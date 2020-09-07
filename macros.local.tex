@@ -1,0 +1,66 @@
+% *** SPECIFIC MACROS ***
+% specific macro definition for the paper
+%
+% requires amsthm, xspace
+
+% theorem-like environment
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{propty}{Property}
+\newtheorem{defn}{Definition}
+
+% asymptotic complexity (Landau) notations
+\newcommand{\landauO}{\ensuremath{\mathcal{O}}\xspace}
+\newcommand{\landauOmega}{\ensuremath{\Omega}\xspace}
+\newcommand{\landauTheta}{\ensuremath{\Theta}\xspace}
+\newcommand{\landauo}{\ensuremath{o}\xspace}
+\newcommand{\landauomega}{\ensuremath{\omega}\xspace}
+\newcommand{\landauorder}{\ensuremath{\sim}\xspace}
+
+% scheduling notations
+\newcommand{\graham}[3]{\mbox{\ensuremath{#1\mid#2\mid#3}}}
+\newcommand{\Cmax}{\ensuremath{C_{\max}}\xspace}
+
+% complexity classes
+\newcommand{\cNP}{\textbf{NP}\xspace}  % bold notations
+\newcommand{\cP}{\textbf{P}\xspace}
+% \newcommand{\cNP}{\ensuremath{\mathcal{N\!P}}\xspace}  % round notations
+% \newcommand{\cP}{\ensuremath{\mathcal{P}}\xspace}
+
+% Machine states
+\newcommand{\computing}{computing}
+\newcommand{\idle}{idle}
+\newcommand{\off}{of\!f}
+\newcommand{\on}{on}
+\newcommand{\ontooff}{\on\rightarrow\off}
+\newcommand{\offtoon}{\off\rightarrow\on}
+
+% CCGRID 2017
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+% Cluster 2017
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newlength\mylen % algorithm2e hack
+\newcommand\myinput[1]{%
+  \settowidth\mylen{\KwIn{}}%
+  \setlength\hangindent{\mylen}%
+  \hspace*{\mylen}#1\\}
+
+\newcommand\myoutput[1]{% algorithm2e hack
+  \settowidth\mylen{\KwOut{}}%
+  \setlength\hangindent{\mylen}%
+  \hspace*{\mylen}#1\\}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% Modular compilation %
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\inputchapter}[2]{%
+  \ifdef{#1}%
+    {\input{#2}\cleardoublepage}%
+    {}%
+}
