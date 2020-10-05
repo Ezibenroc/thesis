@@ -16,7 +16,8 @@
 \ifx\colorbox\undefined\RequirePackage{color}\fi}
 
 \long\def\Universite#1{\gdef\@Universite{#1}}
-\def\@Universite{\includegraphics[width=10cm,clip]{logo_uga}}
+%\def\@Universite{\includegraphics[width=10cm,clip]{logo_uga}}
+\def\@Universite{\includegraphics[width=4cm,clip]{logo_UGA_couleur_cmjn}}
 \long\def\EcoleDoctorale#1{\gdef\@EcoleDoctorale{et de l'\'Ecole Doctorale {\bfseries#1}}}
 \def\@EcoleDoctorale{}
 \long\def\Grade#1{\gdef\@Grade{\uppercase{#1}}}
@@ -51,7 +52,7 @@
 \def\UGTInvite#1#2{{\bfseries\fontsize{12}{14}\selectfont#1}\\ #2, Invit\'e\\[0.5mm]}
 \def\UGTDirecteur#1#2{{\bfseries\fontsize{12}{14}\selectfont#1}\\ #2, Directeur de th\`ese\\[0.5mm]}
 \def\UGTCoDirecteur#1#2{{\bfseries\fontsize{12}{14}\selectfont#1}\\ #2, Co-Directeur de th\`ese\\[0.5mm]}
-\def\UGTCoEncadrant#1#2{{\bfseries\fontsize{12}{14}\selectfont#1}\\ #2, Co-Encadrant de th\`ese\\[0.5mm]}
+\def\UGTCoEncadrant#1#2{{\bfseries\fontsize{12}{14}\selectfont#1}\\ #2, Co-encadrant de th\`ese\\[0.5mm]}
 
 \newcommand{\UGTNewJuryCategory}[2]{%
   \csname#1\endcsname={}%
