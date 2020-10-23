@@ -12,12 +12,13 @@
     \setlength\paperwidth  {210mm}}
 \ProcessOptions\relax
 
+\RequirePackage{svg}
 \AtBeginDocument{\ifx\includegraphics\undefined\RequirePackage{graphicx}\fi%
 \ifx\colorbox\undefined\RequirePackage{color}\fi}
 
 \long\def\Universite#1{\gdef\@Universite{#1}}
 %\def\@Universite{\includegraphics[width=10cm,clip]{logo_uga}}
-\def\@Universite{\includegraphics[width=4cm,clip]{logo_UGA_couleur_cmjn}}
+\def\@Universite{\includesvg[width=4cm]{img/logo_uga}}
 \long\def\EcoleDoctorale#1{\gdef\@EcoleDoctorale{et de l'\'Ecole Doctorale {\bfseries#1}}}
 \def\@EcoleDoctorale{}
 \long\def\Grade#1{\gdef\@Grade{\uppercase{#1}}}
