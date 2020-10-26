@@ -1,8 +1,4 @@
 #! /usr/bin/env sh
 
-echo "Hello $1"
-make
+make $*
 du -sh *.pdf
-file *.pdf
-time=$(date)
-echo "::set-output name=time::$time"

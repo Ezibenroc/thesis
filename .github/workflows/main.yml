@@ -8,13 +8,7 @@ jobs:
     - name: Set up the repository
       uses: actions/checkout@v2
     - name: Compilation
-      id: hello
       uses: ./
-      with:
-        who-to-greet: 'Foo Bar'
-    # Use the output from the `hello` step
-    - name: Get the output time
-      run: echo "The time was ${{ steps.hello.outputs.time }}"
     - name: Upload the resulting PDF
       uses: actions/upload-artifact@v2
       with:

@@ -4,12 +4,9 @@ runs:
   using: docker
   image: Dockerfile
   args:
-    - ${{ inputs.who-to-greet }}
+    - ${{ inputs.compilation-target }}
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  compilation-target:  # id of input
+    description: 'What to compile'
+    required: false
+    default: 'all'
