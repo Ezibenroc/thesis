@@ -1,0 +1,17 @@
+on: [push]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: Compilation of the thesis
+    steps:
+    - name: Set up the repository
+      uses: actions/checkout@v2
+    - name: Compilation
+      id: hello
+      uses: ./
+      with:
+        who-to-greet: 'Foo Bar'
+    # Use the output from the `hello` step
+    - name: Get the output time
+      run: echo "The time was ${{ steps.hello.outputs.time }}"
