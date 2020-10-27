@@ -1,5 +1,3 @@
-## Welcome to GitHub Pages
+## Let's write a PhD thesis in three months!
 
-You can use the [editor on GitHub](https://github.com/Ezibenroc/thesis/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+![plot of the thesis evolution](build/evolution_plot.png)
