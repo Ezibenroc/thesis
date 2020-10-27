@@ -49,8 +49,9 @@ update-view:
 # cleaning #
 ############
 clean:
-	rm -f *.{aux,bbl,bcf,blg,lof,log,lot,out,run.xml,toc,upa}
-	rm -f *-blx.bib
+	rm -f *.aux *.bbl *.bcf *.blg *.lof *.log *.lot *.out *.run.xml *.toc *.upa *-blx.bib
+	rm -f macros.include.tex
+	rm -rf svg-inkscape
 
 distclean: clean
 	rm -f thesis.pdf
