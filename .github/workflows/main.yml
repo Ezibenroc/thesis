@@ -32,9 +32,9 @@ jobs:
           test -f build/thesis_data.csv || echo "timestamp,nb_pages,file_size" > build/thesis_data.csv
           echo "$(date '+%Y-%m-%d %H:%M:%S'),${{ steps.compilation.outputs.nb_pages }},${{ steps.compilation.outputs.file_size }}" >> build/thesis_data.csv
     - name: Generation of the evolution plot
-      run: |
-          Rscript -e 'print(as.data.frame(installed.packages()[,c(3:4)]))'
-          Rscript draw_evolution_plots.R
+      uses: ./.github/actions/rscript
+      with:
+          script: draw_evolution_plots.R
     - name: Deployment to gh-pages
       run: |
           cp -f thesis.pdf build
