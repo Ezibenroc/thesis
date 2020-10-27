@@ -21,7 +21,9 @@ jobs:
           compilation-target: thesis.pdf
     - name: Checkout the gh-pages branch
       run: |
+          cp -r .github /tmp
           git checkout gh-pages
+          cp -r /tmp/.github .
           mkdir -p build
           git config --global user.email "tom.cornebize@univ-grenoble-alpes.fr"
           git config --global user.name "Tom Cornebize"
