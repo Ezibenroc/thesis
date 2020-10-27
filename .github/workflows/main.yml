@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
     - name: Compilation
       id: compilation
-      uses: ./
+      uses: ./.github/actions/compilation
       with:
           compilation-target: thesis.pdf
     - name: Checkout the gh-pages branch
