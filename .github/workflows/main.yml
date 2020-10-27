@@ -1,4 +1,7 @@
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   hello_world_job:
@@ -7,18 +10,28 @@ jobs:
     steps:
     - name: Set up the repository
       uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
     - name: Compilation
       id: compilation
       uses: ./
       with:
           compilation-target: thesis.pdf
+    - name: Checkout the gh-pages branch
+      run: |
+          git checkout gh-pages
+          mkdir -p build
     - name: File informations
       run: |
           echo "Number of pages : ${{ steps.compilation.outputs.nb_pages }}"
           echo "File size       : ${{ steps.compilation.outputs.file_size }}"
-          test -f thesis_data.csv || echo "timestamp,nb_pages,file_size" > thesis_data.csv
-          echo "$(date '+%Y-%m-%d %H:%M:%S'),${{ steps.compilation.outputs.nb_pages }},${{ steps.compilation.outputs.file_size }}" >> thesis_data.csv
-          cat thesis_data.csv
+          test -f build/thesis_data.csv || echo "timestamp,nb_pages,file_size" > build/thesis_data.csv
+          echo "$(date '+%Y-%m-%d %H:%M:%S'),${{ steps.compilation.outputs.nb_pages }},${{ steps.compilation.outputs.file_size }}" >> build/thesis_data.csv
+    - name: Deployment to gh-pages
+      run: |
+          cp -f thesis.pdf build
+          git add build
+          git commit -am "New compilation"
     - name: Upload the resulting PDF
       uses: actions/upload-artifact@v2
       with:
