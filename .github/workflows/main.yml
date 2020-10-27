@@ -21,6 +21,8 @@ jobs:
       run: |
           git checkout gh-pages
           mkdir -p build
+          git config --global user.email "tom.cornebize@univ-grenoble-alpes.fr"
+          git config --global user.name "Tom Cornebize"
     - name: File informations
       run: |
           echo "Number of pages : ${{ steps.compilation.outputs.nb_pages }}"
@@ -32,6 +34,7 @@ jobs:
           cp -f thesis.pdf build
           git add build
           git commit -am "New compilation"
+          git push
     - name: Upload the resulting PDF
       uses: actions/upload-artifact@v2
       with:
