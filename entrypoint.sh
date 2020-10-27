@@ -1,4 +1,6 @@
 #! /usr/bin/env sh
 
-make $*
+pwd
+ls -al
+make $* || exit 1
 du -sh *.pdf
