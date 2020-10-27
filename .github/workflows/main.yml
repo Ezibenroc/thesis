@@ -8,7 +8,11 @@ jobs:
     - name: Set up the repository
       uses: actions/checkout@v2
     - name: Compilation
+      id: compilation
       uses: ./
+    - name: File informations
+      run: echo "Number of pages : ${{ steps.compilation.outputs.nb_pages }}"
+      run: echo "File size       : ${{ steps.compilation.outputs.file_size }}"
     - name: Upload the resulting PDF
       uses: actions/upload-artifact@v2
       with:
