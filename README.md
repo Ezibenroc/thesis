@@ -1,4 +1,6 @@
-Skeleton of a thesis manuscript, greatly inspired by the ones of Clément Mommessin and Millian Poquet, which in turn are inspired by Raphaël Bleuse, David Beniamine and David Glesser.
+[![Actions Status](https://github.com/Ezibenroc/thesis/workflows/Compilation/badge.svg)](http://cornebize.net/thesis/build/thesis.pdf)
+
+The skeleton of this thesis manuscript was greatly inspired by the ones of Clément Mommessin and Millian Poquet, which in turn are inspired by Raphaël Bleuse, David Beniamine and David Glesser.
 
 The makefile provides convenient recipes to build the whole thesis or unique chapters, to check for missing refs, unreferenced labels or uncited references.
 Feel free to hack the template however you like.

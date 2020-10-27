@@ -1,3 +1,5 @@
+name: Compilation
+
 on:
   push:
     branches:
