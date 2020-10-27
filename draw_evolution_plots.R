@@ -12,15 +12,19 @@ subplot = ggplot(df) +
     geom_point() +
     geom_line() +
     xlab("Timestamp") +
-    theme_minimal()
+    expand_limits(y=0) +
+    theme_light()
 
 p1 = subplot +
     aes(y=nb_pages) +
-    ylab("Number of pages")
+    ylab("Number of pages") +
+    scale_x_datetime(position = "top")
 p2 = subplot +
     aes(y=file_size) +
     ylab("File size (MB)")
 
-plot = p1 + p2
+plot = p1 / p2 + plot_annotation(
+    title = 'Evolution of the manuscript file'
+)
 
-ggsave("build/evolution_plot.png", plot=plot, width=8, height=4)
+ggsave("build/evolution_plot.png", plot=plot, width=4, height=8)
