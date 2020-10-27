@@ -25,6 +25,14 @@ chapter_conclusion: $(THESIS_ALL_TEX) Makefile references.bib
 	echo "\\def \\includechapterconclusion {true}" > macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
 
+chapter_prediction: $(THESIS_ALL_TEX) Makefile references.bib
+	echo "\\def \\includechapterprediction {true}" > macros.include.tex
+	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
+
+chapter_experiment: $(THESIS_ALL_TEX) Makefile references.bib
+	echo "\\def \\includechapterexperiment {true}" > macros.include.tex
+	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
+
 #########################
 # Convenience shortcuts #
 #########################
