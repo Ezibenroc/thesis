@@ -11,7 +11,6 @@ all: whole_thesis \
 whole_thesis: $(THESIS_ALL_TEX) Makefile references.bib
 	cp macros.include.default.tex macros.include.tex
 	rubber --pdf --unsafe -Wall thesis.tex
-	@make --silent update-view
 
 ############################
 # Only compile one chapter #
@@ -19,12 +18,10 @@ whole_thesis: $(THESIS_ALL_TEX) Makefile references.bib
 chapter_introduction: $(THESIS_ALL_TEX) Makefile references.bib
 	echo "\\def \\includechapterintroduction {true}" > macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
-	@make --silent update-view
 
 chapter_conclusion: $(THESIS_ALL_TEX) Makefile references.bib
 	echo "\\def \\includechapterconclusion {true}" > macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
-	@make --silent update-view
 
 #########################
 # Convenience shortcuts #

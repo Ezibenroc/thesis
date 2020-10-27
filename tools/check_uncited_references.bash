@@ -9,6 +9,7 @@ latex_files=${@:2}
 refnames=$(cat ${bib_file} | sed -n 's/^\@.*{\([^ ]*\),/\1/p')
 
 echo "Uncited references:"
+error=0
 for refname in ${refnames}
 do
     nb_ref_lines=$(cat ${latex_files} | grep "\cite{.*$refname.*}" | wc -l)
@@ -16,5 +17,10 @@ do
     if [ ${nb_ref_lines} -eq 0 ]
     then
         echo "  ${refname}"
+        error=1
     fi
 done
+if [ $error -eq 0 ]; then
+    echo "  None"
+fi
+exit $error
