@@ -15,20 +15,20 @@
 \pdfobjcompresslevel 0  % Produce PDF file respecting CINES requirements
 
 \documentclass[%
-	paper=A4,              % paper size
-	twoside=true,          % onesite or twoside printing
-	openright,             % doublepage cleaning ends up right side
-	parskip=half,          % spacing value / method for paragraphs
-	chapterprefix=true,    % prefix for chapter marks
-	11pt,                  % font size
-	headings=normal,       % size of headings
-	bibliography=totoc,    % include bib in toc
-	listof=totoc,          % include listof entries in toc
-	titlepage=on,          % own page for each title page
-	captions=tableabove,   % display table captions above the float env
-	chapterprefix=false,   % do not display a prefix for chapters
-	appendixprefix=false,  % do not display a prefix for appendix chapters
-	draft=false,           % value for draft version
+    paper=A4,              % paper size
+    twoside=true,          % onesite or twoside printing
+    openright,             % doublepage cleaning ends up right side
+    parskip=half,          % spacing value / method for paragraphs
+    chapterprefix=true,    % prefix for chapter marks
+    11pt,                  % font size
+    headings=normal,       % size of headings
+    bibliography=totoc,    % include bib in toc
+    listof=totoc,          % include listof entries in toc
+    titlepage=on,          % own page for each title page
+    captions=tableabove,   % display table captions above the float env
+    chapterprefix=false,   % do not display a prefix for chapters
+    appendixprefix=false,  % do not display a prefix for appendix chapters
+    draft=false,           % value for draft version
 ]{scrreprt}
 
 
@@ -49,15 +49,15 @@
 % --- PAGE SETTING ---------------------
 
 \usepackage[%
-	figuresep=colon,          % label separator for captions
-	hangfigurecaption=false,  % use hanging figure label (within margin)
-	hangsection=true,         % use hanging section label (within margin)
-	hangsubsection=true,      % use hanging subsection label (within margin)
-	colorize=full,            % define color mode
-	colortheme=bluemagenta,   % what colors to use
-	bibsys=biber,             % citation manamgement engine
-	bibfile=references,       % bibtex file
-	bibstyle=alphabetic,      % reference style
+    figuresep=colon,          % label separator for captions
+    hangfigurecaption=false,  % use hanging figure label (within margin)
+    hangsection=true,         % use hanging section label (within margin)
+    hangsubsection=true,      % use hanging subsection label (within margin)
+    colorize=full,            % define color mode
+    colortheme=bluemagenta,   % what colors to use
+    bibsys=biber,             % citation manamgement engine
+    bibfile=references,       % bibtex file
+    bibstyle=alphabetic,      % reference style
 ]{cleanthesis}
 
 % --- GRAPHICS / FIGURES ---------------
@@ -89,13 +89,13 @@
 \usepackage{hyperref}  % import as last package
 
 \hypersetup{
-	unicode=true,
-	plainpages=false,
-	colorlinks=false,
-	pdfborder={0 0 0},
-	breaklinks=true,  % allow line breaks inside links
-	bookmarksnumbered=true,
-	bookmarksopen=true,
+    unicode=true,
+    plainpages=false,
+    colorlinks=false,
+    pdfborder={0 0 0},
+    breaklinks=true,  % allow line breaks inside links
+    bookmarksnumbered=true,
+    bookmarksopen=true,
 }
 
 % --- Custom TODO line ------------------------
@@ -206,11 +206,11 @@
 \cleardoublepage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  COMMENTED OUT FOR SEPARATE CHAPTER COMPILATIONS
 
 {
-	\setstretch{1.1}
-	\renewcommand{\bibfont}{\normalfont\small}
-	\setlength{\biblabelsep}{0pt}
-	\setlength{\bibitemsep}{0.5\baselineskip plus 0.5\baselineskip}
-	\printbibliography
+    \setstretch{1.1}
+    \renewcommand{\bibfont}{\normalfont\small}
+    \setlength{\biblabelsep}{0pt}
+    \setlength{\bibitemsep}{0.5\baselineskip plus 0.5\baselineskip}
+    \printbibliography
 }
 
 {\listoffigures \let\cleardoublepage\  \listoftables} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  COMMENTED OUT FOR SEPARATE CHAPTER COMPILATIONS
@@ -221,23 +221,23 @@
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% List of publications %%%%%%%%%%%%%%%%%
 % {
-% 	\clearpage
-% 	Additionally, the work conducted in this dissertation directly led to the
-% 	following communications.
+%     \clearpage
+%     Additionally, the work conducted in this dissertation directly led to the
+%     following communications.
 
-% 	\begin{refsection}
-% 	\makeatletter\@beginparpenalty=10000\makeatother  % prevent page break before list
-% 	\defbibenvironment{itembib}{\itemize}{\enditemize}{\item}
-% 	\nocite{*}
-% 	%
-% 	\paragraph{Peer-reviewed international conferences}
-% 	\printbibliography[heading=none,env=itembib,keyword={own},keyword={conference}]
-% 	%
-% 	\paragraph{Peer-reviewed international workshops}
-% 	\printbibliography[heading=none,env=itembib,keyword={own},keyword={workshop}]
-% 	\paragraph{National workshops}
-% 	\printbibliography[heading=none,env=itembib,keyword={own},keyword={nworkshop}]
-% 	\end{refsection}
+%     \begin{refsection}
+%     \makeatletter\@beginparpenalty=10000\makeatother  % prevent page break before list
+%     \defbibenvironment{itembib}{\itemize}{\enditemize}{\item}
+%     \nocite{*}
+%     %
+%     \paragraph{Peer-reviewed international conferences}
+%     \printbibliography[heading=none,env=itembib,keyword={own},keyword={conference}]
+%     %
+%     \paragraph{Peer-reviewed international workshops}
+%     \printbibliography[heading=none,env=itembib,keyword={own},keyword={workshop}]
+%     \paragraph{National workshops}
+%     \printbibliography[heading=none,env=itembib,keyword={own},keyword={nworkshop}]
+%     \end{refsection}
 % }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% List of publications %%%%%%%%%%%%%%%%%
 
