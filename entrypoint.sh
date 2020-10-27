@@ -5,8 +5,8 @@ pwd
 ls -al
 
 echo
-make $* || exit 1
-du -sh *.pdf
+make $1 || exit 1
+du -sh $1
 
 echo
 ./tools/check_uncited_references.bash references.bib *.tex
@@ -14,7 +14,7 @@ echo
 ./tools/check_missing_refs.bash
 
 echo
-nb_pages=$(pdfinfo thesis.pdf | grep Pages | sed 's/[^0-9]*//') 2> /dev/null
+nb_pages=$(pdfinfo $1 | grep Pages | sed 's/[^0-9]*//') 2> /dev/null
 echo "::set-output name=nb_pages::$nb_pages"
-file_size=$(du -sh thesis.pdf | cut -f1)
+file_size=$(du -sh $1 | cut -f1)
 echo "::set-output name=file_size::$file_size"

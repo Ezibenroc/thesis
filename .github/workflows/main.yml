@@ -10,9 +10,12 @@ jobs:
     - name: Compilation
       id: compilation
       uses: ./
+      with:
+          compilation-target: thesis.pdf
     - name: File informations
-      run: echo "Number of pages : ${{ steps.compilation.outputs.nb_pages }}"
-      run: echo "File size       : ${{ steps.compilation.outputs.file_size }}"
+      run: |
+          echo "Number of pages : ${{ steps.compilation.outputs.nb_pages }}"
+          echo "File size       : ${{ steps.compilation.outputs.file_size }}"
     - name: Upload the resulting PDF
       uses: actions/upload-artifact@v2
       with:

@@ -7,6 +7,8 @@ default: $(DEFAULT_TARGET)
 all: whole_thesis \
      chapter_introduction chapter_conclusion
 
+thesis.pdf: whole_thesis
+
 # Compile the whole thesis
 whole_thesis: $(THESIS_ALL_TEX) Makefile references.bib
 	cp macros.include.default.tex macros.include.tex
