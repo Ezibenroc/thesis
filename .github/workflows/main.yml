@@ -16,6 +16,7 @@ jobs:
       run: |
           echo "Number of pages : ${{ steps.compilation.outputs.nb_pages }}"
           echo "File size       : ${{ steps.compilation.outputs.file_size }}"
+          echo "$(date '+%Y-%m-%d %H:%M:%S'),${{ steps.compilation.outputs.nb_pages }},${{ steps.compilation.outputs.file_size }}"
     - name: Upload the resulting PDF
       uses: actions/upload-artifact@v2
       with:

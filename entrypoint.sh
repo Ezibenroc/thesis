@@ -16,5 +16,5 @@ echo
 echo
 nb_pages=$(pdfinfo $1 | grep Pages | sed 's/[^0-9]*//') 2> /dev/null
 echo "::set-output name=nb_pages::$nb_pages"
-file_size=$(du -sh $1 | cut -f1)
+file_size=$(du -b $1 | cut -f1)
 echo "::set-output name=file_size::$file_size"
