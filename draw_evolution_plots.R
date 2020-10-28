@@ -3,27 +3,46 @@ library(dplyr)
 library(readr)
 library(patchwork)
 
+palette = c(
+    "#1b9e77",
+    "#d95f02",
+    "#7570b3",
+    "#e7298a",
+    "#66a61e",
+    "#e6ab02",
+    "#a6761d",
+    "#666666"
+)
+
 df = read.csv("build/thesis_data.csv") %>%
     mutate(timestamp=parse_datetime(as.character(timestamp), "%Y-%m-%d %H:%M:%S")) %>%
     mutate(file_size = file_size*1e-6)
+df_lagged = df %>%
+    mutate_at(vars(-("timestamp")),lag)
+df_combined = bind_rows(old=df, new=df_lagged, .id="source") %>%
+    arrange(timestamp, source)
 
-subplot = ggplot(df) +
-    aes(x=timestamp) +
-    geom_point() +
-    geom_line() +
+draw_plot = function(ycol, color) {
+    return(ggplot(df) +
+    aes_string(x="timestamp", y=ycol) +
+    geom_step() +
+    geom_ribbon(data=df_combined, aes_string(ymin=0, ymax=ycol), fill=color, alpha=0.5) +
+    geom_point(shape='o') +
     xlab("Timestamp") +
     expand_limits(y=0) +
-    theme_light()
+    theme_light() +
+    theme(axis.title.x = element_blank())
+    )
+}
 
-p1 = subplot +
-    aes(y=nb_pages) +
-    ylab("Number of pages") +
-    scale_x_datetime(position = "top")
-p2 = subplot +
-    aes(y=file_size) +
+p1 = draw_plot("nb_pages", palette[1]) +
+    ylab("Number of pages")
+p2 = draw_plot("file_size", palette[2]) +
     ylab("File size (MB)")
+p3 = draw_plot("compilation_duration", palette[3]) +
+    ylab("Compilation duration (s)")
 
-plot = p1 / p2 + plot_annotation(
+plot = p1 / p2 / p3 + plot_annotation(
     title = 'Evolution of the manuscript file'
 )
 
