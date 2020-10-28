@@ -77,6 +77,9 @@
 
 \newcommand{\SetFigFont}[3]{\fontsize{#1}{#2pt}\normalfont\sffamily}  % XXX: to be removed when CCPE figures are out
 
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,positioning,shadows,trees,calc}
+
 % --- MATHEMATICS TYPESETTING ----------
 
 \usepackage{amsmath}
@@ -92,8 +95,14 @@
 \usepackage[a4paper]{uga}  % UGA title page style (see titlepage.tex)
 \usepackage{xspace}  % easy macros definition
 \usepackage{booktabs}
-\usepackage[font=footnotesize]{subfig} 
+\usepackage[font=footnotesize]{subfig}
 \usepackage[ruled]{algorithm2e}
+
+\usepackage[binary-units,group-digits,group-separator={,}]{siunitx}
+\DeclareSIUnit\flop{Flop}
+\DeclareSIUnit\flops{\flop\per\second}
+\newcommand{\Num}[1]{\num[group-separator={,}]{#1}\xspace}
+\newcommand{\NSI}[2]{\SI[group-separator={,}]{#1}{#2}\xspace}
 
 % --- PDF SUPPORT ----------------------
 
