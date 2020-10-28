@@ -31,8 +31,8 @@ jobs:
       run: |
           echo "Number of pages : ${{ steps.compilation.outputs.nb_pages }}"
           echo "File size       : ${{ steps.compilation.outputs.file_size }}"
-          test -f build/thesis_data.csv || echo "timestamp,nb_pages,file_size" > build/thesis_data.csv
-          echo "$(date '+%Y-%m-%d %H:%M:%S'),${{ steps.compilation.outputs.nb_pages }},${{ steps.compilation.outputs.file_size }}" >> build/thesis_data.csv
+          test -f build/thesis_data.csv || echo "timestamp,commit,nb_pages,file_size" > build/thesis_data.csv
+          echo "$(date '+%Y-%m-%d %H:%M:%S'),$GITHUB_SHA,${{ steps.compilation.outputs.nb_pages }},${{ steps.compilation.outputs.file_size }}" >> build/thesis_data.csv
     - name: Generation of the evolution plot
       uses: ./.github/actions/rscript
       with:
