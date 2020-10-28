@@ -18,19 +18,27 @@ whole_thesis: $(THESIS_ALL_TEX) Makefile references.bib
 # Only compile one chapter #
 ############################
 chapter_introduction: $(THESIS_ALL_TEX) Makefile references.bib
-	echo "\\def \\includechapterintroduction {true}" > macros.include.tex
+	echo "\\\def \\\includechapterintroduction {true}" > macros.include.tex
+	echo "\\\totalcompilationfalse" >> macros.include.tex
+	echo "\\\watermarkfalse" >> macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
 
 chapter_conclusion: $(THESIS_ALL_TEX) Makefile references.bib
-	echo "\\def \\includechapterconclusion {true}" > macros.include.tex
+	echo "\\\def \\\includechapterconclusion {true}" > macros.include.tex
+	echo "\\\totalcompilationfalse" >> macros.include.tex
+	echo "\\\watermarkfalse" >> macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
 
 chapter_prediction: $(THESIS_ALL_TEX) Makefile references.bib
-	echo "\\def \\includechapterprediction {true}" > macros.include.tex
+	echo "\\\def \\\includechapterprediction {true}" > macros.include.tex
+	echo "\\\totalcompilationfalse" >> macros.include.tex
+	echo "\\\watermarkfalse" >> macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
 
 chapter_experiment: $(THESIS_ALL_TEX) Makefile references.bib
-	echo "\\def \\includechapterexperiment {true}" > macros.include.tex
+	echo "\\\def \\\includechapterexperiment {true}" > macros.include.tex
+	echo "\\\totalcompilationfalse" >> macros.include.tex
+	echo "\\\watermarkfalse" >> macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
 
 #########################

@@ -156,6 +156,7 @@
 
 % --- FRONT MATTER ---------------------
 
+\iftotalcompilation
 \pdfbookmark[-1]{Front Matter}{Front Matter}
 
 \pagenumbering{gobble}  % do not count title page
@@ -184,6 +185,7 @@
 \phantomsection\addcontentsline{toc}{chapter}{{\contentsname}}  % display ToC to ToC
 \tableofcontents %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  COMMENTED OUT FOR SEPARATE CHAPTER COMPILATIONS
 \cleardoublepage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  COMMENTED OUT FOR SEPARATE CHAPTER COMPILATIONS
+\fi
 
 % --- MAIN MATTER ----------------------
 
@@ -201,9 +203,9 @@
 \inputchapter{\includechapterexperiment}{chapter_experiment.tex}
 \inputchapter{\includechapterconclusion}{chapter_conclusion.tex}
 
-
 % --- BACK MATTER ----------------------
 
+\iftotalcompilation
 \pdfbookmark[-1]{Back Matter}{Back Matter}
 
 \pagenumbering{arabic}  % arabic page numbering (e.g., 1 2 3), reset counter
@@ -260,7 +262,7 @@
 
 \cleardoubleevenpage  % ensure even page for back cover %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  COMMENTED OUT FOR SEPARATE CHAPTER COMPILATIONS
 \input{backcover} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  COMMENTED OUT FOR SEPARATE CHAPTER COMPILATIONS
-
+\fi
 
 % === END OF DOCUMENT =========================================================
 
