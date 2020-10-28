@@ -5,7 +5,7 @@ pwd
 ls -al
 
 echo
-make $1 || exit 1
+TIME="%e" /usr/bin/time -o time.output make $1 || exit 1
 du -sh $1
 
 echo
@@ -18,3 +18,4 @@ nb_pages=$(pdfinfo $1 | grep Pages | sed 's/[^0-9]*//') 2> /dev/null
 echo "::set-output name=nb_pages::$nb_pages"
 file_size=$(du -b $1 | cut -f1)
 echo "::set-output name=file_size::$file_size"
+echo "::set-output name=compilation_duration::$(cat time.output)"
