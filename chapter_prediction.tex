@@ -93,7 +93,7 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
             \item \texttt{DEPTH} controls how many iterations of the outer loop can overlap with each other.
         \end{itemize}
 
-        The sequential complexity of this factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 + \O(N)\] where $N$ is
+        The sequential complexity of this factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 + \landauO(N)\] where $N$ is
         the order of the matrix to factorize. The time complexity can be approximated by \[T(N) \approx
         \frac{\left(\frac{2}{3}N^3 + 2N^2\right)}{P\cdot{}Q\cdot{}w} + \Theta((P+Q)\cdot{}N^2)\] where $w$ is the flop rate
         of a single node and the second term corresponds to the communication overhead which is influenced by the network
@@ -251,7 +251,265 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
 \section{Emulating HPL at large scale}%
 \label{sec:prediction:emulation}
 
-    some text...
+    In this section, I present the changes to SimGrid and HPL that were required for a scalable simulation.  The
+    experiments were done using a single core from nodes of the Nova cluster provided by the Grid'5000
+    testbed\cite{grid5000} (\NSI{32}{\giga\byte} of RAM, two 8-core Intel Xeon E5-2620 v4 CPUs, Debian Stretch OS
+    (Linux 4.9)).
+
+    \subsection{Speeding Up the Emulation}
+        \label{sub:speeding_emulation}
+
+        \subsubsection{Compute Kernel Modeling}
+            \begin{figure}[htb]
+                \centering
+                \subfigure[Non-intrusive macro replacement with a very simple computation model.\label{fig:macro_simple}]{
+                    \begin{minipage}[b]{\linewidth}
+                        \lstset{frame=bt,language=C,numbers=none,escapechar=|}\lstinputlisting{img/prediction/emulating/HPL_dgemm_macro_simple.c}
+                    \end{minipage}}\vspace{-1em}
+                \subfigure[Gain in terms of simulation time.\label{fig:kernel_sampling}]{
+                    \begin{minipage}[b]{\linewidth}
+                        \includegraphics[width=\linewidth,page=2]{img/prediction/emulating/kernel_modeling.pdf}
+                    \end{minipage}}%\vspace{-1em}
+                \caption{Replacing the calls to computationally expensive functions by a model allows to emulate HPL at
+                a larger scale.}\vspace{-1em}
+            \end{figure}
+
+            HPL heavily relies on BLAS kernels such as \texttt{dgemm} (for matrix-matrix multiplication) or \texttt{dtrsm}
+            (for solving an  \(A\cdot x=b\) equation). The analysis of an HPL simulation with \(64\) processes and a very
+            small matrix of order \Num{30000} showed that about \(\NSI{96}{\percent}\) of the time is spent in these two
+            kernels. Since the output of these kernels does not influence the control flow, simulation time can be reduced
+            by substituting \texttt{dgemm} and \texttt{dtrsm} function calls with a performance model of the respective
+            kernel.
+            Skipping kernels renders the content of some variables invalid but in simulation, only the behavior of the
+            application and not the correctness of computation results are of concern.  Figure\ref{fig:macro_simple} shows
+            an example of this macro-based mechanism that allows to keep HPL code modifications to an absolute minimum. The
+            \texttt{(1.029e-11)} value represents the inverse of the flop rate for this compute kernel and was obtained
+            through calibration. The estimated time of the kernel is calculated based on the given parameters and passed on
+            to \texttt{smpi\_execute\_benched} that advances the clock of the executing rank by this estimate.  The effect
+            on the simulation time for a small scenario is depicted in Figure\ref{fig:kernel_sampling}. This modification
+            speeds up the simulation by orders of magnitude. The precision of the simulation will be investigated in more
+            details in the next sections but it can already be observed that this simple kernel model leads to a sound,
+            albeit slightly more optimistic, estimation of the performance.
+
+            In addition to the main compute kernels, a profiling of the code allowed to identify seven other BLAS functions
+            as computationally expensive enough to justify a specific handling: \texttt{dgemv}, \texttt{dswap},
+            \texttt{daxpy}, \texttt{dscal}, \texttt{dtrsv}, \texttt{dger} and \texttt{idamax}. Similarly, a significant
+            amount of time was spent in fifteen functions implemented in HPL: \texttt{HPL\_dlaswp*N},
+            \texttt{HPL\_dlaswp*T}, \texttt{HPL\_dlacpy} and \texttt{HPL\_dlatcpy}.  All these functions are called during
+            the LU factorization and hence impact the performance measured by HPL; however, because of the removal of the
+            \texttt{dgemm} and \texttt{dtrsm} computations, they all operate on bogus data and hence also produce bogus
+            data. They have been handled similarly to \texttt{dgemm} and \texttt{dtrsm}, through performance models and
+            macro substitution, which speeds up the simulation by an additional factor of \(3\) to \(4\) on small
+            (\(N=\Num{30000}\)) and even more on large scenarios.
+
+        \subsubsection{Specific Adjustments}
+            HPL uses pseudo-randomly generated matrices that are setup every time HPL is executed. This initialization, just
+            like the factorization correctness verification at the end of the run, is not considered in the reported
+            performance and can therefore be safely skipped.  Note that HPL implements an LU factorization with partial
+            pivoting, which requires a special treatment of the \texttt{idamax} function that returns the index of the first
+            element equaling the maximum absolute value. Although the cost of this function was ignored as well, its return
+            value was has been set to a random (but controlled) value to make the simulation unbiased (but fully
+            deterministic).
+
+    \subsection{Scaling Down Memory Consumption}
+        The largest two allocated data structures in HPL are the input matrix \texttt{A} (with a size of typically
+        several \si{\giga\byte} per process) and the \texttt{panel} which contains information about the sub-matrix
+        currently being factorized. This sub-matrix typically occupies a few hundred \si{\mega\byte} per process.
+        Unfortunately, when emulating an application with SMPI, all MPI processes are run within the same simulation
+        process on a single node and the memory consumption of the simulation can therefore quickly reach several
+        \si{\tera\byte} of RAM.  Yet, as we no longer operate on real data, storing the whole input matrix \(A\) is
+        needless. However, since only a minimal portion of the code was modified, some functions may still read or write
+        some parts of the matrix.  It is thus not possible to simply remove the memory allocations of large data
+        structures. SMPI provides the \texttt{SMPI\_SHARED\_MALLOC} (\texttt{SMPI\_SHARED\_FREE}) macro to replace calls
+        to \texttt{malloc} (\texttt{free}). They indicate that some data structures can safely be shared between
+        processes and that the data they contain is not critical for the execution (\eg an input matrix) and that it may
+        even be overwritten. \texttt{SMPI\_SHARED\_MALLOC} works as follows (see
+        Figure\ref{fig:global_shared_malloc}): a single block of physical memory (of default size \NSI{1}{\mega\byte})
+        for the whole execution is allocated and shared by all MPI processes.  A range of virtual addresses
+        corresponding to a specified size is reserved and cyclically mapped onto the previously obtained physical
+        address.  This mechanism allows most applications to obtain a nearly constant memory footprint, regardless of
+        the size of the actual allocations.
+
+        \tikzset{draw half paths/.style 2 args={%
+          % From https://tex.stackexchange.com/a/292108/71579
+            decoration={show path construction,
+              lineto code={
+                \draw [#1] (\tikzinputsegmentfirst) --
+                   ($(\tikzinputsegmentfirst)!0.5!(\tikzinputsegmentlast)$);
+                \draw [#2] ($(\tikzinputsegmentfirst)!0.5!(\tikzinputsegmentlast)$)
+                  -- (\tikzinputsegmentlast);
+              }
+            }, decorate
+        }}
+        \tikzstyle{switch}=[draw, circle, minimum width=1cm, minimum height = 1cm]
+        \tikzstyle{compute}=[draw, rectangle, minimum width=0.5cm, minimum height = 0.5cm, node distance=0.5cm]
+        \tikzstyle{base}=[ellipse, minimum width=2cm, minimum height = 0.5cm, node distance = 0.5cm]
+        \tikzstyle{bigswitch}=[base, draw]
+        \begin{figure}[t]%[htbp]
+            \vspace{-1em}\centering
+            \begin{tikzpicture}[yscale=0.5, scale=0.7]
+                \pgfmathtruncatemacro{\size}{4}
+                \pgfmathtruncatemacro{\width}{2}
+                \pgfmathtruncatemacro{\sizem}{\size-1}
+                \pgfmathtruncatemacro{\smallbasex}{4}
+                \pgfmathtruncatemacro{\smallbasey}{\size/2}
+                \pgfmathtruncatemacro{\smallstopx}{\smallbasex+\width}
+                \pgfmathtruncatemacro{\smallstopy}{\smallbasey+1}
+                \foreach \i in {0,\sizem}{
+          	        \pgfmathtruncatemacro{\j}{\i+1}
+          	        \draw (0, \i) -- (0, \j);
+          	        \draw (\width, \i) -- (\width, \j);
+          	        \draw[dotted] (0, \i) -- (\width, \i);
+          	        \draw[dotted] (0, \j) -- (\width, \j);
+          	    }
+          	    \draw[dashed] (0, 1) -- (0, \sizem);
+          	    \draw[dashed] (\width, 1) -- (\width, \sizem);
+          	    \draw (0, 0)     -- (\width, 0);
+          	    \draw (0, \size) -- (\width, \size);
+                \draw (\smallbasex,\smallbasey) -- (\smallstopx,\smallbasey) -- (\smallstopx,\smallstopy) --
+                (\smallbasex,\smallstopy) -- cycle;
+                \foreach \i in {0,\sizem}{
+          	        \pgfmathtruncatemacro{\j}{\i+1}
+          	        \draw[dotted] (\width, \i) -- (\smallbasex, \smallbasey);
+          	        \draw[dotted] (\width, \j) -- (\smallbasex, \smallstopy);
+          	        \pgfmathsetmacro{\xleft}{\width}
+          	        \pgfmathsetmacro{\xright}{\smallbasex}%{\width/2.0+\smallbasex/2.0}
+          	        \pgfmathsetmacro{\yleft}{\i + 0.5}
+          	        \pgfmathsetmacro{\yright}{\smallbasey + 0.5}
+          	        \path [draw half paths={solid, -latex}{draw=none}]  (\xleft, \yleft) -- (\xright, \yright);
+          	    }
+                \draw[decorate,line width=1pt,decoration={brace,raise=0.2cm}] (0, 0) -- (0, \size) node [pos=0.5,
+                xshift=-1cm] {virtual};
+                \draw[decorate,line width=1pt,decoration={brace,mirror,raise=0.2cm}] (\smallstopx, \smallbasey) --
+                (\smallstopx, \smallstopy) node [pos=0.5, xshift=1.2cm] {physical};
+            \end{tikzpicture}
+            \caption{\label{fig:global_shared_malloc}SMPI shared malloc mechanism: large area of virtual memory are
+            mapped onto the same physical pages.}\vspace{2em}
+
+           \centering
+           {\begin{minipage}{1.0\linewidth}
+            \subfigure[Structure of the panel in HPL.\label{fig:panel_structure}]{\small
+                \begin{minipage}[b]{\linewidth}\centering
+                    \begin{tikzpicture}[yscale=.6,scale=1]
+                        \draw [fill=gray] (3, 2) -- (6, 2) -- (6, 3) -- (3, 3) -- cycle;
+                        \draw (0, 2) -- (9, 2) -- (9, 3) -- (0, 3) -- cycle;
+                        \draw[dashed] (3, 2) -- (3, 3);
+                        \draw[dashed] (6, 2) -- (6, 3);
+                        \node(1) at (1.5, 2.5) {matrix parts};
+                        \node(2) at (4.5, 2.5) {indices};
+                        \node(3) at (7.5, 2.5) {matrix parts};
+                        \draw[decorate,line width=1pt,decoration={brace,raise=0.2cm}] (0.2, 3) -- (2.8, 3) node
+                        [pos=0.5, yshift=0.5cm] {can be shared};
+                        \draw[decorate,line width=1pt,decoration={brace,raise=0.2cm}] (6.2, 3) -- (8.8, 3) node
+                        [pos=0.5, yshift=0.5cm] {can be shared};
+                        \draw[decorate,line width=1pt,decoration={brace,raise=0.2cm}] (3.2, 3) -- (5.8, 3) node
+                        [pos=0.5, yshift=+0.5cm] {must not be shared};
+                    \end{tikzpicture}
+                \end{minipage}}\vspace{-1em}
+            \subfigure[Reusing panel allocation from an iteration to another.\label{fig:panel_reuse}]{\small
+                \begin{minipage}[b]{\linewidth}\centering
+                    \begin{tikzpicture}[yscale=.6,scale=1]
+                        \draw [fill=gray] (2, 1) -- (4, 1) -- (4, 1.5) -- (2, 1.5) --cycle;
+                        \draw (0, 1) -- (6, 1) -- (6, 1.5) -- (0, 1.5) -- cycle;
+                        \draw[dashed] (2, 1) -- (2, 1.5);
+                        \draw[dashed] (4, 1) -- (4, 1.5);
+
+                        \draw [fill=gray] (2, 0) -- (3, 0) -- (3, .5) -- (2, .5) --cycle;
+                        \draw (1, 0) -- (4, 0) -- (4, .5) -- (1, .5) -- cycle;
+                        \draw[dashed] (2, 0) -- (2, .5);
+                        \draw[dashed] (3, 0) -- (3, .5);
+
+                        \draw[-latex] (2, 1) -- (2, .5);
+                        \draw[decorate,line width=1pt,decoration={brace,raise=0.2cm}] (0, 1.5) -- (6, 1.5) node
+                        [pos=0.5, yshift=0.5cm] {initial buffer};
+                        \draw[decorate,line width=1pt,decoration={brace,raise=0.2cm, mirror}] (1, 0) -- (4, 0) node
+                        [pos=0.5, yshift=-0.5cm] {current buffer};
+                    \end{tikzpicture}
+                \end{minipage}%
+            }%
+            \end{minipage}}%\vspace{-1em}
+            \caption{Panel structure and allocation strategy.\label{fig:panel}}\vspace{-1em}
+        \end{figure}
+
+        Although using the default \texttt{SHARED\_MALLOC} mechanism works flawlessly for \texttt{A}, a more careful
+        strategy needs to be used for the \texttt{panel}, which is an intricate data structure with both \texttt{int}s
+        (accounting for matrix indices, error codes, MPI tags, and pivoting information) and \texttt{double}s
+        (corresponding to a copy of a sub-matrix of \texttt{A}). To optimize data transfers, HPL flattens this structure
+        into a single allocation of \texttt{double}s (see Figure\ref{fig:panel_structure}). Using a fully shared memory
+        allocation for the \texttt{panel} therefore leads to index corruption that results in classic invalid memory
+        accesses. Since \texttt{int}s and \texttt{double}s are stored in non-contiguous parts of this flat allocation,
+        it is therefore essential to have a mechanism that preserves the process-specific content. We have thus
+        introduced the \texttt{SMPI\_PARTIAL\_SHARED\_MALLOC} macro that allows us to specify which ranges of the
+        allocation should be preserved (\ie are private to each process) and which ones may be corrupted (\ie are shared
+        between processes).  For a matrix of order \(40,000\) and \(64\) MPI processes, memory consumption decreases
+        with this approach from about \NSI{13.5}{\giga\byte} to less than \NSI{40}{\mega\byte}.
+
+        Another HPL specific optimization is related to the systematic allocation and deallocation of panels in each
+        iteration, with the size of the panel strictly decreasing from iteration to iteration. As explained above,
+        the partial sharing of panels requires many calls to \texttt{mmap} and introduces an overhead that makes these
+        repeated allocations / frees a bottleneck. Since the very first allocation can fit all subsequent panels, we
+        modified this allocation mechanism so that SMPI can reuse panels as much as possible from an iteration to an
+        other (see Figure\ref{fig:panel_reuse}). Even for a very small matrix of order \(40,000\) and \(64\) MPI
+        processes, the simulation time decreases from \NSI{20.5}{\sec} to \NSI{16.5}{\sec}.  The number of page faults
+        decreased from \(2\) million to \(0.2\) million, confirming the devastating effect these
+        allocations/deallocations would have at scale.
+
+        The next three optimizations are not specific to HPL.  We leveraged the information on which memory area is
+        private, shared or partially shared to improve the overall performance.  By making SMPI internally aware of the
+        memory's visibility, it can now avoid calling \texttt{memcopy} when large messages containing shared segments
+        are sent from one MPI rank to another.  For fully private or partially shared segments, SMPI identifies and
+        copies only those parts that are process-dependent (private) into the corresponding buffers on the receiver
+        side.  HPL simulation times and memory consumption were considerably improved in our experiments because the
+        \texttt{panel} is the most frequently transferred data structure but only a small part of it is actually
+        private.
+
+        As explained above, SMPI maps MPI processes to threads of a single process, effectively folding them into the
+        same address space.  Consequently, global variables in the MPI application are shared between threads unless
+        these variables are \emph{privatized} and the simulated MPI ranks thus isolated from each other. Several
+        technical solutions are possible to handle this issue\cite{smpi}. The default strategy in SMPI consists in
+        making a copy of the \texttt{data} segment (containing all global variables) per MPI rank at startup and, when
+        context switching to another rank, to remap the \texttt{data} segment via \texttt{mmap} to the private copy of
+        that rank.  SMPI also implements another mechanism relying on the \texttt{dlopen} function that allows to load
+        several times the \texttt{data} segment in memory and to avoid costly calls to \texttt{mmap} (and subsequent
+        cache flush) when context switching. For a matrix of order \Num{80000} and \(32\) MPI processes, the number of
+        minor page faults drops from \Num{4412047} (with \texttt{mmap}) to \Num{6880} (with \texttt{dlopen}), which
+        results in a reduction of system time from \NSI{10.64}{\sec} (out of \NSI{51.47}{\sec}) to \NSI{2.12}{\sec}.
+
+        Finally, for larger matrix orders (\ie \(N\) larger than a few hundred thousands), the performance of the
+        simulation quickly deteriorates as the memory consumption rises rapidly. Indeed, folding the memory reduces the
+        \emph{physical} memory usage. The \emph{virtual} memory, on the other hand, is still allocated for every process
+        since the allocation calls are still executed.  Without a reduction of allocated virtual addresses, the page
+        table rapidly becomes too large for a single node. Thankfully, the x86-64 architecture supports several page
+        sizes, such as the \emph{huge pages} in Linux. Typically, these pages are around \NSI{2}{\mebi\byte} (instead of
+        \NSI{4}{\kibi\byte}), which reduces drastically the page table size. For example, for a matrix of order
+        \(N=4,000,000\), it shrinks from \NSI{250}{\giga\byte} to \NSI{0.488}{\giga\byte}.
+
+    \subsection{Scalability Evaluation}
+        \begin{figure}[t]
+            \centering
+            \includegraphics[width=\linewidth,page=2]{./img/prediction/emulating/scalability_plot_size.pdf}
+            \caption{Time complexity and memory consumption are linear in the number of processes but remain mildly
+            quadratic with matrix rank.}
+            \label{fig:hpl_scalability}
+        \end{figure}
+
+        The main goal of the previous optimizations is to reduce the complexity from \(\Theta(N^3) +
+        \Theta(N^2\cdot{}P\cdot{}Q)\) to something more reasonable.  The \(\Theta(N^3)\) was removed by skipping most
+        computations.  Ideally, since there are \(N/NB\) iterations (steps), the complexity of simulating one step
+        should be decreased to something independent of \(N\). SimGrid's fluid models, used to simulate communications,
+        do not depend on \(N\). Therefore, the time to simulate a step of HPL should mostly depend on \(P\) and \(Q\).
+        Yet, some memory operations on the panel that are related to pivoting are intertwined in HPL with collective
+        communications, meaning that it is impossible to get rid of the \(\landauO(N)\) complexity without modifying HPL more
+        profoundly.
+
+        To evaluate the efficiency of our proposal, we conduct a first evaluation on a non-existing but Stampede
+        resembling platform comprising 4,096 nodes interconnected through a fat-tree topology.
+        We run simulations with \Num{512}, \Num{1024}, \Num{2048} or \Num{4096} MPI ranks and with matrices of orders
+        \Num{5e5}, \Num{1e6}, \Num{2e6} or \Num{4e6}. All other HPL parameters are similar to the ones of the original
+        Stampede scenario.  The impact of the matrix order on total makespan and memory is illustrated in
+        Figure\ref{fig:hpl_scalability}.  With all previously described optimizations enabled, the longest simulation
+        took close to \(47\) hours and consumed \NSI{16}{\giga\byte} of memory whereas the shortest one took \(20\)
+        minutes and \NSI{282}{\mega\byte} of memory.
 
 \section{Modeling HPL kernels and communications}%
 \label{sec:prediction:modeling}
