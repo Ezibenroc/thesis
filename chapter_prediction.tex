@@ -154,10 +154,97 @@ for publication in a journal. The content of this chapter is therefore a near-ve
 
 
 
-\section{Simgrid/SMPI and the other simulators}%
-\label{sec:prediction:simgrid}
+\section{Related work}%
+\label{sec:prediction:related_work}
 
-    some text...
+    \subsection{Performance prediction}%
+    \label{sub:performance_prediction}
+
+        A first approach for estimating the performance of applications like HPL is statistical modeling of the
+        application as a whole\cite{hpl_prediction}.  By running the application several times with small and medium
+        problem sizes (of a few iterations of large problem sizes) and using simple linear regressions, it is possible
+        to predict its makespan for larger sizes with an error of only a few percents and a relatively low cost.
+        Unfortunately, the predictions are limited to the same application configuration and studying the influence of
+        the number of rows and columns of the virtual grid or of the broadcast algorithms requires a new model and new
+        (costly) runs using the whole target machine.  Furthermore, this approach does not allow to study what-if
+        scenarios (\eg to evaluate what would happen if the network bandwidth was increased or if node heterogeneity was
+        decreased) that are particularly useful when investigating potential performance improvements.
+
+        Simulation provides the details and flexibility missing to such black-box modeling approach. Performance
+        prediction of MPI applications through simulation has been widely studied over the last decades but two
+        approaches can be distinguished in the literature: offline and online simulation.
+
+        With the most common approach, \emph{offline simulation}, a trace of the application is first obtained on a real
+        platform. This trace comprises sequences of MPI operations and CPU bursts and is given as an input to a
+        simulator that implements performance models for the CPUs and the network to derive predictions. Researchers
+        interested in finding out how their application reacts to changes to the underlying platform can replay the
+        trace on commodity hardware at will with different platform models.
+        Most HPC simulators available today, notably BigSim\cite{bigsim_04}, Dimemas\cite{dimemas} and
+        CODES\cite{CODES}, rely on this approach.  The main limitation of this approach comes from the trace acquisition
+        requirement. Not only is a large machine required but the compressed trace of a few iterations (out of several
+        thousands) of HPL typically reaches a few hundred MB, making this approach quickly impractical\cite{suter}.
+        Worse, tracing an application provides only information about its behavior at the time of the run: slight
+        modifications (\eg to communication patterns) may make the trace inaccurate. The behavior of simple applications
+        (\eg \texttt{stencil}) can be extrapolated from small-scale traces\cite{scalaextrap,pmac_lspp13} but this fails
+        if the execution is non-deterministic, \eg whenever the application relies on non-blocking communication
+        patterns, which is unfortunately the case for HPL.
+
+        The second approach discussed in the literature is \emph{online simulation}.  Here, the application is executed
+        (emulated) on top of a simulator that is responsible to determine when each process is run. This approach allows
+        researchers to study directly the behavior of MPI applications but only a few recent simulators such as SST
+        Macro\cite{sstmacro}, SimGrid/SMPI\cite{simgrid} and the closed-source xSim\cite{xsim} support it. To the best
+        of our knowledge, only SST Macro and SimGrid/SMPI are mature enough to faithfully emulate HPL. This work relies
+        on SimGrid as its performance models and its emulation capabilities seemed quite solid but the proposed
+        developments would a priori also be possible with SST.  Note that the HPL emulation described in
+        Section\ref{sec:prediction:emulation} should not be confused with the application
+        skeletonization\cite{sst_skeleton} commonly used with SST. Skeletons are code extractions of the most important
+        parts of a complex application whereas we only modify a few dozens of lines of HPL before emulating it with
+        SMPI. Finally, it is important to understand that the proposed approach is intended to help studies at the level
+        of the whole machine and application, not the influence of microarchitectural details as intended by
+        MUSA\cite{musa_16}.
+
+    \subsection{Simgrid/SMPI}%
+    \label{sub:simgrid_smpi}
+
+        SimGrid\cite{simgrid} is a flexible and open-source simulation framework that was originally designed in 2000 to
+        study scheduling heuristics tailored to heterogeneous grid computing environments but has later been extended to
+        study cloud and HPC infrastructures. The main development goal for SimGrid has been to provide validated performance
+        models particularly for scenarios making heavy use of the network.  Such a validation usually consists of comparing
+        simulation predictions with results from real experiments to confirm or debunk network and application models.
+
+        SMPI, a simulator based on SimGrid, has been developed and used to simulate unmodified MPI applications written in
+        C/C++ or FORTRAN\cite{smpi}.
+        The complex network optimizations done in real MPI implementations need to be considered when predicting the
+        performance of MPI applications.  For instance, the "eager" and "rendez-vous" protocols are selected based on the
+        message size, with each protocol having its own synchronization semantics, which strongly impact performance.  SMPI
+        supports different performance modes through a generalization of the LogGPS model.  Another difficult issue is to
+        model network topologies and contention. SMPI relies on SimGrid's communication models where each ongoing
+        communication is represented as a whole (as opposed to single packets) by a \emph{flow}. Assuming steady-state,
+        contention between active communications can then be modeled as a bandwidth sharing problem that accounts for
+        non-trivial phenomena (\eg cross-traffic interference\cite{Velho_TOMACS13}). If needed, communications that start or
+        end trigger a re-computation of the bandwidth share.  In this fluid model, the time to simulate a message passing
+        through the network is independent of its size, which is advantageous for large-scale applications frequently
+        sending large messages and orders of magnitude faster than packet-level simulation.  SimGrid does not model
+        transient phenomena incurred by the network protocol but accounts for network topology and heterogeneity. Special
+        attention to the modeling of collective communication algorithms has also been paid in SMPI, but this is of little
+        significance in this article as HPL ships with its own implementation of collective operations.
+
+        SMPI maps every MPI rank of the application onto a lightweight simulation thread. These threads are then run one at
+        a time, \ie in mutual exclusion.  Every time a thread enters an MPI call, SMPI takes control and the time that was
+        spent computing (isolated from the other threads) since the previous MPI call is injected into the simulator as a
+        virtual delay.  This time may be scaled up or down depending on the speed of the simulated machine with respect to
+        the simulation machine.
+        Recent results report consistent performance predictions within a few percent for standard benchmarks on small-scale
+        clusters (up to \(12\times12\) cores \cite{heinrich:hal-01523608} and up to \(128\times1\) cores \cite{smpi}). In
+        this thesis, I validate this approach at a much larger scale with HPL, whose emulation comes with at least two
+        challenges:
+        \begin{itemize}
+        \item The time-complexity of the algorithm is \(\Theta(N^3)\) and \(\Theta(N^2)\) communications are performed, with
+            \(N\) being very large. The execution on the Stampede cluster took roughly two hours on \Num{6006}~compute
+            nodes. Using only a single node, a naive emulation of HPL at the scale of the Stampede run would take about
+            500 days if perfect scaling was reached.
+        \item The tremendous memory consumption and amount of memory accesses need to be drastically reduced.
+        \end{itemize}
 
 \section{Emulating HPL at large scale}%
 \label{sec:prediction:emulation}

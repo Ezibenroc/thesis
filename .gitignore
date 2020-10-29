@@ -1,0 +1,15 @@
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.xml
+svg-inkscape
+macros.include.tex
+chapter_experiment.pdf
+chapter_prediction.pdf
+thesis.pdf
