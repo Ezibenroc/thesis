@@ -69,3 +69,11 @@
     {\input{#2}\cleardoublepage}%
     {}%
 }
+
+% Modeling notations
+\newcommand{\model}[2][]{\ensuremath{\mathcal{M}_{#1}\ifthenelse{\equal{#2}{}}{}{\!-\!}{#2}}\xspace}
+\newcommand{\modelp}[2][]{\ensuremath{\mathcal{M'}_{#1}\!\ifthenelse{\equal{#2}{}}{}{\!-\!}{#2}}\xspace}
+\newcommand{\noise}[2][]{\ensuremath{\mathcal{N}_{#1}\ifthenelse{\equal{#2}{}}{}{\!-\!}{#2}}\xspace}
+\newcommand{\noisep}[2][]{\ensuremath{\mathcal{N'}_{#1}\!\ifthenelse{\equal{#2}{}}{}{\!-\!}{#2}}\xspace}
+\newcommand{\norm}{\ensuremath{N}\xspace}
+\newcommand{\mcdots}{\ensuremath{\!\cdot\!\cdot\!\cdot\!}\xspace}
