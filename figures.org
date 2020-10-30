@@ -426,3 +426,122 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-Kejzdq/figureXoNrr1.png]]
+** Network plots                                                  :noexport:
+*** Downloading the CSV
+#+begin_src sh :results output :exports both
+mkdir -p data/prediction/modeling/network
+cd data/prediction/modeling/network
+mkdir -p stampede && cd stampede
+wget -c https://gitlab.inria.fr/simgrid/platform-calibration/raw/master/data/stampede_17_06_01-17:14/calibration/testplatform_PingPong.csv -O pingpong.csv
+wget -c https://gitlab.inria.fr/simgrid/platform-calibration/raw/master/data/stampede_17_06_01-17:14/calibration/testplatform_Recv.csv -O recv.csv
+cd ..
+mkdir -p dahu && cd dahu
+wget -c https://github.com/Ezibenroc/mpi_calibration/raw/master/dahu/mpi/grenoble_2018-08-29_1808878.zip -O archive.zip
+unzip -p archive.zip exp/exp_PingPong.csv > pingpong.csv
+unzip -p archive.zip exp/exp_Recv.csv > recv.csv
+#+end_src
+
+#+RESULTS:
+
+*** Drawing the regression plots
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+
+read_csv <- function(filename) {
+    df = read.csv(filename, header=F)
+    colnames(df) = c('func', 'msg_size', 'start', 'duration')
+#    df = df[sample(nrow(df), 1000), ]  # take only some points, for quick prototyping of the plot
+    return(df)
+}
+
+draw_reg <- function(df, calibration_df) {
+    platforms = unique(calibration_df$platform)
+
+    # Computing the groups
+    df$group = 0
+    for(plat in platforms) {
+        i = 1
+        for(bp in calibration_df[calibration_df$platform == plat,]$breakpoint) {
+            df[df$platform==plat & df$msg_size > bp,]$group = i
+            i = i+1
+        }
+    }
+    df$group = as.factor(df$group)
+
+    # Basic plot
+    plot = ggplot(df, aes(x=msg_size, y=duration, color=group)) + geom_point(size=.5, alpha=0.1)
+    plot = plot + scale_x_log10() + scale_y_log10() + theme_bw() + scale_color_discrete(guide=F)
+    plot = plot + xlab('Message size (bytes)')  + ylab('Duration (seconds)') # + ylab(paste(unique(df$func), 'duration\n (seconds)'))
+
+    # Computing and plotting the regressions
+    df$pred = -1
+    for(plat in unique(df$platform)) {
+        for(grp in unique(df$group)) {
+            for(func in unique(df$func)) {
+                index = df$group == grp & df$func == func & df$platform == plat
+                reg = lm(duration~msg_size, df[index,])
+                df[index,]$pred = predict(reg, df[index,])
+            }
+        }
+    }
+    plot = plot + geom_line(aes(y=pred, group=group), data=df, color='black')
+
+    # Plotting the breakpoints
+    breakpoints_recv = data.frame(calibration_df)
+    breakpoints_recv$func = 'MPI_Recv'
+    breakpoints_send = data.frame(calibration_df)
+    breakpoints_send$func = 'MPI_Send'
+    plot = plot + geom_vline(aes(xintercept=breakpoint), data=rbind(breakpoints_recv, breakpoints_send), linetype='dashed')
+
+    # Plotting the labels
+    txt = data.frame(func=rep(unique(df$func), 2), msg_size=rep(c(1), 4), duration=rep(c(5e-5), 4), platform=sort(rep(unique(df$platform), 2)))
+    txt$label = paste(toupper(txt$platform), txt$func, sep='\n')
+    plot = plot + geom_label(aes(label=label), color='black', data=txt, size=4, hjust=0)
+
+    # Wrapping
+    plot = plot + facet_wrap(c('func', 'platform'), nrow=2) + theme(strip.background = element_blank(), strip.text.x = element_blank())
+    return(plot)
+}
+
+draw_mpi_reg <- function(calibration_df) {
+    df = data.frame()
+    for(platform in unique(calibration_df$platform)) {
+        pingpong_file = paste('data/prediction/modeling/network', platform, 'pingpong.csv', sep='/')
+        recv_file     = paste('data/prediction/modeling/network', platform, 'recv.csv',     sep='/')
+        df_pingpong = read_csv(pingpong_file)
+        df_send = df_pingpong %>% filter(func == 'MPI_Send')
+        df_recv = read_csv(recv_file)
+        tmp = rbind(df_send, df_recv)
+        tmp$platform = platform
+        df = rbind(df, tmp)
+    }
+    return(draw_reg(df, calibration_df))
+}
+#+end_src
+
+#+RESULTS:
+
+#+NAME: table_mpi_calibration
+| platform | breakpoint |
+|----------+------------|
+| dahu     |       8133 |
+| dahu     |      15831 |
+| dahu     |      33956 |
+| dahu     |      64000 |
+| stampede |        150 |
+| stampede |       5000 |
+| stampede |      17420 |
+| stampede |     110000 |
+
+#+begin_src R :results output graphics :var calibrations=table_mpi_calibration :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = draw_mpi_reg(calibrations)
+ggsave(filename='img/prediction/emulating/mpi_calibration.png', plot=plot, width=6,height=4, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Kejzdq/figure8FQI9S.png]]
+
+
