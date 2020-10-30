@@ -4,8 +4,8 @@
 #+STARTUP: overview indent inlineimages logdrawer hidestars
 * Performance prediction through simulation
 ** Modeling HPL kernels and communications
-** Kernels plots                                                  :noexport:
-*** Downloading the CSV
+*** Kernels plots                                                :noexport:
+**** Downloading the CSV
 The file trace_functions.csv has been generated with this [[https://github.com/Ezibenroc/mpi_calibration/blob/74870b0d26497cf623c47a747e2f089eedb62857/dahu/hpl/hpl_trace_simple.ipynb][notebook]] (the dump to
 the CSV file happens in cells 25-26). The notebook uses this [[https://github.com/Ezibenroc/mpi_calibration/blob/74870b0d26497cf623c47a747e2f089eedb62857/dahu/smpi_hpl/grenoble_2019-04-03_1858209.zip][ZIP archive]].
 
@@ -23,12 +23,12 @@ sed 's/function/func/g' -i dgemm_calibration.csv  # cannot have a column named "
 
 #+RESULTS:
 
-*** Drawing the regression plots
+**** Drawing the regression plots
 There are several interesting functions in the CSV file. For each function,
 there are real observations *and* predictions, the column "mode" can be used to
 distinguish them.
 
-**** DGEMM from a calibration
+***** DGEMM from a calibration
 #+begin_src R :results output :session *R* :exports both
 library(ggplot2)
 options(crayon.enabled = FALSE)
@@ -314,7 +314,7 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-Kejzdq/figureKv0dqV.png]]
-**** HPL_dlatcpy
+***** HPL_dlatcpy
 Scatter plot to show the time variability and how we model it.
 
 #+begin_src R :results output :session *R2* :exports both
@@ -426,8 +426,8 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-Kejzdq/figureXoNrr1.png]]
-** Network plots                                                  :noexport:
-*** Downloading the CSV
+*** Network plots                                                :noexport:
+**** Downloading the CSV
 #+begin_src sh :results output :exports both
 mkdir -p data/prediction/modeling/network
 cd data/prediction/modeling/network
@@ -443,7 +443,7 @@ unzip -p archive.zip exp/exp_Recv.csv > recv.csv
 
 #+RESULTS:
 
-*** Drawing the regression plots
+**** Drawing the regression plots
 #+begin_src R :results output :session *R* :exports both
 library(ggplot2)
 library(dplyr)
