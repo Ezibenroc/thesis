@@ -1,0 +1,428 @@
+# -*- coding: utf-8 -*-
+# -*- org-confirm-babel-evaluate: nil -*-
+# -*- mode: org -*-
+#+STARTUP: overview indent inlineimages logdrawer hidestars
+* Performance prediction through simulation
+** Modeling HPL kernels and communications
+** Kernels plots                                                  :noexport:
+*** Downloading the CSV
+The file trace_functions.csv has been generated with this [[https://github.com/Ezibenroc/mpi_calibration/blob/74870b0d26497cf623c47a747e2f089eedb62857/dahu/hpl/hpl_trace_simple.ipynb][notebook]] (the dump to
+the CSV file happens in cells 25-26). The notebook uses this [[https://github.com/Ezibenroc/mpi_calibration/blob/74870b0d26497cf623c47a747e2f089eedb62857/dahu/smpi_hpl/grenoble_2019-04-03_1858209.zip][ZIP archive]].
+
+The file dgemm_calibration.csv has been generated with this [[https://github.com/Ezibenroc/mpi_calibration/blob/df5a957901fac35a3df0bd466acea7d6199a9426/dahu/blas/dgemm_heterogeneous_model.ipynb][notebook]] (the dump
+to the CSV file happens in cell 38). The notebook uses these [[https://github.com/Ezibenroc/mpi_calibration/tree/26fdfbb565e1eb5b9f1015a47ddd8fe9aaa424e5/dahu/blas/heterogeneity_exp/7][ZIP archives]].
+
+#+begin_src sh :results output :exports both
+mkdir -p data/kernel_calibration/
+cd data/kernel_calibration/
+wget -c https://github.com/Ezibenroc/mpi_calibration/raw/master/dahu/smpi_hpl/paper_sc19/traces/2/trace_functions.csv
+sed 's/function/func/g' -i trace_functions.csv  # cannot have a column named "function" in R...
+wget -c https://github.com/Ezibenroc/mpi_calibration/raw/master/dahu/blas/dgemm_calibration.csv
+sed 's/function/func/g' -i dgemm_calibration.csv  # cannot have a column named "function" in R...
+#+end_src
+
+#+RESULTS:
+
+*** Drawing the regression plots
+There are several interesting functions in the CSV file. For each function,
+there are real observations *and* predictions, the column "mode" can be used to
+distinguish them.
+
+**** DGEMM from a calibration
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+options(crayon.enabled = FALSE)
+df = read.csv('data/kernel_calibration/dgemm_calibration.csv')
+str(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	5004288 obs. of  14 variables:
+ $ func        : Factor w/ 1 level "dgemm": 1 1 1 1 1 1 1 1 1 1 ...
+ $ m           : int  378 378 378 9441 9441 9441 1041 1041 1041 1248 ...
+ $ n           : int  7640 7640 7640 640 640 640 2183 2183 2183 1343 ...
+ $ k           : int  2427 2427 2427 1160 1160 1160 735 735 735 1991 ...
+ $ timestamp   : num  3473 3474 3474 3475 3475 ...
+ $ duration    : num  0.486 0.486 0.487 0.455 0.454 ...
+ $ prediction  : num  0.522 0.522 0.522 0.485 0.485 ...
+ $ noise       : num  0.000512 -0.004775 0.001385 -0.001869 0.004448 ...
+ $ pred_noise  : num  0.522 0.517 0.523 0.483 0.489 ...
+ $ node        : int  10 10 10 10 10 10 10 10 10 10 ...
+ $ core        : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ cpu         : int  20 20 20 20 20 20 20 20 20 20 ...
+ $ index       : int  0 1 2 3 4 5 6 7 8 9 ...
+ $ index_in_seq: int  0 1 2 0 1 2 0 1 2 0 ...
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+## df$node = 1 + df$rank %/% 32
+## df$cpu = 2*df$node + df$rank %% 2
+df$m = as.numeric(df$m)
+df$n = as.numeric(df$n)
+df$k = as.numeric(df$k)
+## df$mnk = df$m * df$n * df$k
+## df$mn = df$m * df$n
+## df$mk = df$m * df$k
+## df$nk = df$n * df$k
+str(df)
+head(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	5004288 obs. of  14 variables:
+ $ func        : Factor w/ 1 level "dgemm": 1 1 1 1 1 1 1 1 1 1 ...
+ $ m           : num  378 378 378 9441 9441 ...
+ $ n           : num  7640 7640 7640 640 640 ...
+ $ k           : num  2427 2427 2427 1160 1160 ...
+ $ timestamp   : num  3473 3474 3474 3475 3475 ...
+ $ duration    : num  0.486 0.486 0.487 0.455 0.454 ...
+ $ prediction  : num  0.522 0.522 0.522 0.485 0.485 ...
+ $ noise       : num  0.000512 -0.004775 0.001385 -0.001869 0.004448 ...
+ $ pred_noise  : num  0.522 0.517 0.523 0.483 0.489 ...
+ $ node        : int  10 10 10 10 10 10 10 10 10 10 ...
+ $ core        : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ cpu         : int  20 20 20 20 20 20 20 20 20 20 ...
+ $ index       : int  0 1 2 3 4 5 6 7 8 9 ...
+ $ index_in_seq: int  0 1 2 0 1 2 0 1 2 0 ...
+
+   func    m    n    k timestamp  duration prediction         noise pred_noise
+1 dgemm  378 7640 2427  3473.428 0.4859466  0.5217815  0.0005118576  0.5222933
+2 dgemm  378 7640 2427  3473.914 0.4861293  0.5217815 -0.0047750420  0.5170064
+3 dgemm  378 7640 2427  3474.401 0.4868529  0.5217815  0.0013853568  0.5231668
+4 dgemm 9441  640 1160  3474.887 0.4551385  0.4845474 -0.0018686303  0.4826788
+5 dgemm 9441  640 1160  3475.343 0.4535278  0.4845474  0.0044477582  0.4889952
+6 dgemm 9441  640 1160  3475.796 0.4544535  0.4845474  0.0007154680  0.4852629
+  node core cpu index index_in_seq
+1   10    0  20     0            0
+2   10    0  20     1            1
+3   10    0  20     2            2
+4   10    0  20     3            0
+5   10    0  20     4            1
+6   10    0  20     5            2
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+unique(df$node)
+unique(df$cpu)
+#+end_src
+
+#+RESULTS:
+:  [1] 10 26 31  3 13 18  6  7 29  8  2 20 16  9 23 15 32 22 14 19 12 25 30 17 24
+: [26] 11  1  5  4 28 21 27
+: 
+:  [1] 20 21 52 53 62 63  6  7 26 27 36 37 12 13 14 15 58 59 16 17  4  5 40 41 32
+: [26] 33 18 19 46 47 30 31 64 65 44 45 28 29 38 39 24 25 50 51 60 61 34 35 48 49
+: [51] 22 23  2  3 10 11  8  9 56 57 42 43 54 55
+
+#+begin_src R :results output :session *R* :exports both
+set.seed(42)
+dgemm = df[sample(nrow(df), 100000), ] # This is too large to be plotted
+dgemm = dgemm[dgemm$m*dgemm$n*dgemm$k<1.2E10,]
+summary(lm(data=dgemm, duration ~ I(m*n*k):factor(cpu)))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+Call:
+lm(formula = duration ~ I(m * n * k):factor(cpu), data = dgemm)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.11522 -0.01048 -0.00429  0.00465  0.40312 
+
+Coefficients:
+                            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                7.286e-03  1.895e-04   38.45   <2e-16 ***
+I(m * n * k):factor(cpu)2  6.791e-11  1.309e-13  518.72   <2e-16 ***
+I(m * n * k):factor(cpu)3  6.598e-11  1.255e-13  525.83   <2e-16 ***
+I(m * n * k):factor(cpu)4  6.678e-11  1.285e-13  519.57   <2e-16 ***
+I(m * n * k):factor(cpu)5  6.562e-11  1.285e-13  510.70   <2e-16 ***
+I(m * n * k):factor(cpu)6  6.639e-11  1.297e-13  511.93   <2e-16 ***
+I(m * n * k):factor(cpu)7  6.564e-11  1.290e-13  508.83   <2e-16 ***
+I(m * n * k):factor(cpu)8  6.571e-11  1.257e-13  522.58   <2e-16 ***
+I(m * n * k):factor(cpu)9  6.578e-11  1.315e-13  500.38   <2e-16 ***
+I(m * n * k):factor(cpu)10 6.640e-11  1.296e-13  512.53   <2e-16 ***
+I(m * n * k):factor(cpu)11 6.498e-11  1.314e-13  494.67   <2e-16 ***
+I(m * n * k):factor(cpu)12 6.800e-11  1.293e-13  525.83   <2e-16 ***
+I(m * n * k):factor(cpu)13 6.524e-11  1.305e-13  499.99   <2e-16 ***
+I(m * n * k):factor(cpu)14 6.575e-11  1.319e-13  498.29   <2e-16 ***
+I(m * n * k):factor(cpu)15 6.493e-11  1.288e-13  504.21   <2e-16 ***
+I(m * n * k):factor(cpu)16 6.704e-11  1.304e-13  513.99   <2e-16 ***
+I(m * n * k):factor(cpu)17 6.549e-11  1.335e-13  490.44   <2e-16 ***
+I(m * n * k):factor(cpu)18 6.561e-11  1.289e-13  509.12   <2e-16 ***
+I(m * n * k):factor(cpu)19 6.562e-11  1.316e-13  498.71   <2e-16 ***
+I(m * n * k):factor(cpu)20 6.563e-11  1.287e-13  509.88   <2e-16 ***
+I(m * n * k):factor(cpu)21 6.552e-11  1.279e-13  512.35   <2e-16 ***
+I(m * n * k):factor(cpu)22 6.553e-11  1.292e-13  507.31   <2e-16 ***
+I(m * n * k):factor(cpu)23 6.616e-11  1.301e-13  508.46   <2e-16 ***
+I(m * n * k):factor(cpu)24 6.574e-11  1.326e-13  495.87   <2e-16 ***
+I(m * n * k):factor(cpu)25 6.524e-11  1.317e-13  495.54   <2e-16 ***
+I(m * n * k):factor(cpu)26 8.713e-11  1.268e-13  687.18   <2e-16 ***
+I(m * n * k):factor(cpu)27 7.167e-11  1.276e-13  561.80   <2e-16 ***
+I(m * n * k):factor(cpu)28 7.355e-11  1.237e-13  594.39   <2e-16 ***
+I(m * n * k):factor(cpu)29 7.314e-11  1.307e-13  559.58   <2e-16 ***
+I(m * n * k):factor(cpu)30 8.033e-11  1.277e-13  628.82   <2e-16 ***
+I(m * n * k):factor(cpu)31 7.971e-11  1.248e-13  638.52   <2e-16 ***
+I(m * n * k):factor(cpu)32 7.550e-11  1.243e-13  607.29   <2e-16 ***
+I(m * n * k):factor(cpu)33 7.458e-11  1.242e-13  600.67   <2e-16 ***
+I(m * n * k):factor(cpu)34 7.008e-11  1.287e-13  544.54   <2e-16 ***
+I(m * n * k):factor(cpu)35 6.590e-11  1.299e-13  507.49   <2e-16 ***
+I(m * n * k):factor(cpu)36 6.932e-11  1.261e-13  549.80   <2e-16 ***
+I(m * n * k):factor(cpu)37 6.562e-11  1.302e-13  503.95   <2e-16 ***
+I(m * n * k):factor(cpu)38 6.577e-11  1.314e-13  500.63   <2e-16 ***
+I(m * n * k):factor(cpu)39 6.561e-11  1.299e-13  505.01   <2e-16 ***
+I(m * n * k):factor(cpu)40 6.609e-11  1.265e-13  522.63   <2e-16 ***
+I(m * n * k):factor(cpu)41 6.571e-11  1.315e-13  499.61   <2e-16 ***
+I(m * n * k):factor(cpu)42 6.594e-11  1.264e-13  521.55   <2e-16 ***
+I(m * n * k):factor(cpu)43 6.556e-11  1.302e-13  503.67   <2e-16 ***
+I(m * n * k):factor(cpu)44 6.540e-11  1.271e-13  514.54   <2e-16 ***
+I(m * n * k):factor(cpu)45 6.583e-11  1.269e-13  518.93   <2e-16 ***
+I(m * n * k):factor(cpu)46 6.576e-11  1.264e-13  520.27   <2e-16 ***
+I(m * n * k):factor(cpu)47 6.485e-11  1.299e-13  499.12   <2e-16 ***
+I(m * n * k):factor(cpu)48 6.571e-11  1.277e-13  514.57   <2e-16 ***
+I(m * n * k):factor(cpu)49 6.536e-11  1.287e-13  507.92   <2e-16 ***
+I(m * n * k):factor(cpu)50 6.991e-11  1.316e-13  531.20   <2e-16 ***
+I(m * n * k):factor(cpu)51 6.498e-11  1.287e-13  504.95   <2e-16 ***
+I(m * n * k):factor(cpu)52 6.571e-11  1.295e-13  507.31   <2e-16 ***
+I(m * n * k):factor(cpu)53 6.618e-11  1.290e-13  512.99   <2e-16 ***
+I(m * n * k):factor(cpu)54 6.580e-11  1.264e-13  520.51   <2e-16 ***
+I(m * n * k):factor(cpu)55 6.613e-11  1.288e-13  513.36   <2e-16 ***
+I(m * n * k):factor(cpu)56 6.727e-11  1.291e-13  521.17   <2e-16 ***
+I(m * n * k):factor(cpu)57 6.565e-11  1.274e-13  515.47   <2e-16 ***
+I(m * n * k):factor(cpu)58 6.585e-11  1.287e-13  511.46   <2e-16 ***
+I(m * n * k):factor(cpu)59 6.561e-11  1.270e-13  516.45   <2e-16 ***
+I(m * n * k):factor(cpu)60 6.611e-11  1.292e-13  511.65   <2e-16 ***
+I(m * n * k):factor(cpu)61 6.549e-11  1.282e-13  510.93   <2e-16 ***
+I(m * n * k):factor(cpu)62 6.552e-11  1.288e-13  508.73   <2e-16 ***
+I(m * n * k):factor(cpu)63 6.565e-11  1.315e-13  499.12   <2e-16 ***
+I(m * n * k):factor(cpu)64 6.543e-11  1.297e-13  504.30   <2e-16 ***
+I(m * n * k):factor(cpu)65 6.557e-11  1.267e-13  517.44   <2e-16 ***
+---
+codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02932 on 99772 degrees of freedom
+Multiple R-squared:  0.9783,	Adjusted R-squared:  0.9783 
+F-statistic: 7.027e+04 on 64 and 99772 DF,  p-value: < 2.2e-16
+#+end_example
+
+Regression lines, to show the heterogeneity.
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 400 :height 400 :session *R* 
+plot = ggplot(dgemm, aes(x=m*n*k, y=duration, color=factor(cpu%%9))) +
+    geom_point(alpha=.1,size=.5) + 
+    geom_smooth(data=dgemm, aes(group=factor(cpu)), method='lm', se=F, fullrange=T, size=.5) +
+    geom_smooth(data=dgemm, color="black", method='lm', se=F, fullrange=T, linetype=4) +
+    scale_color_brewer(palette="Set1", guide=F)
+plot = plot + theme_bw() + ylab('Duration (s)') + 
+    scale_x_continuous(name = 'M.N.K', breaks = (0:4)*3E9, limits=c(0,1.2E10)) + 
+    labs(color='CPU') 
+ggsave(filename='img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png', plot=plot, width=3.9,height=3, dpi=200)
+## ggsave(filename="figures/kernels/dgemm_heterogeneity.pdf", plot=plot, width=4,height=4)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Kejzdq/figurebgL9vP.png]]
+
+
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(tidyr)
+library(forcats)
+
+dgemm2 = dgemm[(dgemm$cpu ==2),]
+dgemm2 %>% select(func,m,n,k,duration,prediction,pred_noise,node,core,cpu) %>%
+    gather(duration,prediction,pred_noise,key=type,value=duration) -> dgemm2
+fake_dgemm = dgemm2[1,] # This is just to add a black legend for geom_smooth
+fake_dgemm$m = 695 # 0 if even values of mnk_id are selected
+fake_dgemm$n = 695 # 0
+fake_dgemm$k = 695 # 0 
+fake_dgemm$type = "fake"
+fake_dgemm$duration = 0
+dgemm2 = rbind(fake_dgemm, dgemm2)
+dgemm2 %>%
+    mutate(type = fct_recode(
+               fct_relevel(type, "duration", "fake", "prediction", "pred_noise"),
+               "Reality"="duration", 
+               "M1/N0 (linear)"="fake", 
+               "M2/N0 (polynomial)"="prediction",
+               "M2/N2 (polynomial + noise)"="pred_noise")) -> dgemm2
+dgemm2 %>% mutate(mnk=m*n*k, mnk_id = floor(mnk/329334390)) %>% filter(mnk_id %%2==1) -> dgemm2
+dgemm2 %>% 
+    group_by(type) %>% 
+    mutate(mnk= mnk + ifelse(type=="M2/N0 (polynomial)",1.5E8,ifelse(type=="M2/N2 (polynomial + noise)",3E8,0)),
+           duration = ifelse(type %in% c("M2/N0 (polynomial)","M2/N2 (polynomial + noise)"),duration/1.05,duration)) %>% # This is because this prediction uses the HPL correction
+    ungroup() -> dgemm2
+dgemm2 %>% tail(n=10)
+dgemm2 %>% str()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+# A tibble: 10 x 11
+   func      m     n     k  node  core   cpu type        duration     mnk mnk_id
+   <fct> <dbl> <dbl> <dbl> <int> <int> <int> <fct>          <dbl>   <dbl>  <dbl>
+ 1 dgemm  1306  3172  2011     1     0     2 M2/N2 (pol…   0.605   8.63e9     25
+ 2 dgemm   259  1215  1047     1     6     2 M2/N2 (pol…   0.0252  6.29e8      1
+ 3 dgemm   640  1160  9441     1    24     2 M2/N2 (pol…   0.492   7.31e9     21
+ 4 dgemm   547  3908  3279     1    24     2 M2/N2 (pol…   0.487   7.31e9     21
+ 5 dgemm  1047  1215   259     1    10     2 M2/N2 (pol…   0.0226  6.29e8      1
+ 6 dgemm  1841  2133  1615     1    26     2 M2/N2 (pol…   0.469   6.64e9     19
+ 7 dgemm  1442   912  2781     1    12     2 M2/N2 (pol…   0.253   3.96e9     11
+ 8 dgemm  3136  9602   321     1     8     2 M2/N2 (pol…   0.629   9.97e9     29
+ 9 dgemm  4287   416  1304     1    20     2 M2/N2 (pol…   0.160   2.63e9      7
+10 dgemm  1475   917  1719     1     8     2 M2/N2 (pol…   0.162   2.63e9      7
+
+Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	2290 obs. of  11 variables:
+ $ func    : Factor w/ 1 level "dgemm": 1 1 1 1 1 1 1 1 1 1 ...
+ $ m       : num  695 7359 1313 1887 547 ...
+ $ n       : num  695 311 6716 987 3279 ...
+ $ k       : num  695 441 642 1610 3908 ...
+ $ node    : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ core    : int  18 24 16 4 12 26 30 28 30 12 ...
+ $ cpu     : int  2 2 2 2 2 2 2 2 2 2 ...
+ $ type    : Factor w/ 4 levels "Reality","M1/N0 (linear)",..: 2 1 1 1 1 1 1 1 1 1 ...
+ $ duration: num  0 0.0737 0.3824 0.2065 0.5059 ...
+ $ mnk     : num  3.36e+08 1.01e+09 5.66e+09 3.00e+09 7.01e+09 ...
+ $ mnk_id  : num  1 3 17 9 21 9 27 7 5 1 ...
+#+end_example
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 300 :height 400 :session *R*
+MSet1 <- c("#E41A1C", "#000000", "#377EB8", "#FF7F00", 
+           "#FFFF33", "#A65628", "#F781BF", "#999999");
+plot = ggplot(dgemm2, aes(x=mnk, y=duration,color=type)) + 
+    geom_point(alpha=0.3,size=.3) + xlim(0,1.2E10)
+    ## geom_point(aes(x=m*n*k+.5E8, y=prediction/1.05),alpha=0.3, color="blue") +
+    ## geom_point(aes(x=m*n*k+1E8, y=pred_noise/1.05),alpha=0.3, color="green")
+plot = plot + theme_bw() + ylab('Duration (s)') + 
+        scale_x_continuous(name = 'M.N.K', breaks = (0:4)*3E9, limits=c(0,1.2E10)) 
+plot = plot + annotate('text', x=0, y=0.75, hjust=0, vjust=0, size=2.5, fontface='italic', label='(Both M2 models are shifted to\n the right to improve readability)')
+plot = plot + scale_color_manual(values=MSet1, guide=F) + #    scale_color_brewer(palette="Set1")
+    theme(legend.position = c(1, 0), legend.justification=c(1, 0), legend.text=element_text(size=8), legend.box.background=element_rect(colour = "black"),
+          panel.border=element_rect(colour = "black", fill=NA), legend.title=element_blank()) + #(size = 7, face = "italic")) +
+    geom_smooth(data=dgemm2[dgemm2$type=="Reality",], size=.2,
+                color="black", method='lm', se=F, fullrange=T) +
+    guides(colour = guide_legend(override.aes = list(alpha = 1)))
+ggsave(filename="img/prediction/modeling/kernels/dgemm_model_calib.png", plot=plot, width=3.9,height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Kejzdq/figureKv0dqV.png]]
+**** HPL_dlatcpy
+Scatter plot to show the time variability and how we model it.
+
+#+begin_src R :results output :session *R2* :exports both
+df = read.csv('data/kernel_calibration/trace_functions.csv')
+print(unique(df$func))
+# in this experiment, we got the nodes dahu-{1,...,8} and the ranks were mapped in the right order
+df$node = 1 + df$rank %/% 32
+df$cpu = 2*df$node + df$rank %% 2
+df$mnk = df$m * df$n * df$k
+df$mn = df$m * df$n
+df$mk = df$m * df$k
+df$nk = df$n * df$k
+head(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+[1] dtrsm         dgemm         HPL_dlatcpy   HPL_dlaswp03T HPL_dlaswp02N
+Levels: dgemm dtrsm HPL_dlaswp02N HPL_dlaswp03T HPL_dlatcpy
+
+         func     m n  k   start        end    duration rank    mode node cpu
+1       dtrsm     2 2 NA 0.01674 0.01678434 0.000044337    0 reality    1   2
+2       dgemm 50046 2  2 0.01678 0.01698043 0.000200426    0 reality    1   2
+3 HPL_dlatcpy     2 2 NA 0.01726 0.01726033 0.000000326    0 reality    1   2
+4       dtrsm     4 4 NA 0.01726 0.01726144 0.000001438    0 reality    1   2
+5       dgemm 50044 4  4 0.01727 0.01764994 0.000379944    0 reality    1   2
+6       dtrsm     2 2 NA 0.01790 0.01790106 0.000001056    0 reality    1   2
+     mnk     mn     mk nk
+1     NA      4     NA NA
+2 200184 100092 100092  4
+3     NA      4     NA NA
+4     NA     16     NA NA
+5 800704 200176 200176 16
+6     NA      4     NA NA
+#+end_example
+
+#+begin_src R :results output :session *R2* :exports both
+func = df[(df$func == 'HPL_dlatcpy'),]
+summary(lm(data=func, duration ~ (I(m*n):factor(cpu))+0))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+Call:
+lm(formula = duration ~ (I(m * n):factor(cpu)) + 0, data = func)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+-1.357e-03 -8.570e-06 -7.100e-07  4.000e-08  2.735e-03 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(>|t|)    
+I(m * n):factor(cpu)2  4.949e-09  1.012e-11 489.036   <2e-16 ***
+I(m * n):factor(cpu)3  5.020e-09  9.889e-12 507.660   <2e-16 ***
+I(m * n):factor(cpu)4  4.975e-09  1.011e-11 492.166   <2e-16 ***
+I(m * n):factor(cpu)5  5.080e-09  1.037e-11 489.933   <2e-16 ***
+I(m * n):factor(cpu)6  4.974e-09  1.019e-11 488.265   <2e-16 ***
+I(m * n):factor(cpu)7  5.001e-09  1.027e-11 487.150   <2e-16 ***
+I(m * n):factor(cpu)8  4.892e-09  1.013e-11 482.801   <2e-16 ***
+I(m * n):factor(cpu)9  4.845e-09  1.051e-11 460.972   <2e-16 ***
+I(m * n):factor(cpu)10 4.795e-09  1.022e-11 469.275   <2e-16 ***
+I(m * n):factor(cpu)11 4.760e-09  1.046e-11 455.167   <2e-16 ***
+I(m * n):factor(cpu)13 3.295e-09  3.937e-09   0.837    0.403    
+---
+codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 9.619e-05 on 21086 degrees of freedom
+Multiple R-squared:  0.991,	Adjusted R-squared:  0.991 
+F-statistic: 2.116e+05 on 11 and 21086 DF,  p-value: < 2.2e-16
+#+end_example
+
+OK. cpu 13, is the one with very few measurements and a weird
+behavior. Let's get rid of it.
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R2*
+library(ggplot2)
+func = df[(df$func == 'HPL_dlatcpy') & (df$cpu!=13),]
+func$duration = func$duration*1e3
+func$mode_name = factor(ifelse(func$mode=='reality', 'Reality', 'M1/N2 (linear + noise)'))
+fake_func = func[1,] # This is just to add a black legend for geom_smooth
+fake_func$m = 0
+fake_func$n = 0
+fake_func$mode_name = factor("M1/N0 (linear)")
+fake_func$duration = 0
+func = rbind(fake_func, func)
+func$mode_name = relevel(func$mode_name, 'Reality')
+
+MSet1 <- c("#E41A1C", "#000000", "#377EB8", "#FF7F00",
+           "#FFFF33", "#A65628", "#F781BF", "#999999");
+plot = ggplot(func, aes(x=m*n, y=duration, color=mode_name)) +
+    geom_smooth(data = func[func$mode == "reality",], aes(group=factor(cpu)), method='lm', 
+                se=F, size=.2, color="blue", alpha=.2, fullrange=T) + 
+    geom_point(alpha=.5,size=.5) + 
+    geom_smooth(data = func[func$mode == "reality",], method='lm', se=F, fullrange=T, linetype=4, color="black")
+plot = plot + theme_bw() + ylab('Duration (ms)') + xlab('M.N') +
+    xlim(0,max(func$m*func$n)*1.1) +     
+    scale_color_brewer(palette="Set1")  +
+    scale_color_manual(values=MSet1) +
+    theme(legend.position = c(0.3,0.85), legend.title=element_blank()) +
+    guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+    theme(legend.position = c(1, 0), legend.justification=c(1, 0), legend.text=element_text(size=8), legend.box.background=element_rect(colour = "black"),
+          panel.border = element_rect(colour = "black", fill=NA), legend.title=element_blank())
+
+ggsave(filename='img/prediction/modeling/kernels/dlatcpy_model.png', plot=plot, width=3.9,height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Kejzdq/figureXoNrr1.png]]
