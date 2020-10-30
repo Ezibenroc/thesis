@@ -14,5 +14,5 @@ chapter_experiment.pdf
 chapter_prediction.pdf
 thesis.pdf
 *~
-data/kernel_calibration/dgemm_calibration.csv
-data/kernel_calibration/trace_functions.csv
+data/prediction/modeling/kernels/dgemm_calibration.csv
+data/prediction/modeling/kernels/trace_functions.csv

@@ -13,8 +13,8 @@ The file dgemm_calibration.csv has been generated with this [[https://github.com
 to the CSV file happens in cell 38). The notebook uses these [[https://github.com/Ezibenroc/mpi_calibration/tree/26fdfbb565e1eb5b9f1015a47ddd8fe9aaa424e5/dahu/blas/heterogeneity_exp/7][ZIP archives]].
 
 #+begin_src sh :results output :exports both
-mkdir -p data/kernel_calibration/
-cd data/kernel_calibration/
+mkdir -p data/prediction/modeling/kernels/
+cd data/prediction/modeling/kernels/
 wget -c https://github.com/Ezibenroc/mpi_calibration/raw/master/dahu/smpi_hpl/paper_sc19/traces/2/trace_functions.csv
 sed 's/function/func/g' -i trace_functions.csv  # cannot have a column named "function" in R...
 wget -c https://github.com/Ezibenroc/mpi_calibration/raw/master/dahu/blas/dgemm_calibration.csv
@@ -32,7 +32,7 @@ distinguish them.
 #+begin_src R :results output :session *R* :exports both
 library(ggplot2)
 options(crayon.enabled = FALSE)
-df = read.csv('data/kernel_calibration/dgemm_calibration.csv')
+df = read.csv('data/prediction/modeling/kernels/dgemm_calibration.csv')
 str(df)
 #+end_src
 
@@ -318,7 +318,7 @@ plot
 Scatter plot to show the time variability and how we model it.
 
 #+begin_src R :results output :session *R2* :exports both
-df = read.csv('data/kernel_calibration/trace_functions.csv')
+df = read.csv('data/prediction/modeling/kernels/trace_functions.csv')
 print(unique(df$func))
 # in this experiment, we got the nodes dahu-{1,...,8} and the ranks were mapped in the right order
 df$node = 1 + df$rank %/% 32
