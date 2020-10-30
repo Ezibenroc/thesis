@@ -629,6 +629,25 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         Figure\ref{fig:HPL_var} represent the outcome of a \model{1}\noise{2} model and are hardly distinguishable from
         the real behavior. Similar results can be obtained with this category of model for all other kernels.
 
+    \subsection{Modeling the network}
+
+        Prior to this work, the standard way of accounting for protocol changes in SMPI was to estimate breakpoints
+        visually and to conduct a linear regression for each range. The expected duration was then used directly in the
+        simulation with no particular effort with respect to the temporal variability (\modelp{1}\noise{0}). Yet, as
+        illustrated in Figure\ref{fig:nw_var}, the variability of high speed networks is quite particular. We therefore
+        diligently estimated all the parameters of \modelp{1}\noisep{1}, where each message size range is automatically
+        estimated with \texttt{pytree}, as well as the 2 to 4 modes of the Gaussian mixture for each range. Such
+        temporal variability could explain some (overall bad) performance since they generally get amplified by
+        broadcast and pipelined communication patterns.
+
+        \begin{figure}[ht]
+            \vspace{-1em}
+            \centering \includegraphics[width=.9\linewidth]{./img/prediction/emulating/mpi_calibration.png}
+            \caption{Illustrating piecewise linearity and temporal variability of high-speed communications on two
+            systems.}
+            \label{fig:nw_var}
+        \end{figure}
+
 \section{Validation}%
 \label{sec:prediction:validation}
 
