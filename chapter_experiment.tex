@@ -23,8 +23,19 @@
         \subsubsection{Experiment engines}%
         \label{ssub:experiment_engines}
 
+            While it is possible to run a complete experiment on a testbed like Grid'5000 by manually issuing commands
+            in an interactive shell, it is not advisable as it quickly becomes extremly tedious and error-prone.
+            Automating the experiment is a necessary condition to have reproducible results. A first step toward this
+            goal is to write some ad-hoc script. However, two independent experiments might still share a lot of steps
+            that could be refactored in a common layer, \eg OS deployment, package installation, or even more advanced
+            features like node instrumentation or environment logging.
 
-
+            For these reasons, it is a common practice to use an experiment engine. Buchert~\etal describe the features
+            of eight different softwares~\cite{buchert:hal-01087519}. To the best of our knowledge, only three offer a
+            native support for Grid'5000, namely Expo, XPFlow and Execo. Unfortunately, Expo and XPFlow are now longer
+            maintained, the last commit in their respective repositories was done on November 2014 and September 2015
+            For these reasons, the experiment engine Execo~\cite{Imbert_2013} is often recommended to Grid'5000
+            newcomers.
 
 \section{Randomizing matters!}%
 \label{sec:experiment:randomizing}
