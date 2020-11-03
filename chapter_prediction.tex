@@ -1,16 +1,16 @@
-\chapter{Performance prediction through simulation: the HPL case}
-\label{chapter:prediction}
+\part{Performance prediction through simulation: the HPL case}
+\label{part:prediction}
 
-The work presented in this chapter has been published at a conference\cite{cornebize:cluster19} and has been submitted
-for publication in a journal. The content of this chapter is therefore a near-verbatim copy of these articles. This work
+The work presented in this part has been published at a conference\cite{cornebize:cluster19} and has been submitted
+for publication in a journal. The content of this part is therefore a near-verbatim copy of these articles. This work
 also directly follows my master thesis\cite{cornebize:master_thesis} whose main contribution is summarized in
-section\ref{sec:prediction:emulation} for the sake of completeness.
+chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
-\section{High Performance Linpack}%
-\label{sec:prediction:hpl}
+\chapter{High Performance Linpack}%
+\label{chapter:prediction:hpl}
 
-    \subsection{The benchmark}%
-    \label{sub:hpl:benchmark}
+    \section{The benchmark}%
+    \label{sec:hpl:benchmark}
 
         \begin{figure}[ht]
             \newcommand{\mykwfn}[1]{{\textbf{\textsf{#1}}}}%
@@ -100,8 +100,8 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         capacity and the previously listed parameters (\texttt{RFACT}, \texttt{SWAP}, \texttt{BCAST},
         \texttt{DEPTH}, \ldots) and is very difficult to predict.
 
-    \subsection{Typical runs on a supercomputer}%
-    \label{sub:hpl:typical_runs}
+    \section{Typical runs on a supercomputer}%
+    \label{sec:hpl:typical_runs}
 
         Although the TOP500 reports precise information about the core count,
         the peak performance and the effective performance, it provides almost
@@ -156,11 +156,11 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
 
 
 
-\section{Related work}%
-\label{sec:prediction:related_work}
+\chapter{Related work}%
+\label{chapter:prediction:related_work}
 
-    \subsection{Performance prediction}%
-    \label{sub:performance_prediction}
+    \section{Performance prediction}%
+    \label{sec:performance_prediction}
 
         A first approach for estimating the performance of applications like HPL is statistical modeling of the
         application as a whole\cite{hpl_prediction}.  By running the application several times with small and medium
@@ -198,15 +198,15 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         of our knowledge, only SST Macro and SimGrid/SMPI are mature enough to faithfully emulate HPL. This work relies
         on SimGrid as its performance models and its emulation capabilities seemed quite solid but the proposed
         developments would a priori also be possible with SST.  Note that the HPL emulation described in
-        Section\ref{sec:prediction:emulation} should not be confused with the application
+        chapter~\ref{chapter:prediction:emulation} should not be confused with the application
         skeletonization\cite{sst_skeleton} commonly used with SST. Skeletons are code extractions of the most important
         parts of a complex application whereas we only modify a few dozens of lines of HPL before emulating it with
         SMPI. Finally, it is important to understand that the proposed approach is intended to help studies at the level
         of the whole machine and application, not the influence of microarchitectural details as intended by
         MUSA\cite{musa_16}.
 
-    \subsection{Simgrid/SMPI}%
-    \label{sub:simgrid_smpi}
+    \section{Simgrid/SMPI}%
+    \label{sec:simgrid_smpi}
 
         SimGrid\cite{simgrid} is a flexible and open-source simulation framework that was originally designed in 2000 to
         study scheduling heuristics tailored to heterogeneous grid computing environments but has later been extended to
@@ -248,18 +248,18 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         \item The tremendous memory consumption and amount of memory accesses need to be drastically reduced.
         \end{itemize}
 
-\section{Emulating HPL at large scale}%
-\label{sec:prediction:emulation}
+\chapter{Emulating HPL at large scale}%
+\label{chapter:prediction:emulation}
 
-    In this section, I present the changes to SimGrid and HPL that were required for a scalable simulation.  The
+    In this chapter, we present the changes to SimGrid and HPL that were required for a scalable simulation.  The
     experiments were done using a single core from nodes of the Nova cluster provided by the Grid'5000
     testbed\cite{grid5000} (\NSI{32}{\giga\byte} of RAM, two 8-core Intel Xeon E5-2620 v4 CPUs, Debian Stretch OS
     (Linux 4.9)).
 
-    \subsection{Speeding Up the Emulation}
-        \label{sub:speeding_emulation}
+    \section{Speeding Up the Emulation}
+    \label{sec:speeding_emulation}
 
-        \subsubsection{Compute Kernel Modeling}
+        \subsection{Compute Kernel Modeling}
             \begin{figure}[htb]
                 \centering
                 \subfigure[Non-intrusive macro replacement with a very simple computation model.\label{fig:macro_simple}]{
@@ -288,7 +288,7 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
             to \texttt{smpi\_execute\_benched} that advances the clock of the executing rank by this estimate.  The effect
             on the simulation time for a small scenario is depicted in Figure\ref{fig:kernel_sampling}. This modification
             speeds up the simulation by orders of magnitude. The precision of the simulation will be investigated in more
-            details in the next sections but it can already be observed that this simple kernel model leads to a sound,
+            details in the next chapter but it can already be observed that this simple kernel model leads to a sound,
             albeit slightly more optimistic, estimation of the performance.
 
             In addition to the main compute kernels, a profiling of the code allowed to identify seven other BLAS functions
@@ -302,7 +302,7 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
             macro substitution, which speeds up the simulation by an additional factor of \(3\) to \(4\) on small
             (\(N=\Num{30000}\)) and even more on large scenarios.
 
-        \subsubsection{Specific Adjustments}
+        \subsection{Specific Adjustments}
             HPL uses pseudo-randomly generated matrices that are setup every time HPL is executed. This initialization, just
             like the factorization correctness verification at the end of the run, is not considered in the reported
             performance and can therefore be safely skipped.  Note that HPL implements an LU factorization with partial
@@ -311,7 +311,7 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
             value was has been set to a random (but controlled) value to make the simulation unbiased (but fully
             deterministic).
 
-    \subsection{Scaling Down Memory Consumption}
+    \section{Scaling Down Memory Consumption}
         The largest two allocated data structures in HPL are the input matrix \texttt{A} (with a size of typically
         several \si{\giga\byte} per process) and the \texttt{panel} which contains information about the sub-matrix
         currently being factorized. This sub-matrix typically occupies a few hundred \si{\mega\byte} per process.
@@ -484,7 +484,7 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         \NSI{4}{\kibi\byte}), which reduces drastically the page table size. For example, for a matrix of order
         \(N=4,000,000\), it shrinks from \NSI{250}{\giga\byte} to \NSI{0.488}{\giga\byte}.
 
-    \subsection{Scalability Evaluation}
+    \section{Scalability Evaluation}
         \begin{figure}[t]
             \centering
             \includegraphics[width=\linewidth,page=2]{./img/prediction/emulating/scalability_plot_size.pdf}
@@ -511,20 +511,20 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         took close to \(47\) hours and consumed \NSI{16}{\giga\byte} of memory whereas the shortest one took \(20\)
         minutes and \NSI{282}{\mega\byte} of memory.
 
-\section{Modeling HPL kernels and communications}%
-\label{sec:prediction:modeling}
+\chapter{Modeling HPL kernels and communications}%
+\label{chapter:prediction:modeling}
 
-    As explained in Section\ref{sec:prediction:emulation}, HPL spends most of its computation time in a dozen specific
+    As explained in chapter~\ref{chapter:prediction:emulation}, HPL spends most of its computation time in a dozen specific
     functions for which a performance model has to be designed. Most compute kernels have several parameters from which
     a very simple model can generally easily be identified (\eg proportional to the product of the parameters) but
     refinements including the individual contribution of each parameter as well as the spatial and temporal variability
     of the operation are also possible. Likewise, communications between two nodes are mostly linear in message size but
     the actual performance can wildly vary depending on the range of the message size as MPI switches from one
-    protocol to another whenever needed. In this section we first introduce some notations to describe the complexity of
+    protocol to another whenever needed. In this chapter we first introduce some notations to describe the complexity of
     the models we have investigated. We then briefly compare the prediction of these models with individual measurements
     of both computations and communications to illustrate the importance of the model complexity.
 
-    \subsection{Modeling notations}%
+    \section{Modeling notations}%
 
         We denote as \(T\) the duration of an operation with parameters \(M\), \(N\), \(K\) (in the case of the
         \texttt{dgemm} operation, these parameters describe the geometry of the input matrices). We first consider the
@@ -576,7 +576,7 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         with a mixture of normal distributions whose parameters \(\pi_1 , \dots, \pi_k\) should be estimated. We denote
         this kind of model as \noisep{}. Likewise, the per-host estimations are denoted by \noise[H]{}.
 
-    \subsection{Modeling  the CPU (\ie \texttt{dgemm} function)}
+    \section{Modeling  the CPU (\ie \texttt{dgemm} function)}
 
         \begin{figure}[ht]
             \centering
@@ -629,7 +629,7 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
         Figure\ref{fig:HPL_var} represent the outcome of a \model{1}\noise{2} model and are hardly distinguishable from
         the real behavior. Similar results can be obtained with this category of model for all other kernels.
 
-    \subsection{Modeling the network}
+    \section{Modeling the network}
 
         Prior to this work, the standard way of accounting for protocol changes in SMPI was to estimate breakpoints
         visually and to conduct a linear regression for each range. The expected duration was then used directly in the
@@ -648,12 +648,12 @@ section\ref{sec:prediction:emulation} for the sake of completeness.
             \label{fig:nw_var}
         \end{figure}
 
-\section{Validation}%
-\label{sec:prediction:validation}
+\chapter{Validation}%
+\label{chapter:prediction:validation}
 
     some text...
 
-\section{Sensibility analysis}%
-\label{sec:prediction:sensibility}
+\chapter{Sensibility analysis}%
+\label{chapter:prediction:sensibility}
 
     some text...
