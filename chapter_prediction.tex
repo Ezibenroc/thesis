@@ -729,17 +729,67 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             %% - Détailler un peu l'implémentation, ces méthodes sont moins rapides
             %%   que la première version.
             %% - Comparaison des trois méthodes sur tous les exemples que j'ai.
-
             Some text\dots
 
     \section{Conclusion}%
+        %% TODO
+        %% - Formalisme Bayesian Sampling STAN intéressant mais rarement
+        %%   applicable directement avec nos données. Besoin de solutions un peu
+        %%   ad hoc.
+        %% - Note: le fit dépendra des données fournies, d'où l'importance du
+        %%   plan d'expérience choisi. Ça sera discuté en partie...
+        %% - Pas parfait, c'est un modèle, mais une fois tout ça posé proprement
+        %%   on va pouvoir 1) essayer de trouver le bon niveau de modélisation 2)
+        %%   détecter des situations à problème 3) faire du whatif.
+        Some text\dots
 
 \chapter{Validation}%
 \label{chapter:prediction:validation}
 
-    some text...
+    \section{Different problem sizes}%
+    \label{sec:different_problem_sizes}
+        %% TODO Importance du modlèe dgemm. Validation qualitative (Gantt chart) et quantitative (scatter plot).
+        Some text\dots
+
+    \section{A platform change}%
+    \label{sec:platform_change}
+        %% TODO Problème de température. On est capable de reproduire en simulation un changement de la plateforme, il
+        %% suffit de recalibrer.
+        Some text\dots
+
+    \section{Factorial experiment}%
+    \label{sec:factorial_experiment}
+        %% TODO On arrive à prédire pour toutes les configurations de paramètres.
+        %% Plusieurs difficultés (cf. section expérimentation).
+        Some text\dots
+
+    \section{Different geometries}%
+    \label{sec:different_geometries}
+        %% TODO - Validation de la géométrie. On arrive également à prédire pour toutes les
+        %% géometries. Encore une fois, des difficultés (cette fois qu'on on utilise des
+        %% géométries trés élongées, avec un petit P par exemple), voir section
+        %% expérimentation.
+        Some text\dots
+
+    \section{Conclusion}%
+        %% TODO - Un travail de fourmi et d'expert. Plusieurs difficultés:
+        %% - être sûr que le simulateur fait bien ce qu'on veut (pas mal de paramètres "magiques")
+        %% - cf. section expérimentation
 
 \chapter{Sensibility analysis}%
 \label{chapter:prediction:sensibility}
+    %% TODO Tentative de réponse à toutes les questions (farfelues ou pas) qu'on a
+    %% pu se poser autour d'HPL mais auxquelles on n'a jamais pu répondre
+    %% avec des expériences réelles...
 
-    some text...
+    \section{Influence of temporal variability}%
+    \label{sec:influence_of_temporal_variability}
+        Some text\dots
+
+    \section{Influence of spatial variability}%
+    \label{sec:influence_of_spatial_variability}
+        Some text\dots
+
+    \section{Influence of the physical topology}%
+    \label{sec:influence_of_physical_topology}
+        Some text\dots
