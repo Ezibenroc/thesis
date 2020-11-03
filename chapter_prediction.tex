@@ -154,8 +154,6 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
         thesis was to simulate systems at the scale of Stampede. Given the scale of this scenario (3,785~steps on
         6,006 nodes in two hours), detailed simulations quickly become intractable without significant effort.
 
-
-
 \chapter{Related work}%
 \label{chapter:prediction:related_work}
 
@@ -255,6 +253,13 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
     experiments were done using a single core from nodes of the Nova cluster provided by the Grid'5000
     testbed\cite{grid5000} (\NSI{32}{\giga\byte} of RAM, two 8-core Intel Xeon E5-2620 v4 CPUs, Debian Stretch OS
     (Linux 4.9)).
+
+    %% TODO
+    %% - On remplace les appels à dgemm par des régressions linéaires
+    %%   (expliquer ce qu'il y avait avant, i.e. pas grand chose)
+    %% - execute -> sleep (même si du coup, ça marche plus pour l'énergie,
+    %%   pour que ça marche pour l'énergie, il faut revoir la création de
+    %%   plate-forme et le plugin énergie)
 
     \section{Speeding Up the Emulation}
     \label{sec:speeding_emulation}
@@ -578,75 +583,156 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
     \section{Modeling  the CPU (\ie \texttt{dgemm} function)}
 
-        \begin{figure}[ht]
-            \centering
-            \subfigure[\texttt{dgemm}
-            heterogeneity\label{fig:dgemm_het}]{\includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png}}
-            \subfigure[\texttt{dgemm}
-            model\label{fig:dgemm_poly}]{\includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dgemm_model_calib.png}}
-            \caption{Illustrating the realism of modeling for \texttt{dgemm} function}
-            \label{fig:blas_var}
-        \end{figure}
+        \subsection{Different linear models}%
 
-        HPL spends the most time in the \texttt{dgemm} kernel, it is therefore of extreme importance to model this
-        function very faithfully.  We  evaluated the previous modeling alternatives: \model{\{1,2\}}\noise{\{0,1,2\}}
-        and \model[H]{\{1,2\}}\noise[H]{\{0,1,2\}}.  The \modelp{} and \noisep{} families were not investigated as
-        nothing in our observations called for such complexity on classical multi-core machines.
-        Figure\ref{fig:blas_var} illustrates various models and their respective quality for the \texttt{dgemm}
-        function. In these figures, the performance of \texttt{dgemm} is evaluated by calling \texttt{dgemm} with
-        randomized sizes over all the cores of each node (to reproduce experimental conditions similar to the one of
-        HPL). The first observation (Figure\ref{fig:dgemm_het}) is that a few nodes exhibit quite a different behavior
-        (each color and each regression line under model \model[H]{1} corresponds to a different cpu, whereas the black
-        dotted line corresponds to model \model{1} over all the nodes). These nodes will systematically be slightly
-        slower than other nodes and accounting for this spatial heterogeneity is likely to be rather important for HPL.
-        Second, we took care of covering a wide variety of combinations for \(M\), \(N\), and \(K\) and it can be
-        observed that \(M.N.K\) is not sufficient to describe correctly the performance of \texttt{dgemm}. Indeed, for
-        \(M.N.K \approx \num{4.5E9}\) some duration are systematically higher regardless of the node. This happens for
-        some particular (e.g., tall and skinny) matrix geometries, which strongly suggests using the full polynomial
-        model. Figure\ref{fig:dgemm_poly} depicts the performance (red dots) of a given node as well as the prediction
-        using a simple linear model (\model[H]{1}, black line), a full polynomial model (\model[H]{2}, blue dots) and a
-        full polynomial model with heteroscedastic noise (\model[H]{2}\noise[H]{2}, orange dots). A close inspection
-        reveals that all experimental variability is actually very well explained by both the polynomial model (better
-        fit for particular parameter combinations) and some temporal variability.
+            %% TODO
+            %% - Différents niveaux de modélisation, du plus simple au plus compliqué.
+            %% - point délicat: justification de a+bx+|Norm(0,a'+b'x)|,
+            %%   - si log normal $a' = \alpha.a$ et $b' = \alpha.b$... P-e que le log
+            %%     normal d'après fonctionnerait. À évoquer en conclusion de ce
+            %%     chapitre éventuellement.
+            %% - Au final, régression linéaire OLS + méthode des moments avec
+            %%   régression linéaire OLS des résidus
 
-        \begin{figure}[ht]
-            \centering
-            \includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dlatcpy_model.png}
-            \caption{Illustrating the realism of modeling for \texttt{HPL\_dlatcpy} function}
-            \label{fig:HPL_var}
-        \end{figure}
+            \begin{figure}[ht]
+                \centering
+                \subfigure[\texttt{dgemm}
+                heterogeneity\label{fig:dgemm_het}]{\includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png}}
+                \subfigure[\texttt{dgemm}
+                model\label{fig:dgemm_poly}]{\includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dgemm_model_calib.png}}
+                \caption{Illustrating the realism of modeling for \texttt{dgemm} function}
+                \label{fig:blas_var}
+            \end{figure}
 
-        Four other BLAS kernels and a few other very small HPL compute kernels (often related to memory management) are
-        deeply intertwined with collective operations to allow HPL to be as efficient as possible. Although the total
-        duration of these kernels is extremely small compared to the total execution time, they may perturb collective
-        communication by introducing late sends and receives. The behavior of one of these kernels is illustrated in
-        Figure\ref{fig:HPL_var}. This kind of data can only be obtained by running HPL for a small input matrix over
-        each node individually. Again, for all these kernels a single parameter combination explains most of the
-        performance and there is some variability from one node to another (one blue regression line per CPU) but it
-        remains quite limited (black dotted line for the platform as a whole), especially since these kernels are very
-        short and infrequently called compared to \texttt{dgemm}. Finally, since variability significantly increases
-        with the value of the input parameters, a \noise{2} model is clearly required. The blue dots in
-        Figure\ref{fig:HPL_var} represent the outcome of a \model{1}\noise{2} model and are hardly distinguishable from
-        the real behavior. Similar results can be obtained with this category of model for all other kernels.
+            HPL spends the most time in the \texttt{dgemm} kernel, it is therefore of extreme importance to model this
+            function very faithfully.  We  evaluated the previous modeling alternatives:
+            \model{\{1,2\}}\noise{\{0,1,2\}} and \model[H]{\{1,2\}}\noise[H]{\{0,1,2\}}.  The \modelp{} and \noisep{}
+            families were not investigated as nothing in our observations called for such complexity on classical
+            multi-core machines.  Figure\ref{fig:blas_var} illustrates various models and their respective quality for
+            the \texttt{dgemm} function. In these figures, the performance of \texttt{dgemm} is evaluated by calling
+            \texttt{dgemm} with randomized sizes over all the cores of each node (to reproduce experimental conditions
+            similar to the one of HPL). The first observation (Figure\ref{fig:dgemm_het}) is that a few nodes exhibit
+            quite a different behavior (each color and each regression line under model \model[H]{1} corresponds to a
+            different cpu, whereas the black dotted line corresponds to model \model{1} over all the nodes). These nodes
+            will systematically be slightly slower than other nodes and accounting for this spatial heterogeneity is
+            likely to be rather important for HPL.  Second, we took care of covering a wide variety of combinations for
+            \(M\), \(N\), and \(K\) and it can be observed that \(M.N.K\) is not sufficient to describe correctly the
+            performance of \texttt{dgemm}. Indeed, for \(M.N.K \approx \num{4.5E9}\) some duration are systematically
+            higher regardless of the node. This happens for some particular (e.g., tall and skinny) matrix geometries,
+            which strongly suggests using the full polynomial model. Figure\ref{fig:dgemm_poly} depicts the performance
+            (red dots) of a given node as well as the prediction using a simple linear model (\model[H]{1}, black line),
+            a full polynomial model (\model[H]{2}, blue dots) and a full polynomial model with heteroscedastic noise
+            (\model[H]{2}\noise[H]{2}, orange dots). A close inspection reveals that all experimental variability is
+            actually very well explained by both the polynomial model (better fit for particular parameter combinations)
+            and some temporal variability.
+
+            \begin{figure}[ht]
+                \centering
+                \includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dlatcpy_model.png}
+                \caption{Illustrating the realism of modeling for \texttt{HPL\_dlatcpy} function}
+                \label{fig:HPL_var}
+            \end{figure}
+
+            Four other BLAS kernels and a few other very small HPL compute kernels (often related to memory management)
+            are deeply intertwined with collective operations to allow HPL to be as efficient as possible. Although the
+            total duration of these kernels is extremely small compared to the total execution time, they may perturb
+            collective communication by introducing late sends and receives. The behavior of one of these kernels is
+            illustrated in Figure\ref{fig:HPL_var}. This kind of data can only be obtained by running HPL for a small
+            input matrix over each node individually. Again, for all these kernels a single parameter combination
+            explains most of the performance and there is some variability from one node to another (one blue regression
+            line per CPU) but it remains quite limited (black dotted line for the platform as a whole), especially since
+            these kernels are very short and infrequently called compared to \texttt{dgemm}. Finally, since variability
+            significantly increases with the value of the input parameters, a \noise{2} model is clearly required. The
+            blue dots in Figure\ref{fig:HPL_var} represent the outcome of a \model{1}\noise{2} model and are hardly
+            distinguishable from the real behavior. Similar results can be obtained with this category of model for all
+            other kernels.
+
+        \subsection{Bayesian modeling and generative models}%
+
+            %% TODO
+            %% - Présenter la structure du modèle et la justifier
+            %% - Commencer par la régression linéaire + la méthode des moments, STAN
+            %%   n'était pas nécessaire pour le papier JPDC.
+            %% - Avec Stan pour génerer de nouvelles instances (cf. début de la
+            %%   section whatif du JPDC). Stan est overkill et un peu lent finalement
+            %%   mais ça pourrait être utile avec un modèle plus complexe (mixture)
+            %%   et des données différentes.
+            %%   - Note: pourquoi ne pas donner les données brutes à STAN (trop lent
+            %%     car trop de données, et convergence super difficile à moins de
+            %%     mettre un modèle super sioux).
+            Some text\dots
+
+        \subsection{Conclusion}%
+            %% TODO
+            %% - Limitation: distinction niveaux de caches, ou bien comportement
+            %%   spécifique de la MKL sur KNL. Du piece-wise serait probablement
+            %%   bienvenu. Attention aux tailles spécifiques.
+            Some text\dots
 
     \section{Modeling the network}
 
-        Prior to this work, the standard way of accounting for protocol changes in SMPI was to estimate breakpoints
-        visually and to conduct a linear regression for each range. The expected duration was then used directly in the
-        simulation with no particular effort with respect to the temporal variability (\modelp{1}\noise{0}). Yet, as
-        illustrated in Figure\ref{fig:nw_var}, the variability of high speed networks is quite particular. We therefore
-        diligently estimated all the parameters of \modelp{1}\noisep{1}, where each message size range is automatically
-        estimated with \texttt{pytree}, as well as the 2 to 4 modes of the Gaussian mixture for each range. Such
-        temporal variability could explain some (overall bad) performance since they generally get amplified by
-        broadcast and pipelined communication patterns.
+        \subsection{Modelisation in Simgrid}%
 
-        \begin{figure}[ht]
-            \vspace{-1em}
-            \centering \includegraphics[width=.9\linewidth]{./img/prediction/emulating/mpi_calibration.png}
-            \caption{Illustrating piecewise linearity and temporal variability of high-speed communications on two
-            systems.}
-            \label{fig:nw_var}
-        \end{figure}
+            %% TODO
+            %% 1. fluide, contention, expérience de saturation des switchs
+            %% 2. piecewise, semantic breaks, breaks "multiplicatifs", donc DoE en
+            %%    exp(unif) et régression linéaire à la main.
+            %% Reprendre de "vieilles figures" pour montrer que c'était fait mais
+            %% c'était très manuel. Tentatives d'utilisation de régression linéaire
+            %% segmentée mais rien de concluant/fonctionnel jusqu'ici.
+            %%
+            %% Mentionner le fait qu'on pourrait faire l'analyse et la mesure en même
+            %% temps mais que le papier qui faisait ça est assez "naïf" en terme
+            %% d'analyse (avec des seuils arbitraires).
+            %%
+            %% À quoi ressemblent les données brutes avec les breaks et les
+            %% mixtures. Pas de structure apparente dans les moment où les mixtures
+            %% sont utilisées.
+            %%
+            %% Mini-conclusion: le modèle de nos rêves (breakpoints + mixture). Bien
+            %% plus compliqué que pour le CPU car paramètres à trouver et bruit
+            %% vraiment compliqué. Il existe des choses pour les mixtures seules,
+            %% sous certaines hypothèses (homoscedastique). Pour les breakpoints, on
+            %% va expliquer dans la suite.
+
+            Prior to this work, the standard way of accounting for protocol changes in SMPI was to estimate breakpoints
+            visually and to conduct a linear regression for each range. The expected duration was then used directly in
+            the simulation with no particular effort with respect to the temporal variability (\modelp{1}\noise{0}).
+            Yet, as illustrated in Figure\ref{fig:nw_var}, the variability of high speed networks is quite particular.
+            We therefore diligently estimated all the parameters of \modelp{1}\noisep{1}, where each message size range
+            is automatically estimated with \texttt{pytree}, as well as the 2 to 4 modes of the Gaussian mixture for
+            each range. Such temporal variability could explain some (overall bad) performance since they generally get
+            amplified by broadcast and pipelined communication patterns.
+
+            \begin{figure}[ht]
+                \vspace{-1em}
+                \centering \includegraphics[width=.9\linewidth]{./img/prediction/emulating/mpi_calibration.png}
+                \caption{Illustrating piecewise linearity and temporal variability of high-speed communications on two
+                systems.}
+                \label{fig:nw_var}
+            \end{figure}
+
+        \subsection{Learning breakpoints}%
+
+            %% TODO
+            %% - Algorithme "haut-niveau" avec les deux phases, top-down & bottom-up.
+            %% - Implémentation efficace pour la régression linéaire classique.
+            %% - Faiblesse de la recherche automatique de breakpoints sur certains exemples.
+            %% - Implémentations alternatives : régression pondérée, régression log (y a-t-il
+            %%   un nom officiel pour ce que l'on a fait ?).
+            %%   - Maximum Likelihood avec modèle log-normal.
+            %%   - Note: si lognormal avec mixtures, pourquoi ne pas donner les
+            %%     données brutes à STAN. Convergence déjà super difficile avec
+            %%     notre approche adhoc et s'il fallait rajouter un algorithme d'EM
+            %%     en plus pour les mixtures et les breakpoints, c'est juste pas
+            %%     raisonnable.
+            %% - Détailler un peu l'implémentation, ces méthodes sont moins rapides
+            %%   que la première version.
+            %% - Comparaison des trois méthodes sur tous les exemples que j'ai.
+
+            Some text\dots
+
+    \section{Conclusion}%
 
 \chapter{Validation}%
 \label{chapter:prediction:validation}
