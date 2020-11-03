@@ -37,12 +37,132 @@
             For these reasons, the experiment engine Execo~\cite{Imbert_2013} is often recommended to Grid'5000
             newcomers.
 
+    \section{Yet another experiment engine: \texttt{peanut}}%
+    \label{sec:peanut}
+        %% TODO
+        %% Différents moyens mis en oeuvre pour faciliter la reproductibilité (au sens
+        %% large) :
+        %% - Description structurée et lisible d'une expérience, relativement haut niveau
+        %%   -> on comprend facilement ce qu'il se passe, on peut reproduire l'expérience
+        %%   sans utiliser peanut.
+        %% - Une fois l'expérience écrite, 100% automatisé, lancée avec juste une ligne de
+        %%   commande.
+        %% - Collecte d'information : commandes exécutées et leur std{out,err},
+        %%   informations système, timestamps, monitoring.
+        %% - Attention aux excès, pas forcément pertinent de collecter 10GB
+        %%   d'info par expérience, voir même contre-productif si ça incite à ne
+        %%   pas refaire les XP. Parler des problèmes découverts sur G5K (ref. au
+        %%   dernier chapitre) ?
+        %% - Future work: NIX & GUIX.
+        %% - L'utilisateur garde le contrôle sur le plan d'expérience, grâce à des fichiers
+        %%   d'expériences (peanut n'est pas chargé de randomiser l'xp). Ref à la prochaine
+        %%   section.
+        Some text\dots
+
 \chapter{Randomizing matters!}%
 \label{chapter:experiment:randomizing}
+    %% TODO
+    %% Calibration experiments: randomisation. pour quoi faire ?
+    %% 1. éviter les biais (randomisation de l'espace de paramètres)
+    %%    - certaines valeurs peuvent être particulières et on peut vouloir
+    %%      au contraire biaiser vers ces valeurs
+    %% 2. éviter les perturbations transientes
+    %%    - montée en charge vs. régime stationnaire
+    %%
+    %% Plusieurs exemples à citer (ref aux présentations qu'on aurrait dû
+    %% faire à XUG@Rennes et à JLESC@Bonnes).
 
-    some text...
+    \section{Basic effects}%
+    \label{sec:basic_effects}
+        %% TODO
+        %% - Randomization de l'ordre des XPs HPL aussi mais pas de problème notable.
+        %% - Les performances de MPI_Send,Recv dépendent de l'ordre du fichier d'expérience
+        %%   (bon mélange des tailles ou non).
+        %% - Les performances de dgemm dépendent de l'échantillonnage et de
+        %%   l'échantillon (tests de non régression)
+        %% - Les performances de dgemm dépendent de K (attendu), mais il y a un effet
+        %%   mémoire (plus inattendu). Pour certains cas, souhaitable de calibrer à K
+        %%   fixé. Dans ce cas là, isoler l'expérience du reste, ne pas essayer de mélanger
+        %%   avec d'autres K.
+        Some text\dots
+
+    \section{Unexpected effects}%
+    \label{sec:unexpected_effects}
+        %% TODO
+        %% - Les performances de dgemm dépendent du contenu de la matrice (random ou
+        %%   constant par exemple). Ça serait causé par des bit flips dans le CPU qui
+        %%   engendre une plus grande consommation (réutiliser le rapport).
+        Some text\dots
+
+    \section{Beware of extrapolations}%
+    \label{sec:beware_of_extrapolations}
+        %% TODO
+        %% Le problème est survenu dans plusieurs cas de figure, notamment
+        %% pour HPL avec des géométries très élongées.
+        %% - Les prédictions pour dgemm n'étaient plus très bonnes. On extrapolait trop
+        %%   loin, la calibration était faite avec M<=15000 et N<=15000 alors que pour de
+        %%   telles géométries on avait parfois des tailles 10\times plus grandes (les
+        %%   produits MNK avaient le même ordre de grandeur par contre).
+        %% - Les prédictions pour les communications étaient également mauvaises, en
+        %%   partie parce que l'on calibrait pour des messages jusqu'à 1MB et on
+        %%   esssayait de prédire la durée de communications de 1GB.
+        Some text\dots
+
+    \section{Beware of experimental conditions}%
+    \label{sec:beware_of_experimental_conditions}
+        %% TODO
+		%% - Chauffe des CPU avant au cas où. Brice et Kevin monitoraient la
+		%%   température au fil de l'expérience et arrêtaient les mesures quand
+		%%   c'était trop chaud.
+		%% - Dans HPL, il semble que les calculs ralentissent beaucoup certaines
+		%%   communications. Ce phénomène n'était initialement pas capturé par la
+		%%   calibration puisque les mesures étaient faites sans aucun calculs à
+		%%   côté.
+        Some text\dots
+
+	\section{Conclusion}
+		%% TODO
+        %% - Certains facteurs extérieurs peuvent grandement impacter l'expérience, exemple
+        %%   des problèmes de température sur dahu-{13,14,15,16}. D'où la nécessité de (1)
+        %%   contrôler d'avantage l'environnement et (2) collecter d'avantage
+        %%   d'informations sur l'environnement.
+        Some text\dots
+
 
 \chapter{Performance non-regression tests}%
 \label{chapter:experiment:tests}
+    %% TODO
+    %% La partie précédente a montré que de nombreux problèmes peuvent survenir sur un
+    %% testbed comme Grid'5000. Certains sont très visibles et vont être détectés
+    %% rapidement (e.g. un disque HS), d'autres sont plus subtiles et peuvent passer
+    %% inaperçu, faussant donc les expériences (e.g. performance inférieure de quelques
+    %% pourcents). Dans cette partie, on essaye de détecter ces problèmes
+    %% automatiquement.
 
-    some text...
+    \section{State of the art}%
+        %% TODO comment font les GAFAM ?
+        Some text\dots
+
+    \section{Performance measure and information collection}%
+    \label{sec:performance_measure_and_information_collection}
+        %% TODO
+        %% Description du workflow mis en place, avec un joli dessin.
+        %% - Génération du fichier d'expérience.
+        %% - Soumission de jobs sur chaque cluster.
+        %% - Réalisation de l'expérience, entièrement gérée par peanut.
+        %% - Push automatique des résultats sur le dépôt gitlab.
+        %% - Soumission d'un job CI pour extraire et agréger les informations des archives.
+        %% - Réalisation des tests et courbes sur les données.
+        Some text\dots
+
+    \section{Statistical test}%
+    \label{sec:statistical_test}
+        Some text\dots
+
+
+    \section{Conclusion}%
+    \label{sec:conclusion}
+        %% TODO
+        %% Raconter ce que l'on aurait pu faire et comment il faudrait l'étendre:
+        %% - Test sur le modèle de dgemme plutôt que sur l'aggregated gflops
+        %% - Test du modèle MPI (si on arrivait à définir et calculer les IC)
