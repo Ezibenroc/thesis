@@ -45,7 +45,7 @@
             lacks a lot of important features, like node instrumentation and metadata collection, \ie we would still
             have needed to implement a lot functionnalities on top of Execo.
 
-    \section{Yet another experiment engine: \texttt{Peanut}}%
+    \section{Yet another experiment engine: \texttt{peanut}}%
     \label{sec:peanut}
         %% TODO
         %% Différents moyens mis en oeuvre pour faciliter la reproductibilité (au sens
@@ -67,6 +67,46 @@
         %%   section.
         \subsection{Key features}%
         \label{sub:key_features}
+            We implemented our own experiment engine, named \texttt{peanut}. It comes as a Python library that
+            experimenters can use to write their own experiments, also as a Python script.
+
+            A new experiment can be defined by inheriting from the class \texttt{peanut.Job}. Three methods can be
+            overriden, \texttt{setup}, \texttt{run\_exp} and \texttt{teardown}.
+
+            Once the experiment is written, it can be launched in a single command line. The following steps will
+            happen.
+            \begin{itemize}
+                \item Implicitely, submit a job with the given characteristics (\eg cluster, number of nodes, walltime,
+                    etc), then deploy the given OS image.
+                \item Implicitely (but optionnaly) enable or disable some performance functionnalities like
+                    hyperthreading, turboboost, C-states.
+                \item Implicitely (but optionnaly) instrument the nodes to collect at a regular interval some system
+                    metrics (\eg core frequencies and temperatures, CPU power consumption, network traffic, memory
+                    consumption).
+                \item Implicitely (but optionnaly) run the \texttt{stress} command on all the nodes to warm them up.
+                \item Run the methods \texttt{setup}, \texttt{run\_exp} and \texttt{teardown} in that order.
+                \item Produce a \texttt{zip} archive containing relevant results and metadata. The experimenter can
+                    explicitely add any file to the archive. In addition, the following content is also implicitely
+                    archived:
+                    \begin{itemize}
+                        \item Metrics collected with the aforementioned instrumentation.
+                        \item Human-readable log of the commands issued during the experiment.
+                        \item Machine-parsable log of the commands (in JSON format) with their timestamps and output
+                            (both \texttt{stdin} and \texttt{stderr}).
+                        \item Machine-parsable file (in Yaml format) containing relevant information like
+                            the exact versions used for \texttt{peanut}, \texttt{gcc}, \texttt{MPI} and the Linux
+                            kernel, the command line that was used to launch this experiment, the cluster and the list
+                            of nodes, start and end timestamps for each of the three main methods, the list of the git
+                            repositories cloned during this experiment with their remote URL and the git hash of the
+                            checkout.
+                        \item For each node, the content of the file \texttt{/proc/cpuinfo} as well as the output of the
+                            commands \texttt{env}, \texttt{lstopo}, \texttt{lspci}, \texttt{dmidecode},
+                            \texttt{lsmod}, \texttt{dmesg}.
+                    \end{itemize}
+            \end{itemize}
+            In addition, the experiment can be executed interactively in a Python terminal. All the implicit
+            functionnalities described previously can also be explicitely called (\eg there are methods
+            \texttt{disable\_hyperthreading}, \texttt{start\_monitoring} and \texttt{perform\_stress}).
 
         \subsection{Comparison with Execo}%
         \label{sub:comparison_with_execo}
