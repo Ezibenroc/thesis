@@ -37,7 +37,15 @@
             For these reasons, the experiment engine Execo~\cite{Imbert_2013} is often recommended to Grid'5000
             newcomers.
 
-    \section{Yet another experiment engine: \texttt{peanut}}%
+            Experiments with Execo are described as a Python script. We believe this is one of its best qualities, as it
+            offers a lot of freedom and flexibility to the experimenter, comparatively to other experiment engines that
+            use custom domain specific languages (DSL). Yet, we made the choice to not use it. The main reason is that a
+            typical Execo experiment uses a lot of low-level constructs that are really unpleasant and unintuitive to
+            write and read. Section~\ref{sub:comparison_with_execo} will present some comparisons. Furthermore, Execo
+            lacks a lot of important features, like node instrumentation and metadata collection, \ie we would still
+            have needed to implement a lot functionnalities on top of Execo.
+
+    \section{Yet another experiment engine: \texttt{Peanut}}%
     \label{sec:peanut}
         %% TODO
         %% Différents moyens mis en oeuvre pour faciliter la reproductibilité (au sens
@@ -57,7 +65,11 @@
         %% - L'utilisateur garde le contrôle sur le plan d'expérience, grâce à des fichiers
         %%   d'expériences (peanut n'est pas chargé de randomiser l'xp). Ref à la prochaine
         %%   section.
-        Some text\dots
+        \subsection{Key features}%
+        \label{sub:key_features}
+
+        \subsection{Comparison with Execo}%
+        \label{sub:comparison_with_execo}
 
 \chapter{Randomizing matters!}%
 \label{chapter:experiment:randomizing}
