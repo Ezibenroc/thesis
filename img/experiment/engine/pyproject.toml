@@ -8,6 +8,8 @@ authors = ["Tom Cornebize <tom.cornebize@univ-grenoble-alpes.fr>"]
 python = "^3.7"
 peanut = {git = "https://github.com/Ezibenroc/peanut.git", rev = "a0d49731586d98038a16aad05d1245cb5d3b7f44"}
 execo = "^2.6.4"
+ipython = "^7.19.0"
+requests = "^2.24.0"
 
 [tool.poetry.dev-dependencies]
 
