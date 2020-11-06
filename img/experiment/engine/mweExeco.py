@@ -1,7 +1,6 @@
 import execo
 import execo_g5k as g5k
 
-user = 'tocornebize'
 site = 'grenoble'
 cluster = 'dahu'
 nodes = 2
