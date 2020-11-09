@@ -290,15 +290,15 @@
         duration to be data-dependent.
 
         The observations we have made on \texttt{dgemm} performance can be explained by
-        Figure~\ref{fig:exp:bit-flips:method-perf} which shows the evolution and the distribution of the core
+        Figure~\ref{fig:exp:bit-flips:method-freq} which shows the evolution and the distribution of the core
         frequencies during the experiment. There is a clear correlation between the frequencies and \texttt{dgemm}
         performance: the random initialization produces lower frequencies whereas the constant initialization gives
         higher frequencies. A similar temporal patterns can also be distinguished with clear oscillations.
 
         \begin{figure}[htbp]
             \centering
-            \includegraphics[width=0.9\textwidth]{img/experiment/bit-flips/generation_method_freq.png}
-            \caption{\label{fig:exp:bit-flips:method-perf}
+            \includegraphics[width=\textwidth]{img/experiment/bit-flips/generation_method_freq.png}
+            \caption{\label{fig:exp:bit-flips:method-freq}
             Core frequencies are higher with constant values in the matrices}
         \end{figure}
 
@@ -358,9 +358,11 @@
             sampled in the interval \([0,1]\). Then a bit mask is applied on the lower order bits of their mantissa. As
             a result, all the elements of the matrices have some bits in common. This method is illustrated in
             Figure~\ref{fig:exp:bit-flips:mask_illustration}, the mantissa of the matrix elements (in blue) is at first
-            completely random, then we apply a mask so that the right-most bits (in green) become deterministic.
-            Several mask sizes have been tested, from 0 (the elements are left unchanged) to 53 (the mantissa becomes
-            completely deterministic, all the elements are equal).
+            completely random, then we apply a mask so that the right-most bits (in green) become
+            deterministic\footnote{Image adapted from
+            \url{https://en.wikipedia.org/wiki/Double-precision_floating-point_format}}.  Several mask sizes have been
+            tested, from 0 (the elements are left unchanged) to 53 (the mantissa becomes completely deterministic, all
+            the elements are equal).
             \begin{figure}[htpb]
                 \begin{center}
                     \includesvg[width=\linewidth]{img/experiment/bit-flips/float.svg}
@@ -376,6 +378,46 @@
                 \caption{Illustrating the effect of applying a mask on the random part of the matrix
                 elements\label{fig:exp:bit-flips:mask_illustration}}
             \end{figure}
+
+            The evolution and the distribution of the \texttt{dgemm} durations is plotted in
+            Figure~\ref{fig:exp:bit-flips:mask-perf}. Their is a very clear correlation between the mask size and the
+            performance: the larger the mask, the lower the duration. Similarly to the previous experiment, some
+            temporal patterns can also be distinguished.
+
+            \begin{figure}[htbp]
+                \centering
+                \includegraphics[width=\textwidth]{img/experiment/bit-flips/mask_size_perf.png}
+                \caption{\label{fig:exp:bit-flips:mask-perf}
+                DGEMM durations are lower with larger bit masks}
+            \end{figure}
+
+            This correlation with the mask size can also be seen with the frequencies in
+            Figure~\ref{fig:exp:bit-flips:mask-freq}: larger masks lead to higher frequencies.
+
+            \begin{figure}[htbp]
+                \centering
+                \includegraphics[width=\textwidth]{img/experiment/bit-flips/mask_size_freq.png}
+                \caption{\label{fig:exp:bit-flips:mask-freq}
+                Core frequencies are higher with larger bit masks}
+            \end{figure}
+
+            This experiment has been repeated on two other Grid'5000 clusters, ecotype and gros. For both of them, the
+            same observations could be made, a clear correlation between the mask size, the frequencies and the
+            performance.
+
+        \section{Conclusion}
+            We have shown that the performance of the \texttt{dgemm} function is data-dependent. The best explanation we
+            have for this counter-intuitive fact is an energy cost overhead caused by bit flips inside the processor.
+            This theory has been corroborated by a controlled experiment where the elements of the matrices are
+            initialized semi-randomly: they all share an identical bit suffix.
+
+            To strengthen this claim further, the next steps will be to perform a similar experiment with another
+            compiler, another BLAS library and/or another computation kernel. We also need to understand why some
+            processors are subject to this phenomenon and some others are not.
+
+            We warmly thank our colleagues that helped us to find hypotheses for this performance anomaly. In
+            particular, Guillaume Huard suggested that the performance anomaly may be caused by the bit flips in the
+            processor.
 
         \subsection{Related work}%
         %% TODO
