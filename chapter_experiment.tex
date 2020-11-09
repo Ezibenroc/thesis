@@ -352,7 +352,7 @@
             will have more bits in common, this would causes less bit flips than the random initialization but more bit
             flips than the constant initialization and thus an intermediate performance.
 
-        \section{Testing the bit-flip hypothesis}
+        \subsection{Testing the bit-flip hypothesis}
             To test the hypothesis that the lower frequencies are caused by more frequent bit flips in the processor,
             the matrix initialization has been changed. Now, each element of the matrix is randomly and uniformly
             sampled in the interval \([0,1]\). Then a bit mask is applied on the lower order bits of their mantissa. As
@@ -405,7 +405,7 @@
             same observations could be made, a clear correlation between the mask size, the frequencies and the
             performance.
 
-        \section{Conclusion}
+        \subsection{Conclusion}
             We have shown that the performance of the \texttt{dgemm} function is data-dependent. The best explanation we
             have for this counter-intuitive fact is an energy cost overhead caused by bit flips inside the processor.
             This theory has been corroborated by a controlled experiment where the elements of the matrices are
@@ -420,8 +420,9 @@
             processor.
 
         \subsection{Related work}%
-        %% TODO
-
+            Sch{\"{o}}ne~\etal~\cite{DBLP:journals/corr/abs-1905-12468} observed a data-dependent power consumption with
+            a Skylake-SP processor using AVX instructions. Note that in their experiment, the core frequency and the
+            instruction rate were constant.
 
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
