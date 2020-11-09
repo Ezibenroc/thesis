@@ -271,6 +271,34 @@
                 \item Each element of the matrix is randomly and uniformly sampled in the interval \([0, 1]\).
             \end{enumerate}
 
+        Figure~\ref{fig:exp:bit-flips:method-perf} shows the evolution of the dgemm durations during the experiment.
+        A clear temporal patterns can be distinguished, the performance is oscillating.  Furthermore, several layers can
+        be seen, the durations of \texttt{dgemm} are the highest when the matrices are initialized randomly and the
+        lowest when they are initialized with a constant value. The sequential initialization is in between.
+
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=\textwidth]{img/experiment/bit-flips/generation_method_perf.png}
+            \caption{\label{fig:exp:bit-flips:method-perf}
+            DGEMM durations are lower with constant values in the matrices}
+        \end{figure}
+
+        Such an observation was unforeseen. The function \texttt{dgemm} implements the usual matrix product with cubic
+        complexity. The control flow of the function does not depend on the matrix content, so we did not expect its
+        duration to be data-dependent.
+
+        The observations we have made on \texttt{dgemm} performance can be explained by
+        Figure~\ref{fig:exp:bit-flips:method-perf} which shows the evolution and the distribution of the core
+        frequencies during the experiment. There is a clear correlation between the frequencies and \texttt{dgemm}
+        performance: the random initialization produces lower frequencies whereas the constant initialization gives
+        higher frequencies. A similar temporal patterns can also be distinguished with clear oscillations.
+
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.9\textwidth]{img/experiment/bit-flips/generation_method_freq.png}
+            \caption{\label{fig:exp:bit-flips:method-perf}
+            Core frequencies are higher with constant values in the matrices}
+        \end{figure}
 
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
