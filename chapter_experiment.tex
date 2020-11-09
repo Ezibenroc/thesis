@@ -181,6 +181,31 @@
     %%
     %% Plusieurs exemples à citer (ref aux présentations qu'on aurrait dû
     %% faire à XUG@Rennes et à JLESC@Bonnes).
+    Suppose some researcher wants to evaluate the memory bandwidth of their laptop. A first way to answer this question
+    could be to write a small program that allocates a buffer, then write some data on this buffer with the
+    \texttt{memset} function while measuring the duration of this operation. The problem is that the time taken to make
+    this memory write may not be representative, the following writes would very probably have different durations due
+    to cache effects.  Therefore, it would be better to make several measures that should then be carefuly analyzed
+    (maybe simply taking the average, or perhaps there are some \emph{outliers} that should be removed). However, by
+    doing so we only measure the performance of a write for a given size. The effective bandwidth could be very
+    different with a smaller or a larger buffer. The natural solution here is to repeat these sequences of measures for
+    several sizes.
+
+    A general advice shared by experimental scientists in such situations is to randomize the experiments. In general,
+    this randomization should happen for:
+    \begin{itemize}
+        \item The parameter space (in this example, the set of sizes that are evaluated). The goal is to avoid bias, for
+            instance sizes that are a power of two may lead to a different performance. Note that in some occasions, as
+            this chapter will illustrate, it is desirable to bias the experiment towards some particular values.
+        \item The experiment order (in this example, the order of the sizes). The rational here is to avoid temporal
+            perturbations. In particular, there are often at least two phases, a load build up which converges toward a
+            steady state. There can also be changes that happen once the steady state is reached, \eg caused by some
+            external source. By randomizing the order of the experiments, it becomes much easier to recognize an
+            eventual temporal perturbation simply by plotting the data.
+    \end{itemize}
+
+    In this chapter, we will discuss several lessons learned for conducting faithful experiments, most of the time the
+    hard way.
 
     \section{Basic effects}%
     \label{sec:basic_effects}
