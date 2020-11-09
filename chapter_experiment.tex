@@ -207,6 +207,32 @@
     In this chapter, we will discuss several lessons learned for conducting faithful experiments, most of the time the
     hard way.
 
+    \section{Experimental setup}%
+    \label{sec:experimental_setup}
+
+        All the experiments presented in this chapter share a common setup. They have been repeated on several nodes and
+        follow the same steps:
+        \begin{enumerate}
+            \item Deploy and install a fresh OS on the node.
+            \item Run the \texttt{stress} command for 10 minutes to warm the node.
+            \item Start a background process\footnote{\url{https://github.com/Ezibenroc/ratatouille}} to monitor the
+                core frequencies and temperature every second.
+            \item On each core, run a custom
+                code\footnote{\url{https://github.com/Ezibenroc/platform-calibration/src/calibration}}
+                to measure the durations of a given operation (either \texttt{dgemm} or several MPI functions, depending
+                on the experiment).
+        \end{enumerate}
+
+        Unless specified otherwise, we used nodes from the Dahu cluster from
+        Grid'5000\footnote{\url{https://www.grid5000.fr/w/Grenoble:Hardware}}. Each of these nodes has two Intel Xeon
+        Gold 6130 CPU, which are 16 core CPU from the Skylake generation. They have a base frequency of
+        \NSI{2.1}{\giga\hertz} and a turbo frequency of up to \NSI{3.7}{\giga\hertz}, but their turbo frequency is
+        limited to \NSI{2.4}{\giga\hertz} when their 16 cores are active and in AVX2
+        mode\footnote{\url{https://en.wikichip.org/wiki/intel/xeon\_gold/6130}}. We have used
+        OpenBLAS\footnote{\url{https://github.com/xianyi/OpenBLAS}} version~0.3.1 and
+        OpenMPI\footnote{\url{https://github.com/open-mpi/ompi}} version~2.0.2 compiled with GCC version~6.3.0 on a
+        Debian~9 installation with kernel version~4.9.0.
+
     \section{Randomizing the sizes}%
     \label{sec:randomizing_sizes}
         %% TODO
@@ -227,7 +253,6 @@
         %% - Les performances de dgemm dépendent du contenu de la matrice (random ou
         %%   constant par exemple). Ça serait causé par des bit flips dans le CPU qui
         %%   engendre une plus grande consommation (réutiliser le rapport).
-        Some text\dots
 
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
