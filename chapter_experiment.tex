@@ -352,6 +352,33 @@
             will have more bits in common, this would causes less bit flips than the random initialization but more bit
             flips than the constant initialization and thus an intermediate performance.
 
+        \section{Testing the bit-flip hypothesis}
+            To test the hypothesis that the lower frequencies are caused by more frequent bit flips in the processor,
+            the matrix initialization has been changed. Now, each element of the matrix is randomly and uniformly
+            sampled in the interval \([0,1]\). Then a bit mask is applied on the lower order bits of their mantissa. As
+            a result, all the elements of the matrices have some bits in common. This method is illustrated in
+            Figure~\ref{fig:exp:bit-flips:mask_illustration}, the mantissa of the matrix elements (in blue) is at first
+            completely random, then we apply a mask so that the right-most bits (in green) become deterministic.
+            Several mask sizes have been tested, from 0 (the elements are left unchanged) to 53 (the mantissa becomes
+            completely deterministic, all the elements are equal).
+            \begin{figure}[htpb]
+                \begin{center}
+                    \includesvg[width=\linewidth]{img/experiment/bit-flips/float.svg}
+                    \vspace{-0.2cm}
+
+                    \begin{tikzpicture}
+                        \draw[->, line width=1mm] (0,0) -- (0,-1);
+                    \end{tikzpicture}
+
+                    \vspace{-0.2cm}
+                    \includesvg[width=\linewidth]{img/experiment/bit-flips/float_mask.svg}
+                \end{center}
+                \caption{Illustrating the effect of applying a mask on the random part of the matrix
+                elements\label{fig:exp:bit-flips:mask_illustration}}
+            \end{figure}
+
+        \subsection{Related work}%
+        %% TODO
 
 
     \section{Beware of extrapolations}%
