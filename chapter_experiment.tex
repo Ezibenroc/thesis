@@ -122,6 +122,11 @@
         \subsection{Comparison with Execo}%
         \label{sub:comparison_with_execo}
 
+            In this section, we use a small example to illustrate some differences between \texttt{peanut} and
+            \texttt{execo}. The goal is to write an experiment that will take several nodes on a given Grid'5000
+            cluster, compile the \texttt{CRoaring} library\footnote{\url{https://github.com/RoaringBitmap/CRoaring}} and
+            run one of its benchmarks.
+
             \lstdefinestyle{custom_lst_style}{
              %   language=Matlab,
                 numbers=left,
@@ -133,28 +138,36 @@
             }
             \lstset{basicstyle=\scriptsize, style=custom_lst_style}
 
-            Run with: \verb#python script.py#\\
+            First, Listing~\ref{lst:engine:execo} shows such an experiment using Execo. Run with: \verb#python script.py#\\
 
-            \lstinputlisting[language=Python,
-                caption={Small experiment example using Peanut}\label{lst:engine:peanut_simple}]{
-                img/experiment/engine/mwePeanut_simple.py
+            \lstinputlisting[language={Python},label={lst:engine:execo},
+                caption={Small experiment example Execo}]{
+                img/experiment/engine/mweExeco.py
             }
+
+            This script, albeit fairly small, is already difficult to read in some places. For instance, lines 11-12,
+            one has to write a complex query as a string as follows:
+
+            \verb#OarSubmission("{cluster in ('dahu')}/nodes=2,walltime=00:20:00")#
+
+            It would be much more pleasant to write it as follows:
+
+            \verb#OarSubmission(cluster="dahu", nodes=2, walltime="00:20:00")#
+
+            Now, Listing~\ref{lst:engine:peanut_class} demonstrates how the same experiment can be rewritten using Peanut
+            in a much more concise and readable way.
 
             Run with: \verb#peanut script.py run tocornebize --deploy debian9-x64-base \#\\
             \verb#    --cluster dahu --nbnodes 2 --walltime 00:20:00#
 
-            \lstinputlisting[language=Python,
-                caption={Small experiment example using Peanut (2)}\label{lst:engine:peanut_class}]{
+            \lstinputlisting[language=Python,label={lst:engine:peanut_class},
+                caption={Small experiment example using Peanut}]{
                 img/experiment/engine/mwePeanut.py
             }
 
-            Run with: \verb#python script.py#\\
-
-            \lstinputlisting[language=Python,
-                caption={Small experiment example Execo}\label{lst:engine:execo}]{
-                img/experiment/engine/mweExeco.py
-            }
-
+            The script is not only twice shorter, it is also much more elegant. Furthermore, it accomplishes much more
+            than Listing~\ref{lst:engine:execo}, as it produces a peanut archive with all the metadata related to the
+            experiment.
 
 \chapter{Randomizing matters!}%
 \label{chapter:experiment:randomizing}
