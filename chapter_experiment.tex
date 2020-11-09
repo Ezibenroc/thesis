@@ -253,6 +253,8 @@
         %% - Les performances de dgemm dépendent du contenu de la matrice (random ou
         %%   constant par exemple). Ça serait causé par des bit flips dans le CPU qui
         %%   engendre une plus grande consommation (réutiliser le rapport).
+        The work presented in this section has been published as a technical report\cite{cornebize:bitflips}. The
+        content of this section is therefore a near-verbatim copy of this report.
 
         This experiment comes, yet again, from an unfortunate phenomenon we stumbled upon when calibrating the platform
         for our simulations. Our predictions were wrong, so we investigated a bit and we noticed a significant mismatch
@@ -299,6 +301,58 @@
             \caption{\label{fig:exp:bit-flips:method-perf}
             Core frequencies are higher with constant values in the matrices}
         \end{figure}
+
+        This experiment has been repeated on other Grid'5000 clusters, each time on at least four distinct nodes.
+        Table~\ref{tab:bit-flips} gives a summary of our observations. Four other clusters show a similar behavior, the
+        performance of \texttt{dgemm} is higher when the matrices are generated with a constant value. However, for four
+        other clusters, this phenomenon could not be observed, the matrix content had no impact on the performance.
+        %% TODO run this experiment on other Grid'5000 clusters, just to extend a bit the table of the clusters we tested it on.
+        %% I have at least two clusters in mind:
+        %% - pyxis (ARM processors)
+        %% - troll (newest generation of Intel processors, Cascade Lake)
+
+        \begin{table}[htbp]
+            \caption{\label{tab:bit-flips}
+            Observation of the  performance anomaly on Grid'5000 clusters}
+            \centering
+            \begin{tabular}{llll}
+                \toprule
+                Cluster & CPU & Generation & Performance anomaly\\
+                \midrule
+                dahu & Intel Xeon Gold 6130 & Skylake & yes\\
+                yeti & Intel Xeon Gold 6130 & Skylake & yes\\
+                ecotype & Intel Xeon E5-2630L v4 & Broadwell & yes\\
+                gros & Intel Xeon Gold 5220 & Cascade Lake & yes\\
+                parasilo & Intel Xeon E5-2630 v3 & Haswell & yes\\
+                paranoia & Intel Xeon E5-2660 v2 & Ivy Bridge & no\\
+                nova & Intel Xeon E5-2620 v4 & Broadwell & no\\
+                taurus & Intel Xeon E5-2630 & Sandy Bridge & no\\
+                chiclet & AMD EPYC 7301 & - & no\\
+                \bottomrule
+            \end{tabular}
+        \end{table}
+
+        \subsection{Hypotheses}
+            %% TODO add the hypothesis on subnormal numbers.
+            Several hypotheses were discussed to explain this unexpected phenomenon.
+
+            There could be a small cache  on the floating point unit of the cores to memorize the results of frequent
+            operations. This could explain why the durations were higher when the matrices were initialized randomly,
+            but this does not explain why the sequential initialization is in between.
+
+            This could be due to kernel same page merging (KSM), a mechanism that allows the kernel to share identical
+            memory pages between different processes. Again, this would explain the difference between the random
+            initialization and the constant one, but not why the sequential initialization gives intermediate
+            performance.
+
+            A last hypothesis is the power consumption of the cores. Each state change of the electronic gates of the
+            CPU costs an energy overhead. In the case of the constant initialization, the registers will change less
+            often during the execution of \texttt{dgemm}, in comparison with the random initialization. As for the
+            sequential initialization, we can imagine that we have a locality effect: nearby elements of the matrices
+            will have more bits in common, this would causes less bit flips than the random initialization but more bit
+            flips than the constant initialization and thus an intermediate performance.
+
+
 
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
