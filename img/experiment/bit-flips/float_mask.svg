@@ -62,7 +62,7 @@
        height="28"
        x="22"
        y="54" />
-    <text x="22" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="22" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect3195"
@@ -70,7 +70,7 @@
        height="28"
        x="31"
        y="54" />
-    <text x="31" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="31" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31951"
@@ -78,7 +78,7 @@
        height="28"
        x="40"
        y="54" />
-    <text x="40" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="40" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31952"
@@ -86,7 +86,7 @@
        height="28"
        x="49"
        y="54" />
-    <text x="49" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="49" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31953"
@@ -94,7 +94,7 @@
        height="28"
        x="58"
        y="54" />
-    <text x="58" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="58" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31954"
@@ -102,7 +102,7 @@
        height="28"
        x="67"
        y="54" />
-    <text x="67" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="67" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31955"
@@ -110,7 +110,7 @@
        height="28"
        x="76"
        y="54" />
-    <text x="76" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="76" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31956"
@@ -118,7 +118,7 @@
        height="28"
        x="85"
        y="54" />
-    <text x="85" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="85" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31957"
@@ -126,7 +126,7 @@
        height="28"
        x="94"
        y="54" />
-    <text x="94" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="94" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31958"
@@ -134,7 +134,7 @@
        height="28"
        x="103"
        y="54" />
-    <text x="103" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="103" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect31959"
@@ -142,7 +142,7 @@
        height="28"
        x="112"
        y="54" />
-    <text x="112" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="112" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#DDDDDD;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319510"
@@ -150,7 +150,7 @@
        height="28"
        x="121"
        y="54" />
-    <text x="121" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="121" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1;font-size:14"
        id="rect319511"
@@ -158,7 +158,7 @@
        height="28"
        x="130"
        y="54" />
-    <text x="130" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="130" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319512"
@@ -166,7 +166,7 @@
        height="28"
        x="139"
        y="54" />
-    <text x="139" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="139" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319513"
@@ -174,7 +174,7 @@
        height="28"
        x="148"
        y="54" />
-    <text x="148" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="148" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319514"
@@ -182,7 +182,7 @@
        height="28"
        x="157"
        y="54" />
-    <text x="157" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="157" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319515"
@@ -190,7 +190,7 @@
        height="28"
        x="166"
        y="54" />
-    <text x="166" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="166" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319516"
@@ -198,7 +198,7 @@
        height="28"
        x="175"
        y="54" />
-    <text x="175" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="175" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319517"
@@ -206,7 +206,7 @@
        height="28"
        x="184"
        y="54" />
-    <text x="184" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="184" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319518"
@@ -214,7 +214,7 @@
        height="28"
        x="193"
        y="54" />
-    <text x="193" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="193" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319519"
@@ -222,7 +222,7 @@
        height="28"
        x="202"
        y="54" />
-    <text x="202" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="202" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319520"
@@ -230,7 +230,7 @@
        height="28"
        x="211"
        y="54" />
-    <text x="211" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="211" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319521"
@@ -238,7 +238,7 @@
        height="28"
        x="220"
        y="54" />
-    <text x="220" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="220" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319522"
@@ -246,7 +246,7 @@
        height="28"
        x="229"
        y="54" />
-    <text x="229" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="229" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319523"
@@ -254,7 +254,7 @@
        height="28"
        x="238"
        y="54" />
-    <text x="238" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="238" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319524"
@@ -262,7 +262,7 @@
        height="28"
        x="247"
        y="54" />
-    <text x="247" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="247" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319525"
@@ -270,7 +270,7 @@
        height="28"
        x="256"
        y="54" />
-    <text x="256" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="256" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319526"
@@ -278,7 +278,7 @@
        height="28"
        x="265"
        y="54" />
-    <text x="265" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="265" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319527"
@@ -286,7 +286,7 @@
        height="28"
        x="274"
        y="54" />
-    <text x="274" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="274" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319528"
@@ -294,7 +294,7 @@
        height="28"
        x="283"
        y="54" />
-    <text x="283" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="283" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319529"
@@ -302,7 +302,7 @@
        height="28"
        x="292"
        y="54" />
-    <text x="292" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="292" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319530"
@@ -310,7 +310,7 @@
        height="28"
        x="301"
        y="54" />
-    <text x="301" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="301" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319531"
@@ -318,7 +318,7 @@
        height="28"
        x="310"
        y="54" />
-    <text x="310" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="310" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319532"
@@ -326,7 +326,7 @@
        height="28"
        x="319"
        y="54" />
-    <text x="319" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="319" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319533"
@@ -334,7 +334,7 @@
        height="28"
        x="328"
        y="54" />
-    <text x="328" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="328" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319534"
@@ -342,7 +342,7 @@
        height="28"
        x="337"
        y="54" />
-    <text x="337" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="337" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319535"
@@ -350,7 +350,7 @@
        height="28"
        x="346"
        y="54" />
-    <text x="346" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="346" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319536"
@@ -358,7 +358,7 @@
        height="28"
        x="355"
        y="54" />
-    <text x="355" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="355" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319537"
@@ -366,7 +366,7 @@
        height="28"
        x="364"
        y="54" />
-    <text x="364" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="364" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319538"
@@ -374,7 +374,7 @@
        height="28"
        x="373"
        y="54" />
-    <text x="373" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="373" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319539"
@@ -382,7 +382,7 @@
        height="28"
        x="382"
        y="54" />
-    <text x="382" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="382" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319540"
@@ -390,7 +390,7 @@
        height="28"
        x="391"
        y="54" />
-    <text x="391" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="391" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319541"
@@ -398,7 +398,7 @@
        height="28"
        x="400"
        y="54" />
-    <text x="400" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="400" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319542"
@@ -406,7 +406,7 @@
        height="28"
        x="409"
        y="54" />
-    <text x="409" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="409" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319543"
@@ -414,7 +414,7 @@
        height="28"
        x="418"
        y="54" />
-    <text x="418" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="418" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#2196F4;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319544"
@@ -422,7 +422,7 @@
        height="28"
        x="427"
        y="54" />
-    <text x="427" y="72" font-family="Verdana" font-size="12" fill="black">\tiny0</text>
+    <text x="427" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize0</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319545"
@@ -430,7 +430,7 @@
        height="28"
        x="436"
        y="54" />
-    <text x="436" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="436" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319546"
@@ -438,7 +438,7 @@
        height="28"
        x="445"
        y="54" />
-    <text x="445" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="445" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319547"
@@ -446,7 +446,7 @@
        height="28"
        x="454"
        y="54" />
-    <text x="454" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="454" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319548"
@@ -454,7 +454,7 @@
        height="28"
        x="463"
        y="54" />
-    <text x="463" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="463" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319549"
@@ -462,7 +462,7 @@
        height="28"
        x="472"
        y="54" />
-    <text x="472" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="472" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319550"
@@ -470,7 +470,7 @@
        height="28"
        x="481"
        y="54" />
-    <text x="481" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="481" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319551"
@@ -478,7 +478,7 @@
        height="28"
        x="490"
        y="54" />
-    <text x="490" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="490" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319552"
@@ -486,7 +486,7 @@
        height="28"
        x="499"
        y="54" />
-    <text x="499" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="499" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319553"
@@ -494,7 +494,7 @@
        height="28"
        x="508"
        y="54" />
-    <text x="508" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="508" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319554"
@@ -502,7 +502,7 @@
        height="28"
        x="517"
        y="54" />
-    <text x="517" y="72" font-family="Verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="517" y="72" font-family="Verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319555"
@@ -510,7 +510,7 @@
        height="28"
        x="526"
        y="54" />
-    <text x="526" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="526" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319556"
@@ -518,7 +518,7 @@
        height="28"
        x="535"
        y="54" />
-    <text x="535" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="535" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319557"
@@ -526,7 +526,7 @@
        height="28"
        x="544"
        y="54" />
-    <text x="544" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="544" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319558"
@@ -534,7 +534,7 @@
        height="28"
        x="553"
        y="54" />
-    <text x="553" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="553" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319559"
@@ -542,7 +542,7 @@
        height="28"
        x="562"
        y="54" />
-    <text x="562" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="562" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319560"
@@ -550,7 +550,7 @@
        height="28"
        x="571"
        y="54" />
-    <text x="571" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="571" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319561"
@@ -558,7 +558,7 @@
        height="28"
        x="580"
        y="54" />
-    <text x="580" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="580" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <rect
        style="fill:#CDDC39;fill-opacity:1;stroke:#000000;stroke-linejoin:bevel;stroke-opacity:1"
        id="rect319562"
@@ -566,7 +566,7 @@
        height="28"
        x="589"
        y="54" />
-    <text x="589" y="72" font-family="verdana" font-size="12" fill="black">\tiny1</text>
+    <text x="589" y="72" font-family="verdana" font-size="12" fill="black">\scriptsize1</text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.01339948px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 26.5,41.486325 L 26.5,51.513676"
@@ -605,7 +605,7 @@
          id="tspan4183"
          x="51.380074"
          y="16.812664"
-         style="font-size:14px;font-family:sans">\tiny exponent</tspan></text>
+         style="font-size:14px;font-family:sans">\scriptsize exponent</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri"
@@ -616,7 +616,7 @@
          id="tspan4187"
          x="58.438179"
          y="34.155521"
-         style="font-size:14px;font-family:sans">\tiny (11 bit)</tspan></text>
+         style="font-size:14px;font-family:sans">\scriptsize (11 bit)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:sans"
@@ -627,7 +627,7 @@
          id="tspan4191"
          x="13.918457"
          y="34.843887"
-         style="font-size:14px">\tiny sign</tspan></text>
+         style="font-size:14px">\scriptsize sign</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:sans"
@@ -637,7 +637,7 @@
          sodipodi:role="line"
          id="tspan5164"
          x="341.72983"
-         y="15.752003">\tiny fraction</tspan></text>
+         y="15.752003">\scriptsize fraction</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:sans"
@@ -647,7 +647,7 @@
          sodipodi:role="line"
          id="tspan5168"
          x="342.30746"
-         y="33.429672">\tiny (52 bit)</tspan></text>
+         y="33.429672">\scriptsize (52 bit)</tspan></text>
     <path
        sodipodi:type="arc"
        style="fill:#000000;fill-opacity:0.25098041;stroke:#000000;stroke-width:1;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -667,7 +667,7 @@
          sodipodi:role="line"
          id="tspan5174"
          x="18.765137"
-         y="110.82227">\tiny 63</tspan></text>
+         y="110.82227">\scriptsize 63</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:sans"
@@ -677,7 +677,7 @@
          sodipodi:role="line"
          id="tspan5178"
          x="117.78906"
-         y="110.8291">\tiny 52</tspan></text>
+         y="110.8291">\scriptsize 52</tspan></text>
     <path
        sodipodi:type="arc"
        style="fill:#000000;fill-opacity:0.25098041;stroke:#000000;stroke-width:1;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -707,6 +707,6 @@
          sodipodi:role="line"
          id="tspan5186"
          x="589.65137"
-         y="110.50431">\tiny 0</tspan></text>
+         y="110.50431">\scriptsize 0</tspan></text>
   </g>
 </svg>
