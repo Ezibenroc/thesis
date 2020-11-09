@@ -557,24 +557,27 @@ library(dplyr)
 library(ggplot2)
 library(patchwork)
 
-do_plot = function(frame, y_val, y_label) {
+do_plot = function(frame, y_val, y_label, col_val) {
+    col_label = gsub("_", " ", col_val)
+    col_label = paste(toupper(substr(col_label, 1, 1)), substr(col_label, 2, nchar(col_label)), sep="")
+    frame$x_val = ifelse(frame[[col_val]]=="random", "rand",
+                  ifelse(frame[[col_val]]=="sequential", "seq", as.character(frame[[col_val]])))
     basic_plot = frame %>%
         ggplot() +
-        aes_string(y=y_val, color="matrix_content") +
+        aes_string(y=y_val, fill=col_val) +
         ylab(y_label) +
-        labs(color='Matrix content') +
+        labs(fill=col_label) +
         theme_bw() +
         scale_y_continuous(labels = scales::number_format(accuracy = 0.001)) +
-        guides(color = guide_legend(override.aes = list(alpha=1, shape=16, size=4))) +
-        scale_color_brewer(type='qual', palette='Dark2') -> plot
+        guides(fill = guide_legend(override.aes = list(alpha=1, shape=21, size=4)))
 
     p1 = basic_plot +
-        geom_boxplot(aes(x=matrix_content), outlier.alpha=0, alpha=0) +
+        geom_boxplot(aes(x=x_val), outlier.alpha=0, alpha=1) +
         theme(legend.position='none') +
-        theme(axis.text.x=element_blank()) +
-        xlab('Matrix content')
+#        theme(axis.text.x=element_blank()) +
+        xlab(col_label)
     p2 = basic_plot +
-        geom_point(aes(x=timestamp), size=0.1, alpha=0.3) +
+        geom_point(shape=21, aes(x=timestamp), size=1, alpha=0.3, stroke=0) +
         theme(axis.text.y=element_blank(), axis.ticks.y=element_blank(), axis.title.y=element_blank()) +
         xlab('Timestamp (s)')
 
@@ -587,24 +590,47 @@ do_plot = function(frame, y_val, y_label) {
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 read.csv("data/experiment/bit-flips/generation_method_perf.csv") %>%
-    do_plot("duration", "Duration (s)") -> plot
+    do_plot("duration", "Duration (s)", "matrix_content") &
+    scale_fill_brewer(type='qual', palette='Dark2') -> plot
 ggsave(filename='img/experiment/bit-flips/generation_method_perf.png', plot=plot, width=7, height=3, dpi=200)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-bipihK/figurejTYDGu.png]]
+[[file:/tmp/babel-bipihK/figureEnXWKR.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 read.csv("data/experiment/bit-flips/generation_method_freq.csv") %>%
-    do_plot("frequency", "Frequency (GHz)") -> plot
+    do_plot("frequency", "Frequency (GHz)", "matrix_content") &
+    scale_fill_brewer(type='qual', palette='Dark2') -> plot
 ggsave(filename='img/experiment/bit-flips/generation_method_freq.png', plot=plot, width=7, height=3, dpi=200)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-bipihK/figure0qPGME.png]]
+[[file:/tmp/babel-bipihK/figure5qkT5W.png]]
 
 *** Mask size
-**** Durations
-**** Frequency
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+read.csv("data/experiment/bit-flips/mask_size_perf.csv") %>%
+    mutate(mask_size=factor(mask_size)) %>%
+    do_plot("duration", "Duration (s)", "mask_size") &
+    scale_fill_brewer(type='seq', palette='Blues') -> plot
+ggsave(filename='img/experiment/bit-flips/mask_size_perf.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-bipihK/figureic0oHe.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+read.csv("data/experiment/bit-flips/mask_size_freq.csv") %>%
+    mutate(mask_size=factor(mask_size)) %>%
+    do_plot("frequency", "Frequency (GHz)", "mask_size") &
+    scale_fill_brewer(type='seq', palette='Blues') -> plot
+ggsave(filename='img/experiment/bit-flips/mask_size_freq.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-bipihK/figureZHGqH0.png]]
