@@ -254,6 +254,24 @@
         %%   constant par exemple). Ça serait causé par des bit flips dans le CPU qui
         %%   engendre une plus grande consommation (réutiliser le rapport).
 
+        This experiment comes, yet again, from an unfortunate phenomenon we stumbled upon when calibrating the platform
+        for our simulations. Our predictions were wrong, so we investigated a bit and we noticed a significant mismatch
+        between the durations measured with our calibration code and the durations observed in HPL. We found out that,
+        the performance of the \texttt{dgemm} function depends on the content of the matrix, which was unexpected.
+
+        \subsection{Randomization of the matrix initialization}
+        \label{sub:randomization_matrix_initialization}
+            The three matrices are allocated once at the start of the program as a buffer of size \(N^2\) with
+            \(N=2,048\). Then, their content is initialized in three different ways, depending on the experiment:
+            \begin{enumerate}
+                \item All the elements of the matrices are equal to some constant. We have tested with three different
+                    values: 0, 0.987 and 1.
+                \item The elements of the matrices are made of an increasing sequence in the interval \([0, 1]\). More
+                    precisely, \texttt{mat[i] = i/(N\textasciicircum{}2-1)} for i in \([0, N^2-1]\).
+                \item Each element of the matrix is randomly and uniformly sampled in the interval \([0, 1]\).
+            \end{enumerate}
+
+
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
         %% TODO
