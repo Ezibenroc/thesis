@@ -543,8 +543,6 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-Kejzdq/figure8FQI9S.png]]
-
-
 * Experimental control
 ** Bit flips
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
