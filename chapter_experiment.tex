@@ -424,6 +424,28 @@
             processor.
 
         \subsection{Related work}%
+            M. La{\ss}, Plessl C. and Schade R. (Paderborn Center for Parallel Computing) made independently similar
+            observations (personal communications on 2020/09/24 and 2020/11/11). Their findings is summarized here:
+            \begin{itemize}
+                \item They observed that \texttt{dgemm} performance depended on the content of the matrix. They also
+                    made the hypothesis that it was caused by bit-flips. To test this hypothesis, they used the same
+                    approach, they filled the matrices with random values with a mask applied to the lower-order bits.
+                    They observed a correlation between the mask size and \texttt{dgemm} performance, which is an
+                    argument in favor of this hypothesis. This experiment was done using anoter \texttt{dgemm}
+                    implementation than us (Intel MKL) on an Intel Xeon Gold 6148 (Skylake-SP family) from a noctua
+                    node\footnote{\url{https://pc2.uni-paderborn.de/hpc-services/available-systems/noctua/}}.
+                \item They reproduced the same experiment on a FPGA (more precisely, a Bittware 520N PCIe accelerator
+                    card, equipped with an Intel Stratix 10 GX 2800 FPGA). This time, the way the matrix was filled had
+                    an effect on the power consumption and not the performance. This was expected since there is no DVFS
+                    on FPGA.
+                \item To see whether the effect was caused by the CPU arithmetic units or the cache, they adapted a
+                    micro-benchmark\footnote{\url{https://github.com/pc2/Flops}} to perform multiplications with more or
+                    less random data, using only the registers of the CPU. They did not observe any difference of
+                    performance caused by the data, but they did observe a higher power consumption of \SI{5}{\percent}
+                    with random data. This power consumption remained under the TDP even after the increase, so the CPU
+                    frequency did not get throttled.
+            \end{itemize}
+
             Sch{\"{o}}ne~\etal~\cite{DBLP:journals/corr/abs-1905-12468} observed a data-dependent power consumption with
             a Skylake-SP processor using AVX instructions. Note that in their experiment, the core frequency and the
             instruction rate were constant.
