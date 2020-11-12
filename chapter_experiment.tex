@@ -303,8 +303,8 @@
         \end{figure}
 
         This experiment has been repeated on other Grid'5000 clusters, each time on at least four distinct nodes.
-        Table~\ref{tab:bit-flips} gives a summary of our observations. Four other clusters show a similar behavior, the
-        performance of \texttt{dgemm} is higher when the matrices are generated with a constant value. However, for four
+        Table~\ref{tab:bit-flips} gives a summary of our observations. Five other clusters show a similar behavior, the
+        performance of \texttt{dgemm} is higher when the matrices are generated with a constant value. However, for five
         other clusters, this phenomenon could not be observed, the matrix content had no impact on the performance.
         %% TODO run this experiment on other Grid'5000 clusters, just to extend a bit the table of the clusters we tested it on.
         %% I have at least two clusters in mind:
@@ -349,10 +349,13 @@
 
             A last hypothesis is the power consumption of the cores. Each state change of the electronic gates of the
             CPU costs an energy overhead. In the case of the constant initialization, the registers will change less
-            often during the execution of \texttt{dgemm}, in comparison with the random initialization. As for the
-            sequential initialization, we can imagine that we have a locality effect: nearby elements of the matrices
-            will have more bits in common, this would causes less bit flips than the random initialization but more bit
-            flips than the constant initialization and thus an intermediate performance.
+            often during the execution of \texttt{dgemm}, in comparison with the random initialization. Thus, with the
+            constant initialization, the processor cores would be able to maintain a higher frequency while respecting
+            the thermal design power (TDP), with the random initialization the frequency would be throttled more
+            aggressively and thus the performance would be lower.
+            As for the sequential initialization, we can imagine that we have a locality effect: nearby elements of the
+            matrices will have more bits in common, this would causes less bit flips than the random initialization but
+            more bit flips than the constant initialization and thus an intermediate performance.
 
         \subsection{Testing the bit-flip hypothesis}
             To test the hypothesis that the lower frequencies are caused by more frequent bit flips in the processor,
