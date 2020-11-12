@@ -410,6 +410,8 @@
         \subsection{Conclusion}
             We have shown that the performance of the \texttt{dgemm} function is data-dependent. The best explanation we
             have for this counter-intuitive fact is an energy cost overhead caused by bit flips inside the processor.
+            To respect its energy budget, the CPU has to throttle more aggressively its frequency when the matrices
+            content is more diverse and thus more energy consumming.
             This theory has been corroborated by a controlled experiment where the elements of the matrices are
             initialized semi-randomly: they all share an identical bit suffix.
 
@@ -425,6 +427,11 @@
             Sch{\"{o}}ne~\etal~\cite{DBLP:journals/corr/abs-1905-12468} observed a data-dependent power consumption with
             a Skylake-SP processor using AVX instructions. Note that in their experiment, the core frequency and the
             instruction rate were constant.
+
+            Andr\'e~\etal~\cite{andre:hal-02401796} observed in one of their experiments that limiting the uncore
+            frequency (\ie the frequency of the L3 cache and the memory controler) can increase the performance of HPL
+            by about \SI{1.5}{\percent}. The reason is that HPL power consumption reaches TDP, so lowering the uncore
+            frequency allows a higher power consumption of the cores and thus a higher frequency.
 
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
