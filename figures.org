@@ -2,6 +2,238 @@
 # -*- org-confirm-babel-evaluate: nil -*-
 # -*- mode: org -*-
 #+STARTUP: overview indent inlineimages logdrawer hidestars
+* Context
+** Top500
+*** Downloading the data
+The data has been scrapped from the Top500 website by Dan Lenski (with a
+contribution of Pedro Bruel). This data is used to generate the [[https://commons.wikimedia.org/wiki/File:Processor_families_in_TOP500_supercomputers.svg][Wikipedia]]
+figure.
+
+Note that the script that was used seems to not work anymore. One of the reasons
+is that the Top500 now requires a login/password to download the data. I
+submitted [[https://github.com/dlenski/top500/issues/2][an issue]] on Github.
+
+#+begin_src sh :results output :exports both
+filename=data/context/TOP500_history.csv
+wget https://github.com/dlenski/top500/raw/0438522a225552b818406a4cd1944b7395a076f7/TOP500_history.csv -O ${filename}
+du -sh ${filename}
+wc -l ${filename}
+#+end_src
+
+#+RESULTS:
+: 8,4M	data/context/TOP500_history.csv
+: 27001 data/context/TOP500_history.csv
+*** Generating the figures
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+df = read.csv("data/context/TOP500_history.csv") %>%
+    mutate(date=ISOdate(Year, Month, Day)) %>%
+    mutate(perf_hpl=ifelse(is.na(RMax), Rmax..TFlop.s.*1000, RMax)) %>%
+    mutate(perf_theoretical=ifelse(is.na(RPeak), Rpeak..TFlop.s.*1000, RMax)) %>%
+    mutate(perf_hpcg=HPCG..TFlop.s.*1000) %>%
+    mutate(efficiency=perf_hpl/perf_theoretical) %>%
+    mutate(nb_cores=ifelse(is.na(Total.Cores), Processors, Total.Cores)) %>%
+    mutate(proc_freq=Processor.Speed..MHz.) %>%
+    mutate(per_core_hpl_perf=perf_hpl/nb_cores)
+str(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	27000 obs. of  60 variables:
+ $ Year                           : int  1993 1993 1993 1993 1993 1993 1993 1993 1993 1993 ...
+ $ Month                          : int  6 6 6 6 6 6 6 6 6 6 ...
+ $ Day                            : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ Rank                           : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ Site                           : Factor w/ 2467 levels " Institute of Information and Communication Technologies at the Bulgarian Academy of Sciences",..: 1287 1379 1513 1486 1516 135 1507 277 468 563 ...
+ $ Manufacturer                   : Factor w/ 147 levels "Acer Group","ACTION",..: 141 141 141 141 98 98 141 76 28 28 ...
+ $ Computer                       : Factor w/ 2825 levels " eServer pSeries 655 (1.7 GHz Power4+)",..: 790 799 798 798 2345 2344 796 995 2730 2730 ...
+ $ Country                        : Factor w/ 60 levels "Australia","Austria",..: 58 58 58 58 26 7 58 58 58 58 ...
+ $ Processors                     : num  1024 544 512 512 4 ...
+ $ RMax                           : num  59.7 30.4 30.4 30.4 23.2 20 15.1 13.9 13.7 13.7 ...
+ $ RPeak                          : num  131 69.6 65.5 65.5 25.6 ...
+ $ Nmax                           : num  52224 36864 36864 36864 6400 ...
+ $ Nhalf                          : num  24064 16384 16384 16384 830 ...
+ $ Processor.Family               : Factor w/ 26 levels "","Alpha","AMD",..: 25 25 25 25 21 21 25 14 7 7 ...
+ $ Processor                      : Factor w/ 463 levels "Alpha","Alpha EV4",..: 267 267 267 267 133 133 267 63 25 25 ...
+ $ Processor.Speed..MHz.          : num  32 32 32 32 400 ...
+ $ System.Family                  : Factor w/ 179 levels " IBM Power Systems",..: 174 174 174 174 122 122 174 104 33 33 ...
+ $ Operating.System               : Factor w/ 85 levels "AIX","Amazon Linux 2",..: 10 10 10 10 59 59 10 30 74 74 ...
+ $ Architecture                   : Factor w/ 6 levels "Cluster","Constellations",..: 3 3 3 3 6 6 3 3 6 6 ...
+ $ Segment                        : Factor w/ 7 levels "Academic","Classified",..: 6 4 1 2 7 6 6 1 7 6 ...
+ $ Application.Area               : Factor w/ 48 levels "","Aerospace",..: 37 37 37 37 37 46 37 37 37 37 ...
+ $ Interconnect.Family            : Factor w/ 27 levels "10G","Cray Interconnect",..: 8 8 8 8 3 3 8 17 17 17 ...
+ $ Interconnect                   : Factor w/ 90 levels "100G Ethernet",..: 37 37 37 37 67 67 37 71 71 71 ...
+ $ Region                         : Factor w/ 16 levels "Australia and New Zealand",..: 6 6 6 6 4 6 6 6 6 6 ...
+ $ Continent                      : Factor w/ 5 levels "Africa","Americas",..: 2 2 2 2 3 2 2 2 2 2 ...
+ $ Power                          : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ System.Model                   : Factor w/ 539 levels "","Acer AR585 F1 Cluster",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Total.Cores                    : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Measured.Size                  : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Processor.Cores                : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Accelerator                    : Factor w/ 7 levels "","ATI GPU","IBM PowerXCell 8i",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Name                           : Factor w/ 848 levels "","&#346;wierk Computing Centre",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Accelerator.Cores              : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Efficiency....                 : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Mflops.Watt                    : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Processor.Technology           : Factor w/ 26 levels "","AMD x86_64",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ OS.Family                      : Factor w/ 6 levels "","BSD Based",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Cores.per.Socket               : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Processor.Generation           : Factor w/ 75 levels "","AMD Naples",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Previous.Rank                  : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ First.Appearance               : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ First.Rank                     : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Accelerator.Co.Processor.Cores : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Accelerator.Co.Processor       : Factor w/ 59 levels "","AMD FirePro S10000",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Power.Source                   : Factor w/ 4 levels "","Derived","Optimized",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Rmax..TFlop.s.                 : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Rpeak..TFlop.s.                : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ HPCG..TFlop.s.                 : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Power..kW.                     : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Power.Effeciency..GFlops.Watts.: num  NA NA NA NA NA NA NA NA NA NA ...
+ $ Site.ID                        : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ System.ID                      : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ date                           : POSIXct, format: "1993-06-01 12:00:00" "1993-06-01 12:00:00" ...
+ $ perf_hpl                       : num  59.7 30.4 30.4 30.4 23.2 20 15.1 13.9 13.7 13.7 ...
+ $ perf_theoretical               : num  59.7 30.4 30.4 30.4 23.2 20 15.1 13.9 13.7 13.7 ...
+ $ perf_hpcg                      : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ efficiency                     : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ nb_cores                       : num  1024 544 512 512 4 ...
+ $ proc_freq                      : num  32 32 32 32 400 ...
+ $ per_core_hpl_perf              : num  0.0583 0.0559 0.0594 0.0594 5.8 ...
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+group_top500 = function(df, y_col, group_col, q) {
+    return (df %>%
+        group_by(.data[[group_col]]) %>%
+        filter(!any(is.na(.data[[y_col]]))) %>%
+        summarise(min_val=min(.data[[y_col]]),
+                  small_val=quantile(.data[[y_col]], q),
+                  med_val=median(.data[[y_col]]),
+                  large_val=quantile(.data[[y_col]], 1-q),
+                  max_val=max(.data[[y_col]])
+        )
+    )
+}
+plot_top500 = function(df, y_col, x_col, color) {
+    q = 0.1
+    df %>% group_top500(y_col, x_col, q) %>%
+        ggplot() +
+        aes_string(x=x_col, ymin="min_val", ymax="max_val", y="med_val") +
+        geom_line(color=color) +
+        geom_ribbon(alpha=0.3, fill=color) +
+        geom_ribbon(aes_string(ymin="small_val", ymax="large_val"), alpha=0.3, fill=color) +
+        theme_light() -> plot
+    return(plot)
+}
+#+end_src
+
+#+RESULTS:
+: 
+: `summarise()` ungrouping output (override with `.groups` argument)
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+p_cores = plot_top500(df, "nb_cores",  "date", "#1b9e77") +
+    scale_y_log10(breaks=c(1e1, 1e3, 1e5, 1e7)) +
+    ggtitle("Number of cores")
+p_freq  = plot_top500(df, "proc_freq", "date", "#d95f02") +
+    scale_y_log10(breaks=c(8, 40, 200, 1000, 5000)) +
+    ggtitle("CPU frequency (MHz)")
+p_perf  = plot_top500(df, "perf_hpl",  "date", "#7570b3") +
+    scale_y_log10(breaks=c(1e0, 1e2, 1e4, 1e6, 1e8)) +
+    ggtitle("Performance (Gflop/s)")
+min_year = df %>% pull(Year) %>% min()
+max_year = df %>% pull(Year) %>% max()
+plot = (p_cores + p_freq + p_perf & 
+    theme(axis.title.x=element_blank(),
+          axis.title.y=element_blank()
+        )
+    ) +
+    plot_annotation(title=paste("Top500 evolution from", min_year, "to", max_year),
+#                   subtitle="Showing the quantiles [0, 0.1, 0.5, 0.9, 1]",
+                    caption="Data from https://top500.org, compiled by Dan Lenski and plotted by Tom Cornebize")
+ggsave(filename='img/context/top500.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-HpmkD1/figure6vR0Sb.png]]
+
+#+begin_src R :results output :session *R* :exports both
+names(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+ [1] "Year"                            "Month"                          
+ [3] "Day"                             "Rank"                           
+ [5] "Site"                            "Manufacturer"                   
+ [7] "Computer"                        "Country"                        
+ [9] "Processors"                      "RMax"                           
+[11] "RPeak"                           "Nmax"                           
+[13] "Nhalf"                           "Processor.Family"               
+[15] "Processor"                       "Processor.Speed..MHz."          
+[17] "System.Family"                   "Operating.System"               
+[19] "Architecture"                    "Segment"                        
+[21] "Application.Area"                "Interconnect.Family"            
+[23] "Interconnect"                    "Region"                         
+[25] "Continent"                       "Power"                          
+[27] "System.Model"                    "Total.Cores"                    
+[29] "Measured.Size"                   "Processor.Cores"                
+[31] "Accelerator"                     "Name"                           
+[33] "Accelerator.Cores"               "Efficiency...."                 
+[35] "Mflops.Watt"                     "Processor.Technology"           
+[37] "OS.Family"                       "Cores.per.Socket"               
+[39] "Processor.Generation"            "Previous.Rank"                  
+[41] "First.Appearance"                "First.Rank"                     
+[43] "Accelerator.Co.Processor.Cores"  "Accelerator.Co.Processor"       
+[45] "Power.Source"                    "Rmax..TFlop.s."                 
+[47] "Rpeak..TFlop.s."                 "HPCG..TFlop.s."                 
+[49] "Power..kW."                      "Power.Effeciency..GFlops.Watts."
+[51] "Site.ID"                         "System.ID"                      
+[53] "date"                            "perf_hpl"                       
+[55] "perf_theoretical"                "perf_hpcg"                      
+[57] "efficiency"                      "nb_cores"                       
+[59] "proc_freq"                       "per_core_hpl_perf"
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+df %>%
+    filter(proc_freq >= 3500) %>%
+    select(Processor, proc_freq) %>%
+    unique() %>%
+    arrange(-proc_freq)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+                        Processor proc_freq
+1                          POWER6      5000
+2                          POWER6      4700
+3               POWER6 2C 4.70GHz      4700
+4              POWER6 2C 4.700GHz      4700
+5                   PowerXCell 8i      4000
+6                          POWER7      3860
+7               POWER7 8C 3.86GHz      3860
+8                          POWER7      3836
+9              POWER7 8C 3.836GHz      3836
+10              POWER7 8C 3.84GHz      3836
+11              POWER7 8C 3.83GHz      3830
+12         Intel EM64T Xeon EM64T      3600
+13     Intel IA-32 Pentium 4 Xeon      3600
+14            Xeon EM64T  3.60GHz      3600
+15       Xeon E3-1280v3 4C 3.6GHz      3600
+16       Xeon Gold 5122 4C 3.6GHz      3600
+17          IBM POWER9 20C 3.6GHz      3600
+18             POWER7  8C 3.55GHz      3550
+19 Intel Xeon E5-2637v2 4C 3.5GHz      3500
+#+end_example
+
 * Performance prediction through simulation
 ** Modeling HPL kernels and communications
 *** Kernels plots                                                :noexport:
