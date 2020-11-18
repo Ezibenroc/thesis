@@ -233,7 +233,35 @@
         OpenMPI\footnote{\url{https://github.com/open-mpi/ompi}} version~2.0.2 compiled with GCC version~6.3.0 on a
         Debian~9 installation with kernel version~4.9.0.
 
-    \section{Randomizing the sizes}%
+    \section{Randomizing the order}%
+    \label{sec:randomizing_order}
+        The network model in SMPI needs to be instanciated with a careful calibration of the MPI communication
+        performance, as presented in \cite{smpi}. This was done with a MPI program created by the Simgrid team that
+        performed a sequence of measures with two hosts. Several kind of measures were implemented: the \emph{recv}
+        (a call to \texttt{MPI\_Recv} with waiting to avoid late senders), the \emph{isend} (a call to
+        \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \texttt{MPI\_Send} followed by a call to \texttt{MPI\_Recv}
+        to get the round-trip time) as well as several more minor MPI primitives.
+        \begin{enumerate}
+        \end{enumerate}
+        \begin{algorithm}[H]
+            read the sequence of sizes \(S_1\), typically \(|S_1| \approx 1000\)\;
+            \(S_2 := \underbrace{S_1\cdot S_1\cdot\dots\cdot S_1}_{N\text{ concatenations, typically } N\approx 50}\)\;
+            \For{each kind of measure (recv, isend, pingpong, etc.)}{
+                \For{\(s \in S_2\)}{
+                    perform the measure $K\approx10$ times and output each individual duration
+                }
+            }
+        \end{algorithm}
+
+        Although the sequence of sizes \(S_1\) is a random sequence, there are still two obvious biases in this
+        experiment.  First, the final sequence \(S_2\) is a concatenation of several instances of \(S_1\), so the same
+        (random) order will be used in these \(N\) runs. Then, the different kind of measures are performed one after
+        the other.
+
+        In a first step towards a better methodology, we started by shuffling entirely the sequence \(S_2\) after the
+        concatenation.
+
+    \section{randomizing the sizes}%
     \label{sec:randomizing_sizes}
         %% TODO
         %% - Randomization de l'ordre des XPs HPL aussi mais pas de problème notable.
