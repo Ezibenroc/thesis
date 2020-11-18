@@ -241,8 +241,7 @@
         (a call to \texttt{MPI\_Recv} with waiting to avoid late senders), the \emph{isend} (a call to
         \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \texttt{MPI\_Send} followed by a call to \texttt{MPI\_Recv}
         to get the round-trip time) as well as several more minor MPI primitives.
-        \begin{enumerate}
-        \end{enumerate}
+
         \begin{algorithm}[H]
             read the sequence of sizes \(S_1\), typically \(|S_1| \approx 1000\)\;
             \(S_2 := \underbrace{S_1\cdot S_1\cdot\dots\cdot S_1}_{N\text{ concatenations, typically } N\approx 50}\)\;
