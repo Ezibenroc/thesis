@@ -28,22 +28,14 @@ wc -l ${filename}
 library(dplyr)
 library(ggplot2)
 library(patchwork)
-df = read.csv("data/context/TOP500_history.csv") %>%
-    mutate(date=ISOdate(Year, Month, Day)) %>%
-    mutate(perf_hpl=ifelse(is.na(RMax), Rmax..TFlop.s.*1000, RMax)) %>%
-    mutate(perf_theoretical=ifelse(is.na(RPeak), Rpeak..TFlop.s.*1000, RMax)) %>%
-    mutate(perf_hpcg=HPCG..TFlop.s.*1000) %>%
-    mutate(efficiency=perf_hpl/perf_theoretical) %>%
-    mutate(nb_cores=ifelse(is.na(Total.Cores), Processors, Total.Cores)) %>%
-    mutate(proc_freq=Processor.Speed..MHz.) %>%
-    mutate(per_core_hpl_perf=perf_hpl/nb_cores)
+df = read.csv("data/context/TOP500_history.csv")
 str(df)
 #+end_src
 
 #+RESULTS:
 #+begin_example
 
-'data.frame':	28000 obs. of  61 variables:
+'data.frame':	28000 obs. of  53 variables:
  $ Year                           : int  1993 1993 1993 1993 1993 1993 1993 1993 1993 1993 ...
  $ Month                          : int  6 6 6 6 6 6 6 6 6 6 ...
  $ Day                            : int  1 1 1 1 1 1 1 1 1 1 ...
@@ -97,14 +89,75 @@ str(df)
  $ Site.ID                        : num  NA NA NA NA NA NA NA NA NA NA ...
  $ System.ID                      : int  NA NA NA NA NA NA NA NA NA NA ...
  $ Power.Efficiency..GFlops.Watts.: num  NA NA NA NA NA NA NA NA NA NA ...
- $ date                           : POSIXct, format: "1993-06-01 12:00:00" "1993-06-01 12:00:00" ...
- $ perf_hpl                       : num  59.7 30.4 30.4 30.4 23.2 20 15.1 13.9 13.7 13.7 ...
- $ perf_theoretical               : num  59.7 30.4 30.4 30.4 23.2 20 15.1 13.9 13.7 13.7 ...
- $ perf_hpcg                      : num  NA NA NA NA NA NA NA NA NA NA ...
- $ efficiency                     : num  1 1 1 1 1 1 1 1 1 1 ...
- $ nb_cores                       : num  1024 544 512 512 4 ...
- $ proc_freq                      : num  32 32 32 32 400 ...
- $ per_core_hpl_perf              : num  0.0583 0.0559 0.0594 0.0594 5.8 ...
+#+end_example
+
+There are several columns to denote a number of cores (total, only cpu, only
+accelerators...).
+#+begin_src R :results output :session *R* :exports both
+df %>% filter(Year == 2020, Month==11, Rank %in% c(2,3,5)) %>% select(Site, Processor, Accelerator.Co.Processor, Total.Cores, Processor.Cores, Accelerator.Co.Processor.Cores, Accelerator.Cores)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+                                  Site                 Processor
+1 DOE/SC/Oak Ridge National Laboratory    IBM POWER9 22C 3.07GHz
+2                        DOE/NNSA/LLNL     IBM POWER9 22C 3.1GHz
+3                   NVIDIA Corporation AMD EPYC 7742 64C 2.25GHz
+  Accelerator.Co.Processor Total.Cores Processor.Cores
+1       NVIDIA Volta GV100     2414592              NA
+2       NVIDIA Volta GV100     1572480              NA
+3              NVIDIA A100      555520              NA
+  Accelerator.Co.Processor.Cores Accelerator.Cores
+1                        2211840                NA
+2                        1382400                NA
+3                         483840                NA
+#+end_example
+
+So, let's unify and clean the data.
+#+begin_src R :results output :session *R* :exports both
+df = df %>%
+    mutate(date=ISOdate(Year, Month, Day)) %>%
+    mutate(perf_hpl=ifelse(is.na(RMax), Rmax..TFlop.s.*1000, RMax)) %>%
+    mutate(perf_theoretical=ifelse(is.na(RPeak), Rpeak..TFlop.s.*1000, RMax)) %>%
+    mutate(perf_hpcg=HPCG..TFlop.s.*1000) %>%
+    mutate(efficiency=perf_hpl/perf_theoretical) %>%
+    mutate(total_cores=ifelse(is.na(Total.Cores), Processors, Total.Cores)) %>%
+    mutate(accelerator_cores=ifelse(is.na(Accelerator.Cores), 0, Accelerator.Cores)) %>%
+    mutate(accelerator_cores=ifelse(is.na(Accelerator.Co.Processor.Cores), accelerator_cores, Accelerator.Co.Processor.Cores)) %>%
+    mutate(cpu_cores=total_cores-accelerator_cores) %>%
+    mutate(proc_freq=Processor.Speed..MHz.)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output :session *R* :exports both
+df %>% filter(Year == 2020, Month==11, Rank <= 10) %>% select(Site, total_cores, cpu_cores, accelerator_cores)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+                                             Site total_cores cpu_cores
+1          RIKEN Center for Computational Science     7630848   7630848
+2            DOE/SC/Oak Ridge National Laboratory     2414592    202752
+3                                   DOE/NNSA/LLNL     1572480    190080
+4          National Supercomputing Center in Wuxi    10649600  10649600
+5                              NVIDIA Corporation      555520     71680
+6     National Super Computer Center in Guangzhou     4981760    427008
+7                 Forschungszentrum Juelich (FZJ)      449280     44928
+8                                      Eni S.p.A.      669760     87360
+9  Texas Advanced Computing Center/Univ. of Texas      448448    448448
+10                                   Saudi Aramco      672520     39560
+   accelerator_cores
+1                  0
+2            2211840
+3            1382400
+4                  0
+5             483840
+6            4554752
+7             404352
+8             582400
+9                  0
+10            632960
 #+end_example
 
 #+begin_src R :results output :session *R* :exports both
@@ -136,7 +189,7 @@ plot_top500 = function(df, y_col, x_col, color) {
 #+RESULTS:
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
-p_cores = plot_top500(df, "nb_cores",  "date", "#1b9e77") +
+p_cores = plot_top500(df, "total_cores",  "date", "#1b9e77") +
     scale_y_log10(breaks=c(1e1, 1e3, 1e5, 1e7)) +
     ggtitle("Number of cores")
 p_freq  = plot_top500(df, "proc_freq", "date", "#d95f02") +
@@ -160,45 +213,8 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Y7Z50c/figureux3B05.png]]
+[[file:/tmp/babel-Y7Z50c/figureATURtA.png]]
 
-#+begin_src R :results output :session *R* :exports both
-names(df)
-#+end_src
-
-#+RESULTS:
-#+begin_example
- [1] "Year"                            "Month"                          
- [3] "Day"                             "Rank"                           
- [5] "Site"                            "Manufacturer"                   
- [7] "Computer"                        "Country"                        
- [9] "Processors"                      "RMax"                           
-[11] "RPeak"                           "Nmax"                           
-[13] "Nhalf"                           "Processor.Family"               
-[15] "Processor"                       "Processor.Speed..MHz."          
-[17] "System.Family"                   "Operating.System"               
-[19] "Architecture"                    "Segment"                        
-[21] "Application.Area"                "Interconnect.Family"            
-[23] "Interconnect"                    "Region"                         
-[25] "Continent"                       "Power"                          
-[27] "System.Model"                    "Total.Cores"                    
-[29] "Measured.Size"                   "Processor.Cores"                
-[31] "Accelerator"                     "Name"                           
-[33] "Accelerator.Cores"               "Efficiency...."                 
-[35] "Mflops.Watt"                     "Processor.Technology"           
-[37] "OS.Family"                       "Cores.per.Socket"               
-[39] "Processor.Generation"            "Previous.Rank"                  
-[41] "First.Appearance"                "First.Rank"                     
-[43] "Accelerator.Co.Processor.Cores"  "Accelerator.Co.Processor"       
-[45] "Power.Source"                    "Rmax..TFlop.s."                 
-[47] "Rpeak..TFlop.s."                 "HPCG..TFlop.s."                 
-[49] "Power..kW."                      "Power.Effeciency..GFlops.Watts."
-[51] "Site.ID"                         "System.ID"                      
-[53] "date"                            "perf_hpl"                       
-[55] "perf_theoretical"                "perf_hpcg"                      
-[57] "efficiency"                      "nb_cores"                       
-[59] "proc_freq"                       "per_core_hpl_perf"
-#+end_example
 
 #+begin_src R :results output :session *R* :exports both
 df %>%
