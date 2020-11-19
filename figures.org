@@ -791,7 +791,129 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-Kejzdq/figure8FQI9S.png]]
 * Experimental control
-** Bit flips
+** Randomizing the order
+The CSV file used in this section has been dumped by this [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/grvingt_proper_randomization.ipynb][notebook]] (cell 2)
+using the archives: [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-07-24_1621460.zip][no randomization]], [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-07-27_1625117.zip][half randomization]], [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-08-03_1645238.zip][full randomization]].
+*** Plot drawing
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+df = read.csv('data/experiment/randomizing_order/mpi_calibration_order.csv')
+str(df)
+#+end_src
+
+#+RESULTS:
+: 
+: 'data.frame':	1041500 obs. of  4 variables:
+:  $ index   : int  0 1 2 3 4 5 6 7 8 9 ...
+:  $ msg_size: int  765921 765921 765921 765921 765921 765921 765921 765921 765921 765921 ...
+:  $ duration: num  7.70e-05 7.32e-05 7.29e-05 7.33e-05 7.28e-05 ...
+:  $ shuffled: Factor w/ 3 levels "full","half",..: 3 3 3 3 3 3 3 3 3 3 ...
+
+#+begin_src R :results output :session *R* :exports both
+df %>%
+    group_by(shuffled) %>%
+    summarise(max_size=max(msg_size)) %>%
+    as.data.frame() -> tmp
+max_size = tmp %>% pull(max_size) %>% min()
+str(max_size)
+tmp
+#+end_src
+
+#+RESULTS:
+: 
+: `summarise()` ungrouping output (override with `.groups` argument)
+: 
+:  int 989921
+: 
+:   shuffled max_size
+: 1     full  9981108
+: 2     half   989921
+: 3     none   989921
+
+We used a larger parameter space in one of the runs. For the plots, we will
+restrict every mode to the same size interval.
+
+In fact, we will only plot the half-shuffled and the full-shuffled.
+
+#+begin_src R :results output :session *R* :exports both
+print(length(df$msg_size))
+df = df %>%
+    filter(msg_size <= max_size) %>%
+    filter(shuffled %in% c("half", "none")) %>%
+    mutate(mode=ifelse(shuffled=="none", "Not shuffled", "Shuffled"))
+print(length(df$msg_size))
+#+end_src
+
+#+RESULTS:
+: [1] 1041500
+: 
+: [1] 662000
+
+#+begin_src R :results output :session *R* :exports both
+plot_mpi = function(df, alpha) {
+    return(df %>%
+        ggplot() +
+        aes(x=msg_size, y=duration, color=mode) +
+        geom_point(alpha=alpha) +
+        scale_x_log10() +
+        scale_y_log10() +
+        scale_color_brewer(palette="Dark2") +
+        theme_bw() +
+        labs(x="Message size (bytes)", y="Duration (seconds)") +
+        theme(legend.position="none") +
+        facet_wrap("mode")
+    )
+}
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = df %>% plot_mpi(alpha=0.1)
+ggsave(filename='img/experiment/randomizing_order/raw_data.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-O0Zhn5/figureznNAJh.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = df %>%
+    group_by(msg_size, mode) %>%
+    summarize(duration=mean(duration)) %>%
+    plot_mpi(alpha=1) + expand_limits(y=c(min(df$duration), max(df$duration)))
+ggsave(filename='img/experiment/randomizing_order/aggregated_data.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-O0Zhn5/figureI2E2LZ.png]]
+
+Now, let's zoom on some sizes.
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(see) # https://github.com/easystats/see
+library(ggbeeswarm)
+plot = df %>%
+    filter(msg_size >= 900, msg_size <= 1000) %>%
+    filter(duration <= 4e-6) %>% # removing the 'outliers'
+    ggplot() +
+    aes(x=factor(msg_size), y=duration, color=mode, fill=mode) +
+    geom_quasirandom(dodge.width=1) +
+    stat_summary(fun="mean", geom="point", color="black", size=4, shape=4) +
+    facet_wrap("mode") +
+    scale_color_brewer(palette="Dark2") +
+    theme_bw() +
+    theme(legend.position="none") +
+    labs(x="Message size (bytes)", y="Duration (seconds)")
+ggsave(filename='img/experiment/randomizing_order/distribution.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-O0Zhn5/figureeLgda4.png]]
+
+** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
 the archives from this [[https://github.com/Ezibenroc/presentations/tree/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/exp_data/1][directory]]) and [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_mask_size.ipynb][here]] (using the archives from this
 [[https://github.com/Ezibenroc/presentations/tree/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/exp_data/2][directory]]). You can also see the entries in my journal from 2019/10/25 and
