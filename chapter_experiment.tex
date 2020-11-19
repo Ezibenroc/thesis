@@ -258,9 +258,69 @@
         the other.
 
         In a first step towards a better methodology, we started by shuffling entirely the sequence \(S_2\) after the
-        concatenation.
+        concatenation. The observed durations for function \texttt{MPI\_Recv} with both methods are presented in
+        Figure~\ref{fig:randomizing_order:raw_data}. There is no obvious difference here, in both cases the duration is
+        piecewise linear in the message size and several modes are present for the small and medium messages.
 
-    \section{randomizing the sizes}%
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/raw_data.png}
+            \caption{The duration of \texttt{MPI\_Recv} is piecewise linear, with several modes for small messages.}%
+            \label{fig:randomizing_order:raw_data}
+        \end{figure}
+
+        To compute a network model for SMPI, we need to perform a (segmented) linear regression on this data. One
+        assumption for the simple least-square regression is that the noise should be normaly distributed, which is
+        clearly not the case with our dataset, the noise is multi-modal. One simple solution for this is to compute the
+        average duration for each message size, which all have a large number of measures (500 in this figure). With the
+        central limit theorem, assuming that the measures for similar message sizes are independent and identically
+        distributed, their sample average is normaly distributed. This means that by averaging the data, we should get a
+        normal noise which would allow us to compute a linear regression.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/aggregated_data.png}
+            \caption{The average durations of \texttt{MPI\_Recv} in the non-shuffled case still show several modes,
+            which should not happen according to the central limit theorem.}%
+            \label{fig:randomizing_order:avg_data}
+        \end{figure}
+
+        The aggregated data is presented in Figure~\ref{fig:randomizing_order:avg_data}. With the shuffled experiment
+        (right plot), the average durations have a single-mode, as expected. However, in the non-shuffled case (left
+        plot), at least two modes are clearly present. This contradicts the conclusion of the central limit theorem,
+        thereby proving that its hypotheses do not hold for this experiment. This is confirmed by
+        Figure~\ref{fig:randomizing_order:distribution}, where we zoomed on a few distinct message sizes between
+        \NSI{900}{\byte} and \NSI{1000}{\byte}. Each point is the duration of an individual call to \texttt{MPI\_Recv},
+        the crosses represent the average durations. In the shuffled experiment, on the right, the duration
+        distributions are similar for all message sizes, with two modes clearly identifiable and the average in between.
+        In the non-shuffled case, on the left, the durations of two message sizes are different, namely \NSI{960}{\byte}
+        and \NSI{999}{\byte}. For these two calls, the distributions have only one mode, so their average durations are
+        significantly shifted. The assumption of identical distribution for these different message sizes is clearly not
+        satisfied here.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/distribution.png}
+            \caption{The duration of \texttt{MPI\_Recv} is not identically distributed in the non-shuffled case.
+            Durations truncated to \NSI{4}{\micro\second} for a better readability.}%
+            \label{fig:randomizing_order:distribution}
+        \end{figure}
+
+        The root cause of this phenomenon is still unclear. Since shuffling correctly the experiments prevents the
+        occurence of this issue, a possible reason may be that the individual calls to \texttt{MPI\_Recv} are not truly
+        independent. The sequence before the calls for the sizes like \NSI{960}{\byte} or \NSI{999}{\byte} would lead
+        to particularly good conditions and thus an excellent performance, which does not systematically happen in the
+        shuffled case because of the proper randomization.
+
+        Later on, we went a step further in improving the methodology of this experiment by also randomizing the outer
+        loop, \ie the measures are now shuffled, there are \emph{pingpong} measures between \emph{isend} and \emph{recv}
+        measures and vice-versa. This change however did not bring any noticeable effect on our observations.
+
+        The experiments described in this section were performed in 2018. Two years later, we were unable to replicate
+        this phenomenon, despite using the same MPI implementation and an identical cluster: the averaged data has a
+        single mode, even in the non-shuffled case.
+
+    \section{Randomizing the sizes}%
     \label{sec:randomizing_sizes}
         %% TODO
         %% - Randomization de l'ordre des XPs HPL aussi mais pas de problème notable.
