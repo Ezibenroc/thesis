@@ -10,8 +10,10 @@
 *.xml
 svg-inkscape
 macros.include.tex
+chapter_introduction.pdf
 chapter_experiment.pdf
 chapter_prediction.pdf
+chapter_conclusion.pdf
 thesis.pdf
 *~
 data/prediction/modeling/kernels/dgemm_calibration.csv
