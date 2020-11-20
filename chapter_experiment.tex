@@ -233,6 +233,46 @@
         OpenMPI\footnote{\url{https://github.com/open-mpi/ompi}} version~2.0.2 compiled with GCC version~6.3.0 on a
         Debian~9 installation with kernel version~4.9.0.
 
+    \section{Defining the parameter space}%
+    \label{sec:parameter_space}
+
+        Two families of experiments are discussed in this chapter: (1) MPI operations such as calls to
+        \texttt{MPI\_Recv} or \texttt{MPI\_Send}, their duration is proportional to $S$, the size of the buffer that is
+        being communicated, and (2) calls to the \texttt{dgemm} function, whose duration is proportional to the product
+        of the sizes $mnk$ but also depends on individual interactions of those sizes.
+
+        This section describes how and why these parameters are sampled for making our experiments.
+
+        \subsection{MPI communications}%
+
+            If we assume that the duration of a communication is linear in the amount of data being sent, the easiest
+            way to sample the data is to only measure two sizes, one very small buffer (\eg \NSI{1}{\byte}) and one very
+            large buffer (\eg \NSI{1}{\giga\byte}). To avoid any bias, we could even try several small and large
+            buffers with slight differences in their respective sizes. However, we saw in Part~\ref{part:prediction}
+            that this linearity assumption does not hold, their are large discontinuities. We therefore need to also
+            sample sizes between the two extreme values to (1) make sure that all the breakpoints are visible in our
+            dataset and (2) perform one linear regression in each linear zone.
+
+            Given this requirement, the natural sampling method would be a uniform sampling, taking
+            \(S\sim\unif{1}{10^9}\). However, in our experiments, we found out that the breakpoints are not uniformly
+            spread, but rather exponentially. For instance, the \texttt{MPI\_Send} on the dahu cluster has four
+            breakpoints: \NSI{8.14}{\kilo\byte}, \NSI{34.0}{\kilo\byte}, \NSI{63.8}{\kilo\byte} and
+            \NSI{285}{\mega\byte}. If the sizes of the experiment were uniformly sampled, we would very probably miss
+            the smaller breakpoints: by sampling uniformly and indepently 1000 numbers in the interval \([1, 10^9]\),
+            the probability to have at least one number smaller or equal to \(10^5\) is a bit less than
+            \NSI{10}{\percent}. The reason for these exponentialy spread breakpoints likely comes from the hardware.
+            Typically, each layer of the memory hierarchy is one order of magnitude larger than the previous layer. For
+            instance, each core of a dahu node has \NSI{32}{\kibi\byte} L1 instruction and data caches and one
+            \NSI{1}{\mibi\byte} L2 cache. Then, the 16 nodes of a same CPU share a \NSI{22}{\mibi\byte} L3 cache and
+            a \NSI{93}{\gibi\byte} memory.
+
+            For these reasons, we made the choice to sample the sizes exponentially in the considered interval. More
+            precisely, the size $S$ is sampled as: \[S\sim10^{\unif{0}{9}}\]
+
+        \subsection{Function \texttt{dgemm}}%
+
+            ...
+
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
         The network model in SMPI needs to be instanciated with a careful calibration of the MPI communication
