@@ -271,7 +271,30 @@
 
         \subsection{Function \dgemm}%
 
-            The situation is different with the \dgemm function.
+            The situation is different with the \dgemm function. We did not observe any breakpoint in the performance
+            plots as for the MPI communications. Hence, we did not have any reason to use an exponential sampling. A
+            first solution would therefore consist in taking \(M=N=K\) and sampling the product \(MNK\) uniformly in
+            some interval.  This could be sufficient for a simple linear regression with only one parameter, but as
+            discussed in Part~\ref{part:prediction} we need several coefficients of the polynomial. For this reason, we
+            have to cover a larger zone of the parameter space.
+
+            Two options were considered.
+            \begin{description}
+                \item[Independent sizes] Each of the three sizes \(M\), \(N\) and \(K\) is sampled independently and
+                    uniformly in some interval. This is the easiest method to implement. With this approach, the product
+                    \(MNK\) is not uniform, it is heavily skewed towards the small values.
+                \item[Uniform product] The product \(MNK\) is sampled uniformly in some interval, and then the sizes
+                    \(M\), \(N\) and \(K\) are sampled randomly according to get (approximately) the correct product.
+                    To do so, we sample the sizes as follow:
+                    \begin{enumerate}
+                        \item \(A \sim \unif{1}{\sqrt[3]{MNK}}\)
+                        \item \(B \sim \unif{1}{\sqrt{\frac{MNK}{A}}}\)
+                        \item \(C = \frac{MNK}{AB}\)
+                        \item Return the six possible permutations: \((M,N,K) = (A,B,C), (C,A,B), \dots\)
+                    \end{enumerate}
+                    The goal of returning all the permutations of the sizes is to avoid any bias in the sampling
+                    procedure, since they are not generated independently from each other.
+            \end{description}
 
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
