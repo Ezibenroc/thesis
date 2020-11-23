@@ -316,6 +316,10 @@
             sampling, large values for \(M\) are more likely to give a product \(MNK\) above the specified limit and
             thus to be rejected.
 
+            Since the product \(MNK\) is the most significant factor for the duration of \dgemm, it is more natural to
+            use a uniform distribution for this term, we therefore made the choice to use the second approach for
+            generating experiment files for the \dgemm experiments.
+
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
         The network model in SMPI needs to be instanciated with a careful calibration of the MPI communication
