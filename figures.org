@@ -791,6 +791,92 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-Kejzdq/figure8FQI9S.png]]
 * Experimental control
+** Parameter space
+No dataset here, we generate the data.
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+set.seed(42)
+
+N = 100000
+max_prod = 1e10
+max_size = 1e4
+
+# First, we generate a dataframe with 'independent' sizes (not truly independent, we reject the
+# rows where the product is larger than the limit.
+df_inde = data.frame()
+while(nrow(df_inde) < N) {
+    rem = N-nrow(df_inde)
+    tmp = data.frame(m=round(runif(rem, 1, max_size)), n=round(runif(rem, 1, max_size)), k=round(runif(rem, 1, max_size))) %>%
+        mutate(prod=m*n*k) %>%
+        filter(prod <= max_prod)
+    df_inde = rbind(df_inde, tmp)
+}
+df_inde$mode = "Independent sizes"
+
+# Then, we generate a dataframe with uniform product, again using rejection sampling.
+N_unif = N %/% 6 # 6 permutations
+df_unif = data.frame()
+while(nrow(df_unif) < N_unif) {
+    rem = N_unif - nrow(df_unif)
+    tmp = data.frame(prod=runif(rem, 1, max_prod)) %>%
+        mutate(A=runif(rem, 1, prod**(1/3))) %>%
+        mutate(B=runif(rem, 1, (prod/A)**(1/2))) %>%
+        mutate(C=prod/A/B) %>%
+        filter(A <= max_size, B <= max_size, C <= max_size) %>%
+        mutate(A=round(A), B=round(B), C=round(C), prod=A*B*C)
+    df_unif = rbind(df_unif, tmp)
+}
+df_unif = rbind(
+    df_unif %>% mutate(m=A, n=B, k=C),
+    df_unif %>% mutate(m=A, n=C, k=B),
+    df_unif %>% mutate(m=B, n=A, k=C),
+    df_unif %>% mutate(m=C, n=A, k=B),
+    df_unif %>% mutate(m=B, n=C, k=A),
+    df_unif %>% mutate(m=C, n=B, k=A)) %>%
+    select(-A, -B, -C) %>%
+    mutate(mode="Uniform product")
+
+# Finally we merge the two dataframes
+df = rbind(df_unif, df_inde)
+str(df)
+#+end_src
+
+#+RESULTS:
+: 
+: 'data.frame':	199996 obs. of  5 variables:
+:  $ prod: num  3.28e+09 7.12e+09 6.57e+09 6.81e+07 7.44e+08 ...
+:  $ m   : num  1338 1885 228 296 14 ...
+:  $ n   : num  1031 843 4520 441 6449 ...
+:  $ k   : num  2378 4480 6374 522 8245 ...
+:  $ mode: chr  "Uniform product" "Uniform product" "Uniform product" "Uniform product" ...
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 700 :height 300 :session *R*
+base_plot = df %>%
+    ggplot() +
+    geom_histogram(bins=50, position="identity", alpha=0.5, boundary=0) +
+    theme_bw() +
+    ylab('Count') +
+    scale_fill_brewer(palette="Dark2")
+p1 = base_plot +
+    aes(x=prod, fill=mode) +
+    xlab('MNK') +
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    theme(legend.position=c(0.7, 0.82), legend.title=element_blank())
+p2 = base_plot +
+    aes(x=m, fill=mode) +
+    xlab('M') +
+    scale_y_continuous(position = "right") +
+    theme(legend.position="none")
+plot = p1 + p2
+ggsave(filename='img/experiment/parameter_space/distribution.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-iDrifC/figureEsywBF.png]]
+
 ** Randomizing the order
 The CSV file used in this section has been dumped by this [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/grvingt_proper_randomization.ipynb][notebook]] (cell 2)
 using the archives: [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-07-24_1621460.zip][no randomization]], [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-07-27_1625117.zip][half randomization]], [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-08-03_1645238.zip][full randomization]].

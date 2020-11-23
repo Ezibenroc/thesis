@@ -282,7 +282,8 @@
             \begin{description}
                 \item[Independent sizes] Each of the three sizes \(M\), \(N\) and \(K\) is sampled independently and
                     uniformly in some interval. This is the easiest method to implement. With this approach, the product
-                    \(MNK\) is not uniform, it is heavily skewed towards the small values.
+                    \(MNK\) is not uniform, it is heavily skewed towards the small values. Additionaly, we use rejection
+                    sampling to make sure that the product of the sizes does not get too large.
                 \item[Uniform product] The product \(MNK\) is sampled uniformly in some interval, and then the sizes
                     \(M\), \(N\) and \(K\) are sampled randomly according to get (approximately) the correct product.
                     To do so, we sample the sizes as follow:
@@ -293,10 +294,27 @@
                         \item Return the six possible permutations: \((M,N,K) = (A,B,C), (C,A,B), \dots\)
                     \end{enumerate}
                     The goal of returning all the permutations of the sizes is to avoid any bias in the sampling
-                    procedure, since they are not generated independently from each other. Additionaly, we use rejection
+                    procedure, since they are not generated independently from each other. We also use rejection
                     sampling to make sure that one of the sizes does not get too large: if \(C\) is greater than some
                     limit, we simply regenerate \(A\) and \(B\).
             \end{description}
+
+            These two generation methods are illustrated in Figure~\ref{fig:parameter_space}. A list of \Num{100000}
+            size tuples was sampled with each approach.
+
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=\linewidth]{img/experiment/parameter_space/distribution.pdf}
+                \caption{Distribution of the product \(MNK\) and the size \(M\) with the two generation methods. The
+                maximal product is set to \(10^{10}\) and the maximal size to \Num{10000}.}%
+                \label{fig:parameter_space}
+            \end{figure}
+
+            The left plot shows that as expected, the product \(MNK\) appears to have a large left-skew with the first
+            approach and to be uniformly distributed with the second approach. The right plot is more surprising, since
+            the parameter \(M\) is not uniformly distributed with the first approach. The reason is the rejection
+            sampling, large values for \(M\) are more likely to give a product \(MNK\) above the specified limit and
+            thus to be rejected.
 
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
