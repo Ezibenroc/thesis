@@ -114,9 +114,9 @@
                     done. Typically, it can contain the desired version for different softwares like OpenBLAS or
                     OpenMPI, but also the duration of the warmup or the frequency of the monitoring.
                 \item An experiment file. These can be of any kind. A typical use case is to provide a CSV file where
-                    each line is a particular piece of the experiment (\eg an individual call to \texttt{dgemm} and the
+                    each line is a particular piece of the experiment (\eg an individual call to \dgemm and the
                     columns represent the parameters for these experiments (\eg the sizes \texttt{M}, \texttt{N} and
-                    \texttt{K} used by \texttt{dgemm}).
+                    \texttt{K} used by \dgemm).
             \end{itemize}
 
         \subsection{Comparison with Execo}%
@@ -219,7 +219,7 @@
                 core frequencies and temperature every second.
             \item On each core, run a custom
                 code\footnote{\url{https://github.com/Ezibenroc/platform-calibration/src/calibration}}
-                to measure the durations of a given operation (either \texttt{dgemm} or several MPI functions, depending
+                to measure the durations of a given operation (either \dgemm or several MPI functions, depending
                 on the experiment).
         \end{enumerate}
 
@@ -237,8 +237,8 @@
     \label{sec:parameter_space}
 
         Two families of experiments are discussed in this chapter: (1) MPI operations such as calls to
-        \texttt{MPI\_Recv} or \texttt{MPI\_Send}, their duration is proportional to $S$, the size of the buffer that is
-        being communicated, and (2) calls to the \texttt{dgemm} function, whose duration is proportional to the product
+        \recv or \send, their duration is proportional to $S$, the size of the buffer that is
+        being communicated, and (2) calls to the \dgemm function, whose duration is proportional to the product
         of the sizes $mnk$ but also depends on individual interactions of those sizes.
 
         This section describes how and why these parameters are sampled for making our experiments.
@@ -255,7 +255,7 @@
 
             Given this requirement, the natural sampling method would be a uniform sampling, taking
             \(S\sim\unif{1}{10^9}\). However, in our experiments, we found out that the breakpoints are not uniformly
-            spread, but rather exponentially. For instance, the \texttt{MPI\_Send} on the dahu cluster has four
+            spread, but rather exponentially. For instance, the \send on the dahu cluster has four
             breakpoints: \NSI{8.14}{\kilo\byte}, \NSI{34.0}{\kilo\byte}, \NSI{63.8}{\kilo\byte} and
             \NSI{285}{\mega\byte}. If the sizes of the experiment were uniformly sampled, we would very probably miss
             the smaller breakpoints: by sampling uniformly and indepently 1000 numbers in the interval \([1, 10^9]\),
@@ -269,17 +269,17 @@
             For these reasons, we made the choice to sample the sizes exponentially in the considered interval. More
             precisely, the size $S$ is sampled as: \[S\sim10^{\unif{0}{9}}\]
 
-        \subsection{Function \texttt{dgemm}}%
+        \subsection{Function \dgemm}%
 
-            ...
+            The situation is different with the \dgemm function.
 
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
         The network model in SMPI needs to be instanciated with a careful calibration of the MPI communication
         performance, as presented in \cite{smpi}. This was done with a MPI program created by the Simgrid team that
         performed a sequence of measures with two hosts. Several kind of measures were implemented: the \emph{recv}
-        (a call to \texttt{MPI\_Recv} with waiting to avoid late senders), the \emph{isend} (a call to
-        \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \texttt{MPI\_Send} followed by a call to \texttt{MPI\_Recv}
+        (a call to \recv with waiting to avoid late senders), the \emph{isend} (a call to
+        \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \send followed by a call to \recv
         to get the round-trip time) as well as several more minor MPI primitives.
 
         \begin{algorithm}[H]
@@ -298,14 +298,14 @@
         the other.
 
         In a first step towards a better methodology, we started by shuffling entirely the sequence \(S_2\) after the
-        concatenation. The observed durations for function \texttt{MPI\_Recv} with both methods are presented in
+        concatenation. The observed durations for function \recv with both methods are presented in
         Figure~\ref{fig:randomizing_order:raw_data}. There is no obvious difference here, in both cases the duration is
         piecewise linear in the message size and several modes are present for the small and medium messages.
 
         \begin{figure}[htpb]
             \centering
             \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/raw_data.png}
-            \caption{The duration of \texttt{MPI\_Recv} is piecewise linear, with several modes for small messages.}%
+            \caption{The duration of \recv is piecewise linear, with several modes for small messages.}%
             \label{fig:randomizing_order:raw_data}
         \end{figure}
 
@@ -320,7 +320,7 @@
         \begin{figure}[htpb]
             \centering
             \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/aggregated_data.png}
-            \caption{The average durations of \texttt{MPI\_Recv} in the non-shuffled case still show several modes,
+            \caption{The average durations of \recv in the non-shuffled case still show several modes,
             which should not happen according to the central limit theorem.}%
             \label{fig:randomizing_order:avg_data}
         \end{figure}
@@ -330,7 +330,7 @@
         plot), at least two modes are clearly present. This contradicts the conclusion of the central limit theorem,
         thereby proving that its hypotheses do not hold for this experiment. This is confirmed by
         Figure~\ref{fig:randomizing_order:distribution}, where we zoomed on a few distinct message sizes between
-        \NSI{900}{\byte} and \NSI{1000}{\byte}. Each point is the duration of an individual call to \texttt{MPI\_Recv},
+        \NSI{900}{\byte} and \NSI{1000}{\byte}. Each point is the duration of an individual call to \recv,
         the crosses represent the average durations. In the shuffled experiment, on the right, the duration
         distributions are similar for all message sizes, with two modes clearly identifiable and the average in between.
         In the non-shuffled case, on the left, the durations of two message sizes are different, namely \NSI{960}{\byte}
@@ -341,13 +341,13 @@
         \begin{figure}[htpb]
             \centering
             \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/distribution.png}
-            \caption{The duration of \texttt{MPI\_Recv} is not identically distributed in the non-shuffled case.
+            \caption{The duration of \recv is not identically distributed in the non-shuffled case.
             Durations truncated to \NSI{4}{\micro\second} for a better readability.}%
             \label{fig:randomizing_order:distribution}
         \end{figure}
 
         The root cause of this phenomenon is still unclear. Since shuffling correctly the experiments prevents the
-        occurence of this issue, a possible reason may be that the individual calls to \texttt{MPI\_Recv} are not truly
+        occurence of this issue, a possible reason may be that the individual calls to \recv are not truly
         independent. The sequence before the calls for the sizes like \NSI{960}{\byte} or \NSI{999}{\byte} would lead
         to particularly good conditions and thus an excellent performance, which does not systematically happen in the
         shuffled case because of the proper randomization.
@@ -386,7 +386,7 @@
         This experiment comes, yet again, from an unfortunate phenomenon we stumbled upon when calibrating the platform
         for our simulations. Our predictions were wrong, so we investigated a bit and we noticed a significant mismatch
         between the durations measured with our calibration code and the durations observed in HPL. We found out that,
-        the performance of the \texttt{dgemm} function depends on the content of the matrix, which was unexpected.
+        the performance of the \dgemm function depends on the content of the matrix, which was unexpected.
 
         \subsection{Randomization of the matrix initialization}
         \label{sub:randomization_matrix_initialization}
@@ -402,7 +402,7 @@
 
         Figure~\ref{fig:exp:bit-flips:method-perf} shows the evolution of the dgemm durations during the experiment.
         A clear temporal patterns can be distinguished, the performance is oscillating.  Furthermore, several layers can
-        be seen, the durations of \texttt{dgemm} are the highest when the matrices are initialized randomly and the
+        be seen, the durations of \dgemm are the highest when the matrices are initialized randomly and the
         lowest when they are initialized with a constant value. The sequential initialization is in between.
 
         \begin{figure}[htbp]
@@ -412,13 +412,13 @@
             DGEMM durations are lower with constant values in the matrices}
         \end{figure}
 
-        Such an observation was unforeseen. The function \texttt{dgemm} implements the usual matrix product with cubic
+        Such an observation was unforeseen. The function \dgemm implements the usual matrix product with cubic
         complexity. The control flow of the function does not depend on the matrix content, so we did not expect its
         duration to be data-dependent.
 
-        The observations we have made on \texttt{dgemm} performance can be explained by
+        The observations we have made on \dgemm performance can be explained by
         Figure~\ref{fig:exp:bit-flips:method-freq} which shows the evolution and the distribution of the core
-        frequencies during the experiment. There is a clear correlation between the frequencies and \texttt{dgemm}
+        frequencies during the experiment. There is a clear correlation between the frequencies and \dgemm
         performance: the random initialization produces lower frequencies whereas the constant initialization gives
         higher frequencies. A similar temporal patterns can also be distinguished with clear oscillations.
 
@@ -431,7 +431,7 @@
 
         This experiment has been repeated on other Grid'5000 clusters, each time on at least four distinct nodes.
         Table~\ref{tab:bit-flips} gives a summary of our observations. Five other clusters show a similar behavior, the
-        performance of \texttt{dgemm} is higher when the matrices are generated with a constant value. However, for five
+        performance of \dgemm is higher when the matrices are generated with a constant value. However, for five
         other clusters, this phenomenon could not be observed, the matrix content had no impact on the performance.
         %% TODO run this experiment on other Grid'5000 clusters, just to extend a bit the table of the clusters we tested it on.
         %% I have at least two clusters in mind:
@@ -476,7 +476,7 @@
 
             A last hypothesis is the power consumption of the cores. Each state change of the electronic gates of the
             CPU costs an energy overhead. In the case of the constant initialization, the registers will change less
-            often during the execution of \texttt{dgemm}, in comparison with the random initialization. Thus, with the
+            often during the execution of \dgemm, in comparison with the random initialization. Thus, with the
             constant initialization, the processor cores would be able to maintain a higher frequency while respecting
             the thermal design power (TDP), with the random initialization the frequency would be throttled more
             aggressively and thus the performance would be lower.
@@ -511,7 +511,7 @@
                 elements\label{fig:exp:bit-flips:mask_illustration}}
             \end{figure}
 
-            The evolution and the distribution of the \texttt{dgemm} durations is plotted in
+            The evolution and the distribution of the \dgemm durations is plotted in
             Figure~\ref{fig:exp:bit-flips:mask-perf}. Their is a very clear correlation between the mask size and the
             performance: the larger the mask, the lower the duration. Similarly to the previous experiment, some
             temporal patterns can also be distinguished.
@@ -538,7 +538,7 @@
             performance.
 
         \subsection{Conclusion}
-            We have shown that the performance of the \texttt{dgemm} function is data-dependent. The best explanation we
+            We have shown that the performance of the \dgemm function is data-dependent. The best explanation we
             have for this counter-intuitive fact is an energy cost overhead caused by bit flips inside the processor.
             To respect its energy budget, the CPU has to throttle more aggressively its frequency when the matrices
             content is more diverse and thus more energy consumming.
@@ -557,11 +557,11 @@
             M. La{\ss}, C. Plessl and R. Schade (Paderborn Center for Parallel Computing) made independently similar
             observations (personal communications on 2020/09/24 and 2020/11/11). Their findings is summarized here:
             \begin{itemize}
-                \item They observed that \texttt{dgemm} performance depended on the content of the matrix. They also
+                \item They observed that \dgemm performance depended on the content of the matrix. They also
                     made the hypothesis that it was caused by bit-flips. To test this hypothesis, they used the same
                     approach, they filled the matrices with random values with a mask applied to the lower-order bits.
-                    They observed a correlation between the mask size and \texttt{dgemm} performance, which is an
-                    argument in favor of this hypothesis. This experiment was done using anoter \texttt{dgemm}
+                    They observed a correlation between the mask size and \dgemm performance, which is an
+                    argument in favor of this hypothesis. This experiment was done using anoter \dgemm
                     implementation than us (Intel MKL) on an Intel Xeon Gold 6148 (Skylake-SP family) from a noctua
                     node\footnote{\url{https://pc2.uni-paderborn.de/hpc-services/available-systems/noctua/}}.
                 \item They reproduced the same experiment on a FPGA (more precisely, a Bittware 520N PCIe accelerator

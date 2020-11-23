@@ -353,11 +353,11 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 a larger scale.}\vspace{-1em}
             \end{figure}
 
-            HPL heavily relies on BLAS kernels such as \texttt{dgemm} (for matrix-matrix multiplication) or \texttt{dtrsm}
+            HPL heavily relies on BLAS kernels such as \dgemm (for matrix-matrix multiplication) or \texttt{dtrsm}
             (for solving an  \(A\cdot x=b\) equation). The analysis of an HPL simulation with \(64\) processes and a very
             small matrix of order \Num{30000} showed that about \(\NSI{96}{\percent}\) of the time is spent in these two
             kernels. Since the output of these kernels does not influence the control flow, simulation time can be reduced
-            by substituting \texttt{dgemm} and \texttt{dtrsm} function calls with a performance model of the respective
+            by substituting \dgemm and \texttt{dtrsm} function calls with a performance model of the respective
             kernel.
             Skipping kernels renders the content of some variables invalid but in simulation, only the behavior of the
             application and not the correctness of computation results are of concern.  Figure\ref{fig:macro_simple} shows
@@ -376,8 +376,8 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             amount of time was spent in fifteen functions implemented in HPL: \texttt{HPL\_dlaswp*N},
             \texttt{HPL\_dlaswp*T}, \texttt{HPL\_dlacpy} and \texttt{HPL\_dlatcpy}.  All these functions are called during
             the LU factorization and hence impact the performance measured by HPL; however, because of the removal of the
-            \texttt{dgemm} and \texttt{dtrsm} computations, they all operate on bogus data and hence also produce bogus
-            data. They have been handled similarly to \texttt{dgemm} and \texttt{dtrsm}, through performance models and
+            \dgemm and \texttt{dtrsm} computations, they all operate on bogus data and hence also produce bogus
+            data. They have been handled similarly to \dgemm and \texttt{dtrsm}, through performance models and
             macro substitution, which speeds up the simulation by an additional factor of \(3\) to \(4\) on small
             (\(N=\Num{30000}\)) and even more on large scenarios.
 
@@ -606,7 +606,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
     \section{Modeling notations}%
 
         We denote as \(T\) the duration of an operation with parameters \(M\), \(N\), \(K\) (in the case of the
-        \texttt{dgemm} operation, these parameters describe the geometry of the input matrices). We first consider the
+        \dgemm operation, these parameters describe the geometry of the input matrices). We first consider the
         three following modeling options:
         \begin{itemize}
             \item Modeling option \model{0}: For simple and stable compute kernels, the duration can be modeled as a
@@ -655,7 +655,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
         with a mixture of normal distributions whose parameters \(\pi_1 , \dots, \pi_k\) should be estimated. We denote
         this kind of model as \noisep{}. Likewise, the per-host estimations are denoted by \noise[H]{}.
 
-    \section{Modeling  the CPU (\ie \texttt{dgemm} function)}
+    \section{Modeling  the CPU (\ie \dgemm function)}
 
         \subsection{Different linear models}%
 
@@ -670,28 +670,28 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
             \begin{figure}[ht]
                 \centering
-                \subfigure[\texttt{dgemm}
+                \subfigure[\dgemm
                 heterogeneity\label{fig:dgemm_het}]{\includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png}}
-                \subfigure[\texttt{dgemm}
+                \subfigure[\dgemm
                 model\label{fig:dgemm_poly}]{\includegraphics[height=.25\textheight]{img/prediction/modeling/kernels/dgemm_model_calib.png}}
-                \caption{Illustrating the realism of modeling for \texttt{dgemm} function}
+                \caption{Illustrating the realism of modeling for \dgemm function}
                 \label{fig:blas_var}
             \end{figure}
 
-            HPL spends the most time in the \texttt{dgemm} kernel, it is therefore of extreme importance to model this
+            HPL spends the most time in the \dgemm kernel, it is therefore of extreme importance to model this
             function very faithfully.  We  evaluated the previous modeling alternatives:
             \model{\{1,2\}}\noise{\{0,1,2\}} and \model[H]{\{1,2\}}\noise[H]{\{0,1,2\}}.  The \modelp{} and \noisep{}
             families were not investigated as nothing in our observations called for such complexity on classical
             multi-core machines.  Figure\ref{fig:blas_var} illustrates various models and their respective quality for
-            the \texttt{dgemm} function. In these figures, the performance of \texttt{dgemm} is evaluated by calling
-            \texttt{dgemm} with randomized sizes over all the cores of each node (to reproduce experimental conditions
+            the \dgemm function. In these figures, the performance of \dgemm is evaluated by calling
+            \dgemm with randomized sizes over all the cores of each node (to reproduce experimental conditions
             similar to the one of HPL). The first observation (Figure\ref{fig:dgemm_het}) is that a few nodes exhibit
             quite a different behavior (each color and each regression line under model \model[H]{1} corresponds to a
             different cpu, whereas the black dotted line corresponds to model \model{1} over all the nodes). These nodes
             will systematically be slightly slower than other nodes and accounting for this spatial heterogeneity is
             likely to be rather important for HPL.  Second, we took care of covering a wide variety of combinations for
             \(M\), \(N\), and \(K\) and it can be observed that \(M.N.K\) is not sufficient to describe correctly the
-            performance of \texttt{dgemm}. Indeed, for \(M.N.K \approx \num{4.5E9}\) some duration are systematically
+            performance of \dgemm. Indeed, for \(M.N.K \approx \num{4.5E9}\) some duration are systematically
             higher regardless of the node. This happens for some particular (e.g., tall and skinny) matrix geometries,
             which strongly suggests using the full polynomial model. Figure\ref{fig:dgemm_poly} depicts the performance
             (red dots) of a given node as well as the prediction using a simple linear model (\model[H]{1}, black line),
@@ -715,7 +715,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             input matrix over each node individually. Again, for all these kernels a single parameter combination
             explains most of the performance and there is some variability from one node to another (one blue regression
             line per CPU) but it remains quite limited (black dotted line for the platform as a whole), especially since
-            these kernels are very short and infrequently called compared to \texttt{dgemm}. Finally, since variability
+            these kernels are very short and infrequently called compared to \dgemm. Finally, since variability
             significantly increases with the value of the input parameters, a \noise{2} model is clearly required. The
             blue dots in Figure\ref{fig:HPL_var} represent the outcome of a \model{1}\noise{2} model and are hardly
             distinguishable from the real behavior. Similar results can be obtained with this category of model for all
