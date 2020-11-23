@@ -293,7 +293,9 @@
                         \item Return the six possible permutations: \((M,N,K) = (A,B,C), (C,A,B), \dots\)
                     \end{enumerate}
                     The goal of returning all the permutations of the sizes is to avoid any bias in the sampling
-                    procedure, since they are not generated independently from each other.
+                    procedure, since they are not generated independently from each other. Additionaly, we use rejection
+                    sampling to make sure that one of the sizes does not get too large: if \(C\) is greater than some
+                    limit, we simply regenerate \(A\) and \(B\).
             \end{description}
 
     \section{Randomizing the order}%
