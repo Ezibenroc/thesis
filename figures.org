@@ -878,7 +878,7 @@ plot
 [[file:/tmp/babel-iDrifC/figureEsywBF.png]]
 
 ** Randomizing the order
-The CSV file used in this section has been dumped by this [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/grvingt_proper_randomization.ipynb][notebook]] (cell 2)
+The CSV file used in this section has been dumped by this [[https://github.com/Ezibenroc/calibration_analysis/blob/afc789cbbcc3fdd2cb3c02a8837e2a7fbb0604b2/grvingt/grvingt_proper_randomization.ipynb][notebook]] (cell 2)
 using the archives: [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-07-24_1621460.zip][no randomization]], [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-07-27_1625117.zip][half randomization]], [[https://github.com/Ezibenroc/calibration_analysis/blob/166ba54222891073608059c3e576b30e7cd0b3ff/grvingt/nancy_2018-08-03_1645238.zip][full randomization]].
 *** Plot drawing
 #+begin_src R :results output :session *R* :exports both
@@ -890,8 +890,9 @@ str(df)
 
 #+RESULTS:
 : 
-: 'data.frame':	1041500 obs. of  4 variables:
+: 'data.frame':	1041500 obs. of  5 variables:
 :  $ index   : int  0 1 2 3 4 5 6 7 8 9 ...
+:  $ start   : num  0.00316 0.00408 0.00499 0.0059 0.00682 ...
 :  $ msg_size: int  765921 765921 765921 765921 765921 765921 765921 765921 765921 765921 ...
 :  $ duration: num  7.70e-05 7.32e-05 7.29e-05 7.33e-05 7.28e-05 ...
 :  $ shuffled: Factor w/ 3 levels "full","half",..: 3 3 3 3 3 3 3 3 3 3 ...
@@ -940,14 +941,12 @@ print(length(df$msg_size))
 plot_mpi = function(df, alpha) {
     return(df %>%
         ggplot() +
-        aes(x=msg_size, y=duration, color=mode) +
+        aes(x=msg_size, y=duration) +
         geom_point(alpha=alpha) +
         scale_x_log10() +
         scale_y_log10() +
-        scale_color_brewer(palette="Dark2") +
         theme_bw() +
         labs(x="Message size (bytes)", y="Duration (seconds)") +
-        theme(legend.position="none") +
         facet_wrap("mode")
     )
 }
@@ -962,7 +961,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-O0Zhn5/figureznNAJh.png]]
+[[file:/tmp/babel-70i53c/figurelb3LJj.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = df %>%
@@ -974,30 +973,169 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-O0Zhn5/figureI2E2LZ.png]]
+[[file:/tmp/babel-70i53c/figure1nJZNB.png]]
 
-Now, let's zoom on some sizes.
+Let's take again this aggregated data and build two lists, one of sizes that are
+in the lower mode, one of sizes that are in the upper mode.
+#+begin_src R :results output :session *R* :exports both
+zoom = df %>%
+    filter(duration <= 3.5e-6) %>% # removing the 'outliers'
+    filter(msg_size >= 100, msg_size <= 1000) %>%
+    group_by(msg_size, mode) %>%
+    mutate(mean_duration=mean(duration)) %>%
+    ungroup()
+p = 0.2
+bounds = zoom %>%
+    filter(mode=="Not shuffled") %>%
+    pull(mean_duration) %>%
+    quantile(probs=c(p, 1-p))
+zoom = zoom %>%
+    mutate(category = ifelse(mean_duration <= bounds[[1]], "low", ifelse(mean_duration >= bounds[[2]], "high", "medium")))
+selection_size = 3
+low_selection = zoom %>%
+    filter(category=="low") %>%
+    pull(msg_size) %>%
+    unique() %>%
+    sort() 
+high_selection = zoom %>%
+    filter(category=="high") %>%
+    pull(msg_size) %>%
+    unique() %>%
+    sort()
+low_selection_sample = low_selection  %>% .[. <= 800] %>% tail(n=selection_size)
+high_selection_sample = high_selection  %>% .[. <= 800] %>% tail(n=selection_size)
+selection = c(low_selection_sample, high_selection_sample)
+str(selection)
+selection_df = zoom %>%
+    mutate(category = ifelse(msg_size %in% low_selection, paste(low_selection_sample, collapse=","), paste(high_selection_sample, collapse=","))) %>%
+    mutate(category = paste("{", category, "}", sep="")) %>%
+    filter(msg_size %in% selection)
+#+end_src
+
+#+RESULTS:
+: 
+:  int [1:6] 703 767 779 705 741 782
+
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 library(see) # https://github.com/easystats/see
 library(ggbeeswarm)
-plot = df %>%
-    filter(msg_size >= 900, msg_size <= 1000) %>%
-    filter(duration <= 4e-6) %>% # removing the 'outliers'
+library(cowplot)
+plot = selection_df %>%
     ggplot() +
-    aes(x=factor(msg_size), y=duration, color=mode, fill=mode) +
-    geom_quasirandom(dodge.width=1) +
+    aes(x=factor(msg_size), y=duration, color=category) +
+    geom_quasirandom(alpha=0.5, dodge.width=1, key_glyph=rectangle_key_glyph(fill=color)) +
     stat_summary(fun="mean", geom="point", color="black", size=4, shape=4) +
     facet_wrap("mode") +
     scale_color_brewer(palette="Dark2") +
     theme_bw() +
-    theme(legend.position="none") +
-    labs(x="Message size (bytes)", y="Duration (seconds)")
+    expand_limits(y=0) +
+    theme(legend.position="bottom") +
+    theme(legend.background = element_rect(color="black", size=0.3)) +
+    labs(x="Message size (bytes)", y="Duration (seconds)", color="Message size (bytes)") +
+    guides(color=guide_legend(override.aes=list(alpha=1)))
 ggsave(filename='img/experiment/randomizing_order/distribution.png', plot=plot, width=7, height=3, dpi=200)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-O0Zhn5/figureeLgda4.png]]
+[[file:/tmp/babel-70i53c/figureCRwfze.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = selection_df %>%
+    ggplot() +
+    aes(x=start, y=duration, color=category) +
+    geom_point(alpha=0.5, key_glyph=rectangle_key_glyph(fill=color)) +
+    facet_wrap(c("mode", "category"), ncol=4) +
+    scale_color_brewer(palette="Dark2") +
+    theme_bw() +
+    expand_limits(y=0) +
+    labs(x="Timestamp (seconds)", y="Duration (seconds)", color="Message size (bytes)") +
+    theme(legend.position="bottom") +
+    theme(legend.background = element_rect(color="black", size=0.3)) +
+    guides(color=guide_legend(override.aes=list(alpha=1)))
+ggsave(filename='img/experiment/randomizing_order/evolution.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-70i53c/figureJMCmc9.png]]
+
+Now let's have a quick look at the sizes *before* and *after* the low-duration
+calls.
+#+begin_src R :results output :session *R* :exports both
+df %>%
+    filter(mode == 'Not shuffled') %>%
+    filter(index %% 10 == 0) %>%
+    arrange(index) %>%
+    mutate(size_before=lag(msg_size, n=1), size_after=lead(msg_size, n=1)) %>%
+    filter(msg_size %in% low_selection) %>%
+    group_by(msg_size) %>%
+    summarise(duration=mean(duration), size_before=unique(size_before), size_after=unique(size_after)) %>%
+    as.data.frame()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+`summarise()` regrouping output by 'msg_size' (override with `.groups` argument)
+   msg_size    duration size_before size_after
+1       102 1.08950e-06          50        591
+2       195 1.29450e-06      667582     254743
+3       211 1.16998e-06       16620       9852
+4       232 1.21954e-06      495560          3
+5       260 1.19262e-06      626942         31
+6       279 1.14658e-06        1275          6
+7       310 1.18878e-06       12657       6825
+8       357 1.20886e-06          30       4640
+9       366 1.16614e-06          48       5878
+10      383 1.15176e-06          26         29
+11      400 1.21260e-06           1       7921
+12      411 1.16458e-06         703          3
+13      444 1.15260e-06          41          7
+14      451 1.18381e-06           3       2930
+15      451 1.18381e-06          31     379763
+16      476 1.13258e-06          29       8504
+17      568 1.14188e-06         779         41
+18      601 1.19500e-06        2443     500497
+19      646 1.27478e-06      697005      24379
+20      679 1.13138e-06        2422         50
+21      703 1.12164e-06        1335        411
+22      767 1.13044e-06        1054     283616
+23      779 1.22874e-06      699352        568
+24      960 1.15592e-06        1943       1273
+#+end_example
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 700 :height 300 :session *R*
+start_exp=11
+duration_exp=1
+seg_length=2e-7
+seg_height=3.8e-6
+plot = df %>%
+    filter(mode == "Not shuffled", start >= start_exp, start <= start_exp+duration_exp, duration <= 4e-6) %>%
+    filter(msg_size <= 1000) %>%
+    mutate(category_short = ifelse(duration >= 1.7e-6, "Slow", "Fast")) %>%
+    mutate(category = ifelse(category_short=="Slow", "More than 1.7µs", "Less than 1.7µs")) %>% {(
+    ggplot(.) +
+    aes(x=start, xintercept=start, y=duration, color=category) +
+ #   geom_rug(sides="t", position="jitter", alpha=0.5, length=unit(0.1, "npc")) +  # <- very nice, but I needed to not overlap the two colors, so using geom_segment instead
+    geom_segment(data=filter(., category_short=="Slow"), mapping=aes(xend=start, y=seg_height, yend=seg_height+seg_length)) +
+    geom_segment(data=filter(., category_short=="Fast"), mapping=aes(xend=start, y=seg_height+seg_length/2, yend=seg_height-seg_length/2)) +
+    geom_point(alpha=0.5, key_glyph=rectangle_key_glyph(fill=color)) +
+    scale_color_brewer(palette="Dark2") +
+    theme_bw() +
+    labs(x="Timestamp (seconds)", y="Duration (seconds)") +
+    theme(legend.position="bottom", legend.title=element_blank()) +
+    theme(legend.background = element_rect(color="black", size=0.3)) +
+    coord_cartesian(ylim = c(9e-7*0, 3.5e-6), clip="off") +
+    theme(plot.margin = unit(c(15+5.5,5.5,5.5,5.5), "pt")) +
+    guides(color=guide_legend(override.aes=list(alpha=1)))
+)}
+ggsave(filename='img/experiment/randomizing_order/evolution_rug.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-70i53c/figureo3kaI0.png]]
 
 ** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
