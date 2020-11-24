@@ -1106,10 +1106,11 @@ df %>%
 #+end_example
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 700 :height 300 :session *R*
-start_exp=11
-duration_exp=1
+start_exp=14.
+duration_exp=0.2
 seg_length=2e-7
 seg_height=3.8e-6
+seg_width=0.1
 plot = df %>%
     filter(mode == "Not shuffled", start >= start_exp, start <= start_exp+duration_exp, duration <= 4e-6) %>%
     filter(msg_size <= 1000) %>%
@@ -1118,8 +1119,8 @@ plot = df %>%
     ggplot(.) +
     aes(x=start, xintercept=start, y=duration, color=category) +
  #   geom_rug(sides="t", position="jitter", alpha=0.5, length=unit(0.1, "npc")) +  # <- very nice, but I needed to not overlap the two colors, so using geom_segment instead
-    geom_segment(data=filter(., category_short=="Slow"), mapping=aes(xend=start, y=seg_height, yend=seg_height+seg_length)) +
-    geom_segment(data=filter(., category_short=="Fast"), mapping=aes(xend=start, y=seg_height+seg_length/2, yend=seg_height-seg_length/2)) +
+    geom_segment(data=filter(., category_short=="Slow"), size=seg_width, mapping=aes(xend=start, y=seg_height, yend=seg_height+seg_length)) +
+    geom_segment(data=filter(., category_short=="Fast"), size=seg_width, mapping=aes(xend=start, y=seg_height+seg_length/2, yend=seg_height-seg_length/2)) +
     geom_point(alpha=0.5, key_glyph=rectangle_key_glyph(fill=color)) +
     scale_color_brewer(palette="Dark2") +
     theme_bw() +
@@ -1135,7 +1136,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-70i53c/figureo3kaI0.png]]
+[[file:/tmp/babel-70i53c/figurewYqaRU.png]]
 
 ** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using

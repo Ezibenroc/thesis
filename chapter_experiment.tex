@@ -377,31 +377,81 @@
         plot), at least two modes are clearly present. This contradicts the conclusion of the central limit theorem,
         thereby proving that its hypotheses do not hold for this experiment. This is confirmed by
         Figure~\ref{fig:randomizing_order:distribution}, where we zoomed on a few distinct message sizes between
-        \NSI{900}{\byte} and \NSI{1000}{\byte}. Each point is the duration of an individual call to \recv,
+        \NSI{700}{\byte} and \NSI{800}{\byte}. Each point is the duration of an individual call to \recv,
         the crosses represent the average durations. In the shuffled experiment, on the right, the duration
         distributions are similar for all message sizes, with two modes clearly identifiable and the average in between.
-        In the non-shuffled case, on the left, the durations of two message sizes are different, namely \NSI{960}{\byte}
-        and \NSI{999}{\byte}. For these two calls, the distributions have only one mode, so their average durations are
-        significantly shifted. The assumption of identical distribution for these different message sizes is clearly not
-        satisfied here.
+        In the non-shuffled case, on the left, the durations of three message sizes are different, namely
+        \NSI{703}{\byte}, \NSI{767}{\byte} and \NSI{779}{\byte}. For these three calls, the distributions have only one
+        mode, so their average durations are significantly shifted. The assumption of identical distribution for these
+        different message sizes is clearly not satisfied here.
 
         \begin{figure}[htpb]
             \centering
             \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/distribution.png}
-            \caption{The duration of \recv is not identically distributed in the non-shuffled case.
-            Durations truncated to \NSI{4}{\micro\second} for a better readability.}%
+            \caption{Distribution of the \recv durations for six different message sizes between \NSI{700}{\byte} and
+            \NSI{800}{\byte}.  The durations are not identically distributed in the non-shuffled case.  Durations
+            truncated to \NSI{4}{\micro\second} for a better readability.}%
             \label{fig:randomizing_order:distribution}
         \end{figure}
 
-        The root cause of this phenomenon is still unclear. Since shuffling correctly the experiments prevents the
-        occurence of this issue, a possible reason may be that the individual calls to \recv are not truly
-        independent. The sequence before the calls for the sizes like \NSI{960}{\byte} or \NSI{999}{\byte} would lead
-        to particularly good conditions and thus an excellent performance, which does not systematically happen in the
-        shuffled case because of the proper randomization.
+        Since shuffling correctly the experiments prevents the occurence of this issue, a possible reason could be that
+        the individual calls to \recv are not truly independent. The sequence before the calls for the sizes like
+        \NSI{703}{\byte}, \NSI{767}{\byte} or \NSI{779}{\byte} would lead to particularly good conditions and thus an
+        excellent performance, which does not systematically happen in the shuffled case because of the proper
+        randomization. However, we could not identify anything suspect regarding the message sizes of the calls made
+        just before these high-performance calls. Some of them had messages of a few bytes, some others had messages of
+        several hundreds kilobytes.
+
+        In Figure~\ref{fig:randomizing_order:evolution}, we present the temporal evolution of the durations for the
+        calls to \recv made with the sizes presented in Figure~\ref{fig:randomizing_order:distribution}. In the
+        non-shuffled case, we can identify a temporal pattern. During the first 20 seconds of the experiment, the
+        calls with sizes \NSI{705}{\byte}, \NSI{741}{\byte} and \NSI{782}{\byte} (in green) have durations above
+        \NSI{2}{\micro\second} for a large fraction of them, only a small part have durations below
+        \NSI{1.5}{\micro\second}. After the 20 second timestamp, this suddenly changes, there are at least two time
+        windows where all these calls have a low duration. Even outside these time windows, a much larger fraction of
+        these calls have low durations. This temporal pattern is not visible in the other cases.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/evolution.png}
+            \caption{Temporal evolution of the \recv durations for six different message sizes between \NSI{700}{\byte}
+            and \NSI{800}{\byte}. A temporal pattern can be observed. Durations truncated to \NSI{4}{\micro\second} for
+            a better readability.}%
+            \label{fig:randomizing_order:evolution}
+        \end{figure}
+
+        Another view of the non-shuffled experiment is presented in Figure~\ref{fig:randomizing_order:evolution_rug}.
+        Now all the calls with a size lower than \NSI{1}{\kilo\byte} are shown, but only a small fraction of the whole
+        experiment is displayed. The calls to \recv can be divided into two groups depending on their durations, lower
+        (in green) or greater (in orange) than \NSI{1.7}{\micro\second}. The rug plot on the top of the figure
+        highlights the position in time of each of these \recv calls. Although there are slow and fast calls uniformly
+        distributed during this time window, there appears to be some clusters where nearly all the calls are of the
+        same kind.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/evolution_rug.png}
+            \caption{Temporal evolution of the \recv durations for all the sizes between \NSI{1}{\byte} and
+            \NSI{1}{\kilo\byte} during a \NSI{0.2}{\second} time window of the non-shuffled experiment. Another temporal
+            pattern can be observed.  Durations truncated to \NSI{4}{\micro\second} for a better readability.}%
+            \label{fig:randomizing_order:evolution_rug}
+        \end{figure}
+
+        A possible explanation for such a temporal pattern could be an external perturbation that happens at a regular
+        interval. Since we are measuring very small durations, the culprit would be a short but frequent noise (\eg a
+        system daemon). This is very well explained by Petrini~\etal\cite{Petrini_2003}:
+        \begin{quote}
+            Substantial performance loss occurs when an application resonates with system noise: high-frequency,
+            fine-grained noise affects only fine-grained applications; low-frequency, coarse-grained noise affects only
+            coarse-grained applications.
+        \end{quote}
+
+        A similar temporal pattern can be observed in the shuffled experiment. However, since the order of the sizes is
+        completely random, it affects them all equally.
 
         Later on, we went a step further in improving the methodology of this experiment by also randomizing the outer
         loop, \ie the measures are now shuffled, there are \emph{pingpong} measures between \emph{isend} and \emph{recv}
-        measures and vice-versa. This change however did not bring any noticeable effect on our observations.
+        measures and vice-versa. This change did not bring any noticeable effect on our observations.
 
         The experiments described in this section were performed in 2018. Two years later, we were unable to replicate
         this phenomenon, despite using the same MPI implementation and an identical cluster: the averaged data has a
