@@ -1137,7 +1137,146 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-70i53c/figurewYqaRU.png]]
+** Randomizing the sizes
+The CSV files used in this section have been dumpted by this [[https://github.com/Ezibenroc/calibration_analysis/blob/dbd0d284a878d4bf4a7e4d86bd6fe590c5f35585/dahu/blas/expfile_influence.ipynb][notebook]] (cells 8,
+9, 10 and 21) using these [[https://github.com/Ezibenroc/calibration_analysis/tree/dbd0d284a878d4bf4a7e4d86bd6fe590c5f35585/dahu/blas/expfile_influence/1][archives]]. Relevant entry in my journal: 2020-11-25.
+*** Temporal evolution of the average performance and the DRAM power consumption
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+library(anytime)
+library(patchwork)
+library(scales)
+library(ggrepel)
+set.seed(42)
 
+do_plot = function(frame, y_val, y_label) {
+    avg = frame %>%
+        group_by(Expfile) %>%
+        summarise(avg=mean(.data[[y_val]])) %>%
+        mutate(start_time=frame %>% pull(start_time) %>% min())
+    basic_plot = frame %>%
+        ggplot() +
+        aes_string(y=y_val, fill="Expfile") +
+        ylab(y_label) +
+        theme_bw() +
+        expand_limits(y=c(min(frame[[y_val]]), max(frame[[y_val]]))) +
+        scale_fill_brewer(type='qual', palette='Dark2') +
+        scale_color_brewer(type='qual', palette='Dark2') +
+        theme(legend.position="none") +
+        guides(fill = guide_legend(override.aes = list(alpha=1, shape=21, size=4)))
+
+    p1 = basic_plot +
+        geom_boxplot(aes(x=Expfile), outlier.alpha=0, alpha=1) +
+        theme(legend.position='none') +
+        theme(plot.margin = unit(c(0,0,0,0), "pt"), axis.ticks.length=unit(0, "null")) +
+        xlab('Experiment file') +
+        ylab(y_label)
+    p2 = basic_plot +
+        geom_point(shape=21, aes(x=start_time), size=5, alpha=0.7, stroke=0) +
+        scale_x_datetime(breaks = date_breaks("1 day")) +
+        theme(axis.text.y=element_blank(), axis.ticks.y=element_blank(), axis.title.y=element_blank()) +
+        theme(plot.margin = unit(c(0,0,0,0), "pt"), axis.ticks.length=unit(0, "null")) +
+        xlab('Timestamp')
+    p_label = basic_plot +
+        geom_label(data=avg, aes(x=0, y=avg, fill=NA, color=Expfile, label=Expfile)) +
+        theme(plot.margin = unit(c(0,0,0,0), "pt"), axis.ticks.length=unit(0, "null")) +
+        theme_void() +
+        theme(legend.position="none")
+
+    plot = p1 + p_label + p2 + plot_layout(widths=c(5,1,20), guides = 'collect')
+    return(plot)
+}
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/dgemm_agr_data.csv") %>%
+    filter(node==5, cpu==1) %>%
+    mutate(start_time=anytime(start_time)) %>%
+    mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
+    do_plot("avg_gflops", "Average performance (Gflop/s)")
+ggsave(filename='img/experiment/randomizing_sizes/average_performance.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-flXl3R/figureOLDgxQ.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/dgemm_agr_monitoring.csv") %>%
+    filter(node==5, cpu==1, kind=="power", subgroup=="dram") %>%
+    mutate(start_time=anytime(start_time)) %>%
+    mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
+    do_plot("value", "Average DRAM power consumption (W)")
+ggsave(filename='img/experiment/randomizing_sizes/average_power.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-flXl3R/figure7sV0nZ.png]]
+
+*** Distribution of the regression coefficients
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(dplyr)
+library(ggplot2)
+library(anytime)
+library(patchwork)
+library(scales)
+library(ggrepel)
+
+plot_bivariate <- function(df, x_col, y_col, color_col) {
+    density_plot = ggplot() +
+        aes_string(color=color_col, group=color_col) +
+        geom_density(data=df) +
+        theme_void()
+
+    plot_top = density_plot +
+        aes_string(x=x_col)
+    plot_right = density_plot +
+        aes_string(x=y_col) +
+        coord_flip()
+
+    text = df %>%
+        group_by_(color_col) %>%
+        summarise_all(funs(mean))
+
+    scatter_plot = ggplot(df) +
+        aes_string(x=x_col, y=y_col, color=color_col, group=color_col) +
+        geom_point() +
+        stat_ellipse() +
+# Uncomment the following line to put labels on the ellipses
+        geom_label(data=text, aes_string(label=color_col), alpha=0.7) +
+        theme_minimal() +
+        scale_x_continuous(breaks = scales::pretty_breaks(n = 3)) +
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 3)) +
+        xlab(toupper(x_col)) +
+        ylab(toupper(y_col)) +
+        theme(text=element_text(size=24))
+
+    return(
+        plot_top + plot_spacer() + scatter_plot + plot_right +
+        plot_layout(widths = c(4, 1), heights = c(1, 4)) &
+        scale_color_brewer(palette="Dark2", type="qual") &
+        theme(legend.position='none')
+    )
+}
+
+plot = read.csv("data/experiment/randomizing_sizes/dgemm_agr_data.csv") %>%
+    filter(node==5, cpu==1) %>%
+    mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
+    mutate(cpu_id=interaction(node, cpu), group=interaction(cpu_id, expfile)) %>%
+    plot_bivariate("mnk", "nk", "Expfile")
+ggsave(filename='img/experiment/randomizing_sizes/average_distribution.pdf', plot=plot, width=7, height=5)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-flXl3R/figurePRPkNI.png]]
+
+
+*** Individual durations
 ** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
 the archives from this [[https://github.com/Ezibenroc/presentations/tree/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/exp_data/1][directory]]) and [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_mask_size.ipynb][here]] (using the archives from this
