@@ -351,7 +351,7 @@
 
         \begin{figure}[htpb]
             \centering
-            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/raw_data.png}
+            \includegraphics[width=\linewidth]{img/experiment/randomizing_order/raw_data.png}
             \caption{The duration of \recv is piecewise linear, with several modes for small messages.}%
             \label{fig:randomizing_order:raw_data}
         \end{figure}
@@ -366,7 +366,7 @@
 
         \begin{figure}[htpb]
             \centering
-            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/aggregated_data.png}
+            \includegraphics[width=\linewidth]{img/experiment/randomizing_order/aggregated_data.png}
             \caption{The average durations of \recv in the non-shuffled case still show several modes,
             which should not happen according to the central limit theorem.}%
             \label{fig:randomizing_order:avg_data}
@@ -387,7 +387,7 @@
 
         \begin{figure}[htpb]
             \centering
-            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/distribution.png}
+            \includegraphics[width=\linewidth]{img/experiment/randomizing_order/distribution.png}
             \caption{Distribution of the \recv durations for six different message sizes between \NSI{700}{\byte} and
             \NSI{800}{\byte}.  The durations are not identically distributed in the non-shuffled case.  Durations
             truncated to \NSI{4}{\micro\second} for a better readability.}%
@@ -413,7 +413,7 @@
 
         \begin{figure}[htpb]
             \centering
-            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/evolution.png}
+            \includegraphics[width=\linewidth]{img/experiment/randomizing_order/evolution.png}
             \caption{Temporal evolution of the \recv durations for six different message sizes between \NSI{700}{\byte}
             and \NSI{800}{\byte}. A temporal pattern can be observed. Durations truncated to \NSI{4}{\micro\second} for
             a better readability.}%
@@ -430,7 +430,7 @@
 
         \begin{figure}[htpb]
             \centering
-            \includegraphics[width=0.8\linewidth]{img/experiment/randomizing_order/evolution_rug.png}
+            \includegraphics[width=\linewidth]{img/experiment/randomizing_order/evolution_rug.png}
             \caption{Temporal evolution of the \recv durations for all the sizes between \NSI{1}{\byte} and
             \NSI{1}{\kilo\byte} during a \NSI{0.2}{\second} time window of the non-shuffled experiment. Another temporal
             pattern can be observed.  Durations truncated to \NSI{4}{\micro\second} for a better readability.}%
@@ -504,7 +504,7 @@
 
         \begin{figure}[htbp]
             \centering
-            \includegraphics[width=\textwidth]{img/experiment/bit-flips/generation_method_perf.png}
+            \includegraphics[width=\linewidth]{img/experiment/bit-flips/generation_method_perf.png}
             \caption{\label{fig:exp:bit-flips:method-perf}
             DGEMM durations are lower with constant values in the matrices}
         \end{figure}
@@ -521,7 +521,7 @@
 
         \begin{figure}[htbp]
             \centering
-            \includegraphics[width=\textwidth]{img/experiment/bit-flips/generation_method_freq.png}
+            \includegraphics[width=\linewidth]{img/experiment/bit-flips/generation_method_freq.png}
             \caption{\label{fig:exp:bit-flips:method-freq}
             Core frequencies are higher with constant values in the matrices}
         \end{figure}
@@ -615,7 +615,7 @@
 
             \begin{figure}[htbp]
                 \centering
-                \includegraphics[width=\textwidth]{img/experiment/bit-flips/mask_size_perf.png}
+                \includegraphics[width=\linewidth]{img/experiment/bit-flips/mask_size_perf.png}
                 \caption{\label{fig:exp:bit-flips:mask-perf}
                 DGEMM durations are lower with larger bit masks}
             \end{figure}
@@ -625,7 +625,7 @@
 
             \begin{figure}[htbp]
                 \centering
-                \includegraphics[width=\textwidth]{img/experiment/bit-flips/mask_size_freq.png}
+                \includegraphics[width=\linewidth]{img/experiment/bit-flips/mask_size_freq.png}
                 \caption{\label{fig:exp:bit-flips:mask-freq}
                 Core frequencies are higher with larger bit masks}
             \end{figure}
