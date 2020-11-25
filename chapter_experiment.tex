@@ -469,7 +469,29 @@
         %%   mémoire (plus inattendu). Pour certains cas, souhaitable de calibrer à K
         %%   fixé. Dans ce cas là, isoler l'expérience du reste, ne pas essayer de mélanger
         %%   avec d'autres K.
-        Some text\dots
+        \subsection{Effect of the experiment file}%
+        \label{sub:effect_of_the_experiment_file}
+
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/average_performance.pdf}
+                \caption{Average performance observed on CPU 1 of dahu-5, each point represents one experiment. A
+                significant part of the variability is due to the choice of the experiment file.}%
+                \label{fig:randomizing_sizes:expfile:average_perf}
+            \end{figure}
+
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/average_distribution.pdf}
+                \caption{Distribution of two of the regression parameters for CPU 1 of dahu-5, each point represents one
+                experiment. The experiment file has a clear effect on the generated model}%
+                \label{fig:randomizing_sizes:expfile:average_distribution}
+            \end{figure}
+
+        \subsection{Effect of calibrating with a fixed size}%
+        \label{sub:fixed_size}
+
+            Some text\dots
 
     \section{Randomizing the data}%
     \label{sec:randomizing_data}

@@ -1252,8 +1252,7 @@ plot_bivariate <- function(df, x_col, y_col, color_col) {
         scale_x_continuous(breaks = scales::pretty_breaks(n = 3)) +
         scale_y_continuous(breaks = scales::pretty_breaks(n = 3)) +
         xlab(toupper(x_col)) +
-        ylab(toupper(y_col)) +
-        theme(text=element_text(size=24))
+        ylab(toupper(y_col))
 
     return(
         plot_top + plot_spacer() + scatter_plot + plot_right +
@@ -1273,8 +1272,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-flXl3R/figurePRPkNI.png]]
-
+[[file:/tmp/babel-N5zckS/figurevkNDyY.png]]
 
 *** Individual durations
 ** Randomizing the data
