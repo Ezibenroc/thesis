@@ -108,6 +108,8 @@
 \usepackage{pdflscape}
 
 \usepackage[binary-units,group-digits,group-separator={,}]{siunitx}
+% Uncomment to have stuff like 6.7e-11, keep it commented for 6.7\times10^{-11}
+%\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
 \DeclareSIUnit\flop{Flop}
 \DeclareSIUnit\flops{\flop\per\second}
 \newcommand{\Num}[1]{\num[group-separator={,}]{#1}\xspace}

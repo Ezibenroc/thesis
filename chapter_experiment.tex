@@ -488,6 +488,23 @@
                 \label{fig:randomizing_sizes:expfile:average_distribution}
             \end{figure}
 
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/raw_data.png}
+                \caption{Durations of individual \dgemm calls for CPU 1 of dahu-5.
+                Several calls have significantly longer durations than others. Identical black line on the three plots,
+                with slope \Num{6.7e-11}.}%
+                \label{fig:randomizing_sizes:expfile:raw_data}
+            \end{figure}
+
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_power.pdf}
+                \caption{Average DRAM power consumption observed on CPU 1 of dahu-5, each point represents one
+                experiment.}%
+                \label{fig:randomizing_sizes:expfile:average_power}
+            \end{figure}
+
         \subsection{Effect of calibrating with a fixed size}%
         \label{sub:fixed_size}
 
