@@ -1138,7 +1138,7 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-70i53c/figurewYqaRU.png]]
 ** Randomizing the sizes
-The CSV files used in this section have been dumpted by this [[https://github.com/Ezibenroc/calibration_analysis/blob/dbd0d284a878d4bf4a7e4d86bd6fe590c5f35585/dahu/blas/expfile_influence.ipynb][notebook]] (cells 8,
+The CSV files used in this section have been dumpted by this [[https://github.com/Ezibenroc/calibration_analysis/blob/ab23ec7e2624a5ca524838a7a9f613252aec0797/dahu/blas/expfile_influence.ipynb][notebook]] (cells 8,
 9, 10 and 21) using these [[https://github.com/Ezibenroc/calibration_analysis/tree/dbd0d284a878d4bf4a7e4d86bd6fe590c5f35585/dahu/blas/expfile_influence/1][archives]]. Relevant entry in my journal: 2020-11-25.
 *** Temporal evolution of the average performance and the DRAM power consumption
 #+begin_src R :results output :session *R* :exports both
@@ -1192,31 +1192,30 @@ do_plot = function(frame, y_val, y_label) {
 #+RESULTS:
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
-plot = read.csv("data/experiment/randomizing_sizes/dgemm_agr_data.csv") %>%
+plot = read.csv("data/experiment/randomizing_sizes/expfile/dgemm_agr_data.csv") %>%
     filter(node==5, cpu==1) %>%
     mutate(start_time=anytime(start_time)) %>%
     mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
     do_plot("avg_gflops", "Average performance (Gflop/s)")
-ggsave(filename='img/experiment/randomizing_sizes/average_performance.pdf', plot=plot, width=7, height=3)
+ggsave(filename='img/experiment/randomizing_sizes/expfile/average_performance.pdf', plot=plot, width=7, height=3)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-flXl3R/figureOLDgxQ.png]]
+[[file:/tmp/babel-b2kpD9/figureI5KhqO.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
-plot = read.csv("data/experiment/randomizing_sizes/dgemm_agr_monitoring.csv") %>%
+plot = read.csv("data/experiment/randomizing_sizes/expfile/dgemm_agr_monitoring.csv") %>%
     filter(node==5, cpu==1, kind=="power", subgroup=="dram") %>%
     mutate(start_time=anytime(start_time)) %>%
     mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
     do_plot("value", "Average DRAM power consumption (W)")
-ggsave(filename='img/experiment/randomizing_sizes/average_power.pdf', plot=plot, width=7, height=3)
+ggsave(filename='img/experiment/randomizing_sizes/expfile/average_power.pdf', plot=plot, width=7, height=3)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-flXl3R/figure7sV0nZ.png]]
-
+[[file:/tmp/babel-b2kpD9/figureQLe7FU.png]]
 *** Distribution of the regression coefficients
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 library(dplyr)
@@ -1262,18 +1261,17 @@ plot_bivariate <- function(df, x_col, y_col, color_col) {
     )
 }
 
-plot = read.csv("data/experiment/randomizing_sizes/dgemm_agr_data.csv") %>%
+plot = read.csv("data/experiment/randomizing_sizes/expfile/dgemm_agr_data.csv") %>%
     filter(node==5, cpu==1) %>%
     mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
     mutate(cpu_id=interaction(node, cpu), group=interaction(cpu_id, expfile)) %>%
     plot_bivariate("mnk", "nk", "Expfile")
-ggsave(filename='img/experiment/randomizing_sizes/average_distribution.pdf', plot=plot, width=7, height=5)
+ggsave(filename='img/experiment/randomizing_sizes/expfile/average_distribution.pdf', plot=plot, width=7, height=5)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-N5zckS/figurevkNDyY.png]]
-
+[[file:/tmp/babel-b2kpD9/figurehDHrWR.png]]
 *** Individual durations
 ** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
