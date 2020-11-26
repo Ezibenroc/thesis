@@ -1273,6 +1273,31 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-b2kpD9/figurehDHrWR.png]]
 *** Individual durations
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(dplyr)
+library(ggplot2)
+
+plot = read.csv("data/experiment/randomizing_sizes/expfile/dgemm_raw_data.csv") %>%
+    filter(node==5, cpu==1) %>%
+    mutate(MNK=as.numeric(m)*as.numeric(n)*as.numeric(k), gflops=2*MNK*1e-9/duration) %>%
+    mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
+    ggplot() +
+    aes(x=MNK, y=duration, color=Expfile) +
+    geom_point(alpha=0.1) +
+    facet_wrap("Expfile") +
+    scale_color_brewer(palette="Dark2") +
+    geom_abline(slope=6.7e-11) +
+    theme_bw() +
+    ylab("Duration (seconds)") +
+    scale_x_continuous(breaks = c(0e9, 4e9, 8e9)) +
+    theme(legend.position="none")
+ggsave(filename='img/experiment/randomizing_sizes/expfile/raw_data.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-b2kpD9/figurev1kz6K.png]]
+
 ** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
 the archives from this [[https://github.com/Ezibenroc/presentations/tree/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/exp_data/1][directory]]) and [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_mask_size.ipynb][here]] (using the archives from this
