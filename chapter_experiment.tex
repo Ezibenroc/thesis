@@ -237,11 +237,12 @@
     \label{sec:parameter_space}
 
         Two families of experiments are discussed in this chapter: (1) MPI operations such as calls to
-        \recv or \send, their duration is proportional to $S$, the size of the buffer that is
+        \recv or \send, their duration is proportional to \(S\), the size of the buffer that is
         being communicated, and (2) calls to the \dgemm function, whose duration is proportional to the product
-        of the sizes $mnk$ but also depends on individual interactions of those sizes.
+        of the sizes \(MNK\) but also depends on individual interactions of those sizes.
 
-        This section describes how and why these parameters are sampled for making our experiments.
+        An experiment consists in a sequence of calls to the function of interest, with various sizes as parameters. The
+        goal of this section is to discuss how and why the parameters of these sequences are generated.
 
         \subsection{MPI communications}%
 
@@ -267,7 +268,7 @@
             a \NSI{93}{\gibi\byte} memory.
 
             For these reasons, we made the choice to sample the sizes exponentially in the considered interval. More
-            precisely, the size $S$ is sampled as: \[S\sim10^{\unif{0}{9}}\]
+            precisely, each size $S$ is sampled as: \[S\sim10^{\unif{0}{9}}\]
 
         \subsection{Function \dgemm}%
 
@@ -318,7 +319,19 @@
 
             Since the product \(MNK\) is the most significant factor for the duration of \dgemm, it is more natural to
             use a uniform distribution for this term, we therefore made the choice to use the second approach for
-            generating experiment files for the \dgemm experiments.
+            generating experiment files for the \dgemm experiments, with two minor modifications:
+            \begin{itemize}
+                \item Instead of sampling the product uniformly with \(MNK\sim\unif{1}{S}\), we made the choice to use a
+                    slightly more deterministic approach. We first compute $\gamma$ different values that are uniformly
+                    but deterministically spread in the given interval, \ie we compute the set
+                    \(\left\{S, S-\frac{S}{\gamma},S-2\frac{S}{\gamma}, \dots\right\}\)
+                    (typically, \(\gamma=30\)). Then we add a random noise independently to each of these sizes. The
+                    goal is to ensure a similar (yet still random) distribution of the products \(MNK\) each time we
+                    generate a new experiment file. This approach is similar to latin hypercube sampling (LHS).
+                \item In addition of the size tuples randomly generated, we systematically add a few tuples to the list,
+                    like \((1,1,1)\) or \((2048,2048,2048)\). The goal is to ensure that we have a few identical calls to
+                    \dgemm in every experiment, in case we want a fine comparison.
+            \end{itemize}
 
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
