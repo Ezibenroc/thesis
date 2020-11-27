@@ -271,6 +271,7 @@
             precisely, each size $S$ is sampled as: \[S\sim10^{\unif{0}{9}}\]
 
         \subsection{Function \dgemm}%
+        \label{sub:parameter_space:dgemm}
 
             The situation is different with the \dgemm function. We did not observe any breakpoint in the performance
             plots as for the MPI communications. Hence, we did not have any reason to use an exponential sampling. A
@@ -482,8 +483,29 @@
         %%   mémoire (plus inattendu). Pour certains cas, souhaitable de calibrer à K
         %%   fixé. Dans ce cas là, isoler l'expérience du reste, ne pas essayer de mélanger
         %%   avec d'autres K.
+        The calibration measures for the \dgemm function are done with a random sequence of tuples, as discussed in
+        Section~\ref{sub:parameter_space:dgemm}. This sequence is properly shuffled, so we eliminated the possible
+        experimental bias discussed in Section~\ref{sec:randomizing_order}. In this section, we will approach two
+        difficulties that were encountered with the sizes themselves (as opposed to the order of the sequence).
+
         \subsection{Effect of the experiment file}%
         \label{sub:effect_of_the_experiment_file}
+
+            Through the numerous \dgemm calibrations that were performed, we eventually realized that the set of sizes
+            used for the experiment had a significant effect on the statistical model obtained with these measures. To
+            demonstrate this, we have generated three different experiment files using exactly the same generation
+            method described previously. These three experiments, named \texttt{A}, \texttt{B} and \texttt{C}, were
+            repeated several dozens of times during a week-end in a random order. They have been carried on 8 different
+            nodes of the dahu cluster, for a total of 16 different processors, the results are extremly similar for all
+            of them.
+
+            The average \dgemm performance observed in each experiment is reported in
+            Figure~\ref{fig:randomizing_sizes:expfile:average_perf}. Some performance variability can be observed, the
+            most efficient runs are approximately \NSI{3}{\percent} faster than the least efficient ones. A large
+            fraction of this variability appears to be significantly caused by the experiment file, since all the runs
+            made with file \texttt{C} have an higher performance than those made with file \texttt{B}, which are
+            themselves more efficient than those made with file \texttt{A}. Thanks to the proper randomization of the
+            experiments, we can rule out any temporal bias.
 
             \begin{figure}[htpb]
                 \centering
@@ -493,6 +515,14 @@
                 \label{fig:randomizing_sizes:expfile:average_perf}
             \end{figure}
 
+            The effective performance is not the only aggregated metric affected by the choice of the experiment file.
+            The distributions of two regression coefficients are represented in
+            Figure~\ref{fig:randomizing_sizes:expfile:average_distribution}, namely the coefficients corresponding to
+            the products \(MNK\) and \(NK\) (the effect of the experiment file on the coefficients for \(MK\) and \(MN\)
+            is extremly similar to \(NK\)). It appears here that the experiment file causing the highest performance
+            gives the highest cubic coefficient and the lowest quadratic coefficients. In other words, this means that
+            with this experiment file, a larger fraction of the \dgemm durations is explained by the cubic coefficient.
+
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_distribution.pdf}
@@ -500,6 +530,10 @@
                 experiment. The experiment file has a clear effect on the generated model}%
                 \label{fig:randomizing_sizes:expfile:average_distribution}
             \end{figure}
+
+            These observations suggest that experiments \texttt{A} and \texttt{B} may be less cache-friendly than
+            experiment \texttt{C}, since in a matrix product the number of arithmetic operations grows cubically with
+            the size of the input whereas the number of memory accesses grows quadratically.
 
             \begin{figure}[htpb]
                 \centering
