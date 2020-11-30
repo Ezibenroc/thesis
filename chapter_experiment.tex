@@ -535,6 +535,13 @@
             experiment \texttt{C}, since in a matrix product the number of arithmetic operations grows cubically with
             the size of the input whereas the number of memory accesses grows quadratically.
 
+            A non-aggregated view of the data is presented in Figure~\ref{fig:randomizing_sizes:expfile:raw_data}, each
+            point represents one individual call to \dgemm. It appears that most of the calls in the three experiments
+            have extremly similar durations for a given product \(MNK\). However, a small fraction of the \dgemm calls
+            were significantly slower than the others with experiments \texttt{A} and \texttt{B}. All these calls have
+            been made with a tall and skinny matrix, with \(K\geq3000\), which corroborates the hypothesis of a bad
+            cache utilization.
+
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/raw_data.png}
@@ -544,6 +551,13 @@
                 \label{fig:randomizing_sizes:expfile:raw_data}
             \end{figure}
 
+            A final argument towards this hypothesis is presented with
+            Figure~\ref{fig:randomizing_sizes:expfile:average_power}, the average DRAM power consumption during each run
+            is presented. Similarly to Figure~\ref{fig:randomizing_sizes:expfile:average_perf}, there is a clear
+            difference between the three experiments that cannot be explained by any temporal perturbation. Experiment
+            \texttt{C}, which was the fastest, has the smallest DRAM power consumption. This suggests that the memory
+            was used less intensively with this experiment, \ie there was a better cache utilization.
+
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_power.pdf}
@@ -551,6 +565,14 @@
                 experiment.}%
                 \label{fig:randomizing_sizes:expfile:average_power}
             \end{figure}
+
+            In this section, we compared several \dgemm experiments performed with three sets of sizes. These sets have
+            been generated according to the same statistical distribution, yet they lead to significantly different
+            \dgemm models. We would like to stress that this discrepancy of the resulting models is due to a difference
+            in the experimental conditions and not (only) to a statistical artifact. We proposed the hypothesis of a
+            poor cache utilization, but other possibilities should not be dismissed, since this study was only
+            observationnal, our hypothesis would need to be confirmed or refuted with a properly designed experimental
+            study.
 
         \subsection{Effect of calibrating with a fixed size}%
         \label{sub:fixed_size}
