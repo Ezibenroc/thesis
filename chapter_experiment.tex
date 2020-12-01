@@ -489,7 +489,7 @@
         difficulties that were encountered with the sizes themselves (as opposed to the order of the sequence).
 
         \subsection{Effect of the experiment file}%
-        \label{sub:effect_of_the_experiment_file}
+        \label{sub:effect_experiment_file}
 
             Through the numerous \dgemm calibrations that were performed, we eventually realized that the set of sizes
             used for the experiment had a significant effect on the statistical model obtained with these measures. To
@@ -573,6 +573,32 @@
             poor cache utilization, but other possibilities should not be dismissed, since this study was only
             observationnal, our hypothesis would need to be confirmed or refuted with a properly designed experimental
             study.
+
+        \subsection{Effect of the experiment file generation method}%
+        \label{sub:effect_experiment_file_generation_method}
+
+            Section~\ref{sub:effect_experiment_file} has shown that the experiment file had a significant impact on the
+            experimental conditions which affected the resulting statistical model. We generated three different
+            sequence of sizes using the \emph{uniform product} method and performed several runs with each of these
+            sequences.
+
+            Now, we investigate briefly the effect of the generation method itself. We compare the \emph{independent
+            sizes} and the \emph{uniform product} methods described in Section~\ref{sec:parameter_space}. For each of
+            these methods, we generated several experiment files and performed one run with each of these files.
+
+            Although there is a large variability, which is due to the use of several experiment files, it appears that
+            the two generation methods lead to significantly different experimental conditions, as shown by
+            Figure~\ref{fig:randomizing_sizes:expfile:method}. With the \emph{uniform product} method, \dgemm average
+            performance is higher and the DRAM power consumption is lower.
+
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/method/average.pdf}
+                \caption{Average \dgemm performance and power consumption observed on CPU 1 of dahu-5, each point
+                represents one experiment.}%
+                \label{fig:randomizing_sizes:expfile:method}
+            \end{figure}
+
 
         \subsection{Effect of calibrating with a fixed size}%
         \label{sub:fixed_size}

@@ -1170,7 +1170,8 @@ do_plot = function(frame, y_val, y_label) {
         geom_boxplot(outlier.alpha=0, alpha=1) +
         geom_quasirandom(dodge.width=1) +
         xlab('Generation method') +
-        ylab(y_label)
+        ylab(y_label) +
+        coord_flip()
     return(plot)
 }
 #+end_src
@@ -1184,14 +1185,15 @@ p1 = read.csv("data/experiment/randomizing_sizes/method/dgemm_agr_data.csv") %>%
     do_plot("avg_gflops", "Average performance (Gflop/s)")
 p2 = read.csv("data/experiment/randomizing_sizes/method/dgemm_agr_monitoring.csv") %>%
     filter(node==5, cpu==1, kind=="power", subgroup=="dram") %>%
-    do_plot("value", "Average DRAM power consumption (W)")
+    do_plot("value", "Average DRAM power consumption (W)") +
+    theme(axis.text.y = element_blank(), axis.title.y = element_blank())
 plot = p1 + p2
-ggsave(filename='img/experiment/randomizing_sizes/method/average.pdf', plot=plot, width=7, height=3.5)
+ggsave(filename='img/experiment/randomizing_sizes/method/average.pdf', plot=plot, width=7, height=2)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-B5QDBU/figureibeDu8.png]]
+[[file:/tmp/babel-B5QDBU/figureTmMQZY.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/expfile/dgemm_agr_monitoring.csv") %>%
