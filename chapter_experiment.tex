@@ -469,7 +469,9 @@
 
         The experiments described in this section were performed in 2018. Two years later, we were unable to replicate
         this phenomenon, despite using the same MPI implementation and an identical cluster: the averaged data has a
-        single mode, even in the non-shuffled case.
+        single mode, even in the non-shuffled case. We cannot state with certainty the reason this behavior disappeared,
+        it could be due to a change in our calibration program, or on the platform itself. This motivates the
+        implementation of performance non-regression tests, as discussed in Chapter~\ref{chapter:experiment:tests}.
 
     \section{Randomizing the sizes}%
     \label{sec:randomizing_sizes}
