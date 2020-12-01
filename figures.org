@@ -1138,9 +1138,77 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-70i53c/figurewYqaRU.png]]
 ** Randomizing the sizes
+*** Generation method
+The CSV files used in this section have been dumpted by this [[https://github.com/Ezibenroc/calibration_analysis/blob/19da3d11a4f559a5742b2e9aba689fdad2909708/dahu/blas/expfile_influence.ipynb][notebook]] (cells 8,
+9, 10 and 21) using these [[https://github.com/Ezibenroc/calibration_analysis/tree/19da3d11a4f559a5742b2e9aba689fdad2909708/dahu/blas/expfile_influence/2][archives]] Relevant entry in my journal: 2020-12-01.
+**** Temporal evolution of the average performance and the DRAM power consumption
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+library(anytime)
+library(patchwork)
+library(scales)
+library(ggrepel)
+library(ggbeeswarm)
+
+do_plot = function(frame, y_val, y_label) {
+    frame = frame %>%
+        mutate(exp_kind=stringr::str_to_title(exp_kind))
+    avg = frame %>%
+        group_by(exp_kind) %>%
+        summarise(val=mean(.data[[y_val]]))
+    plot = frame %>%
+        ggplot() +
+        aes_string(x="exp_kind", y=y_val, fill="exp_kind") +
+        ylab(y_label) +
+        theme_bw() +
+        expand_limits(y=c(min(frame[[y_val]]), max(frame[[y_val]]))) +
+        scale_fill_brewer(type='qual', palette='Dark2') +
+        scale_color_brewer(type='qual', palette='Dark2') +
+        theme(legend.position="none") +
+        guides(fill = guide_legend(override.aes = list(alpha=1, shape=21, size=4))) +
+        geom_boxplot(outlier.alpha=0, alpha=1) +
+        geom_quasirandom(dodge.width=1) +
+        xlab('Generation method') +
+        ylab(y_label)
+    return(plot)
+}
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+set.seed(27)
+p1 = read.csv("data/experiment/randomizing_sizes/method/dgemm_agr_data.csv") %>%
+    filter(node==5, cpu==1) %>%
+    do_plot("avg_gflops", "Average performance (Gflop/s)")
+p2 = read.csv("data/experiment/randomizing_sizes/method/dgemm_agr_monitoring.csv") %>%
+    filter(node==5, cpu==1, kind=="power", subgroup=="dram") %>%
+    do_plot("value", "Average DRAM power consumption (W)")
+plot = p1 + p2
+ggsave(filename='img/experiment/randomizing_sizes/method/average.pdf', plot=plot, width=7, height=3.5)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-B5QDBU/figureibeDu8.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/expfile/dgemm_agr_monitoring.csv") %>%
+    filter(node==5, cpu==1, kind=="power", subgroup=="dram") %>%
+    mutate(start_time=anytime(start_time)) %>%
+    mutate(Expfile=ifelse(expfile=="exp_dgemm_a.csv", "A", ifelse(expfile=="exp_dgemm_c.csv", "B", "C"))) %>%
+    do_plot("value", "Average DRAM power consumption (W)")
+ggsave(filename='img/experiment/randomizing_sizes/expfile/average_power.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-b2kpD9/figureQLe7FU.png]]
+*** Expfile
 The CSV files used in this section have been dumpted by this [[https://github.com/Ezibenroc/calibration_analysis/blob/ab23ec7e2624a5ca524838a7a9f613252aec0797/dahu/blas/expfile_influence.ipynb][notebook]] (cells 8,
 9, 10 and 21) using these [[https://github.com/Ezibenroc/calibration_analysis/tree/dbd0d284a878d4bf4a7e4d86bd6fe590c5f35585/dahu/blas/expfile_influence/1][archives]]. Relevant entry in my journal: 2020-11-25.
-*** Temporal evolution of the average performance and the DRAM power consumption
+**** Temporal evolution of the average performance and the DRAM power consumption
 #+begin_src R :results output :session *R* :exports both
 library(dplyr)
 library(ggplot2)
@@ -1216,7 +1284,7 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-b2kpD9/figureQLe7FU.png]]
-*** Distribution of the regression coefficients
+**** Distribution of the regression coefficients
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 library(dplyr)
 library(ggplot2)
@@ -1272,7 +1340,7 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-b2kpD9/figurehDHrWR.png]]
-*** Individual durations
+**** Individual durations
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 library(dplyr)
 library(ggplot2)
