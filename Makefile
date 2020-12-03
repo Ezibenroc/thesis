@@ -9,6 +9,18 @@ all: whole_thesis \
 
 thesis.pdf: whole_thesis
 
+figures:
+	echo "" | emacs -batch \
+		--eval "(require 'package)" \
+		--eval "(package-initialize)" \
+		--eval "(setq enable-local-eval t)" \
+		--eval "(setq enable-local-variables t)" \
+		--eval "(org-babel-do-load-languages 'org-babel-load-languages '((shell . t) (python . t) (R . t)))" \
+		--eval "(setq org-export-babel-evaluate t)" \
+		--eval "(setq org-confirm-babel-evaluate nil)" \
+		figures.org \
+		--funcall org-babel-execute-buffer
+
 # Compile the whole thesis
 whole_thesis: $(THESIS_ALL_TEX) Makefile references.bib
 	cp macros.include.default.tex macros.include.tex
