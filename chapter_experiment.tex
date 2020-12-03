@@ -280,25 +280,34 @@
             discussed in Part~\ref{part:prediction} we need several coefficients of the polynomial. For this reason, we
             have to cover a larger zone of the parameter space.
 
-            Two options were considered.
+            Two options have been considered. Suppose we would like the three sizes \(M,N,K\) to be smaller or equal to
+            some constant \(\Sigma\) and their product \(MNK\) to be smaller or equal to some other constant \(\Pi\).
             \begin{description}
                 \item[Independent sizes] Each of the three sizes \(M\), \(N\) and \(K\) is sampled independently and
-                    uniformly in some interval. This is the easiest method to implement. With this approach, the product
+                    uniformly in the desired interval:
+                    \begin{enumerate}
+                        \item \(M \sim \unif{1}{\Sigma}\) and \(N \sim \unif{1}{\Sigma}\) and
+                            \(K \sim \unif{1}{\Sigma}\)
+                        \item Repeat until \(MNK \leq \Pi\)
+                        \item Return \((M,N,K)\)
+                    \end{enumerate}
+                    This is the easiest method to implement. With this approach, the product
                     \(MNK\) is not uniform, it is heavily skewed towards the small values. Additionaly, we use rejection
                     sampling to make sure that the product of the sizes does not get too large.
-                \item[Uniform product] The product \(MNK\) is sampled uniformly in some interval, and then the sizes
-                    \(M\), \(N\) and \(K\) are sampled randomly according to get (approximately) the correct product.
-                    To do so, we sample the sizes as follow:
+                \item[Uniform product] We start by sampling the size product \(P\) uniformly in the desired interval,
+                    then the sizes \(M\), \(N\) and \(K\) are sampled randomly to get (approximately) the correct
+                    product:
                     \begin{enumerate}
-                        \item \(A \sim \unif{1}{\sqrt[3]{MNK}}\)
-                        \item \(B \sim \unif{1}{\sqrt{\frac{MNK}{A}}}\)
-                        \item \(C = \frac{MNK}{AB}\)
+                        \item \(P \sim \unif{1}{\Pi}\)
+                        \item \(A \sim \unif{1}{\sqrt[3]{P}}\)
+                        \item \(B \sim \unif{1}{\sqrt{\frac{P}{A}}}\)
+                        \item \(C = \frac{P}{AB}\)
+                        \item Repeat steps 2 to 4 until \(A \leq \Sigma\) and \(B \leq \Sigma\) and \(C \leq \Sigma\)
                         \item Return the six possible permutations: \((M,N,K) = (A,B,C), (C,A,B), \dots\)
                     \end{enumerate}
                     The goal of returning all the permutations of the sizes is to avoid any bias in the sampling
                     procedure, since they are not generated independently from each other. We also use rejection
-                    sampling to make sure that one of the sizes does not get too large: if \(C\) is greater than some
-                    limit, we simply regenerate \(A\) and \(B\).
+                    sampling to make sure that one of the sizes does not get too large.
             \end{description}
 
             These two generation methods are illustrated in Figure~\ref{fig:parameter_space}. A list of \Num{100000}
