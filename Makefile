@@ -10,7 +10,7 @@ all: whole_thesis \
 thesis.pdf: whole_thesis
 
 figures:
-	echo "" | emacs -batch \
+	echo "\n\n\n\n\n\n\n" | emacs -batch \
 		--eval "(require 'package)" \
 		--eval "(package-initialize)" \
 		--eval "(setq enable-local-eval t)" \
