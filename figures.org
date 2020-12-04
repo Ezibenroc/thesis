@@ -1368,6 +1368,229 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-b2kpD9/figurev1kz6K.png]]
 
+*** Fixing K
+The CSV files used in this section have been dumpted by this [[https://github.com/Ezibenroc/calibration_analysis/blob/a5953da5f3248226c44906751aaba5479e1b8f16/dahu/blas/expfile_influence.ipynb][notebook]] (cells 8,
+9, 10, 21 and 22) using these [[https://github.com/Ezibenroc/calibration_analysis/tree/a5953da5f3248226c44906751aaba5479e1b8f16/dahu/blas/expfile_influence/4][archives]]. Relevant entry in my journal: 2020-12-04.
+**** Temporal evolution of the average performance and the DRAM power consumption
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+library(anytime)
+library(patchwork)
+library(scales)
+library(ggrepel)
+library(ggbeeswarm)
+set.seed(42)
+
+do_plot = function(frame, y_val, y_label) {
+    avg = frame %>%
+        group_by(exp_kind) %>%
+        summarise(val=mean(.data[[y_val]]))
+    basic_plot = frame %>%
+        ggplot() +
+        aes_string(y=y_val, color="exp_kind", fill="exp_kind") +
+        ylab(y_label) +
+        theme_bw() +
+        expand_limits(y=c(min(frame[[y_val]]), max(frame[[y_val]]))) +
+        scale_fill_brewer(type='qual', palette='Dark2', guide=guide_legend()) +
+        scale_color_brewer(type='qual', palette='Dark2', guide=guide_legend()) +
+        labs(fill='K') +
+        theme(legend.position="bottom") +
+        theme(legend.position="bottom", legend.direction="horizontal") +
+        theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0, 'cm'))+
+        theme(legend.background = element_rect(color="black", size=0.1)) +
+        guides(fill = guide_legend(label.position = "bottom", override.aes = list(alpha=1, shape=21, size=4)))
+
+    p1 = basic_plot +
+     #   geom_quasirandom(aes(x=exp_kind), alpha=0.5, dodge.width=1) +
+        geom_boxplot(aes(x=exp_kind), outlier.alpha=0, alpha=0.3) +
+        theme(legend.position='none') +
+     #   geom_label_repel(data=avg, aes(x=exp_kind, y=val, label=exp_kind), direction="y", alpha=0.5) +
+        ylab(y_label) +
+        theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.title.x=element_blank())
+    p2 = basic_plot +
+        geom_point(shape=21, aes(x=start_time), color="black", size=5, alpha=0.7, stroke=0) +
+        scale_x_datetime(breaks = date_breaks("1 day")) +
+        theme(axis.text.y=element_blank(), axis.ticks.y=element_blank(), axis.title.y=element_blank()) +
+        xlab('Timestamp')
+
+    layout <- c(
+        area(t = 0, l = 0, b = 20, r = 10),
+        area(t = 0, l = 11, b = 20, r = 51),
+        area(t=21, l=0, b=22, r=20)
+    )
+    plot = p1 + p2 + guide_area() + plot_layout(design=layout, guides = 'collect')
+    return(plot)
+}
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_data.csv") %>%
+    mutate(exp_kind=as.character(exp_kind)) %>%
+    mutate(exp_kind=ifelse(exp_kind=="shuffled", "{128,256,512}", exp_kind)) %>%
+    filter(node==5, cpu==1) %>%
+    mutate(start_time=anytime(start_time)) %>%
+    do_plot("avg_gflops", "Average performance (Gflop/s)")
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_performance.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Zo95a7/figureTqxoV5.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
+    mutate(exp_kind=as.character(exp_kind)) %>%
+    mutate(exp_kind=ifelse(exp_kind=="shuffled", "{128,256,512}", exp_kind)) %>%
+    filter(node==5, cpu==1, kind=="temperature") %>%
+    mutate(start_time=anytime(start_time)) %>%
+    do_plot("value", "Average CPU temperature (°C)")
+#ggsave(filename='img/experiment/randomizing_sizes/expfile/average_power.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Zo95a7/figurejGE7RQ.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
+    mutate(exp_kind=as.character(exp_kind)) %>%
+    mutate(exp_kind=ifelse(exp_kind=="shuffled", "{128,256,512}", exp_kind)) %>%
+    filter(node==5, cpu==1, kind=="frequency") %>%
+    mutate(start_time=anytime(start_time)) %>%
+    do_plot("value", "Average CPU frequency (GHz)")
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_frequency.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Zo95a7/figureze9lte.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
+    mutate(exp_kind=as.character(exp_kind)) %>%
+    mutate(exp_kind=ifelse(exp_kind=="shuffled", "{128,256,512}", exp_kind)) %>%
+    filter(node==5, cpu==1, kind=="power", subgroup=="package") %>%
+    mutate(start_time=anytime(start_time)) %>%
+    do_plot("value", "Average CPU power consumption (W)")
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_power_CPU.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Zo95a7/figureLUn3TH.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
+    mutate(exp_kind=as.character(exp_kind)) %>%
+    mutate(exp_kind=ifelse(exp_kind=="shuffled", "{128,256,512}", exp_kind)) %>%
+    filter(node==5, cpu==1, kind=="power", subgroup=="dram") %>%
+    mutate(start_time=anytime(start_time)) %>%
+    do_plot("value", "Average DRAM power consumption (W)")
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_power_DRAM.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Zo95a7/figurewCm8r5.png]]
+**** Distribution of the regression coefficients
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(dplyr)
+library(ggplot2)
+library(anytime)
+library(patchwork)
+library(scales)
+library(ggrepel)
+
+plot_bivariate <- function(df, x_col, y_col, color_col) {
+    density_plot = ggplot() +
+        aes_string(color=color_col, group=color_col) +
+        geom_density(data=df) +
+        theme_void()
+
+    plot_top = density_plot +
+        aes_string(x=x_col)
+    plot_right = density_plot +
+        aes_string(x=y_col) +
+        coord_flip()
+
+    text = df %>%
+        group_by_(color_col) %>%
+        summarise_all(funs(mean))
+
+    scatter_plot = ggplot(df) +
+        aes_string(x=x_col, y=y_col, color=color_col, group=color_col) +
+        geom_point() +
+        stat_ellipse() +
+# Uncomment the following line to put labels on the ellipses
+        geom_label(data=text, aes_string(label=color_col), alpha=0.7) +
+        theme_minimal() +
+        scale_x_continuous(breaks = scales::pretty_breaks(n = 3)) +
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 3)) +
+        xlab(toupper(x_col)) +
+        ylab(toupper(y_col))
+
+    return(
+        plot_top + plot_spacer() + scatter_plot + plot_right +
+        plot_layout(widths = c(4, 1), heights = c(1, 4)) &
+        scale_color_brewer(palette="Dark2", type="qual") &
+        theme(legend.position='none')
+    )
+}
+
+plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_data.csv") %>%
+    mutate(exp_kind=as.character(exp_kind)) %>%
+    mutate(exp_kind=ifelse(exp_kind=="shuffled", "{128,256,512}", exp_kind)) %>%
+    filter(node==5, cpu==1) %>%
+    mutate(cpu_id=interaction(node, cpu), group=interaction(cpu_id, exp_kind)) %>%
+    plot_bivariate("mnk", "nk", "exp_kind")
+#ggsave(filename='img/experiment/randomizing_sizes/expfile/average_distribution.pdf', plot=plot, width=7, height=5)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Zo95a7/figureAtNzXZ.png]]
+**** Individual durations
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(dplyr)
+library(ggplot2)
+library(ggbeeswarm)
+
+plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_raw_data.csv") %>%
+    filter(node==5, cpu==1) %>%
+    mutate(MNK=as.numeric(m)*as.numeric(n)*as.numeric(k), gflops=2*MNK*1e-9/duration) %>%
+    filter(MNK >= 1000) %>% # removing the smallest matrices
+    filter(m != 2048 | n != 2048 | k != 2048) %>% # removing this special point
+    mutate(exp_kind=
+        ifelse(grepl("128", expfile, fixed=T), "128",
+        ifelse(grepl("256", expfile, fixed=T), "256",
+        ifelse(grepl("512", expfile, fixed=T), "512",
+        ifelse(grepl("random", expfile, fixed=T), "random",
+        ifelse(grepl("shuffled", expfile, fixed=T), "{128,256,512}",
+    "NA")))))
+    ) %>%
+    mutate(K_val=ifelse(exp_kind=="random", "other", as.character(k))) %>%
+    ggplot() +
+    aes(x=exp_kind, y=gflops, color=K_val, group=interaction(exp_kind, K_val)) +
+    #geom_point(alpha=0.1) +
+    geom_quasirandom(alpha=0.5, dodge.width=1) +
+    geom_boxplot(alpha=0, outlier.alpha=0, color="black", width=0.5, position=position_dodge(width=1)) +
+    scale_color_brewer(palette="Dark2") +
+    geom_abline(slope=6.7e-11) +
+    guides(colour = guide_legend(override.aes = list(alpha = 1, size=4))) +
+    theme_bw() +
+    xlab("Experiment") +
+    ylab("Performance (Gflop/s)") +
+    labs(color="Value of K")
+#ggsave(filename='img/experiment/randomizing_sizes/expfile/raw_data.png', plot=plot, width=7, height=3, dpi=200)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Zo95a7/figureeOCdmg.png]]
+
 ** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
 the archives from this [[https://github.com/Ezibenroc/presentations/tree/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/exp_data/1][directory]]) and [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_mask_size.ipynb][here]] (using the archives from this
