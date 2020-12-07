@@ -1382,18 +1382,13 @@ do_plot = function(frame, y_val, y_label) {
         expand_limits(y=c(min(frame[[y_val]]), max(frame[[y_val]]))) +
         scale_fill_brewer(type='qual', palette='Dark2', guide=guide_legend()) +
         scale_color_brewer(type='qual', palette='Dark2', guide=guide_legend()) +
-        labs(fill='K') +
-        theme(legend.position="bottom") +
-        theme(legend.position="bottom", legend.direction="horizontal") +
-        theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0, 'cm'))+
-        theme(legend.background = element_rect(color="black", size=0.1)) +
+        labs(fill='K value') +
+        theme(legend.spacing.y = unit(0., 'cm'))+
         guides(fill = guide_legend(label.position = "bottom", override.aes = list(alpha=1, shape=21, size=4)))
 
     p1 = basic_plot +
-     #   geom_quasirandom(aes(x=exp_kind), alpha=0.5, dodge.width=1) +
         geom_boxplot(aes(x=exp_kind), outlier.alpha=0, alpha=0.3) +
         theme(legend.position='none') +
-     #   geom_label_repel(data=avg, aes(x=exp_kind, y=val, label=exp_kind), direction="y", alpha=0.5) +
         ylab(y_label) +
         theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.title.x=element_blank())
     p2 = basic_plot +
@@ -1407,7 +1402,7 @@ do_plot = function(frame, y_val, y_label) {
         area(t = 0, l = 11, b = 20, r = 51),
         area(t=21, l=0, b=22, r=20)
     )
-    plot = p1 + p2 + guide_area() + plot_layout(design=layout, guides = 'collect')
+    plot = p1 + p2 + guide_area() + plot_layout(widths=c(3,12,2), guides = 'collect')
     return(plot)
 }
 #+end_src
@@ -1421,12 +1416,12 @@ plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_data.csv")
     filter(node==5, cpu==1) %>%
     mutate(start_time=anytime(start_time)) %>%
     do_plot("avg_gflops", "Average performance (Gflop/s)")
-ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_performance.pdf', plot=plot, width=7, height=3)
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_performance.pdf', plot=plot, width=7, height=3.2)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figureTqxoV5.png]]
+[[file:/tmp/babel-Zo95a7/figureTEyazq.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1435,12 +1430,11 @@ plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring
     filter(node==5, cpu==1, kind=="temperature") %>%
     mutate(start_time=anytime(start_time)) %>%
     do_plot("value", "Average CPU temperature (°C)")
-#ggsave(filename='img/experiment/randomizing_sizes/expfile/average_power.pdf', plot=plot, width=7, height=3)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figurejGE7RQ.png]]
+[[file:/tmp/babel-Zo95a7/figurefzeBII.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1449,12 +1443,12 @@ plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring
     filter(node==5, cpu==1, kind=="frequency") %>%
     mutate(start_time=anytime(start_time)) %>%
     do_plot("value", "Average CPU frequency (GHz)")
-ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_frequency.pdf', plot=plot, width=7, height=3)
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_frequency.pdf', plot=plot, width=7, height=3.2)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figureze9lte.png]]
+[[file:/tmp/babel-Zo95a7/figurejYcwMQ.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1463,12 +1457,12 @@ plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring
     filter(node==5, cpu==1, kind=="power", subgroup=="package") %>%
     mutate(start_time=anytime(start_time)) %>%
     do_plot("value", "Average CPU power consumption (W)")
-ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_power_CPU.pdf', plot=plot, width=7, height=3)
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_power_CPU.pdf', plot=plot, width=7, height=3.2)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figureLUn3TH.png]]
+[[file:/tmp/babel-Zo95a7/figureMN6HAA.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1477,12 +1471,12 @@ plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring
     filter(node==5, cpu==1, kind=="power", subgroup=="dram") %>%
     mutate(start_time=anytime(start_time)) %>%
     do_plot("value", "Average DRAM power consumption (W)")
-ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_power_DRAM.pdf', plot=plot, width=7, height=3)
+ggsave(filename='img/experiment/randomizing_sizes/fixing_K/average_power_DRAM.pdf', plot=plot, width=7, height=3.2)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figurewCm8r5.png]]
+[[file:/tmp/babel-Zo95a7/figureuBjBFx.png]]
 **** Distribution of the regression coefficients
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 library(dplyr)
