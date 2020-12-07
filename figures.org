@@ -1382,7 +1382,7 @@ do_plot = function(frame, y_val, y_label) {
         expand_limits(y=c(min(frame[[y_val]]), max(frame[[y_val]]))) +
         scale_fill_brewer(type='qual', palette='Dark2', guide=guide_legend()) +
         scale_color_brewer(type='qual', palette='Dark2', guide=guide_legend()) +
-        labs(fill='K value') +
+        labs(fill='Experiment') +
         theme(legend.spacing.y = unit(0., 'cm'))+
         guides(fill = guide_legend(label.position = "bottom", override.aes = list(alpha=1, shape=21, size=4)))
 
@@ -1421,7 +1421,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figureTEyazq.png]]
+[[file:/tmp/babel-Zo95a7/figureQWTqrD.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1434,7 +1434,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figurefzeBII.png]]
+[[file:/tmp/babel-Zo95a7/figureahP4JV.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1448,7 +1448,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figurejYcwMQ.png]]
+[[file:/tmp/babel-Zo95a7/figureJFpNkW.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1462,7 +1462,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figureMN6HAA.png]]
+[[file:/tmp/babel-Zo95a7/figureIwYiRc.png]]
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_agr_monitoring.csv") %>%
@@ -1476,7 +1476,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figureuBjBFx.png]]
+[[file:/tmp/babel-Zo95a7/figuremyzJjF.png]]
 **** Distribution of the regression coefficients
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 library(dplyr)
@@ -1559,19 +1559,19 @@ plot = read.csv("data/experiment/randomizing_sizes/fixing_K/dgemm_raw_data.csv")
     #geom_point(alpha=0.1) +
     geom_quasirandom(alpha=0.5, dodge.width=1) +
     geom_boxplot(alpha=0, outlier.alpha=0, color="black", width=0.5, position=position_dodge(width=1)) +
-    scale_color_brewer(palette="Dark2") +
+    scale_color_manual(values=c("128"="#d95f02", "256"="#7570b3", "512"="#e7298a", "other"="#66a61e")) +
     geom_abline(slope=6.7e-11) +
     guides(colour = guide_legend(override.aes = list(alpha = 1, size=4))) +
     theme_bw() +
     xlab("Experiment") +
     ylab("Performance (Gflop/s)") +
-    labs(color="Value of K")
+    labs(color="K value")
 #ggsave(filename='img/experiment/randomizing_sizes/expfile/raw_data.png', plot=plot, width=7, height=3, dpi=200)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Zo95a7/figureeOCdmg.png]]
+[[file:/tmp/babel-Zo95a7/figureYIfBdm.png]]
 
 ** Randomizing the data
 The CSV files used in this section have been dumped by the notebooks [[https://github.com/Ezibenroc/presentations/blob/30849c839426038fe6d4840cd4403f0d422136c3/2020/jlesc/fig/notebook_generation_method.ipynb][here]] (using
