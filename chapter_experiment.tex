@@ -651,12 +651,28 @@
                 \label{fig:randomizing_sizes:expfile:fixing_K:performance}
             \end{figure}
 
+            The monitoring data collected during the experiments also reveal interesting differences. The average CPU
+            frequency is reported in Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:frequency}. It appears that the
+            frequency is the highest with \(K=128\) and with the random experiment. It is significantly lower with \(K\)
+            chosen randomly among the three sizes, and even lower with \(K=256\) and \(K=512\). It is interesting to
+            note that there is a positive correlation between the frequency and \dgemm performance, but the random
+            experiment is a clear exception as it leads to a relatively low performance and high frequency.
+
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_frequency.pdf}
                 \caption{Average CPU frequency, observed on CPU 1 of dahu-5, each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:frequency}
             \end{figure}
+
+            The average CPU power consumption, presented in
+            Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:power_CPU}, is particularly peculiar. The random
+            experiment has a power consumption significantly lower and more variable than the four other experiments
+            that are all extremly stable, with nearly no inter-run variability. This observation is very
+            counter-intuitive, since the CPU power consumption is in general proportional to the CPU
+            frequency~\cite{heinrich:hal-01523608}.  This only happens on the CPU 1 of the two nodes we tested, the
+            power consumption of the CPU 0 is extremly stable and similar for the five experiment kinds.
+
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_power_CPU.pdf}
@@ -673,7 +689,7 @@
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/raw_data.png}
                 \caption{Durations of individual \dgemm calls for CPU 1 of dahu-5.}%
-                \label{fig:randomizing_sizes:fixing_K:raw_data}
+                \label{fig:randomizing_sizes:expfile:fixing_K:raw_data}
             \end{figure}
 
     \section{Randomizing the data}%
