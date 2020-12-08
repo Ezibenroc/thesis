@@ -506,7 +506,7 @@
             used for the experiment had a significant effect on the statistical model obtained with these measures. To
             demonstrate this, we have generated three different experiment files using exactly the same generation
             method described previously. These three experiments, named \texttt{A}, \texttt{B} and \texttt{C}, were
-            repeated several dozens of times during a week-end in a random order. They have been carried on 8 different
+            repeated several dozen of times during a week-end in a random order. They have been carried on 8 different
             nodes of the dahu cluster, for a total of 16 different processors, the results are extremly similar for all
             of them.
 
@@ -614,13 +614,43 @@
         \subsection{Effect of calibrating with a fixed size}%
         \label{sub:fixed_size}
 
-            Some text\dots
+            In the experiments described in Section~\ref{sub:effect_experiment_file} and
+            Section~\ref{sub:effect_experiment_file_generation_method}, the three \dgemm parameters \(M\), \(N\) and
+            \(K\) can take arbitrary values, to avoid any bias. One of the main reasons we make such measures is to
+            generate a statistical model of \dgemm durations for simulating HPL. For this model to be faithful, the
+            experimental conditions of our measures must be as realistic as possible to what happens during HPL
+            execution. However, nearly all the \dgemm calls performed in HPL use the same value for the parameter \(K\),
+            equal to HPL block size (\ie the parameter \texttt{NB}). For this reason, biasing the calibrations by using
+            a fixed value for \(K\) could help to improve the simulation accuracy. This section investigates the
+            question. We have generated five sets of experiment files:
+            \begin{description}
+                \item[Random] This is the usual \emph{uniform product} generation procedure already discussed in
+                    previous sections.
+                \item[Fixed K] We modified the \emph{uniform product} procedure to have a constant value for \(K\). We
+                    generated three sets of files, with \(K=128\), \(K=256\) and \(K=512\).
+                \item[Several fixed K] We modified the \emph{uniform product} procedure to have the value of \(K\)
+                    choosen randomly in \{128,256,512\}. This is equivalent to concatenating three files generated with
+                    the \emph{fixed K} method and then shuffling the resulting file.
+            \end{description}
+            For each of the five experiment kinds, we have generated several dozen of experiment files. Then, we
+            performed one experiment with each of these files in a random order during a week-end on two nodes of the
+            dahu cluster for a total of four different processors. Again the results are similar for all of them, so we
+            will focus on a single processor.
+
+            Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:performance} presents the observed \dgemm performance
+            with the five experiments. We can observe that again, the generation method for the size sequence has a huge
+            effect on the experiment. First, using a fixed value for \(K\) reduces very significantly the inter-run
+            performance variability. The average performance is also greatly affected, it is the highest with \(K\)
+            fixed to 128, the lowest with \(K\) fixed to 256 or 512 or with the random generation, and it is
+            intermediate with \(K\) randomly sampled in \(\{128,256,512\}\).
+
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_performance.pdf}
                 \caption{Average \dgemm performance observed on CPU 1 of dahu-5, each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:performance}
             \end{figure}
+
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_frequency.pdf}
