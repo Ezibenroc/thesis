@@ -709,6 +709,12 @@
                 \label{fig:randomizing_sizes:expfile:fixing_K:raw_data}
             \end{figure}
 
+            In this section, we demonstrated once again that the sampling method has an important effect on the measured
+            performance. This will affect any statistical model we could build using the measured data, not because of a
+            statistical bias, but because of an experimental bias. Such a bias might be desirable, for instance it
+            should help improve the prediction accuracy of our HPL simulations. It comes at a price though, since we
+            need to perform a new \dgemm calibration if we want to simulate HPL with another block size.
+
     \section{Randomizing the data}%
     \label{sec:randomizing_data}
         %% TODO
