@@ -679,12 +679,29 @@
                 \caption{Average CPU power consumption, observed on CPU 1 of dahu-5, each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:power_CPU}
             \end{figure}
+
+            The five experiments exhibit very different average DRAM power consumption, as depicted in
+            Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:power_DRAM}. The experiment with \(K=128\) is the most
+            energy-hungry, followed by the experiment with \(K\in\{128,256,512\}\), then the experiments with a random
+            \(K\), \(K=256\) and \(K=512\). It is interesting to note that the experiment with the highest DRAM power
+            consumption is also the one with the highest average \dgemm performance, which is the opposite of what was
+            observed in Section~\ref{sub:effect_experiment_file}.
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_power_DRAM.pdf}
                 \caption{Average DRAM power consumption, observed on CPU 1 of dahu-5, each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:power_DRAM}
             \end{figure}
+
+            Finally, the performance of individual \dgemm calls are presented in
+            Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:raw_data}. We made the observation earlier that there was
+            much less inter-run variability when the value of \(K\) was fixed. This plot shows that there is also
+            significantly less intra-run variability. Furthermore, we can compare the performance of \dgemm for a given
+            value of \(K\). With \(K=128\), the performance is higher in the experiment where all the calls are done
+            with \(K=128\) than in the experiment with \(K\in\{128,256,512\}\). With the two other values, \(K=256\) and
+            \(K=512\), this is the opposite, the performance is higher in the mixed experiment than in the experiment
+            with only one \(K\) value. This shows that the durations of individual \dgemm calls are not independent, one
+            call can be faster or slower depending on the calls previously made.
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/raw_data.png}
