@@ -1688,12 +1688,11 @@ confidence = 0.995
 data = mvrnorm(n=N, mu=mu, Sigma=sigma)
 df = data.frame(x=data[,1], y=data[,2])
 
-calculate_ellipse <- function(center, shape, level, segments){
+radius = sqrt(2 * stats::qf(confidence, 2, Inf))
+
+calculate_ellipse <- function(center, shape, radius, segments){
 # Adapted from https://github.com/tidyverse/ggplot2/blob/master/R/stat-ellipse.R
-    dfn <- 2
-    dfd <- Inf  # with actual data, it should be nrow(data) - 1
     chol_decomp <- chol(shape)
-    radius <- sqrt(2 * stats::qf(level, dfn, dfd))
     angles <- (0:segments) * 2 * pi/segments
     unit.circle <- cbind(cos(angles), sin(angles))
     ellipse <- t(center + radius * t(unit.circle %*% chol_decomp))
@@ -1721,25 +1720,23 @@ scatter_plot = base_plot +
     geom_point() +
     expand_limits(x=c(mu[1]-l*std[1], mu[1]+l*std[1])) +
     expand_limits(y=c(mu[2]-l*std[2], mu[2]+l*std[2])) +
-    geom_path(data=calculate_ellipse(mu, sigma, confidence, 100), colour=base_col) +
+    geom_path(data=calculate_ellipse(mu, sigma, radius, 100), colour=base_col) +
     geom_point(data=new_points, aes(fill=type), size=6, shape=21) +
     scale_fill_brewer(palette="Dark2") +
     theme(legend.position="none")
-
-ratio = sqrt(2*qf(confidence, 2, Inf))
 
 plot_top = base_plot +
     aes(x=x) +
     expand_limits(x=c(mu[1]-l*std[1], mu[1]+l*std[1])) +
     theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank()) +
-    geom_vline(xintercept=c(mu[1]-ratio*std[1], mu[1]+ratio*std[1]), color=base_col) +
+    geom_vline(xintercept=c(mu[1]-radius*std[1], mu[1]+radius*std[1]), color=base_col) +
     stat_function(fun = dnorm, n = 100, args = list(mean=mu[1], sd=std[1]))
 
 plot_right = base_plot +
     aes(x=y) +
     expand_limits(x=c(mu[2]-l*std[2], mu[2]+l*std[2])) +
     theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) +
-    geom_vline(xintercept=c(mu[2]-ratio*std[2], mu[2]+ratio*std[2]), color=base_col) +
+    geom_vline(xintercept=c(mu[2]-radius*std[2], mu[2]+radius*std[2]), color=base_col) +
     stat_function(fun = dnorm, n = 100, args = list(mean=mu[2], sd=std[2])) +
     coord_flip()
 
@@ -1750,4 +1747,4 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figureenRHGC.png]]
+[[file:/tmp/babel-LlZHec/figurezDC7lR.png]]
