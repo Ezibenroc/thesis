@@ -1027,6 +1027,28 @@
         \texttt{scipy.stats.f.ppf}\footnote{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html}}.
         The \([0.05,0.95]\) interval should be adapted empirically.
 
+        The proposed test is illustrated in Figure~\ref{fig:non_regression:stat:single_point}. A large number of points,
+        in black, have been generated according to a known bivariate normal distribution. Their abscissa (resp.
+        ordinate) are distributed according to a normal distribution of mean \(\mu_x\) and standard deviation
+        \(\sigma_x\) (resp. \(\mu_y\) and \(\sigma_y\)). The abscissa and ordinates of the points are not independent,
+        they have a correlation coefficient of -0.7. The \NSI{99.5}{\percent} prediction regions are shown in blue. Two
+        additional points are shown in the scatter plot, representing new observations. The orange point has coordinates
+        \((\mu_x+2\sigma_x,\mu_y+2\sigma_y)\) and the green point has coordinates \((\mu_x+2\sigma_x,\mu_y-2\sigma_y)\).
+
+        If each dimensions were considered independently, we would conclude that the probabilities to observe the orange
+        point or the green point are equal. Indeed, these two points have equivalent positions in the one-dimension
+        density graphs and they both fall within the \NSI{99.5}{\percent} interval. Now, when we look at both dimensions
+        simultaneously, the green point becomes much more likely to be observed, it is within the blue ellipse while the
+        orange point is outside.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=1\linewidth]{img/experiment/non_regression/statistics/single_point.pdf}
+            \caption{Illustrating the proposed test with two sets of one observation (\(r=1\)) and a bivariate normal
+            distribution (\(p=2\)). The blue lines represent the \NSI{99.5}{\percent} prediction regions.}%
+            \label{fig:non_regression:stat:single_point}
+        \end{figure}
+
     \section{Conclusion}%
     \label{sec:conclusion}
         %% TODO
