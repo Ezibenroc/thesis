@@ -972,11 +972,94 @@
     %% automatiquement.
 
     \section{State of the art}%
-        %% TODO comment font les GAFAM ?
-        Some text\dots
+        \subsection{Existing tools}%
+        \label{sub:existing_tools}
 
-    \section{Performance measure and information collection}%
-    \label{sec:performance_measure_and_information_collection}
+            %% TODO comment font les GAFAM ?
+            Some text\dots
+
+        \subsection{Statistical test}%
+        \label{sub:statistical_test}
+
+            The following is a transcription of section 4.4 of Chew~\cite{chew}.\footnote{This publication, dating from
+            1966, is the oldest paper used in this thesis. It has been written by an employee of RCA Service Co., a
+            contractor of the US Air Force. The author of the paper describes the typical use case: computing the
+            coordinates of a prediction ellipse for the splash point of a future missile shot.}
+            \begin{quote}
+                Suppose that we have already observed \(n\) vectors of dimension \(p\): \(\bm{x_1},\dots,\bm{x_n} \in
+                \mathbb{R}^p\). We define the random variable \(\bm{m}^{(r)}\) to be the sample mean of the next (unknown)
+                \(r\) observations: \(\bm{m}^{(r)}= \frac{\bm{x_{n+1}}+\dots+\bm{x_{n+r}}}{r}\). We assume here that all the
+                \(\bm{x_i}\) are independent.
+
+                Then, the prediction region of \(\bm{m}^{(r)}\) with probability \(\gamma\) is:
+                \[
+                \frac{nr}{n+r} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
+                \overline{\bm{x}})
+                =
+                \frac{(n-1)p}{n-p} Q_F(1-\gamma, p, n-p)
+                 \]
+                Where \(\overline{\bm{x}}\) and \(\bm{S}\) are respectively the sample mean and sample covariance matrix of
+                the \(n\) observed \(\bm{x_i}\), and \(Q_F(\alpha,v_1,v_2)\) denotes the upper \(\alpha\) quantile of
+                \(F(v_1, v_2)\), the F-distribution with \(v_1\) and \(v_2\) degrees of freedom.
+            \end{quote}
+
+            A test could therefore be designed as follows:
+
+            Compute the value \(t\):
+            \[
+            t = \frac{nr(n-p)}{(n+r)(n-1)p} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
+            \overline{\bm{x}})
+             \]
+
+            Then, raise an error if \(t \geq Q_F(0.95, p, n-p)\).  Note that there is no closed form for the value \(Q_F\),
+            but it can be obtained (numerically) in R with the function
+            \texttt{qf}\footnote{\url{https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html}} and in Python
+            with the function
+            \texttt{scipy.stats.f.ppf}\footnote{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html}}.
+            The \([0.05,0.95]\) interval should be adapted empirically.
+
+            The proposed test is illustrated in Figure~\ref{fig:non_regression:stat:single_point}. A large number of points,
+            in black, have been generated according to a known bivariate normal distribution. Their abscissa (resp.
+            ordinate) are distributed according to a normal distribution of mean \(\mu_x\) and standard deviation
+            \(\sigma_x\) (resp. \(\mu_y\) and \(\sigma_y\)). The abscissa and ordinates of the points are not independent,
+            they have a correlation coefficient of -0.7. The \NSI{99.5}{\percent} prediction regions are shown in blue. Two
+            additional points are shown in the scatter plot, representing new observations. The orange point has coordinates
+            \((\mu_x+2\sigma_x,\mu_y+2\sigma_y)\) and the green point has coordinates \((\mu_x+2\sigma_x,\mu_y-2\sigma_y)\).
+
+            If each dimensions were considered independently, we would conclude that the probabilities to observe the orange
+            point or the green point are equal. Indeed, these two points have equivalent positions in the one-dimension
+            density graphs and they both fall within the \NSI{99.5}{\percent} interval. Now, when we look at both dimensions
+            simultaneously, the green point becomes much more likely to be observed, it is within the blue ellipse while the
+            orange point is outside.
+
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=1\linewidth]{img/experiment/non_regression/statistics/single_point.pdf}
+                \caption{Illustrating the proposed test with two sets of one observation (\(r=1\)) and a bivariate normal
+                distribution (\(p=2\)). The blue zones represent the \NSI{99.5}{\percent} prediction regions.}%
+                \label{fig:non_regression:stat:single_point}
+            \end{figure}
+
+            In Figure~\ref{fig:non_regression:stat:several_points}, two sets of five additional observations are presented
+            as colored dots. Individually, they were all likely to be observed, they are within the dashed ellipse
+            representing the \NSI{99.5}{\percent} prediction region for a single point (\ie \(r=1\)). However, if we
+            consider them together, the prediction region for their averages shrinks drastically. Now it becomes clear that
+            the set of green points was more likely to be observed than the set of orange points, the green average (marked
+            by a cross) is within the filled ellipse representing the \NSI{99.5}{\percent} region for a five-point average
+            (\ie \(r=5\)) whereas the orange average is outside.
+
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[width=1\linewidth]{img/experiment/non_regression/statistics/several_points.pdf}
+                \caption{Illustrating the proposed test with two sets of five observations (\(r=5\)) and a bivariate normal
+                distribution (\(p=2\)). The blue dashed lines represent the \NSI{99.5}{\percent} prediction regions for
+                single observations, the blue zones represent the \NSI{99.5}{\percent} prediction regions for the averages of
+                five new observations, represented by crosses.}%
+                \label{fig:non_regression:stat:several_points}
+            \end{figure}
+
+    \section{Implementation of the test}%
+    \label{sec:test_implementation}
         %% TODO
         %% Description du workflow mis en place, avec un joli dessin.
         %% - Génération du fichier d'expérience.
@@ -987,89 +1070,13 @@
         %% - Réalisation des tests et courbes sur les données.
         Some text\dots
 
-    \section{Statistical test}%
-    \label{sec:statistical_test}
-
-        The following is a transcription of section 4.4 of Chew~\cite{chew}.\footnote{This publication, dating from
-        1966, is the oldest paper used in this thesis. It has been written by an employee of RCA Service Co., a
-        contractor of the US Air Force. The author of the paper describes the typical use case: computing the
-        coordinates of a prediction ellipse for the splash point of a future missile shot.}
-        \begin{quote}
-            Suppose that we have already observed \(n\) vectors of dimension \(p\): \(\bm{x_1},\dots,\bm{x_n} \in
-            \mathbb{R}^p\). We define the random variable \(\bm{m}^{(r)}\) to be the sample mean of the next (unknown)
-            \(r\) observations: \(\bm{m}^{(r)}= \frac{\bm{x_{n+1}}+\dots+\bm{x_{n+r}}}{r}\). We assume here that all the
-            \(\bm{x_i}\) are independent.
-
-            Then, the prediction region of \(\bm{m}^{(r)}\) with probability \(\gamma\) is:
-            \[
-            \frac{nr}{n+r} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
-            \overline{\bm{x}})
-            =
-            \frac{(n-1)p}{n-p} Q_F(1-\gamma, p, n-p)
-             \]
-            Where \(\overline{\bm{x}}\) and \(\bm{S}\) are respectively the sample mean and sample covariance matrix of
-            the \(n\) observed \(\bm{x_i}\), and \(Q_F(\alpha,v_1,v_2)\) denotes the upper \(\alpha\) quantile of
-            \(F(v_1, v_2)\), the F-distribution with \(v_1\) and \(v_2\) degrees of freedom.
-        \end{quote}
-
-        A test could therefore be designed as follows:
-
-        Compute the value \(t\):
-        \[
-        t = \frac{nr(n-p)}{(n+r)(n-1)p} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
-        \overline{\bm{x}})
-         \]
-
-        Then, raise an error if \(t \geq Q_F(0.95, p, n-p)\).  Note that there is no closed form for the value \(Q_F\),
-        but it can be obtained (numerically) in R with the function
-        \texttt{qf}\footnote{\url{https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html}} and in Python
-        with the function
-        \texttt{scipy.stats.f.ppf}\footnote{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html}}.
-        The \([0.05,0.95]\) interval should be adapted empirically.
-
-        The proposed test is illustrated in Figure~\ref{fig:non_regression:stat:single_point}. A large number of points,
-        in black, have been generated according to a known bivariate normal distribution. Their abscissa (resp.
-        ordinate) are distributed according to a normal distribution of mean \(\mu_x\) and standard deviation
-        \(\sigma_x\) (resp. \(\mu_y\) and \(\sigma_y\)). The abscissa and ordinates of the points are not independent,
-        they have a correlation coefficient of -0.7. The \NSI{99.5}{\percent} prediction regions are shown in blue. Two
-        additional points are shown in the scatter plot, representing new observations. The orange point has coordinates
-        \((\mu_x+2\sigma_x,\mu_y+2\sigma_y)\) and the green point has coordinates \((\mu_x+2\sigma_x,\mu_y-2\sigma_y)\).
-
-        If each dimensions were considered independently, we would conclude that the probabilities to observe the orange
-        point or the green point are equal. Indeed, these two points have equivalent positions in the one-dimension
-        density graphs and they both fall within the \NSI{99.5}{\percent} interval. Now, when we look at both dimensions
-        simultaneously, the green point becomes much more likely to be observed, it is within the blue ellipse while the
-        orange point is outside.
-
-        \begin{figure}[htpb]
-            \centering
-            \includegraphics[width=1\linewidth]{img/experiment/non_regression/statistics/single_point.pdf}
-            \caption{Illustrating the proposed test with two sets of one observation (\(r=1\)) and a bivariate normal
-            distribution (\(p=2\)). The blue zones represent the \NSI{99.5}{\percent} prediction regions.}%
-            \label{fig:non_regression:stat:single_point}
-        \end{figure}
-
-        In Figure~\ref{fig:non_regression:stat:several_points}, two sets of five additional observations are presented
-        as colored dots. Individually, they were all likely to be observed, they are within the dashed ellipse
-        representing the \NSI{99.5}{\percent} prediction region for a single point (\ie \(r=1\)). However, if we
-        consider them together, the prediction region for their averages shrinks drastically. Now it becomes clear that
-        the set of green points was more likely to be observed than the set of orange points, the green average (marked
-        by a cross) is within the filled ellipse representing the \NSI{99.5}{\percent} region for a five-point average
-        (\ie \(r=5\)) whereas the orange average is outside.
-
-        \begin{figure}[htpb]
-            \centering
-            \includegraphics[width=1\linewidth]{img/experiment/non_regression/statistics/several_points.pdf}
-            \caption{Illustrating the proposed test with two sets of five observations (\(r=5\)) and a bivariate normal
-            distribution (\(p=2\)). The blue dashed lines represent the \NSI{99.5}{\percent} prediction regions for
-            single observations, the blue zones represent the \NSI{99.5}{\percent} prediction regions for the averages of
-            five new observations, represented by crosses.}%
-            \label{fig:non_regression:stat:several_points}
-        \end{figure}
-
     \section{Conclusion}%
     \label{sec:conclusion}
         %% TODO
         %% Raconter ce que l'on aurait pu faire et comment il faudrait l'étendre:
-        %% - Test sur le modèle de dgemme plutôt que sur l'aggregated gflops
+        %% - Test sur le modèle de dgemm plutôt que sur l'aggregated gflops
+        %% - Implémenter le test multivarié (e.g. sur tous les CPU d'un même noeud, sur différents coefficients du
+        %%   modèle dgemm, sur différentes metriques...). Le test multivarié n'a un intérêt que si les variables
+        %%   considéré sont corrélés, donc pas forcément pertinent de tout tester en même temps.
         %% - Test du modèle MPI (si on arrivait à définir et calculer les IC)
+        %% - Implémentation plus robuste, moins POC (ne pas passer par un dépôt git pour stocker les données par exemple).
