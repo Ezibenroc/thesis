@@ -981,15 +981,18 @@
         \subsection{Statistical test}%
         \label{sub:statistical_test}
 
-            The following is a transcription of section 4.4 of Chew~\cite{chew}.\footnote{This publication, dating from
-            1966, is the oldest paper used in this thesis. It has been written by an employee of RCA Service Co., a
-            contractor of the US Air Force. The author of the paper describes the typical use case: computing the
-            coordinates of a prediction ellipse for the splash point of a future missile shot.}
+            In this section, we describe how to compute a prediction region for multivariate normal variables. This will
+            then be used to implement a statistical test.  This section is mostly based on section 4.4 of
+            Chew~\cite{chew}.\footnote{This publication, dating from 1966, is the oldest paper used in this thesis. It
+            has been written by an employee of RCA Service Co., a contractor of the US Air Force. The author of the
+            paper describes the typical use case: computing the coordinates of a prediction ellipse for the splash point
+            of a future missile shot. I believe this is a poor usage of statistics.}
             \begin{quote}
                 Suppose that we have already observed \(n\) vectors of dimension \(p\): \(\bm{x_1},\dots,\bm{x_n} \in
                 \mathbb{R}^p\). We define the random variable \(\bm{m}^{(r)}\) to be the sample mean of the next (unknown)
                 \(r\) observations: \(\bm{m}^{(r)}= \frac{\bm{x_{n+1}}+\dots+\bm{x_{n+r}}}{r}\). We assume here that all the
-                \(\bm{x_i}\) are independent.
+                \(\bm{x_i}\) are independent and identically distributed according to a multivariate normal distribution
+                of unknown mean and covariance matrix.
 
                 Then, the prediction region of \(\bm{m}^{(r)}\) with probability \(\gamma\) is:
                 \[
@@ -1003,20 +1006,18 @@
                 \(F(v_1, v_2)\), the F-distribution with \(v_1\) and \(v_2\) degrees of freedom.
             \end{quote}
 
-            A test could therefore be designed as follows:
-
-            Compute the value \(t\):
+            We therefore propose the following statistical test for \(\bm{m}^{(r)}\) with confidence \(\gamma\). First,
+            compute the value:
             \[
             t = \frac{nr(n-p)}{(n+r)(n-1)p} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
             \overline{\bm{x}})
              \]
 
-            Then, raise an error if \(t \geq Q_F(0.95, p, n-p)\).  Note that there is no closed form for the value \(Q_F\),
-            but it can be obtained (numerically) in R with the function
+            Then, raise an error if \(t \geq Q_F(\gamma, p, n-p)\).  Note that there is no closed form for the value
+            \(Q_F\), but it can be obtained (numerically) in R with the function
             \texttt{qf}\footnote{\url{https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html}} and in Python
             with the function
             \texttt{scipy.stats.f.ppf}\footnote{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html}}.
-            The \([0.05,0.95]\) interval should be adapted empirically.
 
             The proposed test is illustrated in Figure~\ref{fig:non_regression:stat:single_point}. A large number of points,
             in black, have been generated according to a known bivariate normal distribution. Their abscissa (resp.
