@@ -1685,8 +1685,6 @@ sigma =  diag(std) %*% correlation %*% diag(std)
 N = 1000
 confidence = 0.995
 
-data = mvrnorm(n=N, mu=mu, Sigma=sigma)
-df = data.frame(x=data[,1], y=data[,2])
 
 radius = sqrt(2 * stats::qf(confidence, 2, Inf))
 
@@ -1700,51 +1698,80 @@ calculate_ellipse <- function(center, shape, radius, segments){
     as.data.frame(ellipse)
 }
 
-new_points = rbind(
+new_obs = rbind(
     data.frame(x=mu[1]+std[1], y=mu[2]-2*std[2], type="good"),
     data.frame(x=mu[1]+std[1], y=mu[2]+2*std[2], type="bad")
 )
 
-  #  stat_function(fun = dnorm, n = 100, args = list(mean = mu, sd = sigma)) +
-base_plot = df %>%
-    ggplot() +
-    theme_minimal() +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
-    theme(axis.text.x=element_blank(), axis.text.y=element_blank())
+draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42) {
+    set.seed(seed)
+    data = mvrnorm(n=nb_points, mu=center, Sigma=shape)
+    df = data.frame(x=data[,1], y=data[,2])
 
-base_col = "#2196F3"
+    base_plot = df %>%
+        ggplot() +
+        theme_minimal() +
+        theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+        theme(axis.text.x=element_blank(), axis.text.y=element_blank())
 
-l=4
-scatter_plot = base_plot +
-    aes(x=x, y=y) +
-    geom_point() +
-    expand_limits(x=c(mu[1]-l*std[1], mu[1]+l*std[1])) +
-    expand_limits(y=c(mu[2]-l*std[2], mu[2]+l*std[2])) +
-    geom_path(data=calculate_ellipse(mu, sigma, radius, 100), colour=base_col) +
-    geom_point(data=new_points, aes(fill=type), size=6, shape=21) +
-    scale_fill_brewer(palette="Dark2") +
-    theme(legend.position="none")
+    base_col = "#2196F3"
 
-plot_top = base_plot +
-    aes(x=x) +
-    expand_limits(x=c(mu[1]-l*std[1], mu[1]+l*std[1])) +
-    theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank()) +
-    geom_vline(xintercept=c(mu[1]-radius*std[1], mu[1]+radius*std[1]), color=base_col) +
-    stat_function(fun = dnorm, n = 100, args = list(mean=mu[1], sd=std[1]))
+    l=4
+    scatter_plot = base_plot +
+        aes(x=x, y=y) +
+        geom_point() +
+        expand_limits(x=c(center[1]-l*std[1], center[1]+l*std[1])) +
+        expand_limits(y=c(center[2]-l*std[2], center[2]+l*std[2])) +
+        geom_path(data=calculate_ellipse(center, shape, radius, 100), colour=base_col) +
+        geom_point(data=new_points, aes(fill=type), size=6, shape=21) +
+        scale_fill_brewer(palette="Dark2") +
+        theme(legend.position="none")
 
-plot_right = base_plot +
-    aes(x=y) +
-    expand_limits(x=c(mu[2]-l*std[2], mu[2]+l*std[2])) +
-    theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) +
-    geom_vline(xintercept=c(mu[2]-radius*std[2], mu[2]+radius*std[2]), color=base_col) +
-    stat_function(fun = dnorm, n = 100, args = list(mean=mu[2], sd=std[2])) +
-    coord_flip()
+    plot_top = base_plot +
+        aes(x=x) +
+        expand_limits(x=c(center[1]-l*std[1], center[1]+l*std[1])) +
+        theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank()) +
+        geom_vline(xintercept=c(center[1]-radius*std[1], center[1]+radius*std[1]), color=base_col) +
+        stat_function(fun = dnorm, n = 100, args = list(mean=center[1], sd=std[1]))
 
-plot = plot_top + plot_spacer() + scatter_plot + plot_right +
-        plot_layout(widths = c(4, 1), heights = c(1, 4))
+    plot_right = base_plot +
+        aes(x=y) +
+        expand_limits(x=c(center[2]-l*std[2], center[2]+l*std[2])) +
+        theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) +
+        geom_vline(xintercept=c(center[2]-radius*std[2], center[2]+radius*std[2]), color=base_col) +
+        stat_function(fun = dnorm, n = 100, args = list(mean=center[2], sd=std[2])) +
+        coord_flip()
+
+    plot = plot_top + plot_spacer() + scatter_plot + plot_right +
+            plot_layout(widths = c(4, 1), heights = c(1, 4))
+    return(plot)
+}
+
+plot = draw_plot(mu, sigma, radius, new_obs)
 ggsave(filename='img/experiment/non_regression/statistics/single_point.pdf', plot=plot, width=7, height=5)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figurezDC7lR.png]]
+[[file:/tmp/babel-LlZHec/figureKKHo8b.png]]
+**** Multiple points
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+set.seed(230)
+nb_points = 5
+# We compute only an approximation of the radius for multiple points, since we use Inf for the number of previous observations.
+# In reality, we should multiply it by N/(N+1) * (N+nb_points)/(N*nb_points) = (N+nb_points)/((N+1)*nb_points)
+radius_multiple = sqrt(2 * stats::qf(confidence, 2, Inf)) / nb_points
+
+tmp = mvrnorm(n=nb_points, mu=mu, Sigma=sigma)
+new_good = data.frame(x=tmp[,1], y=tmp[,2], type="good")
+tmp = mvrnorm(n=nb_points, mu=mu*1.1, Sigma=sigma)
+new_bad = data.frame(x=tmp[,1], y=tmp[,2], type="bad")
+new_points = rbind(new_good, new_bad)
+
+plot = draw_plot(mu, sigma, radius_multiple, new_points)
+#ggsave(filename='img/experiment/non_regression/statistics/single_point.pdf', plot=plot, width=7, height=5)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-LlZHec/figurec3Fp8E.png]]
