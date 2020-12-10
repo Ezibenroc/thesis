@@ -1710,7 +1710,7 @@ normal_shade <- function(mean, sd, x, radius){
     return(y)
 }
 
-draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42) {
+draw_plot <- function(center, shape, radius, new_points, old_radius=NA, nb_points=1000, seed=42) {
     set.seed(seed)
     data = mvrnorm(n=nb_points, mu=center, Sigma=shape)
     df = data.frame(x=data[,1], y=data[,2])
@@ -1728,6 +1728,7 @@ draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42
     scatter_plot = base_plot +
         aes(x=x, y=y) +
         geom_point() +
+        geom_path(data=calculate_ellipse(center, shape, old_radius, 1000), colour=base_col, linetype="dashed") +
         geom_polygon(data=calculate_ellipse(center, shape, radius, 1000), colour=base_col, fill=base_col, alpha=base_alpha) +
         expand_limits(x=c(center[1]-l*std[1], center[1]+l*std[1])) +
         expand_limits(y=c(center[2]-l*std[2], center[2]+l*std[2])) +
@@ -1740,6 +1741,7 @@ draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42
         expand_limits(x=c(center[1]-l*std[1], center[1]+l*std[1])) +
         theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank()) +
         geom_vline(xintercept=c(center[1]-radius*std[1], center[1]+radius*std[1]), color=base_col) +
+        geom_vline(xintercept=c(center[1]-old_radius*std[1], center[1]+old_radius*std[1]), color=base_col, linetype="dashed") +
         stat_function(fun = dnorm, n = 1000, args = list(mean=center[1], sd=std[1])) +
         stat_function(fun = normal_shade, n = 1000, args = list(mean=center[1], sd=std[1], radius=radius*std[1]), geom="area", fill=base_col, alpha=base_alpha)
 
@@ -1748,6 +1750,7 @@ draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42
         expand_limits(x=c(center[2]-l*std[2], center[2]+l*std[2])) +
         theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) +
         geom_vline(xintercept=c(center[2]-radius*std[2], center[2]+radius*std[2]), color=base_col) +
+        geom_vline(xintercept=c(center[2]-old_radius*std[2], center[2]+old_radius*std[2]), color=base_col, linetype="dashed") +
         stat_function(fun = dnorm, n = 1000, args = list(mean=center[2], sd=std[2])) +
         stat_function(fun = normal_shade, n = 1000, args = list(mean=center[2], sd=std[2], radius=radius*std[2]), geom="area", fill=base_col, alpha=base_alpha) +
         coord_flip()
@@ -1768,7 +1771,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figureWEjUVE.png]]
+[[file:/tmp/babel-LlZHec/figureMla9Ic.png]]
 **** Multiple points
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 set.seed(230)
@@ -1783,10 +1786,10 @@ tmp = mvrnorm(n=nb_points, mu=mu*1.1, Sigma=sigma)
 new_bad = data.frame(x=tmp[,1], y=tmp[,2], type="bad")
 new_points = rbind(new_good, new_bad)
 
-plot = draw_plot(mu, sigma, radius_multiple, new_points)
+plot = draw_plot(mu, sigma, radius_multiple, new_points, old_radius=radius)
 #ggsave(filename='img/experiment/non_regression/statistics/single_point.pdf', plot=plot, width=7, height=5)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figureKxCMV7.png]]
+[[file:/tmp/babel-LlZHec/figure8Q0wqK.png]]
