@@ -1049,6 +1049,14 @@
             \label{fig:non_regression:stat:single_point}
         \end{figure}
 
+        In Figure~\ref{fig:non_regression:stat:several_points}, two sets of five additional observations are presented
+        as colored dots. Individually, they were all likely to be observed, they are within the dashed ellipse
+        representing the \NSI{99.5}{\percent} prediction region for a single point (\ie \(r=1\)). However, if we
+        consider them together, the prediction region for their averages shrinks drastically. Now it becomes clear that
+        the set of green points was more likely to be observed than the set of orange points, the green average (marked
+        by a cross) is within the filled ellipse representing the \NSI{99.5}{\percent} region for a five-point average
+        (\ie \(r=5\)) whereas the orange average is outside.
+
         \begin{figure}[htpb]
             \centering
             \includegraphics[width=1\linewidth]{img/experiment/non_regression/statistics/several_points.pdf}
@@ -1056,7 +1064,7 @@
             distribution (\(p=2\)). The blue dashed lines represent the \NSI{99.5}{\percent} prediction regions for
             single observations, the blue zones represent the \NSI{99.5}{\percent} prediction regions for the averages of
             five new observations, represented by crosses.}%
-            \label{fig:non_regression:stat:single_point}
+            \label{fig:non_regression:stat:several_points}
         \end{figure}
 
     \section{Conclusion}%
