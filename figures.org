@@ -1710,7 +1710,7 @@ normal_shade <- function(mean, sd, x, radius){
     return(y)
 }
 
-draw_plot <- function(center, shape, radius, new_points, old_radius=NA, nb_points=1000, seed=42) {
+draw_plot <- function(center, shape, radius, new_points, new_point_size, draw_new_point_mean=F, old_radius=NA, nb_points=1000, seed=42) {
     set.seed(seed)
     data = mvrnorm(n=nb_points, mu=center, Sigma=shape)
     df = data.frame(x=data[,1], y=data[,2])
@@ -1732,9 +1732,14 @@ draw_plot <- function(center, shape, radius, new_points, old_radius=NA, nb_point
         geom_polygon(data=calculate_ellipse(center, shape, radius, 1000), colour=base_col, fill=base_col, alpha=base_alpha) +
         expand_limits(x=c(center[1]-l*std[1], center[1]+l*std[1])) +
         expand_limits(y=c(center[2]-l*std[2], center[2]+l*std[2])) +
-        geom_point(data=new_points, aes(fill=type), size=6, shape=21) +
+        geom_point(data=new_points, aes(fill=type), size=new_point_size, shape=21) +
         scale_fill_brewer(palette="Dark2") +
+        scale_color_brewer(palette="Dark2") +
         theme(legend.position="none")
+    if(draw_new_point_mean) {
+        scatter_plot = scatter_plot +
+            geom_point(data=new_points %>% group_by(type) %>% summarise(x=mean(x), y=mean(y)), aes(color=type), shape=4, size=new_point_size*2, stroke=new_point_size-1)
+    }
 
     plot_top = base_plot +
         aes(x=x) +
@@ -1765,31 +1770,46 @@ new_obs = rbind(
     data.frame(x=mu[1]+std[1], y=mu[2]+2*std[2], type="bad")
 )
 
-plot = draw_plot(mu, sigma, radius, new_obs)
+plot = draw_plot(mu, sigma, radius, new_obs, new_point_size=6)
 ggsave(filename='img/experiment/non_regression/statistics/single_point.pdf', plot=plot, width=7, height=5)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figureMla9Ic.png]]
+[[file:/tmp/babel-LlZHec/figureLoLR0V.png]]
 **** Multiple points
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
-set.seed(230)
-nb_points = 5
+set.seed(41)
+
+mx = mu[1]
+my = mu[2]
+sx = std[1]
+sy = std[2]
+new_obs = setNames(data.frame(matrix(ncol = 3, nrow = 0)), c("x", "y", "type"))
+new_obs[1,]  = c(mx+sx, my+sy, "good")
+new_obs[2,]  = c(mx+sx, my-sy, "bad")
+new_obs[3,]  = c(mx-1.7*sx, my+1.7*sy, "good")
+new_obs[4,]  = c(mx-sx, my-sy, "bad")
+new_obs[5,]  = c(mx+sx, my-sy, "good")
+new_obs[6,]  = c(mx-sx, my-sy/2, "bad")
+new_obs[7,]  = c(mx-sx, my-sy, "good")
+new_obs[8,]  = c(mx+sx/2, my-sy/2, "bad")
+new_obs[9,]  = c(mx+sx*2, my-sy*2, "good")
+new_obs[10,] = c(mx+sx*2, my-sy*2, "bad")
+new_obs$x = as.numeric(new_obs$x) + rnorm(n=nrow(new_obs), mean=0, sd=sx/5)
+new_obs$y = as.numeric(new_obs$y) + rnorm(n=nrow(new_obs), mean=0, sd=sy/5)
+new_obs$type = factor(new_obs$type, le=c("good", "bad"))
+
+nb_points = nrow(new_obs) / 2
 # We compute only an approximation of the radius for multiple points, since we use Inf for the number of previous observations.
 # In reality, we should multiply it by N/(N+1) * (N+nb_points)/(N*nb_points) = (N+nb_points)/((N+1)*nb_points)
 radius_multiple = sqrt(2 * stats::qf(confidence, 2, Inf)) / nb_points
 
-tmp = mvrnorm(n=nb_points, mu=mu, Sigma=sigma)
-new_good = data.frame(x=tmp[,1], y=tmp[,2], type="good")
-tmp = mvrnorm(n=nb_points, mu=mu*1.1, Sigma=sigma)
-new_bad = data.frame(x=tmp[,1], y=tmp[,2], type="bad")
-new_points = rbind(new_good, new_bad)
-
-plot = draw_plot(mu, sigma, radius_multiple, new_points, old_radius=radius)
-#ggsave(filename='img/experiment/non_regression/statistics/single_point.pdf', plot=plot, width=7, height=5)
+plot = draw_plot(mu, sigma, radius_multiple, new_obs, old_radius=radius, new_point_size=3, draw_new_point_mean=T)
+ggsave(filename='img/experiment/non_regression/statistics/several_points.pdf', plot=plot, width=7, height=5)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figure8Q0wqK.png]]
+[[file:/tmp/babel-LlZHec/figureHwoaVK.png]]
+
