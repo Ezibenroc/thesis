@@ -1671,6 +1671,10 @@ plot
 ** Performance non-regression tests
 *** Statistical tests
 **** Single point
+Relevant links for the plots:
+- https://github.com/tidyverse/ggplot2/blob/master/R/stat-ellipse.R
+- https://stackoverflow.com/questions/27382145/fine-tuning-stat-ellipse-in-ggplot2/
+- https://stackoverflow.com/questions/33678862/shading-a-region-with-stat-function-and-ggplot
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 library(dplyr)
 library(ggplot2)
@@ -1698,10 +1702,13 @@ calculate_ellipse <- function(center, shape, radius, segments){
     as.data.frame(ellipse)
 }
 
-new_obs = rbind(
-    data.frame(x=mu[1]+std[1], y=mu[2]-2*std[2], type="good"),
-    data.frame(x=mu[1]+std[1], y=mu[2]+2*std[2], type="bad")
-)
+normal_shade <- function(mean, sd, x, radius){
+    inf = mean-radius
+    sup = mean+radius
+    y = dnorm(x, mean=mean, sd=sd)
+    y[x < inf | x > sup] = NA
+    return(y)
+}
 
 draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42) {
     set.seed(seed)
@@ -1715,14 +1722,15 @@ draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42
         theme(axis.text.x=element_blank(), axis.text.y=element_blank())
 
     base_col = "#2196F3"
+    base_alpha = 0.3
 
     l=4
     scatter_plot = base_plot +
         aes(x=x, y=y) +
         geom_point() +
+        geom_polygon(data=calculate_ellipse(center, shape, radius, 1000), colour=base_col, fill=base_col, alpha=base_alpha) +
         expand_limits(x=c(center[1]-l*std[1], center[1]+l*std[1])) +
         expand_limits(y=c(center[2]-l*std[2], center[2]+l*std[2])) +
-        geom_path(data=calculate_ellipse(center, shape, radius, 100), colour=base_col) +
         geom_point(data=new_points, aes(fill=type), size=6, shape=21) +
         scale_fill_brewer(palette="Dark2") +
         theme(legend.position="none")
@@ -1732,14 +1740,16 @@ draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42
         expand_limits(x=c(center[1]-l*std[1], center[1]+l*std[1])) +
         theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank()) +
         geom_vline(xintercept=c(center[1]-radius*std[1], center[1]+radius*std[1]), color=base_col) +
-        stat_function(fun = dnorm, n = 100, args = list(mean=center[1], sd=std[1]))
+        stat_function(fun = dnorm, n = 1000, args = list(mean=center[1], sd=std[1])) +
+        stat_function(fun = normal_shade, n = 1000, args = list(mean=center[1], sd=std[1], radius=radius*std[1]), geom="area", fill=base_col, alpha=base_alpha)
 
     plot_right = base_plot +
         aes(x=y) +
         expand_limits(x=c(center[2]-l*std[2], center[2]+l*std[2])) +
         theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) +
         geom_vline(xintercept=c(center[2]-radius*std[2], center[2]+radius*std[2]), color=base_col) +
-        stat_function(fun = dnorm, n = 100, args = list(mean=center[2], sd=std[2])) +
+        stat_function(fun = dnorm, n = 1000, args = list(mean=center[2], sd=std[2])) +
+        stat_function(fun = normal_shade, n = 1000, args = list(mean=center[2], sd=std[2], radius=radius*std[2]), geom="area", fill=base_col, alpha=base_alpha) +
         coord_flip()
 
     plot = plot_top + plot_spacer() + scatter_plot + plot_right +
@@ -1747,13 +1757,18 @@ draw_plot <- function(center, shape, radius, new_points, nb_points=1000, seed=42
     return(plot)
 }
 
+new_obs = rbind(
+    data.frame(x=mu[1]+std[1], y=mu[2]-2*std[2], type="good"),
+    data.frame(x=mu[1]+std[1], y=mu[2]+2*std[2], type="bad")
+)
+
 plot = draw_plot(mu, sigma, radius, new_obs)
 ggsave(filename='img/experiment/non_regression/statistics/single_point.pdf', plot=plot, width=7, height=5)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figureKKHo8b.png]]
+[[file:/tmp/babel-LlZHec/figureWEjUVE.png]]
 **** Multiple points
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 set.seed(230)
@@ -1774,4 +1789,4 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figurec3Fp8E.png]]
+[[file:/tmp/babel-LlZHec/figureKxCMV7.png]]
