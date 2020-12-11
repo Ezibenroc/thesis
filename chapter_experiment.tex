@@ -938,6 +938,7 @@
         %% - Les prédictions pour les communications étaient également mauvaises, en
         %%   partie parce que l'on calibrait pour des messages jusqu'à 1MB et on
         %%   esssayait de prédire la durée de communications de 1GB.
+        %% - Parler de notre tentative d'extrapolation de HPL sur (P,Q) ? Peut être plutôt en partie 1.
         Some text\dots
 
     \section{Beware of experimental conditions}%
@@ -1072,6 +1073,9 @@
                 \label{fig:non_regression:stat:several_points}
             \end{figure}
 
+            % TODO discuss the choice of the distribution. Normal vs F distribution. Should we even use this at all? Why
+            % not simply the Z-score? See the entries from 2020-05-{07,11,13} in my journal.
+
     \section{Implementation of the test}%
     \label{sec:test_implementation}
         %% TODO
@@ -1082,6 +1086,7 @@
         %% - Push automatique des résultats sur le dépôt gitlab.
         %% - Soumission d'un job CI pour extraire et agréger les informations des archives.
         %% - Réalisation des tests et courbes sur les données.
+        %% - Aussi montrer la distribution des données des clusters (e.g. perf vs frequence) avec les ellipses.
         Some text\dots
 
     \section{Conclusion}%
