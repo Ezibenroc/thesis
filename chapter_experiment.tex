@@ -978,8 +978,8 @@
         the tests. We also list several performance changes we noticed on Grid'5000 clusters during this work.
 
     \section{State of the art}%
-        \subsection{Existing tools}%
-        \label{sub:existing_tools}
+        \subsection{Lack of tests}%
+        \label{sub:lack_of_tests}
 
             SimdJSON\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
             can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
@@ -988,6 +988,9 @@
             report a previously unnoticed \NSI{50}{\percent} performance drop when the library was compiled with Visual
             Studio 2019 instead of G++ 7.5.0. This shows that even high performance libraries do not always have the
             methodology and tools to avoid performance regressions.
+
+        \subsection{Existing tools}%
+        \label{sub:existing_tools}
 
             %% TODO comment font les GAFAM ?
             Some text\dots
