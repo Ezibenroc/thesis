@@ -981,6 +981,8 @@
         \subsection{Lack of tests}%
         \label{sub:lack_of_tests}
 
+            %% TODO: check how to properly cite software. In particular, what contributors should we list?
+
             SimdJSON\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
             can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
             JSON parsers. It is widely used, with more than twelve thousand stars on Github. Yet, in April 2020, one of
@@ -995,6 +997,14 @@
             (relatively to its niche area). The main developers of Simgrid have spent countless hours in optimizing the
             speed of its core components, like the linear maxmin solver. Despite these efforts, there are currently no
             performance test in place to prevent eventual performance regressions.
+
+            To the best of our knowledge, even HPC libraries like OpenBLAS~\cite{openblas} and OpenMPI~\cite{openmpi} do
+            not use automated performance tests. OpenBLAS has several benchmarks
+            implemented\footnote{https://github.com/xianyi/OpenBLAS/tree/f917c26e83e040270cb98488b296a5c85cbb5ffb/benchmark},
+            but they rely on human intervention to run the tests and interpret the performance results. OpenMPI has
+            a software, named MTT\footnote{https://open-mpi.github.io/mtt/}, to automatically deploy a middleware on an
+            infrastructure and run correction tests as well as benchmarks. Yet again, the result of these benchmarks has
+            to be interpreted by a human.
 
         \subsection{Existing tools}%
         \label{sub:existing_tools}
