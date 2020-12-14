@@ -1020,11 +1020,11 @@
 
             To the best of our knowledge, even HPC libraries like OpenBLAS~\cite{openblas} and OpenMPI~\cite{openmpi} do
             not use automated performance tests. OpenBLAS has several benchmarks
-            implemented\footnote{https://github.com/xianyi/OpenBLAS/tree/f917c26e83e040270cb98488b296a5c85cbb5ffb/benchmark},
-            but they rely on human intervention to run the tests and interpret the performance results. OpenMPI has
-            a software, named MTT\footnote{https://open-mpi.github.io/mtt/}, to automatically deploy a middleware on an
-            infrastructure and run correction tests as well as benchmarks. Yet again, the result of these benchmarks has
-            to be interpreted by a human.
+            implemented\footnote{https://github.com/xianyi/OpenBLAS/tree/f917c26e/benchmark}, but they rely on human
+            intervention to run the tests and interpret the performance results. OpenMPI has a software, named
+            MTT\footnote{https://open-mpi.github.io/mtt/}, to automatically deploy a middleware on an infrastructure and
+            run correction tests as well as benchmarks. Yet again, the result of these benchmarks has to be interpreted
+            by a human.
 
         \subsection{Existing tools}%
         \label{sub:existing_tools}
@@ -1034,10 +1034,12 @@
             with several dozens of contributors and about \Num{5000} stars on Github. It greatly facilitates the
             creation of parametric micro-benchmarks by adding only a few lines to an existing code. The result can be
             pretty-printed in the terminal or written in a file in a CSV or JSON format. It is even possible to
-            automatically compute the asymptotic complexity. Finally, they provide a script to compare the results of
-            two executions of the same benchmark, it will print the difference with a raw value as well as a percentage.
-            If there is a large enough number of repetitions of these benchmarks, the script can also perform a
-            Mann–Whitney U test to test if the performance for these two series of runs is statistically identical.
+            automatically compute the asymptotic complexity. Finally, they provide a
+            script\footnote{https://github.com/google/benchmark/blob/8f5e6ae0/tools/compare.py} to compare the results
+            of two executions of the same benchmark, it will print the difference with a raw value as well as a
+            percentage.  If there is a large enough number of repetitions of these benchmarks, the script can also
+            perform a Mann–Whitney U test to test if the performance for these two series of runs is statistically
+            identical.
 
         \subsection{Statistical test}%
         \label{sub:statistical_test}
