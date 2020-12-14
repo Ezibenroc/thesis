@@ -1030,7 +1030,14 @@
         \label{sub:existing_tools}
 
             %% TODO comment font les GAFAM ?
-            Some text, citing Google Benchmark\cite{google-benchmark}
+            Google Benchmark\cite{google-benchmark} is a C++ library to benchmark code snippets. It is well established
+            with several dozens of contributors and about \Num{5000} stars on Github. It greatly facilitates the
+            creation of parametric micro-benchmarks by adding only a few lines to an existing code. The result can be
+            pretty-printed in the terminal or written in a file in a CSV or JSON format. It is even possible to
+            automatically compute the asymptotic complexity. Finally, they provide a script to compare the results of
+            two executions of the same benchmark, it will print the difference with a raw value as well as a percentage.
+            If there is a large enough number of repetitions of these benchmarks, the script can also perform a
+            Mann–Whitney U test to test if the performance for these two series of runs is statistically identical.
 
         \subsection{Statistical test}%
         \label{sub:statistical_test}
