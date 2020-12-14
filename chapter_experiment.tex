@@ -981,9 +981,10 @@
 
         Testing is a core activity of software development. It is usually taught as soon as the first programming courses,
         students need to verify that their programms work as expected. More experienced software developers generally
-        use a wide variety of techniques and methodologies to ensure (or at least limit) the presence of bugs.
+        use a wide variety of techniques and methodologies to limit the presence of bugs.
 
-        Performance testing is less common, probably due to several reasons:
+        Performance testing is less common, the main reason being that it is arguably much more difficult than testing
+        for correction.
         \begin{itemize}
             \item For a performance value to be meaningful, a lot of care needs to be taken when running the test for
                 controling the experimental environment.
@@ -999,6 +1000,8 @@
         \label{sub:lack_of_tests}
 
             %% TODO: check how to properly cite software. In particular, what contributors should we list?
+            This section lists several examples of well established softwares with limited or even inexistant
+            performance testing.
 
             SimdJSON\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
             can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
