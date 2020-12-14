@@ -978,6 +978,23 @@
     also list several performance changes we noticed on Grid'5000 clusters during this work.
 
     \section{State of the art}%
+
+        Testing is a core activity of software development. It is usually taught as soon as the first programming courses,
+        students need to verify that their programms work as expected. More experienced software developers generally
+        use a wide variety of techniques and methodologies to ensure (or at least limit) the presence of bugs.
+
+        Performance testing is less common, probably due to several reasons:
+        \begin{itemize}
+            \item For a performance value to be meaningful, a lot of care needs to be taken when running the test for
+                controling the experimental environment.
+            \item The result of a benchmark is a raw performance value (\eg a duration, an amount of memory or an amout
+                of energy). Ultimately, the test should return a boolean, stating whether the test was successful or
+                failed. It is difficult to define properly such a \emph{truth}. One could define an interval for the
+                expected value, but this will most of the time be an arbitrary choice. A complementary solution, to
+                ensure that the performance values remain stable throughout the life cycle of the software, would be to
+                use statistical tests.
+        \end{itemize}
+
         \subsection{Lack of tests}%
         \label{sub:lack_of_tests}
 
