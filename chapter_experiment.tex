@@ -1041,6 +1041,23 @@
             perform a Mann–Whitney U test to test if the performance for these two series of runs is statistically
             identical.
 
+            This library still suffers from several limitations:
+            \begin{itemize}
+                \item For a given code snippet and a given input, it will perform several iterations and report the
+                    average duration. The user has no control on this number of iterations which is not even
+                    deterministic, as the code snippet is executed in a loop for a fixed period of time.
+                \item There is no support for randomization, the code snippets are executed in a deterministic order.
+                    The calls to a given snippet with different parameters are also executed in a deterministic order.
+                \item The statistical test implemented in the comparison script is quite basic. The two populations that
+                    are compared need to have the same size, so it is not possible to compare a new observation to a
+                    large reference set of previous observations possibly collected during a long period (apart from
+                    randomly sampling a subset of the required size in the reference collection). There is also no
+                    graphical visualization of the two populations, which would greatly help the user to (1) better
+                    understand the result of the test (not everyone knows what is a \emph{P-value}) and (2) visually
+                    detect eventual differences not captured by the test (the Anscombe's quartet is the classical
+                    example).
+            \end{itemize}
+
         \subsection{Statistical test}%
         \label{sub:statistical_test}
 
