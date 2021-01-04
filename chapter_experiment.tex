@@ -1003,14 +1003,6 @@
             This section lists several examples of well established softwares with limited or even inexistant
             performance testing.
 
-            SimdJSON\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
-            can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
-            JSON parsers. It is widely used, with more than twelve thousand stars on Github. Yet, in April 2020, one of
-            the main contributors submitted an issue\footnote{\url{https://github.com/simdjson/simdjson/issues/812}} to
-            report a previously unnoticed \NSI{50}{\percent} performance drop when the library was compiled with Visual
-            Studio 2019 instead of G++ 7.5.0. This shows that even high performance libraries do not always have the
-            methodology and tools to avoid performance regressions.
-
             Simgrid\cite{simgrid}, the simulation framework used in Part~\ref{part:prediction}, is a well established
             software. In the last twenty years, several dozens of contributors have helped to improve or extend it.
             Simgrid has also supported the research for several hundreds of articles, demonstrating a wide user base
@@ -1025,6 +1017,14 @@
             MTT\footnote{https://open-mpi.github.io/mtt/}, to automatically deploy a middleware on an infrastructure and
             run correction tests as well as benchmarks. Yet again, the result of these benchmarks has to be interpreted
             by a human.
+
+            SimdJSON\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
+            can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
+            JSON parsers. It is widely used, with more than twelve thousand stars on Github. Yet, in April 2020, one of
+            the main contributors submitted an issue\footnote{\url{https://github.com/simdjson/simdjson/issues/812}} to
+            report a previously unnoticed \NSI{50}{\percent} performance drop when the library was compiled with Visual
+            Studio 2019 instead of G++ 7.5.0. This shows that even high performance libraries do not always have the
+            methodology and tools to avoid performance regressions.
 
         \subsection{Existing tools}%
         \label{sub:existing_tools}
