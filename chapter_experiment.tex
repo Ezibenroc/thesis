@@ -1029,36 +1029,68 @@
         \subsection{Existing tools}%
         \label{sub:existing_tools}
 
-            Other libraries: Catch2\cite{catch2}, Hayai\cite{hayai}, Celero\cite{celero}, Nonius\cite{nonius}.
+            \subsubsection{Benchmarking software}%
 
-            %% TODO comment font les GAFAM ?
-            Google Benchmark\cite{google-benchmark} is a C++ library to benchmark code snippets. It is well established
-            with several dozens of contributors and about \Num{5000} stars on Github. It greatly facilitates the
-            creation of parametric micro-benchmarks by adding only a few lines to an existing code. The result can be
-            pretty-printed in the terminal or written in a file in a CSV or JSON format. It is even possible to
-            automatically compute the asymptotic complexity. Finally, they provide a
-            script\footnote{https://github.com/google/benchmark/blob/8f5e6ae0/tools/compare.py} to compare the results
-            of two executions of the same benchmark, it will print the difference with a raw value as well as a
-            percentage.  If there is a large enough number of repetitions of these benchmarks, the script can also
-            perform a Mann–Whitney U test to test if the performance for these two series of runs is statistically
-            identical.
+                Several libraries already exist for benchmarking C++ software. Catch2\cite{catch2} is a widely used unit
+                testing framework for C++. It also provides basic functionnalities for benchmarking code snippets.
+                Several alternatives exist, developed specifically for C++ benchmarking\cite{celero,hayai,nonius}, but
+                seemingly no longer maintained and with a smaller user base.
 
-            This library still suffers from several limitations:
-            \begin{itemize}
-                \item For a given code snippet and a given input, it will perform several iterations and report the
-                    average duration. The user has no control on this number of iterations which is not even
-                    deterministic, as the code snippet is executed in a loop for a fixed period of time.
-                \item There is no support for randomization, the code snippets are executed in a deterministic order.
-                    The calls to a given snippet with different parameters are also executed in a deterministic order.
-                \item The statistical test implemented in the comparison script is quite basic. The two populations that
-                    are compared need to have the same size, so it is not possible to compare a new observation to a
-                    large reference set of previous observations possibly collected during a long period (apart from
-                    randomly sampling a subset of the required size in the reference collection). There is also no
-                    graphical visualization of the two populations, which would greatly help the user to (1) better
-                    understand the result of the test (not everyone knows what is a \emph{P-value}) and (2) visually
-                    detect eventual differences not captured by the test (the Anscombe's quartet is the classical
-                    example).
-            \end{itemize}
+                Google Benchmark\cite{google-benchmark} is a C++ library to benchmark code snippets. It is well
+                established with several dozens of contributors and about \Num{5000} stars on Github. It greatly
+                facilitates the creation of parametric micro-benchmarks by adding only a few lines to an existing code.
+                The result can be pretty-printed in the terminal or written in a file in a CSV or JSON format. It is
+                even possible to automatically compute the asymptotic complexity. Finally, they provide a
+                script\footnote{https://github.com/google/benchmark/blob/8f5e6ae0/tools/compare.py} to compare the
+                results of two executions of the same benchmark, it will print the difference with a raw value as well
+                as a percentage.  If there is a large enough number of repetitions of these benchmarks, the script can
+                also perform a Mann–Whitney U test to test if the performance for these two series of runs is
+                statistically identical.
+
+
+
+                All these libraries suffer from at least one of the following limitations (Google benchmark)
+                \begin{itemize}
+                    \item For a given code snippet and a given input, they will perform several iterations and report
+                        the average duration. The user has no control on this number of iterations which is not even
+                        deterministic, as the code snippet is executed in a loop for a fixed period of time.
+                    \item We do not have any information on the distribution of these durations, only the average is
+                        reported, the standard deviation is not displayed. Note that this is understandable, these
+                        libraries typically start a timer, then perform the iterations, they never measure the duration
+                        of an individual iteration. It makes sense when measuring an extremely short code snippet that
+                        can take a few nanoseconds, but this is more unfortunate in our use case where we measure longer
+                        function calls that take at least several milliseconds.
+                    \item There is no support for randomization, the code snippets are executed in a deterministic
+                        order.  The calls to a given snippet with different parameters are also executed in a
+                        deterministic order.
+                    \item The statistical tests implemented (if any) are quite basic.  There is also no graphical
+                        visualization of the results, which would greatly help the user to (1) better understand the
+                        outcome of the test (not everyone knows what is a \emph{P-value}) and (2) visually detect
+                        eventual differences not captured by the test (the Anscombe's quartet is the classical example).
+                \end{itemize}
+
+                We would like to stress that the vast majority of benchmarking tools we know of only report a
+                performance metric (\eg a duration, a network latency, a number of page faults, etc.), they do not allow
+                to perform any statistical tests.
+
+            \subsubsection{Benchmarking systems}%
+
+                Other tools exist for measuring the performance of a platform under some workload. Here, we are not
+                interested in the execution of a given software, but rather the whole platform, \ie the combination of
+                the hardware, the operating system and eventual softwares running concurrently on the system.
+                High Performance Linpack \cite{hpl} is such a tool, it performs a dense linear algebra operation using
+                one or several computers and reports the observed flop rate.
+
+                Another system benchmarking tool is stress-ng\cite{stress-ng}. It runs a selected workload for a given
+                duration and reports various aggregated performance. Over 240 different stress tests are implemented and
+                can be combined (\eg it is possible to launch three processes that perform a lot of I/O operations and
+                five processes that are CPU-intensive with vectorized floating point operations). The reported metrics
+                include the duration, but also the number of instructions, the number of cache reads and writes, the
+                number of page faults, etc. Several dozens of bugs have been found in the Linux kernel thanks to the use
+                of this benchmark.
+
+                These softwares suffer from the same limitations previously described: there is no randomization when
+                several configurations are combined, and no statistical tests are available.
 
         \subsection{Statistical test}%
         \label{sub:statistical_test}

@@ -5,13 +5,11 @@
 %     urldate = {2020-09-07}
 % }
 
-@Misc{hpl,
+@software{hpl,
     author = 	 {Antoine Petitet and Clint Whaley and Jack Dongarra and Andy Cleary and Piotr Luszczek},
     title = 	 {{HPL} - A Portable Implementation of the {High-Performance Linpack} Benchmark for Distributed-Memory Computers},
-    howpublished = {\url{http://www.netlib.org/benchmark/hpl}},
-    month = 	 {February},
-    year = 	 {2016},
-    note = 	 {Version 2.2}
+    url = {http://www.netlib.org/benchmark/hpl},
+    license = {BSD},
 }
 
 @incollection{hpl_prediction,
@@ -467,4 +465,14 @@
                 inspired by Criterion, a similar Haskell-based tool. It runs your code, measures the time it takes to
                 run, and then performs some statistical analysis on those measurements.},
     repository= {https://github.com/libnonius/nonius},
+}
+
+@software {stress-ng,
+    title = {Stress-ng},
+    shorthand = {Stress-ng},
+    license = {GPL 2.0},
+    url = {https://kernel.ubuntu.com/~cking/stress-ng/},
+    abstract = {Stress-ng will stress test a computer system in various selectable ways. It was designed to exercise
+                various physical subsystems of a computer as well as the various operating system kernel interfaces.},
+    repository= {https://github.com/ColinIanKing/stress-ng},
 }
