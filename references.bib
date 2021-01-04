@@ -396,7 +396,7 @@
 
 @software {google-benchmark,
     title = {Google Benchmark},
-%    author = {Fiselier, Eric and Hamon, Dominic},
+    %author = {Fiselier, Eric and Hamon, Dominic},
     author = {The Google Benchmark contributors},
     shorthand = {GBench},
     date = {2020},
@@ -410,7 +410,7 @@
     title = {OpenBLAS},
     author = {The OpenBLAS contributors},
     shorthand = {OpenBLAS},
-%    author = {Xianyi, Zhang and Qian, Wang and Saar, Werner and Kroeker, Martin},
+    %author = {Xianyi, Zhang and Qian, Wang and Saar, Werner and Kroeker, Martin},
     date = {2020},
     license = {BSD},
     url = {http://www.openblas.net/},
@@ -420,7 +420,7 @@
 
 @software {openmpi,
     title = {OpenMPI},
-%    author = {Squyres, Jeff and Castain, Ralph and Bosilca, George},
+    %author = {Squyres, Jeff and Castain, Ralph and Bosilca, George},
     author = {The OpenMPI contributors},
     shorthand = {OpenMPI},
     date = {2020},
@@ -429,4 +429,56 @@
     abstract = {The Open MPI Project is an open source Message Passing Interface implementation that is developed and
                 maintained by a consortium of academic, research, and industry partners.},
     repository= {https://github.com/open-mpi/ompi},
+}
+
+@software {catch2,
+    title = {Catch2},
+    author = {The Catch2 contributors},
+    shorthand = {Catch2},
+    date = {2020},
+    license = {BSL},
+    abstract = {A modern, C++-native, header-only, test framework for unit-tests, TDD and BDD - using C++11, C++14,
+                C++17 and later (or C++03 on the Catch1.x branch)},
+    repository= {https://github.com/catchorg/Catch2},
+}
+
+@software {hayai,
+    title = {Hayai},
+    author = {The Hayai contributors},
+    shorthand = {Hayai},
+    date = {2020},
+    license = {Apache},
+    url = {https://bruun.co/2012/02/07/easy-cpp-benchmarking},
+    abstract = {hayai is a C++ framework for writing benchmarks for pieces of code along the lines of the normal
+                approach for unit testing using frameworks such as googletest.},
+    repository= {https://github.com/nickbruun/hayai},
+}
+
+@software {celero,
+    title = {Celero},
+    author = {The Celero contributors},
+    shorthand = {Celero},
+    date = {2020},
+    license = {Apache},
+    abstract = {Developing consistent and meaningful benchmark results for code is a complicated task. Measurement tools
+                exist (Intel® VTune™ Amplifier, SmartBear AQTime, Valgrind, etc.) external to applications, but they are
+                sometimes expensive for small teams or cumbersome to utilize. This project, Celero, aims to be a small
+                library which can be added to a C++ project and perform benchmarks on code in a way which is easy to
+                reproduce, share, and compare among individual runs, developers, or projects. Celero uses a framework
+                similar to that of GoogleTest to make its API more natural to use and integrate into a project. Make
+                automated benchmarking as much a part of your development process as automated testing.},
+    repository= {https://github.com/DigitalInBlue/Celero},
+}
+
+@software {nonius,
+    title = {nonius},
+    author = {The Nonius contributors},
+    shorthand = {Nonius},
+    date = {2020},
+    license = {Apache},
+    url = {https://nonius.io/},
+    abstract = {Nonius is an open-source framework for benchmarking small snippets of C++ code. It is very heavily
+                inspired by Criterion, a similar Haskell-based tool. It runs your code, measures the time it takes to
+                run, and then performs some statistical analysis on those measurements.},
+    repository= {https://github.com/libnonius/nonius},
 }
