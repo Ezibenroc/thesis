@@ -1055,11 +1055,12 @@
                         the average duration. The user has no control on this number of iterations which is not even
                         deterministic, as the code snippet is executed in a loop for a fixed period of time.
                     \item We do not have any information on the distribution of these durations, only the average is
-                        reported, the standard deviation is not displayed. Note that this is understandable, these
-                        libraries typically start a timer, then perform the iterations, they never measure the duration
-                        of an individual iteration. It makes sense when measuring an extremely short code snippet that
-                        can take a few nanoseconds, but this is more unfortunate in our use case where we measure longer
-                        function calls that take at least several milliseconds.
+                        reported, the standard deviation is not displayed and we do not have any confidence interval for
+                        the estimations of the mean. Note that this is understandable, these libraries typically start a
+                        timer, then perform the iterations, they never measure the duration of an individual iteration.
+                        It makes sense when measuring an extremely short code snippet that can take a few nanoseconds,
+                        but this is more unfortunate in our use case where we measure longer function calls that take at
+                        least several milliseconds.
                     \item There is no support for randomization, the code snippets are executed in a deterministic
                         order.  The calls to a given snippet with different parameters are also executed in a
                         deterministic order.
