@@ -1093,6 +1093,15 @@
                 These softwares suffer from the same limitations previously described: there is no randomization when
                 several configurations are combined, and no statistical tests are available.
 
+                The Grid'5000 platform already has tests in place. First, a script called \texttt{g5k-checks} verifies
+                each time a node boots that its characteristics match the reference information (\eg the amount of
+                memory, the BIOS version). Additionaly, more extensive tests are executed on a regular basis on all the
+                ndoes \cite{nussbaum:hal-01538682}. These are mostly \emph{correction} tests, they perform several
+                operations (\eg node deployment, network reconfiguration) that can either succeed or fail. Two
+                \emph{performance} tests are implemented, one for the network bandwidth, the other for the disk
+                bandwidth.  However, they use threshold values to define what is an acceptable performance, hence they
+                will detect a severe regression but will miss more subtle changes.
+
         \subsection{Statistical test}%
         \label{sub:statistical_test}
 
