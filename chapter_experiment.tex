@@ -24,7 +24,7 @@
         \label{sub:experiment_engines}
 
             While it is possible to run a complete experiment on a testbed like Grid'5000 by manually issuing commands
-            in an interactive shell, it is not advisable as it quickly becomes extremly tedious and error-prone.
+            in an interactive shell, it is not advisable as it quickly becomes extremely tedious and error-prone.
             Automating the experiment is a necessary condition to have reproducible results. A first step toward this
             goal is to write some ad-hoc script. However, two independent experiments might still share a lot of steps
             that could be refactored in a common layer, \eg OS deployment, package installation, or even more advanced
@@ -507,7 +507,7 @@
             demonstrate this, we have generated three different experiment files using exactly the same generation
             method described previously. These three experiments, named \texttt{A}, \texttt{B} and \texttt{C}, were
             repeated several dozen of times during a week-end in a random order. They have been carried on 8 different
-            nodes of the dahu cluster, for a total of 16 different processors, the results are extremly similar for all
+            nodes of the dahu cluster, for a total of 16 different processors, the results are extremely similar for all
             of them.
 
             The average \dgemm performance observed in each experiment is reported in
@@ -530,7 +530,7 @@
             The distributions of two regression coefficients are represented in
             Figure~\ref{fig:randomizing_sizes:expfile:average_distribution}, namely the coefficients corresponding to
             the products \(MNK\) and \(NK\) (the effect of the experiment file on the coefficients for \(MK\) and \(MN\)
-            is extremly similar to \(NK\)). It appears here that the experiment file causing the highest performance
+            is extremely similar to \(NK\)). It appears here that the experiment file causing the highest performance
             gives the highest cubic coefficient and the lowest quadratic coefficients. In other words, this means that
             with this experiment file, a larger fraction of the \dgemm durations is explained by the cubic coefficient.
 
@@ -548,7 +548,7 @@
 
             A non-aggregated view of the data is presented in Figure~\ref{fig:randomizing_sizes:expfile:raw_data}, each
             point represents one individual call to \dgemm. It appears that most of the calls in the three experiments
-            have extremly similar durations for a given product \(MNK\). However, a small fraction of the \dgemm calls
+            have extremely similar durations for a given product \(MNK\). However, a small fraction of the \dgemm calls
             were significantly slower than the others with experiments \texttt{A} and \texttt{B}. All these calls have
             been made with a tall and skinny matrix, with \(K\geq3000\), which corroborates the hypothesis of a bad
             cache utilization.
@@ -668,10 +668,10 @@
             The average CPU power consumption, presented in
             Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:power_CPU}, is particularly peculiar. The random
             experiment has a power consumption significantly lower and more variable than the four other experiments
-            that are all extremly stable, with nearly no inter-run variability. This observation is very
+            that are all extremely stable, with nearly no inter-run variability. This observation is very
             counter-intuitive, since the CPU power consumption is in general proportional to the CPU
             frequency~\cite{heinrich:hal-01523608}.  This only happens on the CPU 1 of the two nodes we tested, the
-            power consumption of the CPU 0 is extremly stable and similar for the five experiment kinds.
+            power consumption of the CPU 0 is extremely stable and similar for the five experiment kinds.
 
             \begin{figure}[htpb]
                 \centering
@@ -1026,8 +1026,8 @@
             Studio 2019 instead of G++ 7.5.0. This shows that even high performance libraries do not always have the
             methodology and tools to avoid performance regressions.
 
-        \subsection{Existing tools}%
-        \label{sub:existing_tools}
+        \subsection{Existing work}%
+        \label{sub:existing_work}
 
             \subsubsection{Benchmarking software}%
 
@@ -1047,9 +1047,7 @@
                 also perform a Mann–Whitney U test to test if the performance for these two series of runs is
                 statistically identical.
 
-
-
-                All these libraries suffer from at least one of the following limitations (Google benchmark)
+                All these libraries suffer from at least one of the following limitations:
                 \begin{itemize}
                     \item For a given code snippet and a given input, they will perform several iterations and report
                         the average duration. The user has no control on this number of iterations which is not even
@@ -1070,9 +1068,32 @@
                         eventual differences not captured by the test (the Anscombe's quartet is the classical example).
                 \end{itemize}
 
+                Another interesting work is related to the StarPU project\cite{AugThiNamWac11CCPE}. StarPU is a state of
+                the art C/C++ task programming library that handles task dependencies and optimized usage of resources
+                (heterogeneous scheduling and data transfers). It is also possible to accurately simulate a StarPU
+                application, using the Simgrid simulation framework\cite{stanisic:hal-01147997}. As part of their
+                development methodology, the StarPU team performs nightly runs of a few selected StarPU applications and
+                measure their performance, both in reality and in simulation. The goal is to detect any performance
+                regression eventually introduced by a change in the software.
+                Figure~\ref{fig:non_regression:state_of_art:starpu} presents the temporal evolution of the StarPU
+                implementation of \texttt{spotrf}, which computes a Cholesky factorization of a given matrix. The purple
+                line is the observed performance in reality, the green line is the estimation made in simulation. The
+                large jump on 01/01/2018 is due to a hardware upgrade. The real runs exhibit an extremely large
+                variability, which is mainly due to platform unstability. Since the StarPU team is interested in
+                detecting regressions in StarPU itself and not the platform, these predictions are extremely valuable to
+                them due to their reliability, they allow to rule out the false conclusions that would be made by
+                looking only at the real runs.
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=0.8\linewidth]{img/experiment/non_regression/state_of_art/starpu.png}
+                    \caption{Evolution of the performance of a StarPU implementation of \texttt{spotrf} function, both
+                    in reality and in simulation\cite{thibault:hal-02943753}.}%
+                    \label{fig:non_regression:state_of_art:starpu}
+                \end{figure}
+
                 We would like to stress that the vast majority of benchmarking tools we know of only report a
-                performance metric (\eg a duration, a network latency, a number of page faults, etc.), they do not allow
-                to perform any statistical tests.
+                performance metric (\eg a duration, a network latency, a number of page faults, etc.), they do not
+                perform any statistical tests.
 
             \subsubsection{Benchmarking systems}%
 
