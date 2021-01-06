@@ -1669,6 +1669,85 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-bipihK/figureZHGqH0.png]]
 ** Performance non-regression tests
+*** State of the art (StarPU)
+I regenerate the figure for the performance tests of StarPU (see the slide 55 of
+the [[https://hal.inria.fr/hal-02943753/file/20-02-15-siampp-seattle.pdf][SiamPP presentation]]). A recent version of the dataset is available [[https://files.inria.fr/starpu/testing/morse/master/morse_spotrf_seq.html][online]],
+but all the data from 2014 to 2020 has been discarded, which is unfortunate.
+
+I obtained the old dataset by an email from Nathalie Furmento on
+[2021-01-06 Wed].
+
+First, let's clean this mess.
+
+#+begin_src python :results output :session *python* :exports both
+path = "data/experiment/non_regression/state_of_art/"
+files = {
+    "results_master_HEAD_spotrf_seq_sim.dat": "simulation",
+    "results_master_HEAD_spotrf_seq.dat"    : "reality",
+}
+for old_f, new_f in files.items():
+    with open(path + old_f) as old:
+        with open(path + new_f + ".csv", "w") as new:
+            new.write(f"date,duration,gflops,mode\n")
+            for line in old:
+                line = line.split()
+                date = line[0]
+                try:
+                    i = line.index("+-")
+                except ValueError:
+                    continue
+                time, gflops = line[i-2:i]
+                try:
+                    float(time) + float(gflops)
+                except ValueError:
+                    continue
+                new.write(f"{date},{time},{gflops},{new_f}\n")
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+library(anytime)
+df = rbind(
+    read.csv("data/experiment/non_regression/state_of_art/reality.csv"),
+    read.csv("data/experiment/non_regression/state_of_art/simulation.csv")
+) %>%
+    mutate(date=anytime(date)) %>%
+    mutate(mode=stringr::str_to_title(mode))
+str(df)
+#+end_src
+
+#+RESULTS:
+: 
+: 'data.frame':	1433 obs. of  4 variables:
+:  $ date    : POSIXct, format: "2014-04-01" "2014-04-02" ...
+:  $ duration: num  15.2 14.7 16.1 15.3 16.2 ...
+:  $ gflops  : num  1239 1284 1173 1236 1165 ...
+:  $ mode    : chr  "Reality" "Reality" "Reality" "Reality" ...
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = ggplot(df) +
+    aes(x=date, y=gflops, color=mode) +
+    geom_point(shape=21, alpha=0.5) +
+    geom_line(alpha=0.2, show.legend=F) +
+    guides(colour = guide_legend(override.aes = list(alpha = 1, shape=16, size=4))) +
+    theme_bw() +
+    xlab("Date") + ylab("Performance (Gflop/s)") +
+    geom_vline(xintercept=anytime("2017-12-15"), linetype="dashed") +
+    annotate("label", x=anytime("2017-12-15"), y=3000, label="Hardware migration") +
+    expand_limits(y=0) +
+    scale_color_brewer(palette="Dark2") +
+    theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt")) +  # sadly required, otherwise the "2020" gets cut off...
+    theme(legend.title=element_blank(), legend.position=c(0.1, 0.82), legend.background=element_rect(color="black", size=0.3))
+ggsave(filename='img/experiment/non_regression/state_of_art/starpu_new.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-bJC7jD/figuresNlJkO.png]]
+
 *** Statistical tests
 **** Single point
 Relevant links for the plots:
