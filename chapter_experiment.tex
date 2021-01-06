@@ -1076,13 +1076,14 @@
                 measure their performance, both in reality and in simulation. The goal is to detect any performance
                 regression eventually introduced by a change in the software.
                 Figure~\ref{fig:non_regression:state_of_art:starpu} presents the temporal evolution of the StarPU
-                implementation of \texttt{spotrf}, which computes a Cholesky factorization of a given matrix. The purple
-                line is the observed performance in reality, the green line is the estimation made in simulation. The
-                large jump on 01/01/2018 is due to a hardware upgrade. The real runs exhibit an extremely large
-                variability, which is mainly due to platform unstability. Since the StarPU team is interested in
-                detecting regressions in StarPU itself and not the platform, these predictions are extremely valuable to
-                them due to their reliability, they allow to rule out the false conclusions that would be made by
-                looking only at the real runs.
+                implementation of \texttt{spotrf}, which computes a Cholesky factorization of a given matrix. The green
+                line is the observed performance in reality, the orange line is the estimation made in simulation. The
+                large jump on 15/12/2017 is due to a hardware upgrade. The real runs exhibit an extremely large
+                variability, which are mainly experiment artifacts: some experiments were performed on a badly
+                configured node which does not report the correct number of cores, so StarPU cannot use appropriately
+                the machine.  Since the StarPU team is interested in detecting regressions in StarPU itself and not the
+                platform, these simulations are extremely valuable to them, they allow to rule out the false conclusions
+                that would be made by looking only at the real runs.
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/state_of_art/starpu_new.pdf}
