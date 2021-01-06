@@ -1677,7 +1677,10 @@ but all the data from 2014 to 2020 has been discarded, which is unfortunate.
 I obtained the old dataset by an email from Nathalie Furmento on
 [2021-01-06 Wed].
 
-First, let's clean this mess.
+First, let's clean this mess. The number of columns in the files changes over
+time, so we cannot directly load it as a CSV and select the desired
+columns. From what I understood, the duration and gflops columns are the ones
+directly to the left of the symbols "+-", so let's use this for the selection.
 
 #+begin_src python :results output :session *python* :exports both
 path = "data/experiment/non_regression/state_of_art/"
