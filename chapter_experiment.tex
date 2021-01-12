@@ -1244,7 +1244,8 @@
 
             \subsubsection{Experiment execution}%
 
-                The experiment script is written in Python and uses the Peanut experiment engine (see
+                The experiment script is written in Python and uses the Peanut experiment
+                engine\footnote{\url{https://github.com/Ezibenroc/peanut}} (see
                 Section~\ref{sec:peanut}). This is also the script used to perform the \dgemm calibrations for HPL
                 simulation (see Part~\ref{part:prediction}).
 
@@ -1269,8 +1270,8 @@
                     \item Start the node monitoring script in the background.
                     \item Perform a stress of \NSI{10}{\minute} on the nodes as a warm-up.
                     \item Run the \dgemm calls with the desired experiment file.
-                    \item Collect the resulting data (\dgemm durations and monitoring values) and meta-data (system
-                        files, software versions, etc.) and build an archive.
+                    \item Collect the resulting data (two CSV files, one for \dgemm durations and one for monitoring
+                        values) and meta-data (system files, software versions, etc.) and build an archive.
                     \item Push the archive to the git repository.
                 \end{enumerate}
 
@@ -1281,7 +1282,21 @@
 
             \subsubsection{Archive extraction and aggregation}%
 
-                \dots
+                Once the experiments of the day have terminated, we submit an \emph{extraction} job on Grid'5000. In the
+                first versions of this work, this step used to be implemented with Gitlab's continuous-integration, but
+                this quickly revealed to be too demanding for the runner of our Gitlab instance.
+
+                The extraction job is a small script that uses
+                Cashew\footnote{\url{https://github.com/Ezibenroc/cashew}}, a Python library implemented specifically
+                for this task. It performs the following steps:
+                \begin{enumerate}
+                    \item Clone the git repository.
+                    \item Iterate on all the new archives to extract the performance and monitoring data. Append it to
+                        the two data files.
+                    \item Process the new additions in the data files to produce aggregated values.
+                \end{enumerate}
+
+                TODO: complete me
 
             \subsubsection{Statistical test computation}%
 
