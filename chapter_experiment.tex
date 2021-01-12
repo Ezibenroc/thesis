@@ -1235,7 +1235,51 @@
         %% - Soumission d'un job CI pour extraire et agréger les informations des archives.
         %% - Réalisation des tests et courbes sur les données.
         %% - Aussi montrer la distribution des données des clusters (e.g. perf vs frequence) avec les ellipses.
-        Some text\dots
+        \subsection{Workflow}%
+        \label{sub:workflow}
+
+            This section describes the different steps and tools involved to perform this performance test, from the
+            execution of the experiment on the target machines to the generation of the final plots. It discusses
+            several technical choices that have been made and gives some insights to their advantages and limitations.
+
+            \subsubsection{Experiment execution}%
+
+                The experiment script is written in Python and uses the Peanut experiment engine (see
+                Section~\ref{sec:peanut}). This is also the script used to perform the \dgemm calibrations for HPL
+                simulation (see Part~\ref{part:prediction}).
+
+                On a regular basis, typically three to four times a week, we use this script to submit new experiment
+                jobs to Grid'5000's scheduler. This regular submission could have been easily automatized, \eg with
+                \texttt{cron} or \texttt{systemd}, but we made the choice to keep this step manual. By inspecting the
+                Grid'5000 Gantt chart, we can check whether the clusters are currently heavily used or not and decide if
+                we should postpone or experiment to avoid disturbing too much the other users. A particularly good
+                timeframe for our experiments is usually between 7 a.m. and 9 a.m., when the (longer) nightly
+                experiments have terminated and the (shorter and interactive) daily expereiments have not started yet.
+
+                When scheduled, the experiment script will perform the following steps:
+                \begin{enumerate}
+                    \item Deploy a fresh Debian image on all the nodes of the job and install the required dependencies.
+                    \item Apply the desired setup to the nodes (\eg enable turboboost, disable hyperthreading, use the
+                        lowest C-state and P-state).
+                    \item Start the node monitoring script in the background.
+                    \item Perform a stress of \NSI{10}{\minute} on the nodes as a warm-up.
+                    \item Run the \dgemm calls with the desired experiment file.
+                    \item Collect the resulting data (\dgemm durations and monitoring values) and meta-data (system
+                        files, software versions, etc.) and build an archive.
+                    \item Push the archive to the git repository.
+                \end{enumerate}
+
+                The choice to use a git repository for storing the experiment data can seem peculiar, git is a very good
+                version control system for small text files but is not the best choice to store gigabytes of data
+                (although we mitigated this by using git LFS). It would have been undoubtedly more efficient to setup a
+                proper database server for this task, but probably longer to implement.
+
+        \subsection{Presentation of the test results}%
+        \label{sub:presentation_of_the_test_results}
+
+        \subsection{Detected events}%
+        \label{sub:detected_events}
+
 
     \section{Conclusion}%
     \label{sec:conclusion}
