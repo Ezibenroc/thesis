@@ -1029,7 +1029,7 @@
         \subsection{Existing work}%
         \label{sub:existing_work}
 
-            \subsubsection{Benchmarking software}%
+            \subsubsection{Benchmarking software: testing code snippets}%
 
                 Several libraries already exist for benchmarking C++ software. Catch2\cite{catch2} is a widely used unit
                 testing framework for C++. It also provides basic functionnalities for benchmarking code snippets.
@@ -1066,7 +1066,14 @@
                         visualization of the results, which would greatly help the user to (1) better understand the
                         outcome of the test (not everyone knows what is a \emph{P-value}) and (2) visually detect
                         eventual differences not captured by the test (the Anscombe's quartet is the classical example).
+                    \item There is no support for comparing long-term performance evolutions. With these libraries, it
+                        is possible to make performance measures for a given state of the codebase on a given machine.
+                        It is even possible to make point-to-point comparison with Google Benchmark, \ie to compare two
+                        states of the codebase or two machines. However, we still miss the full picture, the variation
+                        of the performance on an historical timeframe.
                 \end{itemize}
+
+            \subsubsection{Benchmarking software: long-term performance evolution of an application}%
 
                 Another interesting work is related to the StarPU project\cite{AugThiNamWac11CCPE}. StarPU is a state of
                 the art C/C++ task programming library that handles task dependencies and optimized usage of resources
@@ -1092,9 +1099,18 @@
                     \label{fig:non_regression:state_of_art:starpu}
                 \end{figure}
 
-                We would like to stress that the vast majority of benchmarking tools we know of only report a
-                performance metric (\eg a duration, a network latency, a number of page faults, etc.), they do not
-                perform any statistical tests.
+                The approach of the StarPU team is particularly interesting, because they executed their application on
+                a controled environment on a near-daily basis for several years. An important issue however is that they
+                did not perform any statistics, they only relied on a visual inspection of the plot to decide whether
+                the last modifications of their codebases had any significant effect on performance. While this can be
+                satisfying to some extent, this raises two concerns:
+                \begin{itemize}
+                    \item They could miss a subtle change in the performance or detect it much later, as it can be
+                        extremely difficult and error-prone. \footnote{Emery Berger uses the term "eyeball statistics":
+                        \url{https://youtu.be/r-TLSBdHe1A}}
+                    \item This does not scale well, adding more applications or running the test on more machines would
+                        make this inspection very tedious.
+                \end{itemize}
 
             \subsubsection{Benchmarking systems}%
 
