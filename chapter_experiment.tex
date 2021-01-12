@@ -1255,6 +1255,11 @@
                 we should postpone or experiment to avoid disturbing too much the other users. A particularly good
                 timeframe for our experiments is usually between 7 a.m. and 9 a.m., when the (longer) nightly
                 experiments have terminated and the (shorter and interactive) daily expereiments have not started yet.
+                We generally submit one job per cluster, requesting all the nodes, but we sometimes have to split the
+                experiments and make several smaller jobs when only a subset of the nodes is free immediately. The
+                alternative would be to submit the full-scale job anyway, but it would get scheduled later in the day,
+                which might disturb other users that need to work interactively on some nodes. Again, this kind of
+                decisions is the reason why this step is not trivial to automatize.
 
                 When scheduled, the experiment script will perform the following steps:
                 \begin{enumerate}
@@ -1273,6 +1278,15 @@
                 version control system for small text files but is not the best choice to store gigabytes of data
                 (although we mitigated this by using git LFS). It would have been undoubtedly more efficient to setup a
                 proper database server for this task, but probably longer to implement.
+
+            \subsubsection{Archive extraction and aggregation}%
+
+                \dots
+
+            \subsubsection{Statistical test computation}%
+
+                \dots
+
 
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
