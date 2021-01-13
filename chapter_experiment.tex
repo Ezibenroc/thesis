@@ -1293,6 +1293,15 @@
                 (although we mitigated this by using git LFS). It would have been undoubtedly more efficient to setup a
                 proper database server for this task, but probably longer to implement.
 
+                The \dgemm CSV file contains one row for each individual \dgemm call. The columns are the hostname of
+                the node, the core ID, the exact time at which the call was made, the duration of the call and the
+                \dgemm parameters (including the matrix sizes \(M\), \(N\) and \(K\)).
+
+                The monitoring CSV file contains one row per sample, which typically happens every \NSI{5}{\second}. The
+                columns are the hostname of the node, the exact time at which this sample was taken, then one column for
+                each available metric (\eg temperature of the CPU n°1, frequency of the core n°6, power consumption of
+                the CPU n°0).
+
             \subsubsection{Archive extraction and aggregation}%
 
                 Once the experiments of the day have terminated, we submit an \emph{extraction} job on Grid'5000. In the
@@ -1305,8 +1314,10 @@
                 \begin{enumerate}
                     \item Clone the git repository.
                     \item Iterate on all the new archives to extract the performance and monitoring data. Append it to
-                        the two data files.
-                    \item Process the new additions in the data files to produce aggregated values.
+                        the two \texttt{hdf5} data files.
+                    \item Process the new additions in the data files to produce aggregated values, append these
+                        aggregated values to the \texttt{csv} files.
+                    \item Push the changes to the git repository.
                 \end{enumerate}
 
                 TODO: complete me
