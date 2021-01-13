@@ -1354,11 +1354,24 @@
 
             \subsubsection{Statistical test computation}%
 
-                \dots
+                When the extraction and aggregation of the new data is terminated, we compute the statistical test. This
+                is usually done in the same Grid'5000 job as the previous step, but it can be done independently, the
+                test does not need the full repository, it automatically downloads the required files. As for the
+                previous step, the test is implemented in Cashew.
 
 
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
+
+            \begin{figure}[htpb]
+                \centering
+                \fbox{\includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/g5k_test_home.png}}
+                \caption{Landing page of the test webpage. Each cluster is represented by a row, each factor by a
+                column. Clicking on a button will open the test notebook for the desired cluster and factor. The last
+                column is a drop-down menu showing all the coefficients for the linear regression, as well as a
+                multi-dimensional test made on all these coefficients together.}%
+                \label{fig:img:experiment:non_regression:home}
+            \end{figure}
 
         \subsection{Detected events}%
         \label{sub:detected_events}
