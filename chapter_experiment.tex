@@ -1320,7 +1320,25 @@
                     \item Push the changes to the git repository.
                 \end{enumerate}
 
-                TODO: complete me
+                In the extraction step, we use the archive metadata to add some information to the tables stored in the
+                two CSV files. For instance, we add the ID of the job and its scheduled date, the cluster of the node
+                and a hash of the experiment file. We also reshape the monitoring table to switch from its wide format
+                to a long format (\ie each row now has a set of identifier variables and a single measure variable).
+                These two tables are then appended to the two \texttt{hdf5} files.
+
+                We compared several alternative file formats to store this data: a simple CSV file, a CSV file
+                compressed with \texttt{zip}, SQLite\cite{sqlite}, Apache Arrow \cite{arrow} and HDF5\cite{hdf5} with
+                various options. The Apache Arrow library had the fastest read and write operations as well as the
+                smallest file. HDF5 with the \texttt{table} format and the \texttt{zlib} compression algorithm was the
+                second best, the other alternatives were largely inferior in terms of I/O speed and disk footprint. Two
+                important features of HDF5 made it preferable to Apache Arrow for our use case:
+                \begin{itemize}
+                    \item The possibility to append data to a file. With Appache Arrow, for each new experiment we would
+                        have to read the whole file in memory to add the new data.
+                    \item The ability to load only a subset of the data based on a predicate. For instance, it is
+                        possible to load the measures made on a given node between two given dates without having to
+                        read the whole file.
+                \end{itemize}
 
             \subsubsection{Statistical test computation}%
 
