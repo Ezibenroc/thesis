@@ -1242,6 +1242,19 @@
             execution of the experiment on the target machines to the generation of the final plots. It discusses
             several technical choices that have been made and gives some insights to their advantages and limitations.
 
+            The workflow consists in three main steps:
+            \begin{description}
+                \item[Experiment execution] The \dgemm calibration program is executed on the desired nodes. We obtain
+                    a \texttt{zip} archive containing the experiment data and metadata.
+                \item[Archive extraction and aggregation] The data is extracted from the archive and appended to two
+                    \texttt{hdf5} files (one for the \dgemm duration, one for the monitoring data). Then, some
+                    statistics are computed with this new data on a per-CPU and per-experiment basis (\eg average \dgemm
+                    performance and average CPU temperature), these aggregated values are added to two \texttt{csv}
+                    files.
+                \item[Statistical test computation] Several statistical tests are done on the sequence of aggregated
+                    data. The result is presented as several \texttt{jupyter} notebooks containing plots.
+            \end{description}
+
             \subsubsection{Experiment execution}%
 
                 The experiment script is written in Python and uses the Peanut experiment
