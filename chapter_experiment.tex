@@ -1332,12 +1332,24 @@
                 smallest file. HDF5 with the \texttt{table} format and the \texttt{zlib} compression algorithm was the
                 second best, the other alternatives were largely inferior in terms of I/O speed and disk footprint. Two
                 important features of HDF5 made it preferable to Apache Arrow for our use case:
+                (1) The possibility to append data to a file. With Appache Arrow, for each new experiment we would have
+                to read the whole file in memory to add the new data.  (2) The ability to load only a subset of the data
+                based on a logical predicate. For instance, it is possible to load the measures made on a given node
+                between two given dates without having to read the whole file.
+
+                In the aggregation step, we summarize the data from a given experiment into a single row for each CPU of
+                each node. We keep the \dgemm data and the monitoring data separated. Both these files have identifier
+                columns: cluster name, node ID, CPU ID, job ID, experiment start time and experiment file hash. Their
+                measure columns are listed below:
                 \begin{itemize}
-                    \item The possibility to append data to a file. With Appache Arrow, for each new experiment we would
-                        have to read the whole file in memory to add the new data.
-                    \item The ability to load only a subset of the data based on a predicate. For instance, it is
-                        possible to load the measures made on a given node between two given dates without having to
-                        read the whole file.
+                    \item In the \dgemm file, each row has the observed \texttt{dgemm} performance, computed as the
+                        total number of flops (equal to \(2\sum_i M_iN_iK_i\)) divided by the total duration. Each row
+                        also has the coefficients of the linear regression using the full polynomial model, as discussed
+                        in Part~\ref{part:prediction}.
+                    \item In the monitoring file, each row has the observed mean temperature, frequency, CPU power
+                        consumption and DRAM power consumption. To represent the steady state of the experiment, these
+                        averages are computed on a subset of the available values, a window starting \NSI{2}{\minute}
+                        after the start of the \dgemm calibration program and ending \NSI{2}{\minute} later.
                 \end{itemize}
 
             \subsubsection{Statistical test computation}%
