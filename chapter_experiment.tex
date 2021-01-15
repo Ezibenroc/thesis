@@ -1356,8 +1356,7 @@
 
                 When the extraction and aggregation of the new data is terminated, we compute the statistical test. This
                 is usually done in the same Grid'5000 job as the previous step, but it can be done independently, the
-                test does not need the full repository, it automatically downloads the required files. As for the
-                previous step, the test is implemented in Cashew and use a Jupyter notebook.
+                test does not need the full repository, it automatically downloads the required files.
 
                 The implementation directly follows the formula described in \ref{sub:statistical_test}. It relies
                 heaviliy on Numpy and Pandas for a better efficiency.
@@ -1382,9 +1381,12 @@
 
                 A multi-dimensional test is also performed on the eight parameters of the linear regression for \dgemm
                 durations (\ie \(p=8\)).
-
                 An overview of the graphical presentation of these test results is presented in section
                 \ref{sub:presentation_of_the_test_results}.
+
+                As for the previous step, the test is implemented in Cashew and uses a Jupyter notebook. This notebook
+                is instanciated and executed several times, once per cluster and per factor. All these copies are then
+                converted to HTML and deployed to a website.
 
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
