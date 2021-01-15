@@ -1357,8 +1357,34 @@
                 When the extraction and aggregation of the new data is terminated, we compute the statistical test. This
                 is usually done in the same Grid'5000 job as the previous step, but it can be done independently, the
                 test does not need the full repository, it automatically downloads the required files. As for the
-                previous step, the test is implemented in Cashew.
+                previous step, the test is implemented in Cashew and use a Jupyter notebook.
 
+                The implementation directly follows the formula described in \ref{sub:statistical_test}. It relies
+                heaviliy on Numpy and Pandas for a better efficiency.
+
+                Several factors are available. They are all tested independently, as a one-dimensional variable (\ie
+                \(p=1\)). For each of them, two tests are realised, one with a window of one job (\ie \(r=1\)) and one
+                with a window of five jobs (\ie \(r=5\)). The different factors are:
+                \begin{description}
+                    \item[Performance] Average \dgemm performance, including all calls. We recall that it is computed as
+                        the total number of flops (equal to \(2\sum_i M_iN_iK_i\)) divided by the total duration. This
+                        is not equal to the arithmetic mean of the individual performance values.
+                    \item[Performance$_{\text{2048}}$] Average \dgemm performance, restricted to the calls with matrices
+                        of size \(2048\times2048\).
+                    \item[Frequency] Average CPU frequency during the \dgemm calls.
+                    \item[Power$_{\text{CPU}}$] Average CPU power consumption during the \dgemm calls.
+                    \item[Power$_{\text{DRAM}}$] Average DRAM power consumption during the \dgemm calls.
+                    \item[Temperature] Average CPU temperature during the \dgemm calls.
+                    \item[Model] All the parameters of the linear regression for the \dgemm durations, \ie the intercept
+                        and the coefficients for the variables \(MNK\), \(MN\), \(MK\), \(NK\), \(M\), \(N\) and \(K\).
+                        The regression parameters of the linear regression for \dgemm variability are also available.
+                \end{description}
+
+                A multi-dimensional test is also performed on the eight parameters of the linear regression for \dgemm
+                durations (\ie \(p=8\)).
+
+                An overview of the graphical presentation of these test results is presented in section
+                \ref{sub:presentation_of_the_test_results}.
 
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
