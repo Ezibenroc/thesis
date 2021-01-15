@@ -1408,7 +1408,8 @@
 
             \tikzstyle{label}=[anchor=west, font=\scriptsize]
             \begin{figure}[htpb]
-                \begin{tikzpicture}
+                \centering
+                \resizebox{\linewidth}{!}{\begin{tikzpicture}
                     \def\labelx{11.5}
                     \def\leftcolx{3}
                     \def\rightcolx{9}
@@ -1436,7 +1437,7 @@
                     \def\y{5}
                     \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
                     \node[label, fill=white] at (\labelx, \y) {\textbf{(c)} Cluster overview (raw value)};
-                \end{tikzpicture}
+                \end{tikzpicture}}
                 \caption{Overview of a notebook (cluster \emph{gros}, average performance).}%
                 \label{fig:experiment:non_regression:zoom_out}
 
