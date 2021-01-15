@@ -1391,15 +1391,57 @@
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
 
+            A screenshot of the landing page\footnote{The website presented here is publicly available at
+            \url{https://cornebize.net/g5k_test/} and permanently archived at [...]\todo{Add a Zenodo link}}
+            of the Grid'5000 performance tests we implemented is presented in
+            Figure~\ref{fig:experiment:non_regression:home}. Each cluster is represented by a row, each factor by a
+            column. Clicking on a button will open the test notebook for the desired cluster and factor. The last column
+            is a drop-down menu showing all the coefficients for the linear regression, as well as a multi-dimensional
+            test made on the first eight coefficients together.
+
             \begin{figure}[htpb]
                 \centering
                 \fbox{\includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/g5k_test_home.png}}
-                \caption{Landing page of the test webpage. Each cluster is represented by a row, each factor by a
-                column. Clicking on a button will open the test notebook for the desired cluster and factor. The last
-                column is a drop-down menu showing all the coefficients for the linear regression, as well as a
-                multi-dimensional test made on all these coefficients together.}%
-                \label{fig:img:experiment:non_regression:home}
+                \caption{Landing page of the test website.}%
+                \label{fig:experiment:non_regression:home}
             \end{figure}
+
+            \tikzstyle{label}=[anchor=west, font=\scriptsize]
+            \begin{figure}[htpb]
+                \begin{tikzpicture}
+                    \def\labelx{11.5}
+                    \def\leftcolx{3}
+                    \def\rightcolx{9}
+                    \node[anchor=south west,inner sep=0] at (0,0)
+                        {\hbox{\hspace{-.05\linewidth}\fbox{\resizebox{0.4\linewidth}{!}{\includegraphics{img/experiment/non_regression/implementation/zoom_out1.png}}}\hspace{-.05\linewidth}}\vspace{-1em}};
+                    \node[anchor=south west,inner sep=0] at (6,0)
+                        {\hbox{\hspace{-.05\linewidth}\fbox{\resizebox{0.4\linewidth}{!}{\includegraphics{img/experiment/non_regression/implementation/zoom_out2.png}}}\hspace{-.05\linewidth}}\vspace{-1em}};
+
+                    \def\y{19.5}
+                    \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
+                    \node[label, fill=white] at (\labelx, \y) {\textbf{(a)} Parameter definitions};
+
+                    \def\y{18}
+                    \draw[-latex] (\labelx, \y) to (\rightcolx, \y) ;
+                    \node[label, fill=white] at (\labelx, \y) {\textbf{(d)} Cluster overview (test result)};
+
+                    \def\y{14}
+                    \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
+                    \node[label, fill=white] at (\labelx, \y) {\textbf{(b)} Cluster distribution in the last run};
+
+                    \def\y{10}
+                    \draw[-latex] (\labelx, \y) to (\rightcolx, \y) ;
+                    \node[label, fill=white] at (\labelx, \y) {\textbf{(e)} Historical evolution of each node};
+
+                    \def\y{5}
+                    \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
+                    \node[label, fill=white] at (\labelx, \y) {\textbf{(c)} Cluster overview (raw value)};
+                \end{tikzpicture}
+                \caption{Overview of a notebook (cluster \emph{gros}, average performance).}%
+                \label{fig:experiment:non_regression:zoom_out}
+
+            \end{figure}
+
 
         \subsection{Detected events}%
         \label{sub:detected_events}
