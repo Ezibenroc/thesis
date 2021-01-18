@@ -1414,6 +1414,16 @@
                 I = \overline{\bm{x}} \pm s \left(\sqrt{\frac{n+r}{nr}Q_F(\gamma, 1, n-1)}\right)
             \end{equation}
 
+            Whenever an observation falls outside the fluctuation interval, it is detected as an anomaly. It is
+            classified as either a positive anomaly and colored in red if it is larger than the sample mean, or it is
+            classified as a negative anomaly and colored in blue if it is lower than the sample mean.
+
+            It occasionnaly happens that a single observation is way outside the fluctuation interval (\eg on
+            Figure~\ref{fig:experiment:non_regression:evolution_dahu26}, one experiment had a performance of
+            approximately \NSI{23}{\giga\flop/\second} near the end of 2020). When this happens, we manually label this
+            point as an outlier and remove it from the reference set: it will not be taken into account for computing
+            the reference interval afterwards.
+
             \begin{figure}[htpb]
                 \centering
                 \subfigure[Node \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14}]{
