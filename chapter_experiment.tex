@@ -1157,12 +1157,12 @@
                 of unknown mean and covariance matrix.
 
                 Then, the prediction region of \(\bm{m}^{(r)}\) with probability \(\gamma\) is:
-                \[
-                \frac{nr}{n+r} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
-                \overline{\bm{x}})
-                =
-                \frac{(n-1)p}{n-p} Q_F(1-\gamma, p, n-p)
-                 \]
+                \begin{equation}\label{eqn:experiment:non_regression:pred_region}
+                    \frac{nr}{n+r} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
+                    \overline{\bm{x}})
+                    =
+                    \frac{(n-1)p}{n-p} Q_F(1-\gamma, p, n-p)
+                \end{equation}
                 Where \(\overline{\bm{x}}\) and \(\bm{S}\) are respectively the sample mean and sample covariance matrix of
                 the \(n\) observed \(\bm{x_i}\), and \(Q_F(\alpha,v_1,v_2)\) denotes the upper \(\alpha\) quantile of
                 \(F(v_1, v_2)\), the F-distribution with \(v_1\) and \(v_2\) degrees of freedom.
@@ -1170,10 +1170,10 @@
 
             We therefore propose the following statistical test for \(\bm{m}^{(r)}\) with confidence \(\gamma\). First,
             compute the value:
-            \[
-            t = \frac{nr(n-p)}{(n+r)(n-1)p} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
-            \overline{\bm{x}})
-             \]
+            \begin{equation}\label{eqn:experiment:non_regression:test}
+                t = \frac{nr(n-p)}{(n+r)(n-1)p} (\bm{m}^{(r)} - \overline{\bm{x}})^T \bm{S}^{-1}(\bm{m}^{(r)} -
+                \overline{\bm{x}})
+            \end{equation}
 
             Then, raise an error if \(t \geq Q_F(\gamma, p, n-p)\).  Note that there is no closed form for the value
             \(Q_F\), but it can be obtained (numerically) in R with the function
@@ -1398,9 +1398,21 @@
             modified the experiment in a way that affected the results. The orange lines (with a label on top) are
             events that happened on the platform regardless of our will.  The grey ribbon is the \emph{fluctuation
             interval}, we expect all the observations to fall within this interval with a given confidence
-            (\NSI{99.99}{\percent} in this figure). It is computed using all the previous observations that were made
-            after the last change. In other words, each time we recognise a change and add a vertical line, the
-            fluctuation interval gets reseted.
+            (\NSI{99.99}{\percent} in this figure). The \emph{reference set} of observations used to compute this
+            interval consists of past observations that were made after the last change. In other words, (1) we do not
+            consider the observations that were made in the future and (2) each time we recognise a change and add a
+            vertical line, the fluctuation interval gets reseted.
+
+            The fluctuation interval for a new value \(\bm{m}^{(r)}\) (which is the sample mean of \(r\) new
+            observations \(x_{n+1},\dots,x_{n+r}\), note that \(r=1\) in
+            Figure~\ref{fig:experiment:non_regression:evolution_dahu}) follows a rewriting of
+            Equation~\ref{eqn:experiment:non_regression:test} with a single dimension (\(p=1\)). Noting
+            \(\overline{\bm{x}}\) (resp. \(\bm{s}^2\)) the sample mean (resp. sample variance) of the reference set, the
+            fluctuation interval is defined as:
+
+            \begin{equation}\label{eqn:experiment:non_regression:interval}
+                I = \overline{\bm{x}} \pm s \left(\sqrt{\frac{n+r}{nr}Q_F(\gamma, 1, n-1)}\right)
+            \end{equation}
 
             \begin{figure}[htpb]
                 \centering
