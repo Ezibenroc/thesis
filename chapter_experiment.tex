@@ -1358,8 +1358,8 @@
                 is usually done in the same Grid'5000 job as the previous step, but it can be done independently, the
                 test does not need the full repository, it automatically downloads the required files.
 
-                The implementation directly follows the formula described in \ref{sub:statistical_test}. It relies
-                heaviliy on Numpy and Pandas for a better efficiency.
+                The implementation directly follows the formula described in Section~\ref{sub:statistical_test}. It
+                relies heaviliy on Numpy and Pandas for a better efficiency.
 
                 Several factors are available. They are all tested independently, as a one-dimensional variable (\ie
                 \(p=1\)). For each of them, two tests are realised, one with a window of one job (\ie \(r=1\)) and one
@@ -1391,6 +1391,17 @@
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
 
+            The historical evolution of the mean performance of two nodes is presented in
+            Figure~\ref{fig:experiment:non_regression:evolution_dahu}. Each point represents the observed performance on
+            a given experiment. The vertical dashed lines denote changes in the platform that had a significant effect
+            on at least one of the observed factors. The grey lines (with a label on bottom) are protocol changes, we
+            modified the experiment in a way that affected the results. The orange lines (with a label on top) are
+            events that happened on the platform regardless of our will.  The grey ribbon is the \emph{fluctuation
+            interval}, we expect all the observations to fall within this interval with a given confidence
+            (\NSI{99.99}{\percent} in this figure). It is computed using all the previous observations that were made
+            after the last change. In other words, each time we recognise a change and add a vertical line, the
+            fluctuation interval gets reseted.
+
             \begin{figure}[htpb]
                 \centering
                 \subfigure[Node \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14}]{
@@ -1399,7 +1410,8 @@
                 \subfigure[Node \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26}]{
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
                 }
-                \caption{Evolution of the test result for the mean performance on two nodes of cluster \emph{dahu}}%
+                \caption{Evolution of the mean performance of the two processors of two nodes from cluster \emph{dahu}
+                (the fluctuation interval has a confidence of \NSI{99.99}{\percent})}%
                 \label{fig:experiment:non_regression:evolution_dahu}
             \end{figure}
 
