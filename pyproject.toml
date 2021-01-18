@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "thesis"
+version = "0.1.0"
+description = ""
+authors = ["Tom Cornebize <tom.cornebize@univ-grenoble-alpes.fr>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+cashew = { git = "https://github.com/Ezibenroc/cashew.git", rev="fdff221d3cd29c8dfc91a6c99447316a1e25bb2d" }
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

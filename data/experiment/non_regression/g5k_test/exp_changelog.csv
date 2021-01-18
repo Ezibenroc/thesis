@@ -1,0 +1,22 @@
+date,cluster,node,type,description
+2019-07-13,all,all,protocol,randomisation of the expfile
+2019-09-01,dahu,13/14/15/16,G5K,cooling issue
+2019-10-18,all,all,protocol,randomisation of the matrices content
+2019-11-27,dahu,13/14/15/16,G5K,cooling issue fixed
+2020-02-06,gros,all,G5K,BIOS upgrade
+2020-04-01,dahu,all,G5K,BIOS upgrade
+2020-05-05,all,all,protocol,stop randomisation of the expfile
+2020-05-18,dahu,26,G5K,power drain
+2020-05-21,ecotype,24,G5K,unexplained
+2020-06-19,gros,all,G5K,BIOS upgrade
+2020-07-02,ecotype,24,G5K,unexplained
+2020-07-13,ecotype,47,G5K,unexplained
+2020-08-06,grisou,12,G5K,unexplained
+2020-09-13,parasilo,1,G5K,unexplained
+2020-09-19,parasilo,11,G5K,unexplained
+2020-09-29,troll,all,G5K,BIOS upgrade
+2020-10-01,gros,all,G5K,BIOS upgrade
+2020-10-06,parasilo,1/11,G5K,unexplained
+2020-10-15,dahu,29/30,G5K,unexplained
+2020-11-06,all,all,protocol,report the CPU temperature & more frequent monitoring probe & larger monitoring window
+2020-12-15,dahu,all,G5K,BIOS upgrade

@@ -1,0 +1,27 @@
+date,cluster,node,jobid,description
+2020-09-25,dahu,7,1949205,CPU power drop
+2020-09-28,dahu,17/18/19,1949268,CPU power drop
+2020-10-05,dahu,17/18/19,1949999,CPU power drop
+2020-10-05,dahu,20,1950000,CPU power drop
+2020-10-06,dahu,21/22/23/24,1950218,CPU power drop
+2020-10-07,dahu,21/22/23/24,1950387,CPU power drop
+2020-10-12,dahu,21/22/23/24,1951177,CPU power drop
+2020-10-13,dahu,21/22/23/24,1951248,CPU power drop
+2020-10-14,dahu,21/22/23/24,1951314,CPU power drop
+2020-10-26,dahu,2,1953585,CPU power drop
+2020-11-09,dahu,29/30/31/32,1957362,CPU power drop
+2020-11-17,dahu,29/31/32,1958992,CPU power drop
+2020-11-24,dahu,25/26/28/29/31/32,1962514,CPU power drop
+2020-11-25,dahu,29,1962918,CPU power drop
+2020-11-25,dahu,31,1962919,CPU power drop
+2020-11-25,dahu,32,1962920,CPU power drop
+2020-11-27,dahu,29/31/32,1963707,CPU power drop
+2020-11-30,dahu,29,1964626,CPU power drop
+2020-11-30,dahu,32,1964628,CPU power drop
+2020-12-02,dahu,29/31/32,1965170,CPU power drop
+2020-12-04,dahu,26/29/31/32,1965756,CPU power drop
+2020-12-07,dahu,29/31/32,1966474,CPU power drop
+2020-12-08,dahu,29/30/31/32,1966627,CPU power drop
+2020-12-09,dahu,29/30/31/32,1966749,CPU power drop
+2021-01-05,dahu,29/30/31/32,1972975,CPU power drop
+2021-01-15,dahu,32,1974675,overheating
