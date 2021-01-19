@@ -1426,16 +1426,26 @@
 
             \begin{figure}[htpb]
                 \centering
-                \subfigure[Node \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14}]{
+                \subfigure[Performance evolution of node \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14}]{
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14.pdf}
                 }
-                \subfigure[Node \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26}]{
+                \subfigure[Performance evolution of node \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26}]{
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
                 }
                 \caption{Evolution of the mean performance of the two processors of two nodes from cluster \emph{dahu}
                 (the fluctuation interval has a confidence of \NSI{99.99}{\percent})}%
                 \label{fig:experiment:non_regression:evolution_dahu}
             \end{figure}
+
+            We are running regular tests for several factors on hundreds of nodes, it would be very long and tedious to
+            review each individual plot. For this reason, we implemented overview plots, as presented in
+            Figure~\ref{fig:experiment:non_regression:overview}. In this presentation, each processor of each node
+            occupies one row. Individual experiments are still presented as points and the vertical grey or orange lines
+            represent the same platform changes. We added intermediate levels in the colors to display how unlikely it
+            was to make a given observation. In the one-dimension case (\ie \(p=1\)), this represents the distance
+            between the observation and the sample mean of the reference set.
+
+            \todo{Explain how we compute the probability}
 
             \begin{figure}[htpb]
                 \centering
