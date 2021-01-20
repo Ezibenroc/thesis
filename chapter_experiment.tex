@@ -1467,6 +1467,51 @@
                     \label{fig:experiment:non_regression:overview}
                 \end{figure}
 
+            \subsubsection{Windowed test}%
+
+                The test presented in Figure~\ref{fig:experiment:non_regression:overview} and
+                Figure~\ref{fig:experiment:non_regression:evolution_dahu} was done with a single factor (\(p=1\)), for
+                comparing a single new observation to the reference set (\(r=1\)). A similar test is implemented to
+                compare five new observations to the reference set, still with a single factor (\(p=1\) and \(r=5\)).
+
+                Figure~\ref{fig:experiment:non_regression:evolution_dahu_windowed} shows the performance evolution of
+                two nodes of the cluster \emph{dahu} with the five experiment window. Taking the average of several runs
+                reduces the noise. This allows to reduce considerably the width of the fluctuation interval, thereby
+                permitting to detect much more subtle changes. The downside is that it introduces a lag, the change
+                might not be detected immediately.
+
+                \begin{figure}[htpb]
+                    \centering
+                    \subfigure[Performance evolution of node
+                        \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14_windowed}]{
+                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14_windowed.pdf}
+                    }
+                    \subfigure[Performance evolution of node
+                    \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26_windowed}]{
+                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26_windowed.pdf}
+                    }
+                    \caption{Evolution of the mean performance of the two processors of two nodes from cluster
+                    \emph{dahu} using a window of five experiments (the fluctuation interval has a confidence of
+                    \NSI{99.99}{\percent})}%
+                    \label{fig:experiment:non_regression:evolution_dahu_windowed}
+                \end{figure}
+
+                The overview plot with the five experiment window is displayed in
+                Figure~\ref{fig:experiment:non_regression:overview_windowed}. The vertical orange line on 2020/12/15
+                marks a platform change we noticed. On this plot, it is very clear that the change has affected
+                significantly a large fraction of the nodes by increasing their performance (positive anomaly). This was
+                slightly visible on the non-windowed plot from Figure~\ref{fig:experiment:non_regression:overview}, but
+                much more tenuous. This desmonstrates well the complementarity of both tests: the non-windowed test is
+                better for detecting quickly any large change, whereas the windowed test is best at detecting more
+                subtle changes but with some lag.
+
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_windowed.pdf}
+                    \caption{Overview of the test result for the mean performance on cluster \emph{dahu} using a window
+                    of five experiments}%
+                    \label{fig:experiment:non_regression:overview_windowed}
+                \end{figure}
 
             \subsubsection{Website presentation}%
 
