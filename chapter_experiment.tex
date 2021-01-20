@@ -1391,77 +1391,81 @@
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
 
-            The historical evolution of the mean performance of two nodes is presented in
-            Figure~\ref{fig:experiment:non_regression:evolution_dahu}. Each point represents the observed performance on
-            a given experiment. The vertical dashed lines denote changes in the platform that had a significant effect
-            on at least one of the observed factors. The grey lines (with a label on bottom) are protocol changes, we
-            modified the experiment in a way that affected the results. The orange lines (with a label on top) are
-            events that happened on the platform regardless of our will.  The grey ribbon is the \emph{fluctuation
-            interval}, we expect all the observations to fall within this interval with a given confidence
-            (\NSI{99.99}{\percent} in this figure). The \emph{reference set} of observations used to compute this
-            interval consists of past observations that were made after the last change. In other words, (1) we do not
-            consider the observations that were made in the future and (2) each time we recognise a change and add a
-            vertical line, the fluctuation interval gets reseted.
+            \subsubsection{Evolution plot}%
 
-            The fluctuation interval for a new value \(\bm{m}^{(r)}\) (which is the sample mean of \(r\) new
-            observations \(x_{n+1},\dots,x_{n+r}\), note that \(r=1\) in
-            Figure~\ref{fig:experiment:non_regression:evolution_dahu}) follows a rewriting of
-            Equation~\ref{eqn:experiment:non_regression:test} with a single dimension (\(p=1\)). Noting
-            \(\overline{\bm{x}}\) (resp. \(\bm{s}^2\)) the sample mean (resp. sample variance) of the reference set, the
-            fluctuation interval is defined as:
+                The historical evolution of the mean performance of two nodes is presented in
+                Figure~\ref{fig:experiment:non_regression:evolution_dahu}. Each point represents the observed
+                performance on a given experiment. The vertical dashed lines denote changes in the platform that had a
+                significant effect on at least one of the observed factors. The grey lines (with a label on bottom) are
+                protocol changes, we modified the experiment in a way that affected the results. The orange lines (with
+                a label on top) are events that happened on the platform regardless of our will.  The grey ribbon is the
+                \emph{fluctuation interval}, we expect all the observations to fall within this interval with a given
+                confidence (\NSI{99.99}{\percent} in this figure). The \emph{reference set} of observations used to
+                compute this interval consists of past observations that were made after the last change. In other
+                words, (1) we do not consider the observations that were made in the future and (2) each time we
+                recognise a change and add a vertical line, the fluctuation interval gets reseted.
 
-            \begin{equation}\label{eqn:experiment:non_regression:interval}
-                I = \overline{\bm{x}} \pm s \left(\sqrt{\frac{n+r}{nr}Q_F(\gamma, 1, n-1)}\right)
-            \end{equation}
+                The fluctuation interval for a new value \(\bm{m}^{(r)}\) (which is the sample mean of \(r\) new
+                observations \(x_{n+1},\dots,x_{n+r}\), note that \(r=1\) in
+                Figure~\ref{fig:experiment:non_regression:evolution_dahu}) follows a rewriting of
+                Equation~\ref{eqn:experiment:non_regression:test} with a single dimension (\(p=1\)). Noting
+                \(\overline{\bm{x}}\) (resp. \(\bm{s}^2\)) the sample mean (resp. sample variance) of the reference set,
+                the fluctuation interval is defined as:
 
-            Whenever an observation falls outside the fluctuation interval, it is detected as an anomaly. It is
-            classified as either a positive anomaly and colored in red if it is larger than the sample mean, or it is
-            classified as a negative anomaly and colored in blue if it is lower than the sample mean.
+                \begin{equation}\label{eqn:experiment:non_regression:interval}
+                    I = \overline{\bm{x}} \pm s \left(\sqrt{\frac{n+r}{nr}Q_F(\gamma, 1, n-1)}\right)
+                \end{equation}
 
-            It occasionnaly happens that a single observation is way outside the fluctuation interval (\eg on
-            Figure~\ref{fig:experiment:non_regression:evolution_dahu26}, one experiment had a performance of
-            approximately \NSI{23}{\giga\flop/\second} near the end of 2020). When this happens, we manually label this
-            point as an outlier and remove it from the reference set: it will not be taken into account for computing
-            the reference interval afterwards.
+                Whenever an observation falls outside the fluctuation interval, it is detected as an anomaly. It is
+                classified as either a positive anomaly and colored in red if it is larger than the sample mean, or it
+                is classified as a negative anomaly and colored in blue if it is lower than the sample mean.
 
-            \begin{figure}[htpb]
-                \centering
-                \subfigure[Performance evolution of node \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14}]{
-                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14.pdf}
-                }
-                \subfigure[Performance evolution of node \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26}]{
-                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
-                }
-                \caption{Evolution of the mean performance of the two processors of two nodes from cluster \emph{dahu}
-                (the fluctuation interval has a confidence of \NSI{99.99}{\percent})}%
-                \label{fig:experiment:non_regression:evolution_dahu}
-            \end{figure}
+                It occasionnaly happens that a single observation is way outside the fluctuation interval (\eg on
+                Figure~\ref{fig:experiment:non_regression:evolution_dahu26}, one experiment had a performance of
+                approximately \NSI{23}{\giga\flop/\second} near the end of 2020). When this happens, we manually label
+                this point as an outlier and remove it from the reference set: it will not be taken into account for
+                computing the reference interval afterwards.
 
-            We are running regular tests for several factors on hundreds of nodes, it would be very long and tedious to
-            review each individual plot. For this reason, we implemented overview plots, as presented in
-            Figure~\ref{fig:experiment:non_regression:overview}. In this presentation, each processor of each node
-            occupies one row. Individual experiments are still presented as points and the vertical grey or orange lines
-            represent the same platform changes. We added intermediate levels in the colors to display how unlikely it
-            was to make a given observation. In the one-dimension case (\ie \(p=1\)), this represents the distance
-            between the observation and the sample mean of the reference set.
+                \begin{figure}[htpb]
+                    \centering
+                    \subfigure[Performance evolution of node \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14}]{
+                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14.pdf}
+                    }
+                    \subfigure[Performance evolution of node \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26}]{
+                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
+                    }
+                    \caption{Evolution of the mean performance of the two processors of two nodes from cluster \emph{dahu}
+                    (the fluctuation interval has a confidence of \NSI{99.99}{\percent})}%
+                    \label{fig:experiment:non_regression:evolution_dahu}
+                \end{figure}
 
-            More formally, this likelihood is the probability to make an observation at least as extreme. To compute it,
-            we use the value \(t\) defined in Equation~\ref{eqn:experiment:non_regression:test} and define the
-            likelihood \(\mathcal{L}\) as follows:
-            \begin{equation}\label{eqn:experiment:non_regression:likelihood}
-                \mathcal{L} = 1-F_{F(p, n-p)}(t)
-            \end{equation}
-            Here, \(F_{F(v_1, v_2)}\) denotes the cumulative distribution function of the F-distribution with \(v_1\)
-            and \(v_2\) degrees of freedom. An implementation is available in R with the function
-            \texttt{pf}\repeatfootnote{footnote:R_fdist} and in Python with the function
-            \texttt{scipy.stats.f.cdf}\repeatfootnote{footnote:PY_fdist}.
+            \subsubsection{Overview plot}%
 
-            \begin{figure}[htpb]
-                \centering
-                \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview.pdf}
-                \caption{Overview of the test result for the mean performance on cluster \emph{dahu}}%
-                \label{fig:experiment:non_regression:overview}
-            \end{figure}
+                We are running regular tests for several factors on hundreds of nodes, it would be very long and tedious
+                to review each individual plot. For this reason, we implemented overview plots, as presented in
+                Figure~\ref{fig:experiment:non_regression:overview}. In this presentation, each processor of each node
+                occupies one row. Individual experiments are still presented as points and the vertical grey or orange
+                lines represent the same platform changes. We added intermediate levels in the colors to display how
+                unlikely it was to make a given observation. In the one-dimension case (\ie \(p=1\)), this represents
+                the distance between the observation and the sample mean of the reference set.
+
+                More formally, this likelihood is the probability to make an observation at least as extreme. To compute
+                it, we use the value \(t\) defined in Equation~\ref{eqn:experiment:non_regression:test} and define the
+                likelihood \(\mathcal{L}\) as follows:
+                \begin{equation}\label{eqn:experiment:non_regression:likelihood}
+                    \mathcal{L} = 1-F_{F(p, n-p)}(t)
+                \end{equation}
+                Here, \(F_{F(v_1, v_2)}\) denotes the cumulative distribution function of the F-distribution with
+                \(v_1\) and \(v_2\) degrees of freedom. An implementation is available in R with the function
+                \texttt{pf}\repeatfootnote{footnote:R_fdist} and in Python with the function
+                \texttt{scipy.stats.f.cdf}\repeatfootnote{footnote:PY_fdist}.
+
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview.pdf}
+                    \caption{Overview of the test result for the mean performance on cluster \emph{dahu}}%
+                    \label{fig:experiment:non_regression:overview}
+                \end{figure}
 
             An extract of one notebook is presented in Figure~\ref{fig:experiment:non_regression:zoom_out}.
             % Note:
