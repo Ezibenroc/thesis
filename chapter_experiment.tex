@@ -1569,7 +1569,25 @@
                     \label{fig:experiment:non_regression:home}
                 \end{figure}
 
-                An extract of one notebook is presented in Figure~\ref{fig:experiment:non_regression:zoom_out}.
+                An extract of a single-factor notebook is presented in
+                Figure~\ref{fig:experiment:non_regression:zoom_out}. The different parts of the notebooks are:
+                \begin{enumerate}[(a)]
+                    \item This part is intended to import the required libraries and setup a few options, but most
+                        importantly to define three variables: the desired cluster, factor(s) and confidence.
+                    \item This is an histogram of the values obtained in the last run among the different processors of
+                        the cluster for the desired factor. The average value as well as the spatial variability
+                        coefficient are also displayed.
+                    \item This is an overview plot of the cluster, similar to the overview plots previously presented.
+                        The main difference is that the colors do not encode a test result, but the raw value. Like the
+                        histogram, it helps to visualize the heterogeneity of the cluster. It also demonstrates once
+                        again the utility of statistical tests: only the most brutal changes are visible in this plot,
+                        the more subtle ones get completely unnoticed to the naked eye.
+                    \item This is the non-windowed overview plot, as presented previously.
+                    \item These are the non-windowed evolution plots, as presented previously.
+                \end{enumerate}
+                This notebook extract is obviously incomplete, only three evolution plots are shown. It also contains in
+                a second part the windowed versions of the overview plot and evolution plots.
+
                 % Note:
                 % To make this figure, I took two screenshots of the g5k_test website on my desktop screen (2560x1440
                 % resolution), using the "capture the current window" mode. Then, I cropped these screenshots with the
@@ -1578,8 +1596,8 @@
                 \tikzstyle{label}=[anchor=west]
                 \begin{figure}[htpb]
                     \centering
-                    \resizebox{\linewidth}{!}{\begin{tikzpicture}
-                        \def\labelx{11.5}
+                    \resizebox{!}{0.5\textheight}{\begin{tikzpicture}
+                        \def\labelx{14}
                         \def\leftcolx{3}
                         \def\rightcolx{9}
                         \node[anchor=south west,inner sep=0] at (0,0)
