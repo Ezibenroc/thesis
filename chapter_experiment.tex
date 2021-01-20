@@ -1467,62 +1467,65 @@
                     \label{fig:experiment:non_regression:overview}
                 \end{figure}
 
-            An extract of one notebook is presented in Figure~\ref{fig:experiment:non_regression:zoom_out}.
-            % Note:
-            % To make this figure, I took two screenshots of the g5k_test website on my desktop screen (2560x1440
-            % resolution), using the "capture the current window" mode. Then, I cropped these screenshots with the
-            % command:
-            % convert input.png -crop 350x1310+30+103 output.png
-            \tikzstyle{label}=[anchor=west]
-            \begin{figure}[htpb]
-                \centering
-                \resizebox{\linewidth}{!}{\begin{tikzpicture}
-                    \def\labelx{11.5}
-                    \def\leftcolx{3}
-                    \def\rightcolx{9}
-                    \node[anchor=south west,inner sep=0] at (0,0)
-                        {\hbox{\hspace{-.05\linewidth}\fbox{\resizebox{0.4\linewidth}{!}{\includegraphics{img/experiment/non_regression/implementation/zoom_out1.png}}}\hspace{-.05\linewidth}}\vspace{-1em}};
-                    \node[anchor=south west,inner sep=0] at (6,0)
-                        {\hbox{\hspace{-.05\linewidth}\fbox{\resizebox{0.4\linewidth}{!}{\includegraphics{img/experiment/non_regression/implementation/zoom_out2.png}}}\hspace{-.05\linewidth}}\vspace{-1em}};
 
-                    \def\y{19.5}
-                    \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
-                    \node[label, fill=white] at (\labelx, \y) {\textbf{(a)} Parameter definitions};
+            \subsubsection{Website presentation}%
 
-                    \def\y{18}
-                    \draw[-latex] (\labelx, \y) to (\rightcolx, \y) ;
-                    \node[label, fill=white] at (\labelx, \y) {\textbf{(d)} Cluster overview (test result)};
+                An extract of one notebook is presented in Figure~\ref{fig:experiment:non_regression:zoom_out}.
+                % Note:
+                % To make this figure, I took two screenshots of the g5k_test website on my desktop screen (2560x1440
+                % resolution), using the "capture the current window" mode. Then, I cropped these screenshots with the
+                % command:
+                % convert input.png -crop 350x1310+30+103 output.png
+                \tikzstyle{label}=[anchor=west]
+                \begin{figure}[htpb]
+                    \centering
+                    \resizebox{\linewidth}{!}{\begin{tikzpicture}
+                        \def\labelx{11.5}
+                        \def\leftcolx{3}
+                        \def\rightcolx{9}
+                        \node[anchor=south west,inner sep=0] at (0,0)
+                            {\hbox{\hspace{-.05\linewidth}\fbox{\resizebox{0.4\linewidth}{!}{\includegraphics{img/experiment/non_regression/implementation/zoom_out1.png}}}\hspace{-.05\linewidth}}\vspace{-1em}};
+                        \node[anchor=south west,inner sep=0] at (6,0)
+                            {\hbox{\hspace{-.05\linewidth}\fbox{\resizebox{0.4\linewidth}{!}{\includegraphics{img/experiment/non_regression/implementation/zoom_out2.png}}}\hspace{-.05\linewidth}}\vspace{-1em}};
 
-                    \def\y{14}
-                    \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
-                    \node[label, fill=white] at (\labelx, \y) {\textbf{(b)} Cluster distribution in the last run};
+                        \def\y{19.5}
+                        \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
+                        \node[label, fill=white] at (\labelx, \y) {\textbf{(a)} Parameter definitions};
 
-                    \def\y{10}
-                    \draw[-latex] (\labelx, \y) to (\rightcolx, \y) ;
-                    \node[label, fill=white] at (\labelx, \y) {\textbf{(e)} Historical evolution of each node};
+                        \def\y{18}
+                        \draw[-latex] (\labelx, \y) to (\rightcolx, \y) ;
+                        \node[label, fill=white] at (\labelx, \y) {\textbf{(d)} Cluster overview (test result)};
 
-                    \def\y{5}
-                    \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
-                    \node[label, fill=white] at (\labelx, \y) {\textbf{(c)} Cluster overview (raw value)};
-                \end{tikzpicture}}
-                \caption{Overview of a notebook (cluster \emph{gros}, average performance).}%
-                \label{fig:experiment:non_regression:zoom_out}
-            \end{figure}
+                        \def\y{14}
+                        \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
+                        \node[label, fill=white] at (\labelx, \y) {\textbf{(b)} Cluster distribution in the last run};
 
-            A screenshot of the landing page\footnote{The website presented here is publicly available at
-            \url{https://cornebize.net/g5k_test/} and permanently archived at [...]\todo{Add a Zenodo link}}
-            of the Grid'5000 performance tests we implemented is presented in
-            Figure~\ref{fig:experiment:non_regression:home}. Each cluster is represented by a row, each factor by a
-            column. Clicking on a button will open the test notebook for the desired cluster and factor. The last column
-            is a drop-down menu showing all the coefficients for the linear regression, as well as a multi-dimensional
-            test made on the first eight coefficients together.
+                        \def\y{10}
+                        \draw[-latex] (\labelx, \y) to (\rightcolx, \y) ;
+                        \node[label, fill=white] at (\labelx, \y) {\textbf{(e)} Historical evolution of each node};
 
-            \begin{figure}[htpb]
-                \centering
-                \fbox{\includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/g5k_test_home.png}}
-                \caption{Landing page of the test website.}%
-                \label{fig:experiment:non_regression:home}
-            \end{figure}
+                        \def\y{5}
+                        \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
+                        \node[label, fill=white] at (\labelx, \y) {\textbf{(c)} Cluster overview (raw value)};
+                    \end{tikzpicture}}
+                    \caption{Overview of a notebook (cluster \emph{gros}, average performance).}%
+                    \label{fig:experiment:non_regression:zoom_out}
+                \end{figure}
+
+                A screenshot of the landing page\footnote{The website presented here is publicly available at
+                \url{https://cornebize.net/g5k_test/} and permanently archived at [...]\todo{Add a Zenodo link}} of the
+                Grid'5000 performance tests we implemented is presented in
+                Figure~\ref{fig:experiment:non_regression:home}. Each cluster is represented by a row, each factor by a
+                column. Clicking on a button will open the test notebook for the desired cluster and factor. The last
+                column is a drop-down menu showing all the coefficients for the linear regression, as well as a
+                multi-dimensional test made on the first eight coefficients together.
+
+                \begin{figure}[htpb]
+                    \centering
+                    \fbox{\includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/g5k_test_home.png}}
+                    \caption{Landing page of the test website.}%
+                    \label{fig:experiment:non_regression:home}
+                \end{figure}
 
 
         \subsection{Detected events}%
