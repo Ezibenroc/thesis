@@ -1514,8 +1514,38 @@
                 \end{figure}
 
             \subsubsection{Multi-factor test}%
-            \label{ssub:multi_factor_test}
-                \todo{}
+
+                We have also implemented the multidimensional test.
+                Figure~\ref{fig:experiment:non_regression:overview_multifactor} presents the overview plot for this test
+                made on the eight regression parameters (\ie \(p=8\), the parameters are\(MNK, MN, MK, NK, M, N, K\) and
+                the intercept). With several dimensions, there is no notion of \emph{negative} or \emph{positive}
+                anomaly, hence all the detected anomalies are colored in red. Likewise, we cannot represent graphically
+                the temporal evolution of these eight factors like we did in the single-dimension case.
+
+                This figure should be compared to Figure~\ref{fig:experiment:non_regression:overview}, since both of
+                them aim at detecting changes in \dgemm durations. We can nottice two interesting differences:
+                \begin{itemize}
+                    \item The first change, which happened on 2019/07/13, was detected as very significant on all the
+                        nodes with the multi-factor test. On the other hand, the single-factor test only marked a subset
+                        of the nodes.
+                    \item Two events have gone completely unnoticed by the multi-factor test whereas they were reported
+                        by the single-factor test: the positive anomaly on \emph{dahu-26} from 2020/05/18, and the series of
+                        negative anomalies (that we later decided to be outliers) between 2020/11 and 2020/12 on nodes
+                        \emph{dahu-29}, \emph{dahu-30}, \emph{dahu-31} and \emph{dahu-32}. The reason they went
+                        unnoticed is that a change was registered shortly before, so the reference set had a very low
+                        number of points. The radius of our fluctuation region is proportional to \(Q_F(\gamma, p,
+                        n-p)\), it is obviously not defined when \(n \leq p\). When \(n\) is larger than \(p\), the value
+                        \(Q_F(\gamma, p, n-p)\) starts extremely high, then quickly decreases. Hence, although it is
+                        defined, the test is not useful yet, we need to have a few more observations as reference.
+                        The same problem obviously exists when \(p=1\), but we have to wait longer with a larger number
+                        of parameters.
+                \end{itemize}
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_multifactor.pdf}
+                    \caption{Overview of the test result for the eight regression parameters on cluster \emph{dahu}}
+                    \label{fig:experiment:non_regression:overview_multifactor}
+                \end{figure}
 
             \subsubsection{Website presentation}%
 
