@@ -1177,9 +1177,9 @@
 
             Then, raise an error if \(t \geq Q_F(\gamma, p, n-p)\).  Note that there is no closed form for the value
             \(Q_F\), but it can be obtained (numerically) in R with the function
-            \texttt{qf}\footnote{\url{https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html}} and in Python
+            \texttt{qf}\savefootnote{footnote:R_fdist}{\url{https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Fdist.html}} and in Python
             with the function
-            \texttt{scipy.stats.f.ppf}\footnote{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html}}.
+            \texttt{scipy.stats.f.ppf}\savefootnote{footnote:PY_fdist}{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html}}.
 
             The proposed test is illustrated in Figure~\ref{fig:non_regression:stat:single_point}. A large number of points,
             in black, have been generated according to a known bivariate normal distribution. Their abscissa (resp.
@@ -1445,7 +1445,16 @@
             was to make a given observation. In the one-dimension case (\ie \(p=1\)), this represents the distance
             between the observation and the sample mean of the reference set.
 
-            \todo{Explain how we compute the probability}
+            More formally, this likelihood is the probability to make an observation at least as extreme. To compute it,
+            we use the value \(t\) defined in Equation~\ref{eqn:experiment:non_regression:test} and define the
+            likelihood \(\mathcal{L}\) as follows:
+            \begin{equation}\label{eqn:experiment:non_regression:likelihood}
+                \mathcal{L} = 1-F_{F(p, n-p)}(t)
+            \end{equation}
+            Here, \(F_{F(v_1, v_2)}\) denotes the cumulative distribution function of the F-distribution with \(v_1\)
+            and \(v_2\) degrees of freedom. An implementation is available in R with the function
+            \texttt{pf}\repeatfootnote{footnote:R_fdist} and in Python with the function
+            \texttt{scipy.stats.f.cdf}\repeatfootnote{footnote:PY_fdist}.
 
             \begin{figure}[htpb]
                 \centering

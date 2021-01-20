@@ -87,3 +87,8 @@
 \newcommand{\dgemm}{\texttt{dgemm}\@\xspace}
 \newcommand{\recv}{\texttt{MPI\_Recv}\@\xspace}
 \newcommand{\send}{\texttt{MPI\_Send}\@\xspace}
+
+% Referencing several times a footnote
+% See https://tex.stackexchange.com/a/54240
+\newcommand{\savefootnote}[2]{\footnote{\label{#1}#2}}
+\newcommand{\repeatfootnote}[1]{\textsuperscript{\ref{#1}}}
