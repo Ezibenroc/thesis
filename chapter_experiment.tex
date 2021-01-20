@@ -1539,6 +1539,11 @@
                         defined, the test is not useful yet, we need to have a few more observations as reference.
                         The same problem obviously exists when \(p=1\), but we have to wait longer with a larger number
                         of parameters.
+
+                        One way to limit this issue is to limit the number of factors used in the test. It appears that
+                        only three of the regression parameters are really significant: \(MNK, MK\) and \(NK\). By doing
+                        so, the multi-factor test is able to detect the anomaly from 2020/05/18 on \emph{dahu-26}, but
+                        it still misses the outliers from 2020/11-2020-12.
                 \end{itemize}
                 \begin{figure}[htpb]
                     \centering
