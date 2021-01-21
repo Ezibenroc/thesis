@@ -1632,6 +1632,31 @@
         \subsection{Detected events}%
         \label{sub:detected_events}
 
+            Our non-regression tests have been used on a regular basis on nine Grid'5000 clusters during a period of
+            several months (from July 2019 to February 2021 for \emph{dahu}, the first cluster we monitored). In total,
+            we have tested 386 nodes (656 processors).
+
+            The list and basic characteristics of these clusters is described in table
+            \ref{tab:experiment:non_regression:clusters}. It has been curated from Grid'5000
+            documentation\footnote{\url{https://www.grid5000.fr/w/Hardware}}.
+            \begin{table}[htpb]
+                \centering
+                \caption{List of the Grid'5000 clusters covered by our tests}
+                \label{tab:experiment:non_regression:clusters}
+                \begin{tabular}{l|llll}
+                    Cluster & Nodes & CPU & Cores & Memory\\
+                    \hline
+                    chetemi   & 15  & \(2\times\) Intel Xeon E5-2630 v4  & \(2\times10\) & \NSI{256}{\gibi\byte}\\
+                    dahu      & 32  & \(2\times\) Intel Xeon Gold 6130   & \(2\times16\) & \NSI{192}{\gibi\byte}\\
+                    ecotype   & 48  & \(2\times\) Intel Xeon E5-2630L v4 & \(2\times10\) & \NSI{128}{\gibi\byte}\\
+                    grisou    & 51  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
+                    gros      & 124 & \(1\times\) Xeon Gold 5220         & \(1\times18\) & \NSI{96}{\gibi\byte}\\
+                    parasilo  & 28  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
+                    paravance & 72  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
+                    troll     & 4   & \(2\times\) Intel Xeon Gold 5218   & \(2\times16\) & \NSI{384}{\gibi\byte}\\
+                    yeti      & 4   & \(4\times\) Intel Xeon Gold 6130   & \(4\times16\) & \NSI{768}{\gibi\byte}\\
+                \end{tabular}
+            \end{table}
 
     \section{Conclusion}%
     \label{sec:conclusion}
