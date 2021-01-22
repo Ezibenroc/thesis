@@ -1707,6 +1707,28 @@
                 2019/11/27 as a side effect of some work done in the server room. A cluster was installed, so some some
                 computer racks were moved and some cable management was done.
 
+            \subsubsection{Faulty memory}%
+
+                Occasionnaly, some nodes became extremely slow. The performance difference was so large that our test
+                program did not even have the time to terminate in the usual timeframe we use for the jobs. Thus, we
+                did not detect these events as a non-green point in the plots, but simply because our jobs were failing.
+
+                We were able to reproduce the issue with a much simpler program that was stressing the memory, by
+                calling the function \texttt{memset} on all the cores of the node silmutaneously. Each time, it was
+                located on a single processor of the node, the other processor was functionning normally.
+
+                This issue was noticed on the following instances:
+                \begin{itemize}
+                    \item Node \emph{yeti-3} on 2019/07/05.
+                    \item Nodes \emph{dahu-20} and \emph{dahu-24} on 2019/08/14.
+                    \item Nodes \emph{dahu-20} and \emph{dahu-22} on 2019/11/03.
+                    \item Node \emph{dahu-7} on 2020/09/17 and on 2020/09/28.
+                    \item Node \emph{dahu-14} on 2020/09/28.
+                \end{itemize}
+
+                The Grid'5000 team was able to solve this problem, sometimes by inverting two memory sticks, sometimes
+                by changing one memory stick for a new one, sometimes by simply performing a power drain of the nodes.
+
     \section{Conclusion}%
     \label{sec:conclusion}
         %% TODO
