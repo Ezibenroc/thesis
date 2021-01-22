@@ -1633,8 +1633,8 @@
         \label{sub:detected_events}
 
             Our non-regression tests have been used on a regular basis on nine Grid'5000 clusters during a period of
-            several months (from July 2019 to February 2021 for \emph{dahu}, the first cluster we monitored). In total,
-            we have tested 386 nodes (656 processors).
+            several months (from July 2019 to February 2021 for \emph{dahu}, the first cluster we started to monitor).
+            In total, we have tested 386 nodes (656 processors).
 
             The list and basic characteristics of these clusters is described in table
             \ref{tab:experiment:non_regression:clusters}. It has been curated from Grid'5000
@@ -1657,6 +1657,37 @@
                     yeti      & 4   & \(4\times\) Intel Xeon Gold 6130   & \(4\times16\) & \NSI{768}{\gibi\byte}\\
                 \end{tabular}
             \end{table}
+
+            We give in this section an exhaustive list of the events detected by running our tests.
+
+            \subsubsection{BIOS upgrade}%
+
+                The Grid'5000 technical team occasionally upgrades the BIOS and the firmware of all the nodes of a
+                cluster. Most of the time, it does not affect the nodes in a noticeable way, but we did measure a
+                significant change on several occasions.
+                \begin{itemize}
+                    \item On 2020/02/06, cluster \emph{gros}. The temperature of all the nodes increased by several
+                        degrees. In a more subtle way, but still significant, the frequency and the \dgemm performance
+                        have decreased on a large fraction of the nodes (T-test with a \NSI{95}{\percent} confidence).
+                    \item On 2020/04/01, cluster \emph{dahu}. The upgrade caused a performance drop of \NSI{5}{\percent}
+                        on node \emph{dahu-26}, as well as a decrease of its frequency and temperature. There was also a
+                        statistically significant (albeit very small) change on the other nodes of the cluster (T-test
+                        with a \NSI{95}{\percent} confidence). This issue on \emph{dahu-26} has later been resolved by
+                        an administrator doing a power drain of the node. Note that this return to normal was also
+                        detected by our tests.
+                    \item On 2020/06/10, cluster \emph{gros}. All the nodes of the cluster had a performande drop of
+                        about \NSI{1}{\percent}. The frequency has also dropped noticeably.
+                    \item On 2020/09/29, cluster \emph{troll}. A very large temperature drop of temperature followed the
+                        upgrade. The largest effect was on CPU n°1 of node \emph{troll-2}, where the temperature
+                        decreased from \NSI{86}{\celsius} to \NSI{60}{\celsius}. Not all the processors of
+                        the cluster encountered this temperature anomaly. In a more subtle but still significant way,
+                        the \dgemm performance of several processors has increased. The frequency was not affected.
+                    \item On 2020/10/01, cluster \emph{gros}. The average \dgemm performance of nearly all nodes had a
+                        small but significant increase. The frequency has also slightly increased, whereas the
+                        temperature was not affected.
+                    \item On 2020/12/15, cluster \emph{dahu}. A large fraction of the nodes had a performance increase
+                        of \NSI{1}{\percent}. The frequency also slightly increased and the temperature decreased.
+                \end{itemize}
 
     \section{Conclusion}%
     \label{sec:conclusion}
