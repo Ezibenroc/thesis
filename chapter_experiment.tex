@@ -1695,7 +1695,9 @@
                 \emph{dahu-14}, \emph{dahu-15} and \emph{dahu-16}. Their performance and frequency was lower by
                 \NSI{10}{\percent} whereas their temperature was much higher, especially on their CPU n°0 where it went
                 above \NSI{90}{\celsius} instead of the usual \NSI{20}{\celsius}. Our hypothesis is that for some
-                unknown reason the cooling system of the nodes started to malfunction.
+                unknown reason the cooling system of the nodes started to malfunction. It is interesting to note that
+                the four nodes are located in the same chassis, which probably explain why they were all affected at the
+                same time.
 
                 This problem appeared a first time between October 2018 and March 2019. We did not perform regular
                 measures on the platform at the moment, so we do not have a more precise timeframe. The issue was solved
@@ -1728,6 +1730,27 @@
 
                 The Grid'5000 team was able to solve this problem, sometimes by inverting two memory sticks, sometimes
                 by changing one memory stick for a new one, sometimes by simply performing a power drain of the nodes.
+
+            \subsubsection{Power unstability}%
+
+                The CPU power consumption on nodes from cluster \emph{dahu} is very stable when the \dgemm calls are
+                performed. On a normal experiment, each individual processor has an average consumption between
+                \NSI{124.63}{\watt} and \NSI{124.65}{\watt}. Yet, sometimes one node has a large drop of the CPU
+                power consumption on both its processors. We identified at least 68 events of one node having the
+                consumption of one of its processors below \NSI{124}{\watt}, which is already very significant given the
+                extreme stability that we usually observe. On half of these events, the power consumption was below
+                \NSI{119.4}{\watt}. The largest power drop happened on node \emph{dahu-26} on 2020/12/04, where its CPU
+                n°0 consummed only \NSI{97.5}{\watt}. For reasons we ignore, such power drops happened particuliarly
+                frequently on the four nodes \emph{dahu-29}, \emph{dahu-30}, \emph{dahu-31} and \emph{dahu-32} between
+                November 2020 and January 2021. Since the four nodes are part of the same chassis and therefore share
+                their power supply, our hypothesis is that there could be an issue with the power supply itself.
+
+                Whenever these power drops happens, both the frequency and the \dgemm performance also have a huge drop,
+                up to \NSI{10}{\percent}, whereas the temperature is unaffected.
+
+                Every time, this was a temporary anomaly, the affected nodes were back to normal on the following
+                experiments. For this reason, we did not add a new platform change for these events, instead we marked
+                them as outliers in the plots.
 
     \section{Conclusion}%
     \label{sec:conclusion}
