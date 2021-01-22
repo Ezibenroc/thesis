@@ -1689,6 +1689,24 @@
                         of \NSI{1}{\percent}. The frequency also slightly increased and the temperature decreased.
                 \end{itemize}
 
+            \subsubsection{Cooling issue}%
+
+                Four nodes from cluster \emph{dahu} encountered some issues in two occasions, namely \emph{dahu-13},
+                \emph{dahu-14}, \emph{dahu-15} and \emph{dahu-16}. Their performance and frequency was lower by
+                \NSI{10}{\percent} whereas their temperature was much higher, especially on their CPU n°0 where it went
+                above \NSI{90}{\celsius} instead of the usual \NSI{20}{\celsius}. Our hypothesis is that for some
+                unknown reason the cooling system of the nodes started to malfunction.
+
+                This problem appeared a first time between October 2018 and March 2019. We did not perform regular
+                measures on the platform at the moment, so we do not have a more precise timeframe. The issue was solved
+                on 2019/05/15 by changing the node chassis.
+
+                A few months later, the same issue happened again on the same four nodes, their performance and
+                frequency had a very large drop and their temperature rose dramatically. We do not have an accurate date
+                for this event, it could have happened between 2019/08/20 and 2019/09/16. The problem was solved on
+                2019/11/27 as a side effect of some work done in the server room. A cluster was installed, so some some
+                computer racks were moved and some cable management was done.
+
     \section{Conclusion}%
     \label{sec:conclusion}
         %% TODO
