@@ -1752,6 +1752,38 @@
                 experiments. For this reason, we did not add a new platform change for these events, instead we marked
                 them as outliers in the plots.
 
+            \subsubsection{Other issues}%
+
+                Several other significant and durable changes have been detected on individual nodes. To this day, we
+                were unable to determine their root cause. On seven nodes of four different clusters, the temperature
+                has inexplicably dropped by several degrees, from \NSI{5}{\celsius} to \NSI{15}{\celsius} depending on
+                the nodes. Some of them were back to normal a few weeks later, but others remained in this state. Table
+                \ref{tab:experiment:non_regression:unexplained} summarizes those unexplained changes. Most of the time,
+                the frequency and \dgemm performance were also slightly affected, but to a lower extent.
+                \begin{table}[htpb]
+                    \centering
+                    \caption{Unexplained changes detected on Grid'5000 nodes}
+                    \label{tab:experiment:non_regression:unexplained}
+                    \begin{tabular}{l|lll}
+                        Node & Date & Back to normal & Temperature drop\\
+                        \hline
+                        \emph{ecotype-24} & 2020/05/21 & 2020/07/02 & \NSI{15}{\celsius} \\
+                        \emph{ecotype-47} & 2020/07/13 & NA & \NSI{15}{\celsius} \\
+                        \emph{grisou-12} & 2020/08/06 & NA & \NSI{15}{\celsius} \\
+                        \emph{parasilo-1} & 2020/09/13 & NA & \NSI{10}{\celsius}\\
+                        \emph{parasilo-11} & 2020/09/19 & NA & \NSI{15}{\celsius}\\
+                        \emph{dahu-29} & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
+                        \emph{dahu-30} & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
+                    \end{tabular}
+                \end{table}
+
+                The two nodes \emph{parasilo-1} and \emph{parasilo-11} also had a temperature increase of
+                \NSI{5}{\celsius} a few weeks later, on 2020/10/06. This new change was not enough to revert the effect
+                of the first change.
+
+                The two nodes \emph{dahu-29} and \emph{dahu-30} had a temperature increase a few weeks later and went
+                back to normal, this change coincided with the BIOS upgrade that happened on the whole cluster.
+
     \section{Conclusion}%
     \label{sec:conclusion}
         %% TODO
