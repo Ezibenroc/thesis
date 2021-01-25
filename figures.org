@@ -1668,6 +1668,37 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-bipihK/figureZHGqH0.png]]
+** Beware of experimental conditions
+The CSV file used in this section has been dumped by this [[https://github.com/Ezibenroc/calibration_analysis/blob/7170f426a97e3dc45e19e03c4ca2b7d988d3d466/dahu/mpi/comparison_ring_classical.ipynb][notebook]] (cell 5)
+using [[https://github.com/Ezibenroc/calibration_analysis/tree/7170f426a97e3dc45e19e03c4ca2b7d988d3d466/dahu/mpi/250MB/1][these archives]].
+*** Plot drawing
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(dplyr)
+library(ggplot2)
+
+bw  = 12.5*1e9
+lat = 0.1*1e-6
+
+plot = read.csv("data/experiment/experimental_conditions/communication_computation_interference.csv") %>%
+    mutate(background=factor(background, levels=c("Idle", "DGEMM", "MPI_Iprobe", "MPI_Iprobe & DGEMM"))) %>% {(
+    ggplot(.) +
+        aes(x=background, y=duration, color=experiment) +
+        geom_boxplot(outlier.alpha=0, size=1, position=position_dodge(width=0.5)) +
+        theme_bw() +
+        expand_limits(y=0) +
+        scale_color_brewer(type='qual', palette='Dark2') +
+        labs(x='Computations on the node', y='Duration (seconds)', color='Locality') +
+        geom_hline(yintercept=pull(., msg_size) %>% max() / bw + lat, linetype='dashed') +
+        annotate('label', x=3.5, y=pull(., msg_size) %>% max() / bw + lat, label='Expected duration on a 100 Gbps link') +
+        theme(legend.position=c(0.11, 0.77), legend.background=element_rect(color='black'), text=element_text(size=16))
+)}
+ggsave(filename='img/experiment/experimental_conditions/communication_computation_interference.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-aL5QFP/figureKi3dYk.png]]
+
 ** Performance non-regression tests
 *** State of the art (StarPU)
 I regenerate the figure for the performance tests of StarPU (see the slide 55 of
