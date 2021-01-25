@@ -928,6 +928,7 @@
 
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
+        \todo{Should we remove this section? It seems pretty obvious and uninteresting...}
         %% TODO
         %% Le problème est survenu dans plusieurs cas de figure, notamment
         %% pour HPL avec des géométries très élongées.
@@ -939,7 +940,33 @@
         %%   partie parce que l'on calibrait pour des messages jusqu'à 1MB et on
         %%   esssayait de prédire la durée de communications de 1GB.
         %% - Parler de notre tentative d'extrapolation de HPL sur (P,Q) ? Peut être plutôt en partie 1.
-        Some text\dots
+        In several occasions when working on Part~\ref{part:prediction}, we found that our predictions were inaccurate
+        because of a wrong extrapolation. The measures made for instanciating the model were made with parameters that
+        were very different to the ones needed when using these models in simulation. This happened at least twice, with
+        the \dgemm function and with MPI communications.
+
+        \begin{description}
+            \item[Function \dgemm] The model used to be instanciated using the durations of \dgemm calls made with
+                random arguments \(M,N\) and \(K\), as described in Section~\ref{sec:parameter_space}. The maximum value
+                of these three parameters was \Num{15000}. However, when HPL is executed with very elongated
+                geometries (\eg a very small \texttt{P} or a very small \texttt{Q}), it performs \dgemm calls with very
+                elongated matrices. We observed in some experiments that \(M\) or \(N\) could take values as large as
+                \Num{150000} while the two other parameters remained rather small. In these conditions, the durations of
+                individual \dgemm calls are much more variable, while the average performance is slightly lower.
+            \item[Functions \recv and \send] In the legacy script for calbrating MPI communications for Simgrid, the
+                message size was sampled randomly, with a maximum size of \NSI{1}{\mega\byte}. However, similarly to the
+                \dgemm calibration issue we had, some communications in HPL are much larger, up to \NSI{1}{\giga\byte}
+                in our experiments. When increasing the maximal size, we found out that the network performance drops
+                very significantly at some point.
+        \end{description}
+
+        These two examples can seem obvious after the fact. Yet, they show the difficulty of anticipating when the usage
+        of a model will reaches its limits. In both cases, we had to instrument the HPL code to generate a trace and
+        find that the parameters space used in the calibration was very different than the parameter space used during
+        the execution. One way to limit the risk of missing such extrapolations would be to define explicitely in the
+        model files the parameter ranges that were used for calibrating them. Then, during a simulation, we could raise
+        a warning whenever a model is used outside of its parameter space.
+
 
     \section{Beware of experimental conditions}%
     \label{sec:beware_of_experimental_conditions}
