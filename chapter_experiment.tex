@@ -973,11 +973,15 @@
     %% automatiquement.
     When working on the simulations described in Part~\ref{part:prediction}, we occasionnaly encountered inconsistent
     performance. The reasons are multiple, ranging from the hardware to the software. This motivated the implementation
-    of performance non-regression tests, to help us detect any noteworthy change on the platform.  This chapter
-    describes the existing state of the art, the statistics we based our work on and how we implemented the tests. We
-    also list several performance changes we noticed on Grid'5000 clusters during this work.
+    of performance non-regression tests, to help us detect any noteworthy change on the platform. In this chapter, we
+    start by giving an overview of the existing state of the art and explaining the statistics we based our work on in
+    Section~\ref{sec:state_of_art}. Then, in Section~\ref{sec:test:implementation} we describe how we implemented the
+    tests, from the experiment execution to the final test result. We show and explain the graphical representation of
+    our test results, and we describe the various events we were able to detect on Grid'5000 platform. Finally, in
+    Section~\ref{sec:test:conclusion} we propose several ways to improve this work.
 
     \section{State of the art}%
+    \label{sec:test:state_of_art}
 
         Testing is a core activity of software development. It is usually taught as soon as the first programming courses,
         students need to verify that their programms work as expected. More experienced software developers generally
@@ -1225,7 +1229,7 @@
             % not simply the Z-score? See the entries from 2020-05-{07,11,13} in my journal.
 
     \section{Implementation of the test}%
-    \label{sec:test_implementation}
+    \label{sec:test:implementation}
         %% TODO
         %% Description du workflow mis en place, avec un joli dessin.
         %% - Génération du fichier d'expérience.
@@ -1784,8 +1788,8 @@
                 The two nodes \emph{dahu-29} and \emph{dahu-30} had a temperature increase a few weeks later and went
                 back to normal, this change coincided with the BIOS upgrade that happened on the whole cluster.
 
-    \section{Conclusion}%
-    \label{sec:conclusion}
+    \section{Conclusion and future work}%
+    \label{sec:test:conclusion}
         %% TODO
         %% Raconter ce que l'on aurait pu faire et comment il faudrait l'étendre:
         %% - Test sur le modèle de dgemm plutôt que sur l'aggregated gflops
@@ -1794,3 +1798,20 @@
         %%   considéré sont corrélés, donc pas forcément pertinent de tout tester en même temps.
         %% - Test du modèle MPI (si on arrivait à définir et calculer les IC)
         %% - Implémentation plus robuste, moins POC (ne pas passer par un dépôt git pour stocker les données par exemple).
+
+        We have implemented statistical tests for detecting performance regressions on computers. The novelty of our
+        work does not reside on the statistics, our approach is entirely based on a 55 year old paper. However, to the
+        best of our knowledge, we are the first to apply these statistics for testing performance.
+
+        We have monitored 386 nodes from Grid'5000 testbed for more than one year, running new tests several times a
+        week. This allowed us to detect multiple events that had a significant effect on the nodes, from subtle
+        performance changes of \NSI{1}{\percent} to much more severe degradations of more than \NSI{10}{\percent}, or
+        even nodes that were literraly unusable when their memory was under heavy load. These events went unnoticed by
+        both Grid'5000 technical team and Grid'5000 users, yet they could greatly harm the reproducibility of
+        experiments and lead to wrong scientific conclusions. We therefore believe that our approach could greatly
+        benefit to the HPC community.
+
+        Their remains some engineering work before targeting a broader adoption. Some parts of our workflow should be
+        reimplemented with other more suitable technologies, for instance the data should be stored with a proper
+        database management system. There also remains some automations to implement, in particular the scheduling of
+        new experiments, with the constraint that it should not bother other users too much.
