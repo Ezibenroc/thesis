@@ -978,7 +978,34 @@
 		%%   communications. Ce phénomène n'était initialement pas capturé par la
 		%%   calibration puisque les mesures étaient faites sans aucun calculs à
 		%%   côté.
-        Some text\dots
+        We already have demonstrated numerous times in previous sections that the experimental conditions are of utmost
+        importance in this work, any change can have a significant effect on the measures, as harmless as it may seem.
+        In this section, we give some details on an interaction between computations and MPI communications we observed
+        while working on Part~\ref{part:prediction}.
+
+        We compare four different scenarios for sending a message of \NSI{256}{\mebi\byte} with MPI. For each scenario,
+        we performed two experiments, one where this communication happens locally and another one where it is done
+        remotely. The result is presented in Figure~\ref{fig:experiment:experimental_conditions}.
+        \begin{itemize}
+            \item Scenario \texttt{idle}. Two MPI ranks perform a simple ping-pong with the aforementioned message. Each
+                MPI rank is bound to one core (either two cores of the same node for the loopback communication, or two
+                cores of distinct nodes in the remote case). All the other cores are kept idle.
+            \item Scenario \dgemm. This one is identical to the scenario \texttt{idle}, except that all the cores not
+                involved in the communication are performing \dgemm calls.
+            \item Scenario \texttt{MPI\_Iprobe}. The communication pattern is more elaborated in this scenario. It uses
+                two nodes, for a total of 64 cores. It repeats several times a sequence of 64 steps, where at step \(i\)
+                the MPI rank \(i\) performs a ping-pong with the MPI rank \((i+1)\mod64\). This is similar to a ring
+                broadcast, except that the ranks perform a two-way exchange instead of one-way. All the ranks waiting
+                for an incoming communication are performing a busy waiting, looping on the result of the function
+                \texttt{MPI\_Iprobe}.
+            \item Scenario \texttt{MPI\_Iprobe} \& \dgemm. This scenario is identical to the \texttt{MPI\_Iprobe}
+                scenario, except that every rank performs a call to function \dgemm between any call to function
+                \texttt{MPI\_Iprobe}.
+        \end{itemize}
+
+        The two last scenarios can appear oddly twisted. The goal was, again, to implement a micro-benchmark that is as
+        close as possible to what happens in the real application we tried to modelize, HPL in this case.
+
         \begin{figure}[htpb]
             \centering
             \includegraphics[width=1\linewidth]{img/experiment/experimental_conditions/communication_computation_interference.pdf}
@@ -986,6 +1013,17 @@
             activities.}%
             \label{fig:experiment:experimental_conditions}
         \end{figure}
+
+        The background noise we introduced had a large effect on the performance of the ping-pong. The durations of
+        individual calls to \recv are presented in Figure~\ref{fig:experiment:experimental_conditions}. Making simple
+        calls to \dgemm in the background increases the remote duration by nearly a factor \(3\), without affecting the
+        local durations. The ring communication pattern with \texttt{MPI\_Iprobe} busy waiting increases both the local
+        and remote durations, although the effect remains small for the local communication. Finally, adding \dgemm
+        calls to the busy waiting increases a lot the durations of all communications, by adding an overhead of about
+        \NSI{0.1}{\second}.
+
+        Although we do not have a definitive explanation of the root cause of this phenomenon, it is extremely important
+        to reproduce it in the calibration benchmark if we wish to have a faithful model.
 
 	\section{Conclusion}
 		%% TODO
