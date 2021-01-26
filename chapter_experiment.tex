@@ -169,8 +169,8 @@
             than Listing~\ref{lst:engine:execo}, as it produces a peanut archive with all the metadata related to the
             experiment.
 
-\chapter{Randomizing matters!}%
-\label{chapter:experiment:randomizing}
+\chapter{On the difficulties of experimentation}%
+\label{chapter:experiment:difficulties}
     %% TODO
     %% Calibration experiments: randomisation. pour quoi faire ?
     %% 1. éviter les biais (randomisation de l'espace de paramètres)
@@ -1031,8 +1031,22 @@
         %%   des problèmes de température sur dahu-{13,14,15,16}. D'où la nécessité de (1)
         %%   contrôler d'avantage l'environnement et (2) collecter d'avantage
         %%   d'informations sur l'environnement.
-        Some text\dots
+        %% - La randomisation est très importante pour se prémunir de biais expérimentaux. Or, des fois on cherche
+        %%   justement ces biais.
+        %% - De manière plus générale, les conditions expérimentales ont un rôle très important.
+        A common theme to several sections of this chapter was the importance of the randomisation. It is of great help
+        to avoid or at least limit any experimental bias. We have presented several counter-intuitive phenomenons that
+        were only revealed through the randomisation (or the lack thereof). However, in some cases, we needed our
+        experiments to be biased, to have more realistic experimental conditions. When we execute a micro-benchmark that
+        supposedly mimic a real application, the main objective is for this micro-benchmark to be the best possible
+        surrogate for the real application, begin unbiased is only a secondary goal.
 
+        During our work, we have been confronted multiple times to external factors that unknowingly affected our
+        experiments (\eg cooling issues, BIOS upgrades). With this kind of artifacts, it can become more difficult to
+        trust any experimental results, especially in the presence of unexpected phenomenons like the ones presented
+        here. This demonstrates the great importance of gaining back this trust by (1) having an experiment engine to
+        automatize everything (thereby limiting greatly the human errors) and collect relevant information and (2)
+        making regular tests on the platform to detect eventual changes.
 
 \chapter{Performance non-regression tests}%
 \label{chapter:experiment:tests}
@@ -1051,6 +1065,7 @@
     tests, from the experiment execution to the final test result. We show and explain the graphical representation of
     our test results, and we describe the various events we were able to detect on Grid'5000 platform. Finally, in
     Section~\ref{sec:test:conclusion} we propose several ways to improve this work.
+    \todo{We should discuss the normality assumption somewhere, I am not sure of the best location though.}
 
     \section{State of the art}%
     \label{sec:test:state_of_art}
