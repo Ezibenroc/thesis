@@ -346,11 +346,11 @@
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
         The network model in SMPI needs to be instantiated with a careful calibration of the MPI communication
-        performance, as presented in \cite{smpi}. This was done with a MPI program created by the Simgrid team that
-        performed a sequence of measures with two hosts. Several kind of measures were implemented: the \emph{recv}
-        (a call to \recv with waiting to avoid late senders), the \emph{isend} (a call to
-        \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \send followed by a call to \recv
-        to get the round-trip time) as well as several more minor MPI primitives.
+        performance, as presented by Degomme~\etal \cite{smpi}. This was done with a MPI program created by the Simgrid
+        team that performed a sequence of measures with two hosts. Several kind of measures were implemented: the
+        \emph{recv} (a call to \recv with waiting to avoid late senders), the \emph{isend} (a call to
+        \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \send followed by a call to \recv to get the round-trip
+        time) as well as several more minor MPI primitives.
 
         \begin{algorithm}[H]
             read the sequence of sizes \(S_1\), typically \(|S_1| \approx 1000\)\;
@@ -721,7 +721,7 @@
         %% - Les performances de dgemm dépendent du contenu de la matrice (random ou
         %%   constant par exemple). Ça serait causé par des bit flips dans le CPU qui
         %%   engendre une plus grande consommation (réutiliser le rapport).
-        The work presented in this section has been published as a technical report\cite{cornebize:bitflips}. The
+        The work presented in this section has been published as a technical report~\cite{cornebize:bitflips}. The
         content of this section is therefore a near-verbatim copy of this report.
 
         This experiment comes, yet again, from an unfortunate phenomenon we stumbled upon when calibrating the platform
@@ -1094,7 +1094,7 @@
             This section lists several examples of well established software projects with limited or even nonexistent
             performance testing.
 
-            Simgrid\cite{simgrid}, the simulation framework used in Part~\ref{part:prediction}, is a well established
+            Simgrid~\cite{simgrid}, the simulation framework used in Part~\ref{part:prediction}, is a well established
             software. In the last twenty years, several dozens of contributors have helped to improve or extend it.
             Simgrid has also supported the research for several hundreds of articles, demonstrating a wide user base
             (relatively to its niche area). The main developers of Simgrid have spent countless hours in optimizing the
@@ -1109,7 +1109,7 @@
             run correction tests as well as benchmarks. Yet again, the result of these benchmarks has to be interpreted
             by a human.
 
-            SimdJSON\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
+            SimdJSON~\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
             can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
             JSON parsers. It is widely used, with more than twelve thousand stars on Github. Yet, in April 2020, one of
             the main contributors submitted an issue\footnote{\url{https://github.com/simdjson/simdjson/issues/812}} to
@@ -1122,12 +1122,12 @@
 
             \subsubsection{Benchmarking software: testing code snippets}%
 
-                Several libraries already exist for benchmarking C++ software. Catch2\cite{catch2} is a widely used unit
-                testing framework for C++. It also provides basic functionalities for benchmarking code snippets.
-                Several alternatives exist, developed specifically for C++ benchmarking\cite{celero,hayai,nonius}, but
+                Several libraries already exist for benchmarking C++ software. Catch2~\cite{catch2} is a widely used
+                unit testing framework for C++. It also provides basic functionalities for benchmarking code snippets.
+                Several alternatives exist, developed specifically for C++ benchmarking~\cite{celero,hayai,nonius}, but
                 seemingly no longer maintained and with a smaller user base.
 
-                Google Benchmark\cite{google-benchmark} is a C++ library to benchmark code snippets. It is well
+                Google Benchmark~\cite{google-benchmark} is a C++ library to benchmark code snippets. It is well
                 established with several dozens of contributors and about \Num{5000} stars on Github. It greatly
                 facilitates the creation of parametric micro-benchmarks by adding only a few lines to an existing code.
                 The result can be pretty-printed in the terminal or written in a file in a CSV or JSON format. It is
@@ -1166,13 +1166,13 @@
 
             \subsubsection{Benchmarking software: long-term performance evolution of an application}%
 
-                Another interesting work is related to the StarPU project\cite{AugThiNamWac11CCPE}. StarPU is a state of
-                the art C/C++ task programming library that handles task dependencies and optimized usage of resources
-                (heterogeneous scheduling and data transfers). It is also possible to accurately simulate a StarPU
-                application, using the Simgrid simulation framework\cite{stanisic:hal-01147997}. As part of their
-                development methodology, the StarPU team performs nightly runs of a few selected StarPU applications and
-                measure their performance, both in reality and in simulation. The goal is to detect any performance
-                regression eventually introduced by a change in the software.
+                Another interesting work is related to the StarPU project~\cite{AugThiNamWac11CCPE}. StarPU is a state
+                of the art C/C++ task programming library that handles task dependencies and optimized usage of
+                resources (heterogeneous scheduling and data transfers). It is also possible to accurately simulate a
+                StarPU application, using the Simgrid simulation framework~\cite{stanisic:hal-01147997}. As part of
+                their development methodology, the StarPU team performs nightly runs of a few selected StarPU
+                applications and measure their performance, both in reality and in simulation. The goal is to detect any
+                performance regression eventually introduced by a change in the software.
                 Figure~\ref{fig:non_regression:state_of_art:starpu} presents the temporal evolution of the StarPU
                 implementation of \texttt{spotrf}, which computes a Cholesky factorization of a given matrix. The green
                 line is the observed performance in reality, the orange line is the estimation made in simulation. The
@@ -1186,7 +1186,7 @@
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/state_of_art/starpu_new.pdf}
                     \caption{Evolution of the performance of a StarPU implementation of \texttt{spotrf} function, both
-                    in reality and in simulation\cite{thibault:hal-02943753}.}%
+                    in reality and in simulation~\cite{thibault:hal-02943753}.}%
                     \label{fig:non_regression:state_of_art:starpu}
                 \end{figure}
 
@@ -1235,7 +1235,7 @@
         \label{sub:statistical_test}
 
             In this section, we describe how to compute a prediction region for multivariate normal variables. This will
-            then be used to implement a statistical test.  This section is mostly based on section 4.4 of
+            then be used to implement a statistical test.  This section is mostly based on Section 4.4 of
             Chew~\cite{chew}.\footnote{This publication, dating from 1966, is the oldest paper used in this thesis. It
             has been written by an employee of RCA Service Co., a contractor of the US Air Force. The author of the
             paper describes the typical use case: computing the coordinates of a prediction ellipse for the splash point
@@ -1418,7 +1418,7 @@
                 These two tables are then appended to the two \texttt{hdf5} files.
 
                 We compared several alternative file formats to store this data: a simple CSV file, a CSV file
-                compressed with \texttt{zip}, SQLite\cite{sqlite}, Apache Arrow \cite{arrow} and HDF5\cite{hdf5} with
+                compressed with \texttt{zip}, SQLite~\cite{sqlite}, Apache Arrow~\cite{arrow} and HDF5~\cite{hdf5} with
                 various options. The Apache Arrow library had the fastest read and write operations as well as the
                 smallest file. HDF5 with the \texttt{table} format and the \texttt{zlib} compression algorithm was the
                 second best, the other alternatives were largely inferior in terms of I/O speed and disk footprint. Two
@@ -1588,7 +1588,7 @@
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview.pdf}
-                    \caption{Overview of the test result for the mean performance on cluster \emph{dahu}}%
+                    \caption{Overview of the test result for the mean performance on cluster \emph{dahu}.}%
                     \label{fig:experiment:non_regression:overview}
                 \end{figure}
 
@@ -1673,7 +1673,7 @@
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_multifactor.pdf}
-                    \caption{Overview of the test result for the eight regression parameters on cluster \emph{dahu}}
+                    \caption{Overview of the test result for the eight regression parameters on cluster \emph{dahu}.}
                     \label{fig:experiment:non_regression:overview_multifactor}
                 \end{figure}
 
@@ -1766,7 +1766,7 @@
             documentation\footnote{\url{https://www.grid5000.fr/w/Hardware}}.
             \begin{table}[htpb]
                 \centering
-                \caption{List of the Grid'5000 clusters covered by our tests}
+                \caption{List of the Grid'5000 clusters covered by our tests.}
                 \label{tab:experiment:non_regression:clusters}
                 \begin{tabular}{l|llll}
                     Cluster & Nodes & CPU & Cores & Memory\\
@@ -1887,7 +1887,7 @@
                 the frequency and \dgemm performance were also slightly affected, but to a lower extent.
                 \begin{table}[htpb]
                     \centering
-                    \caption{Unexplained changes detected on Grid'5000 nodes}
+                    \caption{Unexplained changes detected on Grid'5000 nodes.}
                     \label{tab:experiment:non_regression:unexplained}
                     \begin{tabular}{l|lll}
                         Node & Date & Back to normal & Temperature drop\\
@@ -1941,4 +1941,4 @@
         workload that makes an heavy use of vector floating point operations and, to a lesser extent, also stresses the
         memory. For a broader coverage, it would be interesting to implement new tests that stress other parts of the
         platform, \eg with workloads that perform a lot of memory operations, disk operations, or even network
-        communications. To this end, the stress-ng\cite{stress-ng} benchmark would be a great source of inspiration.
+        communications. To this end, the stress-ng~\cite{stress-ng} benchmark would be a great source of inspiration.
