@@ -1902,3 +1902,9 @@
         reimplemented with other more suitable technologies, for instance the data should be stored with a proper
         database management system. There also remains some automations to implement, in particular the scheduling of
         new experiments, with the constraint that it should not bother other users too much.
+
+        Our test currently relies solely on performance measures for the \dgemm function. This is a CPU intensive
+        workload that makes an heavy use of vector floating point operations and, to a lesser extent, also stresses the
+        memory. For a broader coverage, it would be interesting to implement new tests that stress other parts of the
+        platform, \eg with workloads that perform a lot of memory operations, disk operations, or even network
+        communications. To this end, the stress-ng\cite{stress-ng} benchmark would be a great source of inspiration.
