@@ -43,7 +43,7 @@
             typical Execo experiment uses a lot of low-level constructs that are really unpleasant and unintuitive to
             write and read. Section~\ref{sub:comparison_with_execo} will present some comparisons. Furthermore, Execo
             lacks a lot of important features, like node instrumentation and metadata collection, \ie we would still
-            have needed to implement a lot functionnalities on top of Execo.
+            have needed to implement a lot functionalities on top of Execo.
 
     \section{Yet another experiment engine: \texttt{peanut}}%
     \label{sec:peanut}
@@ -71,28 +71,28 @@
             experimenters can use to write their own experiments, also as a Python script.
 
             A new experiment can be defined by inheriting from the class \texttt{peanut.Job}. Three methods can be
-            overriden, \texttt{setup}, \texttt{run\_exp} and \texttt{teardown}.
+            overridden, \texttt{setup}, \texttt{run\_exp} and \texttt{teardown}.
 
             Once the experiment is written, it can be launched in a single command line. The following steps will
             happen.
             \begin{itemize}
-                \item Implicitely, submit a job with the given characteristics (\eg cluster, number of nodes, walltime,
+                \item Implicitly, submit a job with the given characteristics (\eg cluster, number of nodes, walltime,
                     etc), then deploy the given OS image.
-                \item Implicitely (but optionnaly) enable or disable some performance functionnalities like
+                \item Implicitly (but optionally) enable or disable some performance functionalities like
                     hyperthreading, turboboost, C-states.
-                \item Implicitely (but optionnaly) instrument the nodes to collect at a regular interval some system
+                \item Implicitly (but optionally) instrument the nodes to collect at a regular interval some system
                     metrics (\eg core frequencies and temperatures, CPU power consumption, network traffic, memory
                     consumption).
-                \item Implicitely (but optionnaly) run the \texttt{stress} command on all the nodes to warm them up.
+                \item Implicitly (but optionally) run the \texttt{stress} command on all the nodes to warm them up.
                 \item Run the methods \texttt{setup}, \texttt{run\_exp} and \texttt{teardown} in that order.
                 \item Produce a \texttt{zip} archive containing relevant results and metadata. The experimenter can
-                    explicitely add any file to the archive. In addition, the following content is also implicitely
+                    explicitly add any file to the archive. In addition, the following content is also implicitly
                     archived:
                     \begin{itemize}
                         \item Metrics collected with the aforementioned instrumentation.
                         \item Human-readable log of the commands issued during the experiment.
                         \item Machine-parsable log of the commands (in JSON format) with their timestamps and output
-                            (both \texttt{stdin} and \texttt{stderr}).
+                            (both \texttt{stdout} and \texttt{stderr}).
                         \item Machine-parsable file (in Yaml format) containing relevant information like
                             the exact versions used for \texttt{peanut}, \texttt{gcc}, \texttt{MPI} and the Linux
                             kernel, the command line that was used to launch this experiment, the cluster and the list
@@ -105,7 +105,7 @@
                     \end{itemize}
             \end{itemize}
             In addition, the experiment can be executed interactively in a Python terminal. All the implicit
-            functionnalities described previously can also be explicitely called (\eg there are methods
+            : functionalities described previously can also be explicitly called (\eg there are methods
             \texttt{disable\_hyperthreading}, \texttt{start\_monitoring} and \texttt{perform\_stress}).
 
             An experiment can be parametrized by two means:
@@ -185,7 +185,7 @@
     could be to write a small program that allocates a buffer, then write some data on this buffer with the
     \texttt{memset} function while measuring the duration of this operation. The problem is that the time taken to make
     this memory write may not be representative, the following writes would very probably have different durations due
-    to cache effects.  Therefore, it would be better to make several measures that should then be carefuly analyzed
+    to cache effects.  Therefore, it would be better to make several measures that should then be carefully analyzed
     (maybe simply taking the average, or perhaps there are some \emph{outliers} that should be removed). However, by
     doing so we only measure the performance of a write for a given size. The effective bandwidth could be very
     different with a smaller or a larger buffer. The natural solution here is to repeat these sequences of measures for
@@ -259,9 +259,9 @@
             spread, but rather exponentially. For instance, the \send on the dahu cluster has four
             breakpoints: \NSI{8.14}{\kilo\byte}, \NSI{34.0}{\kilo\byte}, \NSI{63.8}{\kilo\byte} and
             \NSI{285}{\mega\byte}. If the sizes of the experiment were uniformly sampled, we would very probably miss
-            the smaller breakpoints: by sampling uniformly and indepently 1000 numbers in the interval \([1, 10^9]\),
+            the smaller breakpoints: by sampling uniformly and independently 1000 numbers in the interval \([1, 10^9]\),
             the probability to have at least one number smaller or equal to \(10^5\) is a bit less than
-            \NSI{10}{\percent}. The reason for these exponentialy spread breakpoints likely comes from the hardware.
+            \NSI{10}{\percent}. The reason for these exponentially spread breakpoints likely comes from the hardware.
             Typically, each layer of the memory hierarchy is one order of magnitude larger than the previous layer. For
             instance, each core of a dahu node has \NSI{32}{\kibi\byte} L1 instruction and data caches and one
             \NSI{1}{\mebi\byte} L2 cache. Then, the 16 cores of a same CPU share a \NSI{22}{\mebi\byte} L3 cache and
@@ -292,7 +292,7 @@
                         \item Return \((M,N,K)\)
                     \end{enumerate}
                     This is the easiest method to implement. With this approach, the product
-                    \(MNK\) is not uniform, it is heavily skewed towards the small values. Additionaly, we use rejection
+                    \(MNK\) is not uniform, it is heavily skewed towards the small values. Additionally, we use rejection
                     sampling to make sure that the product of the sizes does not get too large.
                 \item[Uniform product] We start by sampling the size product \(P\) uniformly in the desired interval,
                     then the sizes \(M\), \(N\) and \(K\) are sampled randomly to get (approximately) the correct
@@ -345,7 +345,7 @@
 
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
-        The network model in SMPI needs to be instanciated with a careful calibration of the MPI communication
+        The network model in SMPI needs to be instantiated with a careful calibration of the MPI communication
         performance, as presented in \cite{smpi}. This was done with a MPI program created by the Simgrid team that
         performed a sequence of measures with two hosts. Several kind of measures were implemented: the \emph{recv}
         (a call to \recv with waiting to avoid late senders), the \emph{isend} (a call to
@@ -417,7 +417,7 @@
             \label{fig:randomizing_order:distribution}
         \end{figure}
 
-        Since shuffling correctly the experiments prevents the occurence of this issue, a possible reason could be that
+        Since shuffling correctly the experiments prevents the occurrence of this issue, a possible reason could be that
         the individual calls to \recv are not truly independent. The sequence before the calls for the sizes like
         \NSI{703}{\byte}, \NSI{767}{\byte} or \NSI{779}{\byte} would lead to particularly good conditions and thus an
         excellent performance, which does not systematically happen in the shuffled case because of the proper
@@ -582,7 +582,7 @@
             \dgemm models. We would like to stress that this discrepancy of the resulting models is due to a difference
             in the experimental conditions and not (only) to a statistical artifact. We proposed the hypothesis of a
             poor cache utilization, but other possibilities should not be dismissed, since this study was only
-            observationnal, our hypothesis would need to be confirmed or refuted with a properly designed experimental
+            observational, our hypothesis would need to be confirmed or refuted with a properly designed experimental
             study.
 
         \subsection{Effect of the experiment file generation method}%
@@ -629,7 +629,7 @@
                 \item[Fixed K] We modified the \emph{uniform product} procedure to have a constant value for \(K\). We
                     generated three sets of files, with \(K=128\), \(K=256\) and \(K=512\).
                 \item[Several fixed K] We modified the \emph{uniform product} procedure to have the value of \(K\)
-                    choosen randomly in \{128,256,512\}. This is equivalent to concatenating three files generated with
+                    chosen randomly in \{128,256,512\}. This is equivalent to concatenating three files generated with
                     the \emph{fixed K} method and then shuffling the resulting file.
             \end{description}
             For each of the five experiment kinds, we have generated several dozen of experiment files. Then, we
@@ -741,7 +741,7 @@
                 \item Each element of the matrix is randomly and uniformly sampled in the interval \([0, 1]\).
             \end{enumerate}
 
-        Figure~\ref{fig:exp:bit-flips:method-perf} shows the evolution of the dgemm durations during the experiment.
+        Figure~\ref{fig:exp:bit-flips:method-perf} shows the evolution of the \dgemm durations during the experiment.
         A clear temporal patterns can be distinguished, the performance is oscillating.  Furthermore, several layers can
         be seen, the durations of \dgemm are the highest when the matrices are initialized randomly and the
         lowest when they are initialized with a constant value. The sequential initialization is in between.
@@ -750,7 +750,7 @@
             \centering
             \includegraphics[width=\linewidth]{img/experiment/bit-flips/generation_method_perf.png}
             \caption{\label{fig:exp:bit-flips:method-perf}
-            DGEMM durations are lower with constant values in the matrices}
+            \dgemm durations are lower with constant values in the matrices}
         \end{figure}
 
         Such an observation was unforeseen. The function \dgemm implements the usual matrix product with cubic
@@ -861,7 +861,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/bit-flips/mask_size_perf.png}
                 \caption{\label{fig:exp:bit-flips:mask-perf}
-                DGEMM durations are lower with larger bit masks}
+                \dgemm durations are lower with larger bit masks}
             \end{figure}
 
             This correlation with the mask size can also be seen with the frequencies in
@@ -882,7 +882,7 @@
             We have shown that the performance of the \dgemm function is data-dependent. The best explanation we
             have for this counter-intuitive fact is an energy cost overhead caused by bit flips inside the processor.
             To respect its energy budget, the CPU has to throttle more aggressively its frequency when the matrices
-            content is more diverse and thus more energy consumming.
+            content is more diverse and thus more energy consuming.
             This theory has been corroborated by a controlled experiment where the elements of the matrices are
             initialized semi-randomly: they all share an identical bit suffix.
 
@@ -902,7 +902,7 @@
                     made the hypothesis that it was caused by bit-flips. To test this hypothesis, they used the same
                     approach, they filled the matrices with random values with a mask applied to the lower-order bits.
                     They observed a correlation between the mask size and \dgemm performance, which is an
-                    argument in favor of this hypothesis. This experiment was done using anoter \dgemm
+                    argument in favor of this hypothesis. This experiment was done using another \dgemm
                     implementation than us (Intel MKL) on an Intel Xeon Gold 6148 (Skylake-SP family) from a noctua
                     node\footnote{\url{https://pc2.uni-paderborn.de/hpc-services/available-systems/noctua/}}.
                 \item They reproduced the same experiment on a FPGA (more precisely, a Bittware 520N PCIe accelerator
@@ -922,7 +922,7 @@
             instruction rate were constant.
 
             Andr\'e~\etal~\cite{andre:hal-02401796} observed in one of their experiments that limiting the uncore
-            frequency (\ie the frequency of the L3 cache and the memory controler) can increase the performance of HPL
+            frequency (\ie the frequency of the L3 cache and the memory controller) can increase the performance of HPL
             by about \SI{1.5}{\percent}. The reason is that HPL power consumption reaches TDP, so lowering the uncore
             frequency allows a higher power consumption of the cores and thus a higher frequency.
 
@@ -941,19 +941,19 @@
         %%   esssayait de prédire la durée de communications de 1GB.
         %% - Parler de notre tentative d'extrapolation de HPL sur (P,Q) ? Peut être plutôt en partie 1.
         In several occasions when working on Part~\ref{part:prediction}, we found that our predictions were inaccurate
-        because of a wrong extrapolation. The measures made for instanciating the model were made with parameters that
+        because of a wrong extrapolation. The measures made for instantiating the model were made with parameters that
         were very different to the ones needed when using these models in simulation. This happened at least twice, with
         the \dgemm function and with MPI communications.
 
         \begin{description}
-            \item[Function \dgemm] The model used to be instanciated using the durations of \dgemm calls made with
+            \item[Function \dgemm] The model used to be instantiated using the durations of \dgemm calls made with
                 random arguments \(M,N\) and \(K\), as described in Section~\ref{sec:parameter_space}. The maximum value
                 of these three parameters was \Num{15000}. However, when HPL is executed with very elongated
                 geometries (\eg a very small \texttt{P} or a very small \texttt{Q}), it performs \dgemm calls with very
                 elongated matrices. We observed in some experiments that \(M\) or \(N\) could take values as large as
                 \Num{150000} while the two other parameters remained rather small. In these conditions, the durations of
                 individual \dgemm calls are much more variable, while the average performance is slightly lower.
-            \item[Functions \recv and \send] In the legacy script for calbrating MPI communications for Simgrid, the
+            \item[Functions \recv and \send] In the legacy script for calibrating MPI communications for Simgrid, the
                 message size was sampled randomly, with a maximum size of \NSI{1}{\mega\byte}. However, similarly to the
                 \dgemm calibration issue we had, some communications in HPL are much larger, up to \NSI{1}{\giga\byte}
                 in our experiments. When increasing the maximal size, we found out that the network performance drops
@@ -963,7 +963,7 @@
         These two examples can seem obvious after the fact. Yet, they show the difficulty of anticipating when the usage
         of a model will reaches its limits. In both cases, we had to instrument the HPL code to generate a trace and
         find that the parameters space used in the calibration was very different than the parameter space used during
-        the execution. One way to limit the risk of missing such extrapolations would be to define explicitely in the
+        the execution. One way to limit the risk of missing such extrapolations would be to define explicitly in the
         model files the parameter ranges that were used for calibrating them. Then, during a simulation, we could raise
         a warning whenever a model is used outside of its parameter space.
 
@@ -1004,7 +1004,7 @@
         \end{itemize}
 
         The two last scenarios can appear oddly twisted. The goal was, again, to implement a micro-benchmark that is as
-        close as possible to what happens in the real application we tried to modelize, HPL in this case.
+        close as possible to what happens in the real application we tried to model, HPL in this case.
 
         \begin{figure}[htpb]
             \centering
@@ -1057,7 +1057,7 @@
     %% inaperçu, faussant donc les expériences (e.g. performance inférieure de quelques
     %% pourcents). Dans cette partie, on essaye de détecter ces problèmes
     %% automatiquement.
-    When working on the simulations described in Part~\ref{part:prediction}, we occasionnaly encountered inconsistent
+    When working on the simulations described in Part~\ref{part:prediction}, we occasionally encountered inconsistent
     performance. The reasons are multiple, ranging from the hardware to the software. This motivated the implementation
     of performance non-regression tests, to help us detect any noteworthy change on the platform. In this chapter, we
     start by giving an overview of the existing state of the art and explaining the statistics we based our work on in
@@ -1071,15 +1071,15 @@
     \label{sec:test:state_of_art}
 
         Testing is a core activity of software development. It is usually taught as soon as the first programming courses,
-        students need to verify that their programms work as expected. More experienced software developers generally
+        students need to verify that their programs work as expected. More experienced software developers generally
         use a wide variety of techniques and methodologies to limit the presence of bugs.
 
         Performance testing is less common, the main reason being that it is arguably much more difficult than testing
         for correction.
         \begin{itemize}
             \item For a performance value to be meaningful, a lot of care needs to be taken when running the test for
-                controling the experimental environment.
-            \item The result of a benchmark is a raw performance value (\eg a duration, an amount of memory or an amout
+                controlling the experimental environment.
+            \item The result of a benchmark is a raw performance value (\eg a duration, an amount of memory or an amount
                 of energy). Ultimately, the test should return a boolean, stating whether the test was successful or
                 failed. It is difficult to define properly such a \emph{truth}. One could define an interval for the
                 expected value, but this will most of the time be an arbitrary choice. A complementary solution, to
@@ -1091,7 +1091,7 @@
         \label{sub:lack_of_tests}
 
             %% TODO: check how to properly cite software. In particular, what contributors should we list?
-            This section lists several examples of well established software projects with limited or even inexistant
+            This section lists several examples of well established software projects with limited or even nonexistent
             performance testing.
 
             Simgrid\cite{simgrid}, the simulation framework used in Part~\ref{part:prediction}, is a well established
@@ -1123,7 +1123,7 @@
             \subsubsection{Benchmarking software: testing code snippets}%
 
                 Several libraries already exist for benchmarking C++ software. Catch2\cite{catch2} is a widely used unit
-                testing framework for C++. It also provides basic functionnalities for benchmarking code snippets.
+                testing framework for C++. It also provides basic functionalities for benchmarking code snippets.
                 Several alternatives exist, developed specifically for C++ benchmarking\cite{celero,hayai,nonius}, but
                 seemingly no longer maintained and with a smaller user base.
 
@@ -1157,7 +1157,7 @@
                         visualization of the results, which would greatly help the user to (1) better understand the
                         outcome of the test (not everyone knows what is a \emph{P-value}) and (2) visually detect
                         eventual differences not captured by the test (the Anscombe's quartet is the classical example).
-                    \item There is no support for comparing long-term performance evolutions. With these libraries, it
+                    \item There is no support for comparing long-term performance evolution. With these libraries, it
                         is possible to make performance measures for a given state of the codebase on a given machine.
                         It is even possible to make point-to-point comparison with Google Benchmark, \ie to compare two
                         states of the codebase or two machines. However, we still miss the full picture, the variation
@@ -1191,7 +1191,7 @@
                 \end{figure}
 
                 The approach of the StarPU team is particularly interesting, because they executed their application on
-                a controled environment on a near-daily basis for several years. An important issue however is that they
+                a controlled environment on a near-daily basis for several years. An important issue however is that they
                 did not perform any statistics, they only relied on a visual inspection of the plot to decide whether
                 the last modifications of their codebases had any significant effect on performance. While this can be
                 satisfying to some extent, this raises two concerns:
@@ -1224,8 +1224,8 @@
 
                 The Grid'5000 platform already has tests in place. First, a script called \texttt{g5k-checks} verifies
                 each time a node boots that its characteristics match the reference information (\eg the amount of
-                memory, the BIOS version). Additionaly, more extensive tests are executed on a regular basis on all the
-                ndoes \cite{nussbaum:hal-01538682}. These are mostly \emph{correction} tests, they perform several
+                memory, the BIOS version). Additionally, more extensive tests are executed on a regular basis on all the
+                nodes \cite{nussbaum:hal-01538682}. These are mostly \emph{correction} tests, they perform several
                 operations (\eg node deployment, network reconfiguration) that can either succeed or fail. Two
                 \emph{performance} tests are implemented, one for the network bandwidth, the other for the disk
                 bandwidth.  However, they use threshold values to define what is an acceptable performance, hence they
@@ -1359,7 +1359,7 @@
                 Grid'5000 Gantt chart, we can check whether the clusters are currently heavily used or not and decide if
                 we should postpone or experiment to avoid disturbing too much the other users. A particularly good
                 timeframe for our experiments is usually between 7 a.m. and 9 a.m., when the (longer) nightly
-                experiments have terminated and the (shorter and interactive) daily expereiments have not started yet.
+                experiments have terminated and the (shorter and interactive) daily experiments have not started yet.
                 We generally submit one job per cluster, requesting all the nodes, but we sometimes have to split the
                 experiments and make several smaller jobs when only a subset of the nodes is free immediately. The
                 alternative would be to submit the full-scale job anyway, but it would get scheduled later in the day,
@@ -1450,7 +1450,7 @@
                 test does not need the full repository, it automatically downloads the required files.
 
                 The implementation directly follows the formula described in Section~\ref{sub:statistical_test}. It
-                relies heaviliy on Numpy and Pandas for a better efficiency.
+                relies heavily on Numpy and Pandas for a better efficiency.
 
                 Several factors are available. They are all tested independently, as a one-dimensional variable (\ie
                 \(p=1\)). For each of them, two tests are realised, one with a window of one job (\ie \(r=1\)) and one
@@ -1476,7 +1476,7 @@
                 \ref{sub:presentation_of_the_test_results}.
 
                 As for the previous step, the test is implemented in Cashew and uses a Jupyter notebook. This notebook
-                is instanciated and executed several times, once per cluster and per factor. All these copies are then
+                is instantiated and executed several times, once per cluster and per factor. All these copies are then
                 converted to HTML and deployed to a website.
 
         \subsection{On the normality assumption}%
@@ -1545,7 +1545,7 @@
                 classified as either a positive anomaly and colored in red if it is larger than the sample mean, or it
                 is classified as a negative anomaly and colored in blue if it is lower than the sample mean.
 
-                It occasionnaly happens that a single observation is way outside the fluctuation interval (\eg on
+                It occasionally happens that a single observation is way outside the fluctuation interval (\eg on
                 Figure~\ref{fig:experiment:non_regression:evolution_dahu26}, one experiment had a performance of
                 approximately \NSI{23}{\giga\flop/\second} near the end of 2020). When this happens, we manually label
                 this point as an outlier and remove it from the reference set: it will not be taken into account for
@@ -1626,7 +1626,7 @@
                 marks a platform change we noticed. On this plot, it is very clear that the change has affected
                 significantly a large fraction of the nodes by increasing their performance (positive anomaly). This was
                 slightly visible on the non-windowed plot from Figure~\ref{fig:experiment:non_regression:overview}, but
-                much more tenuous. This desmonstrates well the complementarity of both tests: the non-windowed test is
+                much more tenuous. This demonstrates well the complementarity of both tests: the non-windowed test is
                 better for detecting quickly any large change, whereas the windowed test is best at detecting more
                 subtle changes but with some lag.
 
@@ -1648,7 +1648,7 @@
                 the temporal evolution of these eight factors like we did in the single-dimension case.
 
                 This figure should be compared to Figure~\ref{fig:experiment:non_regression:overview}, since both of
-                them aim at detecting changes in \dgemm durations. We can nottice two interesting differences:
+                them aim at detecting changes in \dgemm durations. We can notice two interesting differences:
                 \begin{itemize}
                     \item The first change, which happened on 2019/07/13, was detected as very significant on all the
                         nodes with the multi-factor test. On the other hand, the single-factor test only marked a subset
@@ -1800,7 +1800,7 @@
                         with a \NSI{95}{\percent} confidence). This issue on \emph{dahu-26} has later been resolved by
                         an administrator doing a power drain of the node. Note that this return to normal was also
                         detected by our tests.
-                    \item On 2020/06/10, cluster \emph{gros}. All the nodes of the cluster had a performande drop of
+                    \item On 2020/06/10, cluster \emph{gros}. All the nodes of the cluster had a performance drop of
                         about \NSI{1}{\percent}. The frequency has also dropped noticeably.
                     \item On 2020/09/29, cluster \emph{troll}. A very large temperature drop of temperature followed the
                         upgrade. The largest effect was on CPU n°1 of node \emph{troll-2}, where the temperature
@@ -1836,13 +1836,13 @@
 
             \subsubsection{Faulty memory}%
 
-                Occasionnaly, some nodes became extremely slow. The performance difference was so large that our test
+                Occasionally, some nodes became extremely slow. The performance difference was so large that our test
                 program did not even have the time to terminate in the usual timeframe we use for the jobs. Thus, we
                 did not detect these events as a non-green point in the plots, but simply because our jobs were failing.
 
                 We were able to reproduce the issue with a much simpler program that was stressing the memory, by
-                calling the function \texttt{memset} on all the cores of the node silmutaneously. Each time, it was
-                located on a single processor of the node, the other processor was functionning normally.
+                calling the function \texttt{memset} on all the cores of the node simultaneously. Each time, it was
+                located on a single processor of the node, the other processor was functioning normally.
 
                 This issue was noticed on the following instances:
                 \begin{itemize}
@@ -1856,7 +1856,7 @@
                 The Grid'5000 team was able to solve this problem, sometimes by inverting two memory sticks, sometimes
                 by changing one memory stick for a new one, sometimes by simply performing a power drain of the nodes.
 
-            \subsubsection{Power unstability}%
+            \subsubsection{Power instability}%
 
                 The CPU power consumption on nodes from cluster \emph{dahu} is very stable when the \dgemm calls are
                 performed. On a normal experiment, each individual processor has an average consumption between
@@ -1865,7 +1865,7 @@
                 consumption of one of its processors below \NSI{124}{\watt}, which is already very significant given the
                 extreme stability that we usually observe. On half of these events, the power consumption was below
                 \NSI{119.4}{\watt}. The largest power drop happened on node \emph{dahu-26} on 2020/12/04, where its CPU
-                n°0 consummed only \NSI{97.5}{\watt}. For reasons we ignore, such power drops happened particuliarly
+                n°0 consumed only \NSI{97.5}{\watt}. For reasons we ignore, such power drops happened particularly
                 frequently on the four nodes \emph{dahu-29}, \emph{dahu-30}, \emph{dahu-31} and \emph{dahu-32} between
                 November 2020 and January 2021. Since the four nodes are part of the same chassis and therefore share
                 their power supply, our hypothesis is that there could be an issue with the power supply itself.
@@ -1927,14 +1927,14 @@
         We have monitored 386 nodes from Grid'5000 testbed for more than one year, running new tests several times a
         week. This allowed us to detect multiple events that had a significant effect on the nodes, from subtle
         performance changes of \NSI{1}{\percent} to much more severe degradations of more than \NSI{10}{\percent}, or
-        even nodes that were literraly unusable when their memory was under heavy load. These events went unnoticed by
+        even nodes that were literally unusable when their memory was under heavy load. These events went unnoticed by
         both Grid'5000 technical team and Grid'5000 users, yet they could greatly harm the reproducibility of
         experiments and lead to wrong scientific conclusions. We therefore believe that our approach could greatly
         benefit to the HPC community.
 
         Their remains some engineering work before targeting a broader adoption. Some parts of our workflow should be
-        reimplemented with other more suitable technologies, for instance the data should be stored with a proper
-        database management system. There also remains some automations to implement, in particular the scheduling of
+        re-implemented with other more suitable technologies, for instance the data should be stored with a proper
+        database management system. There also remains some automation to implement, in particular the scheduling of
         new experiments, with the constraint that it should not bother other users too much.
 
         Our test currently relies solely on performance measures for the \dgemm function. This is a CPU intensive
