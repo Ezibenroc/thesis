@@ -380,11 +380,11 @@
         \end{figure}
 
         To compute a network model for SMPI, we need to perform a (segmented) linear regression on this data. One
-        assumption for the simple least-square regression is that the noise should be normaly distributed, which is
+        assumption for the simple least-square regression is that the noise should be normally distributed, which is
         clearly not the case with our dataset, the noise is multi-modal. One simple solution for this is to compute the
         average duration for each message size, which all have a large number of measures (500 in this figure). With the
         central limit theorem, assuming that the measures for similar message sizes are independent and identically
-        distributed, their sample average is normaly distributed. This means that by averaging the data, we should get a
+        distributed, their sample average is normally distributed. This means that by averaging the data, we should get a
         normal noise which would allow us to compute a linear regression.
 
         \begin{figure}[htpb]
@@ -1478,6 +1478,40 @@
                 As for the previous step, the test is implemented in Cashew and uses a Jupyter notebook. This notebook
                 is instanciated and executed several times, once per cluster and per factor. All these copies are then
                 converted to HTML and deployed to a website.
+
+        \subsection{On the normality assumption}%
+        \label{sub:on_the_normality_assumption}
+
+            The statistical test described in Section~\ref{sub:statistical_test} assumes that the data follows a normal
+            distribution. In this section, we argue that all the variables described previously satisfy this hypothesis.
+
+            \begin{itemize}
+                \item The factors Frequency, Temperature, Power$_{\text{CPU}}$ and Power$_{\text{DRAM}}$ are all an
+                    arithmetic mean of several dozens of values. It comes directly by the central limit theorem that
+                    these averages follow a normal distribution.
+                \item The Model factors (\eg MNK) are coefficients of an ordinary least-square linear regression (OLS).
+                    The input data are the averaged \dgemm durations, for each distinct tuple \(M,N,K\), we compute the
+                    arithmetical mean of the durations observed on all the cores of a given CPU. Thus, by the central
+                    limit theorem, the input data has a normally distributed noise. Now, if we note \(\bm{X}\) the
+                    \(n\times8\) matrix of regressors (each of the \(n\) rows is an observation, the 8 columns are the
+                    products \(MNK, MN, MK, NK, M, N\) and \(K\) that were used for this observation) and we note
+                    \(\bm{y}\) the vector of observed durations, the vector of regression coefficients
+                    \(\hat{\bm{\beta}}\) can be obtained by computing \(\hat{\bm{\beta}} = \left( \bm{X}^{\mathsf T}
+                    \bm{X} \right)^{-1} \bm{X}^{\mathsf T} \bm{y} \).  By doing this regression, we assume that \(\bm{y}
+                    = \bm{X}\bm{\beta} + \bm{\varepsilon}\) where \(\bm{\beta}\) is the true (unknown) vector of coefficients
+                    and \(\bm{\varepsilon}\) is the normally distributed noise. It follows that the estimator
+                    \(\hat{\bm{\beta}}\) is also normally distributed.
+                \item The factors Performance and Performance\(_{2048}\) are defined as a ratio of two values, the total
+                    number of operations divided by the total duration. The number of operations is constant, only the
+                    duration is a random variable. Since it is itself the sum of individual durations, it follows a
+                    normal distribution, by the central limit theorem. If we note the ratio as
+                    \(R=\frac{F}{T+\varepsilon}\) where \(F\) and \(T\) are constant and \(\varepsilon\) is a random
+                    normal noise, we have \(R = \left(\frac{F}{T}\right) \left(\frac{1}{1+\varepsilon/T}\right)
+                    \approx \frac{F}{T}\left(1-\frac{\varepsilon}{T}\right)\). The last approximation is obtained by the
+                    Taylor expansion, it holds because \(T \gg \varepsilon\), \ie the variability of the total duration
+                    is small compared to its average. Since \(F\) and \(T\) are constant and \(\varepsilon\) is normally
+                    distributed, it follows that \(R\) is also normally distributed.
+            \end{itemize}
 
         \subsection{Presentation of the test results}%
         \label{sub:presentation_of_the_test_results}
