@@ -31,7 +31,7 @@
             features like node instrumentation or environment logging.
 
             For these reasons, it is a common practice to use an experiment engine. Buchert~\etal describe the features
-            of eight different softwares~\cite{buchert:hal-01087519}. To the best of our knowledge, only three offer a
+            of eight different engines~\cite{buchert:hal-01087519}. To the best of our knowledge, only three offer a
             native support for Grid'5000, namely Expo, XPFlow and Execo. Unfortunately, Expo and XPFlow are now longer
             maintained, the last commit in their respective repositories was done on November 2014 and September 2015
             For these reasons, the experiment engine Execo~\cite{Imbert_2013} is often recommended to Grid'5000
@@ -111,7 +111,7 @@
             An experiment can be parametrized by two means:
             \begin{itemize}
                 \item An install file. This is a Yaml file that can be used to describe how the setup phase should be
-                    done. Typically, it can contain the desired version for different softwares like OpenBLAS or
+                    done. Typically, it can contain the desired version for different libraries like OpenBLAS or
                     OpenMPI, but also the duration of the warmup or the frequency of the monitoring.
                 \item An experiment file. These can be of any kind. A typical use case is to provide a CSV file where
                     each line is a particular piece of the experiment (\eg an individual call to \dgemm and the
@@ -1091,7 +1091,7 @@
         \label{sub:lack_of_tests}
 
             %% TODO: check how to properly cite software. In particular, what contributors should we list?
-            This section lists several examples of well established softwares with limited or even inexistant
+            This section lists several examples of well established software projects with limited or even inexistant
             performance testing.
 
             Simgrid\cite{simgrid}, the simulation framework used in Part~\ref{part:prediction}, is a well established
@@ -1207,7 +1207,7 @@
 
                 Other tools exist for measuring the performance of a platform under some workload. Here, we are not
                 interested in the execution of a given software, but rather the whole platform, \ie the combination of
-                the hardware, the operating system and eventual softwares running concurrently on the system.
+                the hardware, the operating system and eventual programs running concurrently on the system.
                 High Performance Linpack \cite{hpl} is such a tool, it performs a dense linear algebra operation using
                 one or several computers and reports the observed flop rate.
 
@@ -1219,7 +1219,7 @@
                 number of page faults, etc. Several dozens of bugs have been found in the Linux kernel thanks to the use
                 of this benchmark.
 
-                These softwares suffer from the same limitations previously described: there is no randomization when
+                These libraries suffer from the same limitations previously described: there is no randomization when
                 several configurations are combined, and no statistical tests are available.
 
                 The Grid'5000 platform already has tests in place. First, a script called \texttt{g5k-checks} verifies
