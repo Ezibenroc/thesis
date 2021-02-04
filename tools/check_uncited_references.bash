@@ -12,7 +12,7 @@ echo "Uncited references:"
 error=0
 for refname in ${refnames}
 do
-    nb_ref_lines=$(cat ${latex_files} | grep "\cite{.*$refname.*}" | wc -l)
+    nb_ref_lines=$(cat ${latex_files} | grep -E "\cite(\[.*\])?{.*$refname.*}" | wc -l)
 
     if [ ${nb_ref_lines} -eq 0 ]
     then
