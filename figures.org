@@ -248,6 +248,147 @@ df %>%
 18             POWER7  8C 3.55GHz      3550
 19 Intel Xeon E5-2637v2 4C 3.5GHz      3500
 #+end_example
+** 49 years of micro-processor data
+*** Downloading the data
+The data comes from two Wikipedia pages:
+- [[https://en.wikipedia.org/wiki/Transistor_count][Transistor count]]
+- [[https://en.wikipedia.org/wiki/Microprocessor_chronology][Microprocessor chronology]]
+**** Transistor count
+#+begin_src python :results output :session *python* :exports both
+import pandas
+print(f'Pandas version {pandas.__version__}')
+
+df_list = pandas.read_html('https://en.wikipedia.org/wiki/Transistor_count', match='Intel 8008')
+assert len(df_list) == 1
+df = df_list[0]
+df.columns = ['processor', 'transistor_count', 'date', 'designer', 'process', 'area']
+
+def grep_number(column):
+    return column.astype(str).str.extract('([0-9,\,]+)')[0].str.replace(',', '')
+
+def parse_number(df, colname, number_type=float):
+    df[colname] = grep_number(df[colname]).astype(number_type)
+
+parse_number(df, 'transistor_count', float)
+parse_number(df, 'date', int)
+parse_number(df, 'process', float)
+parse_number(df, 'area', float)
+print(f'Dataframe of {len(df)} rows and {len(df.columns)} columns')
+print(df.head())
+df.to_csv('data/context/transistor_count.csv', index=false)
+#+end_src
+
+#+RESULTS:
+: Pandas version 1.2.1
+: Dataframe of 191 rows and 6 columns
+:                                 processor  transistor_count  date            designer  process  area
+: 0  MP944 (20-bit, 6-chip, 28 chips total)           74442.0  1970  Garrett AiResearch      NaN   NaN
+: 1              Intel 4004 (4-bit, 16-pin)            2250.0  1971               Intel  10000.0  12.0
+: 2                TMX 1795 (?-bit, 24-pin)            3078.0  1971   Texas Instruments      NaN  30.0
+: 3              Intel 8008 (8-bit, 18-pin)            3500.0  1972               Intel  10000.0  14.0
+: 4              NEC μCOM-4 (4-bit, 42-pin)            2500.0  1973                 NEC   7500.0   NaN
+**** Microprocessor chronology
+#+begin_src python :results output :session *python* :exports both
+import pandas
+print(f'Pandas version {pandas.__version__}')
+
+df_list = pandas.read_html('https://en.wikipedia.org/wiki/Microprocessor_chronology', match='Developer')
+assert len(df_list) == 6
+
+for df in df_list:
+    columns = list(df.columns)
+    new_cols = ['date', 'processor', 'designer', 'frequency',]
+    columns[:len(new_cols)] = new_cols
+    df.columns = columns
+
+df = pandas.concat(df_list).reset_index(drop=True)
+
+def grep_number(column):
+    return column.astype(str).str.extract('([0-9,\,]+)')[0].str.replace(',', '')
+
+def parse_number(df, colname, number_type=float):
+    df[colname] = grep_number(df[colname]).astype(number_type)
+
+parse_number(df, 'date', int)
+
+parse_number(df, 'Word size(bits)', float)
+df['word_size'] = df['Word size(bits)']
+df.loc[df['date'] >= 2000, 'word_size'] = 64  # after 2000, all the processors listed here are 64 bits
+
+parse_number(df, 'Transistors', float)
+parse_number(df, 'Transistors(millions)', float)
+df['transistors'] = float('nan')
+df.loc[~df['Transistors'].isna(), 'transistors'] = df['Transistors']
+df.loc[~df['Transistors(millions)'].isna(), 'transistors'] = df['Transistors(millions)']*1e6
+
+def parse_unit(df, colname, unit, new_name):
+    unit_prefix = {'n':1e-9, 'μ':1e-6, 'm':1e-3, 'k':1e3, 'M':1e6, 'G':1e9}
+    number = '[0-9]+(?:\.[0-9]+)?'
+    reg = f'({number})(?:(?:-|–)({number}))?\s*([{"|".join(unit_prefix)}]){unit}'
+    result = df[colname].astype(str).str.extract(reg)
+    result['multiplier'] = result.apply(lambda row: unit_prefix.get(row[2], float('nan')), axis=1)
+    result.loc[result[1].isna(), 1] = result[0]
+    result[0] = result[0].astype(float) * result['multiplier']
+    result[1] = result[1].astype(float) * result['multiplier']
+    df[f'{new_name}_min'] = result[[0, 1]].min(axis=1)
+    df[f'{new_name}_max'] = result[[0, 1]].max(axis=1)
+
+parse_unit(df, 'frequency', 'Hz', 'frequency')
+parse_unit(df, 'Process', 'm', 'process')
+
+def parse_cores(val):
+    NA = float('nan')
+    if isinstance(val, float):  # NaN
+        return NA, NA, NA, NA
+    val = val.split('/')
+    if len(val) == 1:
+        val.append('')
+    def parse_list(list_str):
+        if '–' in list_str:
+            values = list_str.split('–')
+        else:
+            values = list_str.split(',')
+        if values == ['']:
+            return [NA]
+        else:
+            for i, val in enumerate(values):
+                try:
+                    a, b = val.split('+')
+                    values[i] = int(a) + int(b)
+                except ValueError:
+                    values[i] = int(val)
+            return values
+    cores = parse_list(val[0])
+    dies = parse_list(val[1])
+    return min(cores), max(cores), min(dies), max(dies)
+
+# Testcases for this ugly function
+assert str(parse_cores('6, 8, 12, 16, 24, 32, 64 / 1, 2, 4')) == '(6, 64, 1, 4)'
+assert str(parse_cores('6, 8, 12, 16 /')) == '(6, 16, nan, nan)'
+assert str(parse_cores('32')) == '(32, 32, nan, nan)'
+assert str(parse_cores('1+8 / 1')) == '(9, 9, 1, 1)'
+assert str(parse_cores('4–6 / 1')) == '(4, 6, 1, 1)'
+
+df[['core_per_die_min', 'core_per_die_max', 'die_per_module_min', 'die_per_module_max']] = df.apply(lambda row: pandas.Series(parse_cores(row['Cores per die /Dies per module'])), axis=1)
+
+df = df[['date', 'processor', 'designer', 'frequency', 'word_size', 'transistors', 'frequency_min',
+       'frequency_max', 'process_min', 'process_max', 'core_per_die_min',
+       'core_per_die_max', 'die_per_module_min', 'die_per_module_max']]
+
+print(f'Dataframe of {len(df)} rows and {len(df.columns)} columns')
+print(df.head())
+df.to_csv('data/context/microprocessor_chronology.csv', index=False)
+#+end_src
+
+#+RESULTS:
+: Pandas version 1.2.1
+: Dataframe of 212 rows and 14 columns
+:    date processor   designer frequency  word_size  transistors  frequency_min  frequency_max  process_min  process_max  core_per_die_min  core_per_die_max  die_per_module_min  die_per_module_max
+: 0  1971      4004      Intel   740 kHz        4.0       2250.0       740000.0       740000.0      0.00001      0.00001               NaN               NaN                 NaN                 NaN
+: 1  1972    PPS-25  Fairchild   400 kHz        4.0          NaN       400000.0       400000.0          NaN          NaN               NaN               NaN                 NaN                 NaN
+: 2  1972    μPD700        NEC       NaN        4.0          NaN            NaN            NaN          NaN          NaN               NaN               NaN                 NaN                 NaN
+: 3  1972      8008      Intel   500 kHz        8.0       3500.0       500000.0       500000.0      0.00001      0.00001               NaN               NaN                 NaN                 NaN
+: 4  1972     PPS-4   Rockwell   200 kHz        4.0          NaN       200000.0       200000.0          NaN          NaN               NaN               NaN                 NaN                 NaN
 
 * Performance prediction through simulation
 ** Modeling HPL kernels and communications
