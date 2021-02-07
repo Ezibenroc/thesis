@@ -204,16 +204,13 @@ plot = (p_cores + p_freq + p_perf &
     theme(axis.title.x=element_blank(),
           axis.title.y=element_blank()
         )
-    ) +
-    plot_annotation(title=paste("Top500 evolution from", min_year, "to", max_year),
-#                   subtitle="Showing the quantiles [0, 0.1, 0.5, 0.9, 1]",
-                    caption="Data from https://top500.org, compiled by Dan Lenski and plotted by Tom Cornebize")
+    )
 ggsave(filename='img/context/top500.pdf', plot=plot, width=7, height=3)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Y7Z50c/figureATURtA.png]]
+[[file:/tmp/babel-REZPeJ/figureOTRz3J.png]]
 
 
 #+begin_src R :results output :session *R* :exports both
