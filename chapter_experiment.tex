@@ -13,7 +13,7 @@
             Nearly all the experiments presented in this document have been carried on the Grid'5000~\cite{grid5000}
             testbed.  Quoting its official website\footnote{\url{https://www.grid5000.fr/}}: \blockquote{Grid'5000 is a
             large-scale and flexible testbed for experiment-driven research in all areas of computer science, with a
-            focus on parallel and distributed computing including Cloud, HPC and Big Data and AI.} It provides dozen of
+            focus on parallel and distributed computing including Cloud, HPC and Big Data and AI.} It provides dozens of
             clusters, each one having between 2 and 124 homogeneous compute nodes. There is a high diversity of hardware,
             including several generations of Intel processors available, AMD and ARM processors, GPU, persistent memory
             (PMEM) as well as high-performance networks such as Infiniband or Omni-path. Another important feature is the
@@ -26,8 +26,8 @@
             While it is possible to run a complete experiment on a testbed like Grid'5000 by manually issuing commands
             in an interactive shell, it is not advisable as it quickly becomes extremely tedious and error-prone.
             Automating the experiment is a necessary condition to have reproducible results. A first step toward this
-            goal is to write some ad-hoc script. However, two independent experiments might still share a lot of steps
-            that could be refactored in a common layer, \eg OS deployment, package installation, or even more advanced
+            goal is to write some ad~hoc script. However, two independent experiments might still share many steps that
+            could be refactored in a common layer, \eg OS deployment, package installation, or even more advanced
             features like node instrumentation or environment logging.
 
             For these reasons, it is a common practice to use an experiment engine. Buchert~\etal describe the features
@@ -40,10 +40,10 @@
             Experiments with Execo are described as a Python script. We believe this is one of its best qualities, as it
             offers a lot of freedom and flexibility to the experimenter, comparatively to other experiment engines that
             use custom domain specific languages (DSL). Yet, we made the choice to not use it. The main reason is that a
-            typical Execo experiment uses a lot of low-level constructs that are really unpleasant and unintuitive to
-            write and read. Section~\ref{sub:comparison_with_execo} will present some comparisons. Furthermore, Execo
-            lacks a lot of important features, like node instrumentation and metadata collection, \ie we would still
-            have needed to implement a lot functionalities on top of Execo.
+            typical Execo experiment uses many low-level constructs that are really unpleasant and unintuitive to write
+            and read. Section~\ref{sub:comparison_with_execo} will present some comparisons. Furthermore, Execo lacks
+            many important features, like node instrumentation and metadata collection, \ie we would still have needed
+            to implement many functionalities on top of Execo.
 
     \section{Yet another experiment engine: \texttt{peanut}}%
     \label{sec:peanut}
@@ -70,13 +70,13 @@
             We implemented our own experiment engine, named \texttt{peanut}. It comes as a Python library that
             experimenters can use to write their own experiments, also as a Python script.
 
-            A new experiment can be defined by inheriting from the class \texttt{peanut.Job}. Three methods can be
-            overridden, \texttt{setup}, \texttt{run\_exp} and \texttt{teardown}.
+            A new experiment can be defined by inheriting from the class \texttt{Job}. Three methods can be overridden,
+            \texttt{setup}, \texttt{run\_exp} and \texttt{teardown}.
 
             Once the experiment is written, it can be launched in a single command line. The following steps will
             happen.
             \begin{itemize}
-                \item Implicitly, submit a job with the given characteristics (\eg cluster, number of nodes, walltime,
+                \item Implicitly, submit a job with the given characteristics (\eg cluster, number of nodes, wall time,
                     etc), then deploy the given OS image.
                 \item Implicitly (but optionally) enable or disable some performance functionalities like
                     hyperthreading, turboboost, C-states.
@@ -108,13 +108,13 @@
             : functionalities described previously can also be explicitly called (\eg there are methods
             \texttt{disable\_hyperthreading}, \texttt{start\_monitoring} and \texttt{perform\_stress}).
 
-            An experiment can be parametrized by two means:
+            An experiment can be parameterized by two means:
             \begin{itemize}
-                \item An install file. This is a Yaml file that can be used to describe how the setup phase should be
-                    done. Typically, it can contain the desired version for different libraries like OpenBLAS or
-                    OpenMPI, but also the duration of the warmup or the frequency of the monitoring.
+                \item An installation file. This is a Yaml file that can be used to describe how the setup phase should
+                    be done. Typically, it can contain the desired version for different libraries like OpenBLAS or
+                    OpenMPI, but also the duration of the warm up or the frequency of the monitoring.
                 \item An experiment file. These can be of any kind. A typical use case is to provide a CSV file where
-                    each line is a particular piece of the experiment (\eg an individual call to \dgemm and the
+                    each line is a particular piece of the experiment (\eg an individual call to \dgemm) and the
                     columns represent the parameters for these experiments (\eg the sizes \texttt{M}, \texttt{N} and
                     \texttt{K} used by \dgemm).
             \end{itemize}
@@ -172,8 +172,8 @@
 \chapter{On the difficulties of experimentation}%
 \label{chapter:experiment:difficulties}
     %% TODO
-    %% Calibration experiments: randomisation. pour quoi faire ?
-    %% 1. éviter les biais (randomisation de l'espace de paramètres)
+    %% Calibration experiments: randomization. pour quoi faire ?
+    %% 1. éviter les biais (randomization de l'espace de paramètres)
     %%    - certaines valeurs peuvent être particulières et on peut vouloir
     %%      au contraire biaiser vers ces valeurs
     %% 2. éviter les perturbations transientes
@@ -250,7 +250,7 @@
             way to sample the data is to only measure two sizes, one very small buffer (\eg \NSI{1}{\byte}) and one very
             large buffer (\eg \NSI{1}{\giga\byte}). To avoid any bias, we could even try several small and large
             buffers with slight differences in their respective sizes. However, we saw in Part~\ref{part:prediction}
-            that this linearity assumption does not hold, their are large discontinuities. We therefore need to also
+            that this linearity assumption does not hold, there are large discontinuities. We therefore need to also
             sample sizes between the two extreme values to (1) make sure that all the breakpoints are visible in our
             dataset and (2) perform one linear regression in each linear zone.
 
@@ -306,8 +306,8 @@
                         \item Return the six possible permutations: \((M,N,K) = (A,B,C), (C,A,B), \dots\)
                     \end{enumerate}
                     The goal of returning all the permutations of the sizes is to avoid any bias in the sampling
-                    procedure, since they are not generated independently from each other. We also use rejection
-                    sampling to make sure that one of the sizes does not get too large.
+                    procedure, since they are not generated independently of each other. We also use rejection sampling
+                    to make sure that one of the sizes does not get too large.
             \end{description}
 
             These two generation methods are illustrated in Figure~\ref{fig:parameter_space}. A list of \Num{100000}
@@ -347,7 +347,7 @@
     \label{sec:randomizing_order}
         The network model in SMPI needs to be instantiated with a careful calibration of the MPI communication
         performance, as presented by Degomme~\etal \cite{smpi}. This was done with a MPI program created by the Simgrid
-        team that performed a sequence of measures with two hosts. Several kind of measures were implemented: the
+        team that performed a sequence of measures with two hosts. Several kinds of measures were implemented: the
         \emph{recv} (a call to \recv with waiting to avoid late senders), the \emph{isend} (a call to
         \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \send followed by a call to \recv to get the round-trip
         time) as well as several more minor MPI primitives.
@@ -382,10 +382,10 @@
         To compute a network model for SMPI, we need to perform a (segmented) linear regression on this data. One
         assumption for the simple least-square regression is that the noise should be normally distributed, which is
         clearly not the case with our dataset, the noise is multi-modal. One simple solution for this is to compute the
-        average duration for each message size, which all have a large number of measures (500 in this figure). With the
-        central limit theorem, assuming that the measures for similar message sizes are independent and identically
-        distributed, their sample average is normally distributed. This means that by averaging the data, we should get a
-        normal noise which would allow us to compute a linear regression.
+        average duration for each message size, which all have many measures (500 in this figure). With the central
+        limit theorem, assuming that the measures for similar message sizes are independent and identically distributed,
+        their sample average is normally distributed. This means that by averaging the data, we should get a normal
+        noise which would allow us to compute a linear regression.
 
         \begin{figure}[htpb]
             \centering
@@ -514,7 +514,7 @@
             Figure~\ref{fig:randomizing_sizes:expfile:average_perf}. Some performance variability can be observed, the
             most efficient runs are approximately \NSI{3}{\percent} faster than the least efficient ones. A large
             fraction of this variability appears to be significantly caused by the experiment file, since all the runs
-            made with file \texttt{C} have an higher performance than those made with file \texttt{B}, which are
+            made with file \texttt{C} have a higher performance than those made with file \texttt{B}, which are
             themselves more efficient than those made with file \texttt{A}. Thanks to the proper randomization of the
             experiments, we can rule out any temporal bias.
 
@@ -806,7 +806,7 @@
             %% TODO add the hypothesis on subnormal numbers.
             Several hypotheses were discussed to explain this unexpected phenomenon.
 
-            There could be a small cache  on the floating point unit of the cores to memorize the results of frequent
+            There could be a small cache  on the floating-point unit of the cores to memorize the results of frequent
             operations. This could explain why the durations were higher when the matrices were initialized randomly,
             but this does not explain why the sequential initialization is in between.
 
@@ -853,7 +853,7 @@
             \end{figure}
 
             The evolution and the distribution of the \dgemm durations is plotted in
-            Figure~\ref{fig:exp:bit-flips:mask-perf}. Their is a very clear correlation between the mask size and the
+            Figure~\ref{fig:exp:bit-flips:mask-perf}. There is a very clear correlation between the mask size and the
             performance: the larger the mask, the lower the duration. Similarly to the previous experiment, some
             temporal patterns can also be distinguished.
 
@@ -896,7 +896,7 @@
 
         \subsection{Related work}%
             M. La{\ss}, C. Plessl and R. Schade (Paderborn Center for Parallel Computing) made independently similar
-            observations (personal communications on 2020/09/24 and 2020/11/11). Their findings is summarized here:
+            observations (personal communications on 2020/09/24 and 2020/11/11). Their findings are summarized here:
             \begin{itemize}
                 \item They observed that \dgemm performance depended on the content of the matrix. They also
                     made the hypothesis that it was caused by bit-flips. To test this hypothesis, they used the same
@@ -905,7 +905,7 @@
                     argument in favor of this hypothesis. This experiment was done using another \dgemm
                     implementation than us (Intel MKL) on an Intel Xeon Gold 6148 (Skylake-SP family) from a noctua
                     node\footnote{\url{https://pc2.uni-paderborn.de/hpc-services/available-systems/noctua/}}.
-                \item They reproduced the same experiment on a FPGA (more precisely, a Bittware 520N PCIe accelerator
+                \item They reproduced the same experiment on an FPGA (more precisely, a Bittware 520N PCIe accelerator
                     card, equipped with an Intel Stratix 10 GX 2800 FPGA). This time, the way the matrix was filled had
                     an effect on the power consumption and not the performance. This was expected since there is no DVFS
                     on FPGA.
@@ -961,8 +961,8 @@
         \end{description}
 
         These two examples can seem obvious after the fact. Yet, they show the difficulty of anticipating when the usage
-        of a model will reaches its limits. In both cases, we had to instrument the HPL code to generate a trace and
-        find that the parameters space used in the calibration was very different than the parameter space used during
+        of a model will reach its limits. In both cases, we had to instrument the HPL code to generate a trace and
+        find that the parameters space used in the calibration was very different from the parameter space used during
         the execution. One way to limit the risk of missing such extrapolations would be to define explicitly in the
         model files the parameter ranges that were used for calibrating them. Then, during a simulation, we could raise
         a warning whenever a model is used outside of its parameter space.
@@ -1031,12 +1031,12 @@
         %%   des problèmes de température sur dahu-{13,14,15,16}. D'où la nécessité de (1)
         %%   contrôler d'avantage l'environnement et (2) collecter d'avantage
         %%   d'informations sur l'environnement.
-        %% - La randomisation est très importante pour se prémunir de biais expérimentaux. Or, des fois on cherche
+        %% - La randomization est très importante pour se prémunir de biais expérimentaux. Or, des fois on cherche
         %%   justement ces biais.
         %% - De manière plus générale, les conditions expérimentales ont un rôle très important.
-        A common theme to several sections of this chapter was the importance of the randomisation. It is of great help
+        A common theme to several sections of this chapter was the importance of the randomization. It is of great help
         to avoid or at least limit any experimental bias. We have presented several counter-intuitive phenomenons that
-        were only revealed through the randomisation (or the lack thereof). However, in some cases, we needed our
+        were only revealed through the randomization (or the lack thereof). However, in some cases, we needed our
         experiments to be biased, to have more realistic experimental conditions. When we execute a micro-benchmark that
         supposedly mimic a real application, the main objective is for this micro-benchmark to be the best possible
         surrogate for the real application, begin unbiased is only a secondary goal.
@@ -1091,10 +1091,10 @@
         \label{sub:lack_of_tests}
 
             %% TODO: check how to properly cite software. In particular, what contributors should we list?
-            This section lists several examples of well established software projects with limited or even nonexistent
+            This section lists several examples of well-established software projects with limited or even nonexistent
             performance testing.
 
-            Simgrid~\cite{simgrid}, the simulation framework used in Part~\ref{part:prediction}, is a well established
+            Simgrid~\cite{simgrid}, the simulation framework used in Part~\ref{part:prediction}, is a well-established
             software. In the last twenty years, several dozens of contributors have helped to improve or extend it.
             Simgrid has also supported the research for several hundreds of articles, demonstrating a wide user base
             (relatively to its niche area). The main developers of Simgrid have spent countless hours in optimizing the
@@ -1127,8 +1127,8 @@
                 Several alternatives exist, developed specifically for C++ benchmarking~\cite{celero,hayai,nonius}, but
                 seemingly no longer maintained and with a smaller user base.
 
-                Google Benchmark~\cite{google-benchmark} is a C++ library to benchmark code snippets. It is well
-                established with several dozens of contributors and about \Num{5000} stars on Github. It greatly
+                Google Benchmark~\cite{google-benchmark} is a C++ library to benchmark code snippets. It is
+                well-established with several dozens of contributors and about \Num{5000} stars on Github. It greatly
                 facilitates the creation of parametric micro-benchmarks by adding only a few lines to an existing code.
                 The result can be pretty-printed in the terminal or written in a file in a CSV or JSON format. It is
                 even possible to automatically compute the asymptotic complexity. Finally, they provide a
@@ -1161,7 +1161,7 @@
                         is possible to make performance measures for a given state of the codebase on a given machine.
                         It is even possible to make point-to-point comparison with Google Benchmark, \ie to compare two
                         states of the codebase or two machines. However, we still miss the full picture, the variation
-                        of the performance on an historical timeframe.
+                        of the performance on a historical timeframe.
                 \end{itemize}
 
             \subsubsection{Benchmarking software: long-term performance evolution of an application}%
@@ -1180,7 +1180,7 @@
                 variability, which are mainly experiment artifacts: some experiments were performed on a badly
                 configured node which does not report the correct number of cores, so StarPU cannot use appropriately
                 the machine.  Since the StarPU team is interested in detecting regressions in StarPU itself and not the
-                platform, these simulations are extremely valuable to them, they allow to rule out the false conclusions
+                platform, these simulations are extremely valuable to them, they allow ruling out the false conclusions
                 that would be made by looking only at the real runs.
                 \begin{figure}[htpb]
                     \centering
@@ -1197,8 +1197,8 @@
                 satisfying to some extent, this raises two concerns:
                 \begin{itemize}
                     \item They could miss a subtle change in the performance or detect it much later, as it can be
-                        extremely difficult and error-prone. \footnote{Emery Berger uses the term "eyeball statistics":
-                        \url{https://youtu.be/r-TLSBdHe1A}}
+                        extremely difficult and error-prone. \footnote{Emery Berger uses the term ``eyeball
+                        statistics'': \url{https://youtu.be/r-TLSBdHe1A}}
                     \item This does not scale well, adding more applications or running the test on more machines would
                         make this inspection very tedious.
                 \end{itemize}
@@ -1213,8 +1213,8 @@
 
                 Another system benchmarking tool is stress-ng\cite{stress-ng}. It runs a selected workload for a given
                 duration and reports various aggregated performance. Over 240 different stress tests are implemented and
-                can be combined (\eg it is possible to launch three processes that perform a lot of I/O operations and
-                five processes that are CPU-intensive with vectorized floating point operations). The reported metrics
+                can be combined (\eg it is possible to launch three processes that perform many I/O operations and five
+                processes that are CPU-intensive with vectorized floating-point operations). The reported metrics
                 include the duration, but also the number of instructions, the number of cache reads and writes, the
                 number of page faults, etc. Several dozens of bugs have been found in the Linux kernel thanks to the use
                 of this benchmark.
@@ -1272,19 +1272,20 @@
             with the function
             \texttt{scipy.stats.f.ppf}\savefootnote{footnote:PY_fdist}{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html}}.
 
-            The proposed test is illustrated in Figure~\ref{fig:non_regression:stat:single_point}. A large number of points,
-            in black, have been generated according to a known bivariate normal distribution. Their abscissa (resp.
+            The proposed test is illustrated in Figure~\ref{fig:non_regression:stat:single_point}. Numerous points, in
+            black, have been generated according to a known bivariate normal distribution. Their abscissa (resp.
             ordinate) are distributed according to a normal distribution of mean \(\mu_x\) and standard deviation
-            \(\sigma_x\) (resp. \(\mu_y\) and \(\sigma_y\)). The abscissa and ordinates of the points are not independent,
-            they have a correlation coefficient of -0.7. The \NSI{99.5}{\percent} prediction regions are shown in blue. Two
-            additional points are shown in the scatter plot, representing new observations. The orange point has coordinates
-            \((\mu_x+2\sigma_x,\mu_y+2\sigma_y)\) and the green point has coordinates \((\mu_x+2\sigma_x,\mu_y-2\sigma_y)\).
+            \(\sigma_x\) (resp. \(\mu_y\) and \(\sigma_y\)). The abscissa and ordinates of the points are not
+            independent, they have a correlation coefficient of -0.7. The \NSI{99.5}{\percent} prediction regions are
+            shown in blue. Two additional points are shown in the scatter plot, representing new observations. The
+            orange point has coordinates \((\mu_x+2\sigma_x,\mu_y+2\sigma_y)\) and the green point has coordinates
+            \((\mu_x+2\sigma_x,\mu_y-2\sigma_y)\).
 
-            If each dimensions were considered independently, we would conclude that the probabilities to observe the orange
-            point or the green point are equal. Indeed, these two points have equivalent positions in the one-dimension
-            density graphs and they both fall within the \NSI{99.5}{\percent} interval. Now, when we look at both dimensions
-            simultaneously, the green point becomes much more likely to be observed, it is within the blue ellipse while the
-            orange point is outside.
+            If each dimension was considered independently, we would conclude that the probabilities to observe the
+            orange point or the green point are equal. Indeed, these two points have equivalent positions in the
+            one-dimension density plots and they both fall within the \NSI{99.5}{\percent} interval. Now, when we look
+            at both dimensions simultaneously, the green point becomes much more likely to be observed, it is within the
+            blue ellipse while the orange point is outside.
 
             \begin{figure}[htpb]
                 \centering
@@ -1423,7 +1424,7 @@
                 smallest file. HDF5 with the \texttt{table} format and the \texttt{zlib} compression algorithm was the
                 second best, the other alternatives were largely inferior in terms of I/O speed and disk footprint. Two
                 important features of HDF5 made it preferable to Apache Arrow for our use case:
-                (1) The possibility to append data to a file. With Appache Arrow, for each new experiment we would have
+                (1) The possibility to append data to a file. With Apache Arrow, for each new experiment we would have
                 to read the whole file in memory to add the new data.  (2) The ability to load only a subset of the data
                 based on a logical predicate. For instance, it is possible to load the measures made on a given node
                 between two given dates without having to read the whole file.
@@ -1521,14 +1522,14 @@
                 The historical evolution of the mean performance of two nodes is presented in
                 Figure~\ref{fig:experiment:non_regression:evolution_dahu}. Each point represents the observed
                 performance on a given experiment. The vertical dashed lines denote changes in the platform that had a
-                significant effect on at least one of the observed factors. The grey lines (with a label on bottom) are
+                significant effect on at least one of the observed factors. The gray lines (with a label on bottom) are
                 protocol changes, we modified the experiment in a way that affected the results. The orange lines (with
-                a label on top) are events that happened on the platform regardless of our will.  The grey ribbon is the
+                a label on top) are events that happened on the platform regardless of our will.  The gray ribbon is the
                 \emph{fluctuation interval}, we expect all the observations to fall within this interval with a given
                 confidence (\NSI{99.99}{\percent} in this figure). The \emph{reference set} of observations used to
                 compute this interval consists of past observations that were made after the last change. In other
                 words, (1) we do not consider the observations that were made in the future and (2) each time we
-                recognise a change and add a vertical line, the fluctuation interval gets reseted.
+                recognize a change and add a vertical line, the fluctuation interval gets reseted.
 
                 The fluctuation interval for a new value \(\bm{m}^{(r)}\) (which is the sample mean of \(r\) new
                 observations \(x_{n+1},\dots,x_{n+r}\), note that \(r=1\) in
@@ -1569,7 +1570,7 @@
                 We are running regular tests for several factors on hundreds of nodes, it would be very long and tedious
                 to review each individual plot. For this reason, we implemented overview plots, as presented in
                 Figure~\ref{fig:experiment:non_regression:overview}. In this presentation, each processor of each node
-                occupies one row. Individual experiments are still presented as points and the vertical grey or orange
+                occupies one row. Individual experiments are still presented as points and the vertical gray or orange
                 lines represent the same platform changes. We added intermediate levels in the colors to display how
                 unlikely it was to make a given observation. In the one-dimension case (\ie \(p=1\)), this represents
                 the distance between the observation and the sample mean of the reference set.
@@ -1601,7 +1602,7 @@
 
                 Figure~\ref{fig:experiment:non_regression:evolution_dahu_windowed} shows the performance evolution of
                 two nodes of the cluster \emph{dahu} with the five experiment window. Taking the average of several runs
-                reduces the noise. This allows to reduce considerably the width of the fluctuation interval, thereby
+                reduces the noise. This allows reducing considerably the width of the fluctuation interval, thereby
                 permitting to detect much more subtle changes. The downside is that it introduces a lag, the change
                 might not be detected immediately.
 
@@ -1699,7 +1700,7 @@
                 \begin{enumerate}[label=\alph*]
                     \item This part is intended to import the required libraries and setup a few options, but most
                         importantly to define three variables: the desired cluster, factor(s) and confidence.
-                    \item This is an histogram of the values obtained in the last run among the different processors of
+                    \item This is a histogram of the values obtained in the last run among the different processors of
                         the cluster for the desired factor. The average value as well as the spatial variability
                         coefficient are also displayed.
                     \item This is an overview plot of the cluster, similar to the overview plots previously presented.
@@ -1788,7 +1789,7 @@
             \subsubsection{BIOS upgrade}%
 
                 The Grid'5000 technical team occasionally upgrades the BIOS and the firmware of all the nodes of a
-                cluster. Most of the time, it does not affect the nodes in a noticeable way, but we did measure a
+                cluster. Most of the time, it does not affect the nodes noticeably, but we did measure a
                 significant change on several occasions.
                 \begin{itemize}
                     \item On 2020/02/06, cluster \emph{gros}. The temperature of all the nodes increased by several
@@ -1921,7 +1922,7 @@
         %% - Implémentation plus robuste, moins POC (ne pas passer par un dépôt git pour stocker les données par exemple).
 
         We have implemented statistical tests for detecting performance regressions on computers. The novelty of our
-        work does not reside on the statistics, our approach is entirely based on a 55 year old paper. However, to the
+        work does not reside on the statistics, our approach is entirely based on a 55-year-old paper. However, to the
         best of our knowledge, we are the first to apply these statistics for testing performance.
 
         We have monitored 386 nodes from Grid'5000 testbed for more than one year, running new tests several times a
@@ -1938,7 +1939,7 @@
         new experiments, with the constraint that it should not bother other users too much.
 
         Our test currently relies solely on performance measures for the \dgemm function. This is a CPU intensive
-        workload that makes an heavy use of vector floating point operations and, to a lesser extent, also stresses the
+        workload that makes a heavy use of vector floating-point operations and, to a lesser extent, also stresses the
         memory. For a broader coverage, it would be interesting to implement new tests that stress other parts of the
-        platform, \eg with workloads that perform a lot of memory operations, disk operations, or even network
+        platform, \eg with workloads that perform many memory operations, disk operations, or even network
         communications. To this end, the stress-ng~\cite{stress-ng} benchmark would be a great source of inspiration.
