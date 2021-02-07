@@ -398,12 +398,15 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 
-plot = read.csv('data/context/microprocessor_chronology.csv') %>%
+plot = bind_rows(
+        read.csv('data/context/microprocessor_chronology.csv'),
+        read.csv('data/context/transistor_count.csv') %>% mutate(core_per_die_min=-42, core_per_die_max=-42)  # dirty hack to remove these points
+    ) %>%
     mutate(process_min=process_min*1e9, process_max=process_max*1e9) %>%
     mutate(frequency_min=frequency_min*1e-6, frequency_max=frequency_max*1e-6) %>%
     mutate(transistor_count = transistor_count*1e-3) %>%
     replace_na(list(core_per_die_min=1, core_per_die_max=1)) %>%
-    select(-processor, -designer, -word_size, -die_per_module_min, -die_per_module_max) %>%
+    select(-processor, -designer, -word_size, -die_per_module_min, -die_per_module_max, -area) %>%
     gather(key, value, -date) %>%
     mutate(key=ifelse(grepl("frequency", key), "Frequency (MHz)", key)) %>%
     mutate(key=ifelse(grepl("process", key), "Process (nm)", key)) %>%
@@ -429,7 +432,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-BScjbh/figureiN1gRV.png]]
+[[file:/tmp/babel-REZPeJ/figurerSwaSp.png]]
 
 * Performance prediction through simulation
 ** Modeling HPL kernels and communications
