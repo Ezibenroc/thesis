@@ -799,11 +799,21 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             breakpoints using this aggregated data, and (2) on each segment, compute the linear regression with a noise
             mixture.
             \begin{enumerate}
-                \item TODO \cite{cubist}\cite{datadog}
-                \item TODO \cite{flexmix}
+                \item We have tested two different solutions for computing a piecewise linear regression, a Python
+                    package named \texttt{piecewise}~\cite{datadog}, and an R package named
+                    \texttt{cubist}~\cite{cubist}.  Although both of them work perfectly on the simplest generated
+                    datasets, they did not produce satisfying results with our real data. The likely reason is both the
+                    exponential distribution of the predictor variable and the heteroscedasticity of the noise. We made
+                    the choice  to implement our own solution, detailed in Section~\ref{sub:pytree}.
+                \item We tested an existing R package named \texttt{flexmix} for computing a linear regression with a
+                    Gaussian mixture noise~\cite{flexmix}. It revealed to be fragile, the result being
+                    non-deterministic: the number of modes found by the algorithm was not constant. We ended up
+                    clustering the data manually with a visual inspection and then computing a simple linear regression
+                    for each mode.
             \end{enumerate}
 
         \subsection{Learning breakpoints}%
+        \label{sub:pytree}
 
             %% TODO
             %% - Algorithme "haut-niveau" avec les deux phases, top-down & bottom-up.
