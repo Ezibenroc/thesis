@@ -656,6 +656,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
         this kind of model as \noisep{}. Likewise, the per-host estimations are denoted by \noise[H]{}.
 
     \section{Modeling  the CPU (\ie \dgemm function)}
+    \label{sec:dgemm_model}
 
         \subsection{Different linear models}%
 
@@ -744,6 +745,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             Some text\dots
 
     \section{Modeling the network}
+    \label{sec:network_model}
 
         \subsection{Modelisation in Simgrid}%
 
@@ -772,11 +774,10 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             Prior to this work, the standard way of accounting for protocol changes in SMPI was to estimate breakpoints
             visually and to conduct a linear regression for each range. The expected duration was then used directly in
             the simulation with no particular effort with respect to the temporal variability (\modelp{1}\noise{0}).
-            Yet, as illustrated in Figure\ref{fig:nw_var}, the variability of high speed networks is quite particular.
-            We therefore diligently estimated all the parameters of \modelp{1}\noisep{1}, where each message size range
-            is automatically estimated with \texttt{pytree}, as well as the 2 to 4 modes of the Gaussian mixture for
-            each range. Such temporal variability could explain some (overall bad) performance since they generally get
-            amplified by broadcast and pipelined communication patterns.
+            Yet, as illustrated in Figure\ref{fig:nw_var}, the variability of high speed networks is quite particular,
+            for some intervals of message sizes the observed durations have several modes. These modes happen
+            homogeneously during the calibration experiment, they are not caused by a transient perturbation of the
+            system.
 
             \begin{figure}[ht]
                 \vspace{-1em}
@@ -785,6 +786,22 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 systems.}
                 \label{fig:nw_var}
             \end{figure}
+
+            The ideal model for such observed data would be \modelp{1}\noisep{1}, several intervals of message sizes
+            with abrupt breakpoints, and a noise distributed as a Gaussian mixture for each range.  Such temporal
+            variability could explain some (overall bad) performance since they generally get amplified by broadcast and
+            pipelined communication patterns.
+
+            Automatically computing the best fit for a complex model like the abovementionned one is way more difficult
+            than for the \dgemm model proposed in Section~\ref{sec:network_model}. It should be possible to compute it
+            in one go with a Bayesian framework like STAN, but it would probably be computationally prohibitive. A more
+            realistic solution is to perform two steps: (1) average the durations per message size and find the
+            breakpoints using this aggregated data, and (2) on each segment, compute the linear regression with a noise
+            mixture.
+            \begin{enumerate}
+                \item TODO \cite{cubist}\cite{datadog}
+                \item TODO \cite{flexmix}
+            \end{enumerate}
 
         \subsection{Learning breakpoints}%
 
@@ -803,7 +820,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             %% - Détailler un peu l'implémentation, ces méthodes sont moins rapides
             %%   que la première version.
             %% - Comparaison des trois méthodes sur tous les exemples que j'ai.
-            Some text\dots
+            Some text~\cite{Malerba_2004}\dots
 
     \section{Conclusion}%
         %% TODO
