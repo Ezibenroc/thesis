@@ -830,7 +830,32 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             %% - Détailler un peu l'implémentation, ces méthodes sont moins rapides
             %%   que la première version.
             %% - Comparaison des trois méthodes sur tous les exemples que j'ai.
-            Some text~\cite{Malerba_2004}\dots
+            In this section, we present our solution for automatically computing a piecewise linear regression. This has
+            been implemented as a Python package named
+            \texttt{pytree}\footnote{\url{https://github.com/Ezibenroc/pytree}}.
+
+            \subsubsection{Model}%
+
+                We define here the base asumptions and notations for our algorithm. The predictor variables (\eg the
+                message size) will be noted \(X\), the response variables (\eg the communication duration) will be noted
+                \(Y\). We suppose there are \(N\) different unknown breakpoints \(B_1 < \dots < B_N\), where
+                \(N\) itself is also unknown. For convenience, we will note \(B_0=-\infty\) and \(B_{N+1} = +\infty\).
+                Then, there are \(N+1\) tuples \(\alpha_i, \beta_i, \gamma_i, \delta_i\) such that:
+                \begin{align}\label{eqn:prediction:pytree_model}
+                    Y \sim \alpha_i X + \beta_i + \mathcal{N}\left(0, \gamma_i X + \delta_i\right)
+                        && \text{ if } B_i \leq X < B_{i+1}
+                \end{align}
+
+                Here, \(\gamma_i\) may be null (homoscedastic data) or non-null (heteroscedastic data). This hypothesis
+                will be discussed later. Likewise, the distribution of the \(B_i\) will be discussed when comparing
+                different solutions, no assumption is made yet.
+
+            \subsubsection{Main algorithm}%
+                Some text~\cite{Malerba_2004}\dots
+
+            \subsubsection{Loss function}%
+
+            \subsubsection{Comparison of the solutions}%
 
     \section{Conclusion}%
         %% TODO
