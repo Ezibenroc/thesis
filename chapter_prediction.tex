@@ -185,7 +185,6 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             \SetKw{KwStep}{step}%
             \centering
             \begin{minipage}[m]{0.5\linewidth}
-                % \vspace{0.3cm} % ugly, could not align the drawing with the algorithm with minipages or tabular...
                 \begin{tikzpicture}[scale=0.28]
                     \draw (0, 0) -- (0, 12) -- (12, 12) -- (12, 0) -- cycle;
                     \foreach \i in {2}{
@@ -208,6 +207,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             \end{minipage}%
             \begin{minipage}[m]{0.5\linewidth}
                 \begin{algorithm}[H]
+                    \DontPrintSemicolon
                     allocate and initialize $A$\;
                     \For{$k=N$ \KwTo $0$ \KwStep \texttt{NB}}{
                         allocate the panel\;
@@ -216,9 +216,8 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                         update the sub-matrix;
                     }
                 \end{algorithm}
-                \vspace{1em}
-            \end{minipage}\vspace{-.5em}
-            \caption{Overview of High Performance Linpack}\vspace{-1.5em}
+            \end{minipage}
+            \caption{Overview of High Performance Linpack}
             \label{fig:hpl_overview}
         \end{figure}
 
@@ -860,6 +859,28 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 The algorithm is made of two steps, it starts by a top-down step where new breakpoints are
                 greedily added, it finishes by a bottom-up step where some breakpoints are greedily removed to simpify
                 the solution. The first step is inspired by the work of Malerba~\etal~\cite{Malerba_2004}.
+
+                In the top-down step, we recursively build a tree, where the inner nodes represent a breakpoint and the
+                leaves represent a simple linear regression. The function \texttt{topdown} takes as input a list
+                \(\ell\) of tuples \((X,Y)\) sorted by increasing \(X\) and returns a list of breakpoints. On a given
+                call, we iterate on the list to test all the \(X\) as a possible breakpoint, we search for the \(X\)
+                that minimizes the loss function. If the loss with the new breakpoint is smaller than the loss without
+                breakpoint, then we recursively call the function on the two sub-lists.
+                \begin{algorithm}
+                    \DontPrintSemicolon
+                    \SetKwFunction{Ftopdown}{topdown}
+                    \SetKwProg{Fn}{Function}{:}{}
+                    \Fn{\Ftopdown{\(\ell\)}}{
+                        \(\text{best\_error} = +\infty\)\;
+                        \ForEach{\((X,Y) \in \ell\)}{
+                            split \(\ell\) into \(\ell_1\) and \(\ell_2\) such that
+                                \(\forall X'\in\ell_1, X'\leq X\)
+                                and \(\forall X'\in\ell_2, X'> X\)\;
+                            [\dots]
+                        }\;
+                        \KwRet\;
+                    }
+                \end{algorithm}
 
             \subsubsection{Loss function}%
 
