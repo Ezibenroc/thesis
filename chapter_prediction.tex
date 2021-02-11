@@ -215,6 +215,8 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                         broadcast the panel\;
                         update the sub-matrix;
                     }
+                    \caption{HPL}
+                    \label{algo:hpl}
                 \end{algorithm}
             \end{minipage}
             \caption{Overview of High Performance Linpack}
@@ -914,7 +916,19 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                             \KwRet{\(\emptyset\)}\;
                         }
                     }
+                    \caption{Top-down step for computing the piecewise linear regression}
+                    \label{algo:pytree:topdown}
                 \end{algorithm}
+
+                In our implementation, each iteration of the \texttt{foreach} loop from
+                Algorithm~\ref{algo:pytree:topdown} is executed in a constant time. This is possible because the list
+                \(\ell\) is sorted by increasing \(X\), no copies are made when splitting the list, and both the new linear
+                regressions and the new BIC are computed with online algorithms (\ie adding or removing one tuple
+                \((X,Y)\) from the sublists \(\ell_1\) and \(\ell_2\) does not require to recompute from scratch the new
+                regression coefficients nor the BIC, it is possible to update the values from the previous iterations).
+                In the next sections, we changed the objective function and had to drop this quality of doing an
+                iteration in constant time, the effect on the computation duration will be discussed.
+
 
 
             \subsubsection{Loss function}%
