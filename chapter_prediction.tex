@@ -835,11 +835,12 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
             \subsubsection{Model}%
 
-                We define here the base asumptions and notations for our algorithm. The predictor variables (\eg the
-                message size) will be noted \(X\), the response variables (\eg the communication duration) will be noted
-                \(Y\). We suppose there are \(N\) different unknown breakpoints \(B_1 < \dots < B_N\), where
-                \(N\) itself is also unknown. For convenience, we will note \(B_0=-\infty\) and \(B_{N+1} = +\infty\).
-                Then, there are \(N+1\) tuples \((\alpha_i, \beta_i, \gamma_i, \delta_i)\) such that:
+                We define here the base asumptions and notations for our optimization problem. The predictor variables
+                (\eg the message size) will be noted \(X\), the response variables (\eg the communication duration) will
+                be noted \(Y\). We will note \(\ell\) the list of tuples \((X,Y)\). We suppose there are \(N\) different
+                unknown breakpoints \(B_1 < \dots < B_N\), where \(N\) itself is also unknown. For convenience, we will
+                note \(B_0=-\infty\) and \(B_{N+1} = +\infty\).  Then, there are \(N+1\) tuples \((\alpha_i, \beta_i,
+                \gamma_i, \delta_i)\) such that:
                 \begin{align}\label{eqn:prediction:pytree_model}
                     Y \sim \alpha_i X + \beta_i + \mathcal{N}\left(0, \gamma_i X + \delta_i\right)
                         && \text{ if } B_i \leq X < B_{i+1}
@@ -849,12 +850,28 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 will be discussed later. Likewise, the distribution of the \(B_i\) will be discussed when comparing
                 different solutions, no assumption is made yet.
 
+                A \emph{solution} \(\theta\) to the optimization problem consists in the list of breakpoints \((B_i)\)
+                and tuples \((\alpha_i,\beta_i)\). The values \((\gamma_i, \delta_i)\) are not computed here, they could
+                be estimated in a second phase. We will write \(f_\theta\) the (deterministic) prediction function
+                associated with the solution:
+                \begin{align}
+                    f_{\theta}(X) = \alpha_i X + \beta_i
+                        && \text{ if } B_i \leq X < B_{i+1}
+                \end{align}
+
+                Two objective functions are considered in the following:
+                \begin{itemize}
+                    \item \(\text{RSS}(\ell, \theta) = \sum_{(X,Y)\in\ell} (Y-f_\theta(X))^2\) is the usual residual sum
+                        of squares.
+                    \item \(\text{BIC}(\ell, \theta) = K\log(S) + S\log(\text{RSS}(\ell, \theta))\) where \(S=|\ell|\)
+                        is the number of observations, \(K = 3(N+1)+N = 4N+3\) is the number of parameters in the
+                        model. This is the usual bayesian information criterion.
+                \end{itemize}
+
+                The goal of the optimization problem is to minimize the BIC. The \(K\log(S)\) term in this function is
+                intended to penalize the model size and thus prevent overfitting.
+
             \subsubsection{Main algorithm}%
-                This section presents the main algorithm used to find the best solution. It computes the \(N\)
-                breakpoints \(B_1 < \dots < B_N\) (where \(N\) is unknown) and the \(N+1\) tuples
-                \((\alpha_i,\beta_i)\). The values \((\gamma_i, \delta_i)\) are not computed here, they could be
-                estimated in a second phase. The notion of \emph{best solution} depends on a loss function
-                \(\mathcal{L}\) that will be discussed in a next section.
 
                 The algorithm is made of two steps, it starts by a top-down step where new breakpoints are
                 greedily added, it finishes by a bottom-up step where some breakpoints are greedily removed to simpify
