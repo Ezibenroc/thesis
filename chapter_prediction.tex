@@ -886,10 +886,11 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
                 In the top-down step, we recursively build a tree, where the inner nodes represent a breakpoint and the
                 leaves represent a simple linear regression. The function \texttt{topdown} takes as input a list
-                \(\ell\) of tuples \((X,Y)\) sorted by increasing \(X\) and returns a list of breakpoints. On a given
-                call, we iterate on the list to test all the \(X\) as a possible breakpoint, we search for the \(X\)
-                that minimizes the loss function. If the loss with the new breakpoint is smaller than the loss without
-                breakpoint, then we recursively call the function on the two sub-lists.
+                \(\ell\) of tuples \((X,Y)\) sorted by increasing \(X\) and returns a list of sublists, each sublist
+                representing an interval for the piecewise regression. On a given call, we iterate on the list to test
+                all the \(X\) as a possible breakpoint, we search for the \(X\) that minimizes the objective function.
+                If the objective with the new breakpoint is smaller than the objective without breakpoint, then we
+                recursively call the function on the two sub-lists.
                 \begin{algorithm}
                     \DontPrintSemicolon
                     \SetKwFunction{Ftopdown}{topdown}
@@ -903,17 +904,17 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                             \(\text{new\_BIC} = \text{BIC}(\ell_1 \oplus \ell_2)\)\;
                             \If{\(\text{new\_BIC} < \text{best\_BIC}\)}{
                                 \(\text{best\_BIC} = \text{new\_BIC}\)\;
-                                \(\text{best\_solution} = (\ell_1, \ell_2, X)\)\;
+                                \(\text{best\_solution} = (\ell_1, \ell_2)\)\;
                             }\;
                         }\;
                         \uIf{\(\text{new\_BIC} < \text{BIC}(\ell)\)}{
-                            \((\ell_1, \ell_2, X) = \text{best\_solution}\)\;
-                            \(\text{breaks}_1\) = \Ftopdown{\(\ell_1\)}\;
-                            \(\text{breaks}_2\) = \Ftopdown{\(\ell_2\)}\;
-                            \KwRet{\(\text{breaks}_1 \oplus (X) \oplus \text{breaks}_2\)}\;
+                            \((\ell_1, \ell_2) = \text{best\_solution}\)\;
+                            \(\text{lists}_1\) = \Ftopdown{\(\ell_1\)}\;
+                            \(\text{lists}_2\) = \Ftopdown{\(\ell_2\)}\;
+                            \KwRet{\(\text{lists}_1 \oplus \text{lists}_2\)}\;
                         }
                         \Else{
-                            \KwRet{\(\emptyset\)}\;
+                            \KwRet{\(\ell\)}\;
                         }
                     }
                     \caption{Top-down step for computing the piecewise linear regression}
@@ -929,7 +930,18 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 In the next sections, we changed the objective function and had to drop this quality of doing an
                 iteration in constant time, the effect on the computation duration will be discussed.
 
-
+                In the bottom-up step, adjacent intervals are greedily merged (thereby removing breakpoints) while this
+                decreases the BIC.
+                \begin{algorithm}
+                    \DontPrintSemicolon
+                    \SetKwFunction{Fbottomup}{bottomup}
+                    \SetKwProg{Fn}{Function}{:}{}
+                    \Fn{\Fbottomup{\(\ell\)}}{
+                        [...]
+                    }
+                    \caption{Bottom-up step for computing the piecewise linear regression}
+                    \label{algo:pytree:bottomup}
+                \end{algorithm}
 
             \subsubsection{Loss function}%
 
