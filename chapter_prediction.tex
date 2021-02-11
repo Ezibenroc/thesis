@@ -840,7 +840,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 message size) will be noted \(X\), the response variables (\eg the communication duration) will be noted
                 \(Y\). We suppose there are \(N\) different unknown breakpoints \(B_1 < \dots < B_N\), where
                 \(N\) itself is also unknown. For convenience, we will note \(B_0=-\infty\) and \(B_{N+1} = +\infty\).
-                Then, there are \(N+1\) tuples \(\alpha_i, \beta_i, \gamma_i, \delta_i\) such that:
+                Then, there are \(N+1\) tuples \((\alpha_i, \beta_i, \gamma_i, \delta_i)\) such that:
                 \begin{align}\label{eqn:prediction:pytree_model}
                     Y \sim \alpha_i X + \beta_i + \mathcal{N}\left(0, \gamma_i X + \delta_i\right)
                         && \text{ if } B_i \leq X < B_{i+1}
@@ -851,7 +851,15 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 different solutions, no assumption is made yet.
 
             \subsubsection{Main algorithm}%
-                Some text~\cite{Malerba_2004}\dots
+                This section presents the main algorithm used to find the best solution. It computes the \(N\)
+                breakpoints \(B_1 < \dots < B_N\) (where \(N\) is unknown) and the \(N+1\) tuples
+                \((\alpha_i,\beta_i)\). The values \((\gamma_i, \delta_i)\) are not computed here, they could be
+                estimated in a second phase. The notion of \emph{best solution} depends on a loss function
+                \(\mathcal{L}\) that will be discussed in a next section.
+
+                The algorithm is made of two steps, it starts by a top-down step where new breakpoints are
+                greedily added, it finishes by a bottom-up step where some breakpoints are greedily removed to simpify
+                the solution. The first step is inspired by the work of Malerba~\etal~\cite{Malerba_2004}.
 
             \subsubsection{Loss function}%
 
