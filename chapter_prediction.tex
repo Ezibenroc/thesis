@@ -859,7 +859,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                         && \text{ if } B_i \leq X < B_{i+1}
                 \end{align}
 
-                Two objective functions are considered in the following:
+                Two objective functions are considered:
                 \begin{itemize}
                     \item \(\text{RSS}(\ell, \theta) = \sum_{(X,Y)\in\ell} (Y-f_\theta(X))^2\) is the usual residual sum
                         of squares.
@@ -870,6 +870,11 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
                 The goal of the optimization problem is to minimize the BIC. The \(K\log(S)\) term in this function is
                 intended to penalize the model size and thus prevent overfitting.
+
+                By an abuse of notation, we will write \(\text{BIC}(\ell)\) the BIC for the observations \(\ell\) with a
+                simple linear regression without breakpoint (\ie \(N=0\)). We will write
+                \(\text{BIC}(\ell_1\oplus\ell_2)\) the BIC for the observations \(\ell_1 \cup \ell_2\) with a single
+                breakpoint between the two lists and a simple linear regression for each list (\ie \(N=1\)).
 
             \subsubsection{Main algorithm}%
 
@@ -888,16 +893,29 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                     \SetKwFunction{Ftopdown}{topdown}
                     \SetKwProg{Fn}{Function}{:}{}
                     \Fn{\Ftopdown{\(\ell\)}}{
-                        \(\text{best\_error} = +\infty\)\;
+                        \(\text{best\_BIC} = +\infty\)\;
                         \ForEach{\((X,Y) \in \ell\)}{
                             split \(\ell\) into \(\ell_1\) and \(\ell_2\) such that
                                 \(\forall X'\in\ell_1, X'\leq X\)
                                 and \(\forall X'\in\ell_2, X'> X\)\;
-                            [\dots]
+                            \(\text{new\_BIC} = \text{BIC}(\ell_1 \oplus \ell_2)\)\;
+                            \If{\(\text{new\_BIC} < \text{best\_BIC}\)}{
+                                \(\text{best\_BIC} = \text{new\_BIC}\)\;
+                                \(\text{best\_solution} = (\ell_1, \ell_2, X)\)\;
+                            }\;
                         }\;
-                        \KwRet\;
+                        \uIf{\(\text{new\_BIC} < \text{BIC}(\ell)\)}{
+                            \((\ell_1, \ell_2, X) = \text{best\_solution}\)\;
+                            \(\text{breaks}_1\) = \Ftopdown{\(\ell_1\)}\;
+                            \(\text{breaks}_2\) = \Ftopdown{\(\ell_2\)}\;
+                            \KwRet{\(\text{breaks}_1 \oplus (X) \oplus \text{breaks}_2\)}\;
+                        }
+                        \Else{
+                            \KwRet{\(\emptyset\)}\;
+                        }
                     }
                 \end{algorithm}
+
 
             \subsubsection{Loss function}%
 
