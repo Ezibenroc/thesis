@@ -149,6 +149,7 @@ wheel = ">=0.33.6"
 reference = "fdff221d3cd29c8dfc91a6c99447316a1e25bb2d"
 type = "git"
 url = "https://github.com/Ezibenroc/cashew.git"
+
 [[package]]
 category = "main"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -839,6 +840,7 @@ lxml = "^4.4"
 reference = "45eae5c006cc6f07632903f1ea40385739a69c63"
 type = "git"
 url = "https://github.com/Ezibenroc/peanut.git"
+
 [[package]]
 category = "main"
 description = "Pexpect allows easy control of interactive console applications."
@@ -927,6 +929,14 @@ name = "py"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.10.0"
+
+[[package]]
+category = "main"
+description = "Piecewise linear regressions, based on model trees."
+name = "pycewise"
+optional = false
+python-versions = "*"
+version = "0.1.1"
 
 [[package]]
 category = "main"
@@ -1058,6 +1068,26 @@ urllib3 = ">=1.21.1,<1.27"
 [package.extras]
 security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
+
+[[package]]
+category = "main"
+description = "Python interface to the R language (embedded R)"
+name = "rpy2"
+optional = false
+python-versions = "*"
+version = "3.4.2"
+
+[package.dependencies]
+cffi = ">=1.10.0"
+jinja2 = "*"
+pytz = "*"
+tzlocal = "*"
+
+[package.extras]
+all = ["pandas", "numpy", "pytest"]
+numpy = ["pandas"]
+pandas = ["numpy", "pandas"]
+test = ["pytest"]
 
 [[package]]
 category = "main"
@@ -1224,6 +1254,17 @@ version = "3.7.4.3"
 
 [[package]]
 category = "main"
+description = "tzinfo object for the local timezone"
+name = "tzlocal"
+optional = false
+python-versions = "*"
+version = "2.1"
+
+[package.dependencies]
+pytz = "*"
+
+[[package]]
+category = "main"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
 optional = false
@@ -1276,7 +1317,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "c006e1ddde0c14891722affe5fb9f25e7659aaa0d56a86ec5c59a201353edf34"
+content-hash = "cdc32e8b750cdfe562ff4ca2a5d7ff09f6e6c9b931101fd03ff4ba1add5bfc72"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1858,6 +1899,9 @@ py = [
     {file = "py-1.10.0-py2.py3-none-any.whl", hash = "sha256:3b80836aa6d1feeaa108e046da6423ab8f6ceda6468545ae8d02d9d58d18818a"},
     {file = "py-1.10.0.tar.gz", hash = "sha256:21b81bda15b66ef5e1a777a21c4dcd9c20ad3efd0b3f817e7a809035269e1bd3"},
 ]
+pycewise = [
+    {file = "pycewise-0.1.1-py3-none-any.whl", hash = "sha256:25a196976489e6ca74f05b49d9c778d754eaf75495a7394f62420886cad14839"},
+]
 pycparser = [
     {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},
     {file = "pycparser-2.20.tar.gz", hash = "sha256:2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"},
@@ -2012,6 +2056,12 @@ regex = [
 requests = [
     {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
     {file = "requests-2.25.1.tar.gz", hash = "sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"},
+]
+rpy2 = [
+    {file = "rpy2-3.4.2-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:dd2d1e9b4733a449f5c48e2f1da165bf77bc33c43ffcf9dacf051c6eb9a417d7"},
+    {file = "rpy2-3.4.2-cp37-cp37m-macosx_10_14_x86_64.whl", hash = "sha256:1eb4f7fd414a60dbe2555751b6789f64353db770b2d40917dac1bd20b7bec333"},
+    {file = "rpy2-3.4.2-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:10944c3e38fb2c89fbe89c42308189936b055a9ad011d5c72e96f7ba8720dec1"},
+    {file = "rpy2-3.4.2.tar.gz", hash = "sha256:8f7d1348b77bc45425b846a0d625f24a51a1c4f32ef2cd1c07a24222aa64e2e0"},
 ]
 scipy = [
     {file = "scipy-1.6.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:3d4303e3e21d07d9557b26a1707bb9fc065510ee8501c9bf22a0157249a82fd0"},
@@ -2196,6 +2246,10 @@ typing-extensions = [
     {file = "typing_extensions-3.7.4.3-py2-none-any.whl", hash = "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"},
     {file = "typing_extensions-3.7.4.3-py3-none-any.whl", hash = "sha256:7cb407020f00f7bfc3cb3e7881628838e69d8f3fcab2f64742a5e76b2f841918"},
     {file = "typing_extensions-3.7.4.3.tar.gz", hash = "sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c"},
+]
+tzlocal = [
+    {file = "tzlocal-2.1-py2.py3-none-any.whl", hash = "sha256:e2cb6c6b5b604af38597403e9852872d7f534962ae2954c7f35efcb1ccacf4a4"},
+    {file = "tzlocal-2.1.tar.gz", hash = "sha256:643c97c5294aedc737780a49d9df30889321cbe1204eac2c2ec6134035a92e44"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.2-py2.py3-none-any.whl", hash = "sha256:d8ff90d979214d7b4f8ce956e80f4028fc6860e4431f731ea4a8c08f23f99473"},
