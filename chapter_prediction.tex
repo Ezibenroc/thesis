@@ -1016,7 +1016,9 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 \begin{equation}
                     \text{RSS}_{\log}(\ell,\theta) = \sum_{(X,Y)\in\ell} (\log Y - \log f_\theta(X))^2
                 \end{equation}
-                Likewise, the value \(\text{BIC}_\log\) is naturally defined based on \(\text{RSS}_\log\).
+                Likewise, the value \(\text{BIC}_\log\) is naturally defined based on \(\text{RSS}_\log\). The main
+                motivation here is to penalize the prediction error relatively to the predictor variable and not in
+                absolute value.
 
                 With such an objective function, there is no closed form for the optimal regression parameters. Instead,
                 we implemented a gradient descent algorithm to find the optimum.
