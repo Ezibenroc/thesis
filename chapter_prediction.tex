@@ -987,7 +987,8 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 \begin{equation}
                     \text{RSS}_\text{weight}(\ell,\theta) = \sum_{(X,Y)\in\ell} (w(X)(Y - f_\theta(X)))^2
                 \end{equation}
-
+                The \(\text{BIC}_\text{weighted}\) value is defined like the BIC, replacing the RSS value by
+                \(\text{RSS}_\text{weight}\).
                 In our case, we used \(w(X) = 1/X\), a classical choice for linear regressions in the presence of
                 heteroscedasticity.
 
@@ -1010,6 +1011,15 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 \begin{equation}
                     \hat{Y}_\text{weight} = \frac{\sum_{(X,Y)\in\ell}w(X)Y}{\sum_{(X,Y)\in\ell}w(X)}
                 \end{equation}
+
+                An alternative objective function is based on the logarithm of the observations and the predictions:
+                \begin{equation}
+                    \text{RSS}_{\log}(\ell,\theta) = \sum_{(X,Y)\in\ell} (\log Y - \log f_\theta(X))^2
+                \end{equation}
+                Likewise, the value \(\text{BIC}_\log\) is naturally defined based on \(\text{RSS}_\log\).
+
+                With such an objective function, there is no closed form for the optimal regression parameters. Instead,
+                we implemented a gradient descent algorithm to find the optimum.
 
             \subsubsection{Comparison of the solutions}%
 
