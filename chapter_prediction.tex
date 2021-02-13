@@ -967,7 +967,26 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
                 \pagebreak
 
-            \subsubsection{Loss function}%
+            \subsubsection{Objective function}%
+                The breakpoint learning process relies entirely on the objective function we defined, based on the
+                residual sum of squares (RSS) and its BIC counterpart that penalizes the model size:
+                \begin{equation}
+                    \text{RSS}(\ell, \theta) = \sum_{(X,Y)\in\ell} (Y-f_\theta(X))^2
+                \end{equation}
+                The algorithm is an heuristic to minimize the BIC, but the parameters of the linear regressions are
+                also the optimal estimators for this objective function.
+
+                In the case of heteroscedastic data, the noise is by definition not constant, it grows linearly with the
+                predictor variable. In this case, the RSS is not the best choice, as it does not penalize errors
+                relatively to the predictor variable. It will give much more weight to the larger noise observed for
+                larger predictor variables, hence a bias towards those large values.
+
+                A classical solution for this problem is the use of weighted least square (WLS) instead of the ordinary
+                least square (OLS). A weight function \(w\) gives a different weight for each predictor variable. We
+                define the new objective function as such:
+                \begin{equation}
+                    \text{RSS}_w(\ell,\theta) = \sum_{(X,Y)\in\ell} (w(X)(Y - f_\theta(X)))^2
+                \end{equation}
 
             \subsubsection{Comparison of the solutions}%
 
