@@ -1020,6 +1020,12 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
                 With such an objective function, there is no closed form for the optimal regression parameters. Instead,
                 we implemented a gradient descent algorithm to find the optimum.
+                The downside of using a gradient descent is that the whole regression is now significantly slower, the
+                extent of this will be discussed later. On the other hand, a nice benefit is the possibility to tune the
+                objective function to better suit our needs. For instance, in the case of network calibrations, the
+                regression parameters \(\alpha\) and \(\beta\) represent respectively the inverse of the bandwidth and
+                the latency, it would make no sense for them to be negative. With the gradient descent approach, the
+                search space can easily be restricted to limit the possible solutions to positive values.
 
             \subsubsection{Comparison of the solutions}%
 
