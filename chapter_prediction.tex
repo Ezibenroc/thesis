@@ -877,6 +877,9 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 simple linear regression without breakpoint (\ie \(N=0\)). We will write
                 \(\text{BIC}(\ell_1\oplus\ell_2)\) the BIC for the observations \(\ell_1 \cup \ell_2\) with a single
                 breakpoint between the two lists and a simple linear regression for each list (\ie \(N=1\)).
+                The concatenation of lists will be noted \(\ell_1 \cdot \ell_2\), hence
+                \(\text{BIC}(\ell_1\cdot\ell_2)\) will denote the BIC of a linear regression without breakpoint
+                (\(N=0\)).
 
             \subsubsection{Main algorithm}%
 
@@ -930,14 +933,33 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 In the next sections, we changed the objective function and had to drop this quality of doing an
                 iteration in constant time, the effect on the computation duration will be discussed.
 
-                In the bottom-up step, adjacent intervals are greedily merged (thereby removing breakpoints) while this
-                decreases the BIC.
+                In the bottom-up step, adjacent intervals are greedily merged (thereby removing breakpoints), starting
+                by fusions that decrease the least the RSS. All the different iterations of the loop are kept in memory,
+                the merging operation is carried until there is no breakpoint left. In the end, we keep the iteration
+                that minimized the BIC.
                 \begin{algorithm}
                     \DontPrintSemicolon
                     \SetKwFunction{Fbottomup}{bottomup}
                     \SetKwProg{Fn}{Function}{:}{}
-                    \Fn{\Fbottomup{\(\ell\)}}{
-                        [...]
+                    \Fn{\Fbottomup{\(L = (\ell_1,\dots,\ell_{N})\)}}{
+                        \(S\) = []\;
+                        add \(L\) to \(S\)\;
+                        \For{\(i=1\) \KwTo \(N-1\)}{
+                            \(\text{best\_diff} = +\infty\)\;
+                            \(n = N-i\)\;
+                            \For{\(j=1\) \KwTo \(n-1\)}{
+                                \(\text{new\_diff} = \text{RSS}(\ell_j \oplus \ell_{j+1}) - \left(\text{RSS}(\ell_j) +
+                                    \text{RSS}(\ell_{j+1})\right)\)\;
+                                \If{\(\text{new\_diff} < \text{best\_diff}\)}{
+                                    \(\text{best\_diff} = \text{new\_diff}\)\;
+                                    \(k = j\)\;
+                                }\;
+                            }\;
+                            \(L = (\ell_1,\dots,\ell_{k}\oplus\ell_{k+1},\dots,\ell_n)\)\;
+                            add \(L\) to \(S\)\;
+                        }\;
+                        let \(L \in S\) be the solution with minimal BIC\;
+                        \KwRet{\(L\)}\;
                     }
                     \caption{Bottom-up step for computing the piecewise linear regression}
                     \label{algo:pytree:bottomup}
