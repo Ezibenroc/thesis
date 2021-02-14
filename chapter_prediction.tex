@@ -801,7 +801,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             mixture.
             \begin{enumerate}
                 \item We have tested two different solutions for computing a piecewise linear regression, a Python
-                    package named \texttt{piecewise}~\cite{datadog}, and an R package named
+                    package named \texttt{datadog-piecewise}~\cite{datadog}, and an R package named
                     \texttt{cubist}~\cite{cubist}.  Although both of them work perfectly on the simplest generated
                     datasets, they did not produce satisfying results with our real data. The likely reason is both the
                     exponential distribution of the predictor variable and the heteroscedasticity of the noise. We made
@@ -1030,6 +1030,13 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 search space can easily be restricted to limit the possible solutions to positive values.
 
             \subsubsection{Comparison of the solutions}%
+
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/prediction/modeling/network/pycewise.pdf}
+                    \caption{Illustrating different piecewise linear regression approaches on different datasets.}%
+                    \label{fig:img:prediction:pycewise}
+                \end{figure}
 
     \section{Conclusion}%
         %% TODO
