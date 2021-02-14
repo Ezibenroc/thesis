@@ -805,7 +805,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                     \texttt{cubist}~\cite{cubist}.  Although both of them work perfectly on the simplest generated
                     datasets, they did not produce satisfying results with our real data. The likely reason is both the
                     exponential distribution of the predictor variable and the heteroscedasticity of the noise. We made
-                    the choice  to implement our own solution, detailed in Section~\ref{sub:pytree}.
+                    the choice  to implement our own solution, detailed in Section~\ref{sub:pycewise}.
                 \item We tested an existing R package named \texttt{flexmix} for computing a linear regression with a
                     Gaussian mixture noise~\cite{flexmix}. It revealed to be fragile, the result being
                     non-deterministic: the number of modes found by the algorithm was not constant. We ended up
@@ -814,7 +814,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             \end{enumerate}
 
         \subsection{Learning breakpoints}%
-        \label{sub:pytree}
+        \label{sub:pycewise}
 
             %% TODO
             %% - Algorithme "haut-niveau" avec les deux phases, top-down & bottom-up.
@@ -833,7 +833,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             %% - Comparaison des trois méthodes sur tous les exemples que j'ai.
             In this section, we present our solution for automatically computing a piecewise linear regression. This has
             been implemented as a Python package named
-            \texttt{pytree}\footnote{\url{https://github.com/Ezibenroc/pytree}}.
+            \texttt{pycewise}\footnote{\url{https://github.com/Ezibenroc/pycewise}}.
 
             \subsubsection{Model}%
 
@@ -843,7 +843,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 unknown breakpoints \(B_1 < \dots < B_N\), where \(N\) itself is also unknown. For convenience, we will
                 note \(B_0=-\infty\) and \(B_{N+1} = +\infty\).  Then, there are \(N+1\) tuples \((\alpha_i, \beta_i,
                 \gamma_i, \delta_i)\) such that:
-                \begin{align}\label{eqn:prediction:pytree_model}
+                \begin{align}\label{eqn:prediction:pycewise_model}
                     Y \sim \alpha_i X + \beta_i + \mathcal{N}\left(0, \gamma_i X + \delta_i\right)
                         && \text{ if } B_i \leq X < B_{i+1}
                 \end{align}
@@ -887,7 +887,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 greedily added, it finishes by a bottom-up step where some breakpoints are greedily removed to simpify
                 the solution. The first step is inspired by the work of Malerba~\etal~\cite{Malerba_2004}.
 
-                In the top-down step (Algorithm~\ref{algo:pytree:topdown}), we recursively build a tree, where the inner
+                In the top-down step (Algorithm~\ref{algo:pycewise:topdown}), we recursively build a tree, where the inner
                 nodes represent a breakpoint and the leaves represent a simple linear regression. The function
                 \texttt{topdown} takes as input a list \(\ell\) of tuples \((X,Y)\) sorted by increasing \(X\) and
                 returns a list of sublists, each sublist representing an interval for the piecewise regression. On a
@@ -921,11 +921,11 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                         }
                     }
                     \caption{Top-down step for computing the piecewise linear regression}
-                    \label{algo:pytree:topdown}
+                    \label{algo:pycewise:topdown}
                 \end{algorithm}
 
                 In our implementation, each iteration of the \texttt{foreach} loop from
-                Algorithm~\ref{algo:pytree:topdown} is executed in a constant time. This is possible because the list
+                Algorithm~\ref{algo:pycewise:topdown} is executed in a constant time. This is possible because the list
                 \(\ell\) is sorted by increasing \(X\), no copies are made when splitting the list, and both the new linear
                 regressions and the new BIC are computed with online algorithms (\ie adding or removing one tuple
                 \((X,Y)\) from the sublists \(\ell_1\) and \(\ell_2\) does not require to recompute from scratch the new
@@ -933,7 +933,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 In the next sections, we changed the objective function and had to drop this quality of doing an
                 iteration in constant time, the effect on the computation duration will be discussed.
 
-                In the bottom-up step (Algorithm~\ref{algo:pytree:bottomup}), adjacent intervals are greedily merged
+                In the bottom-up step (Algorithm~\ref{algo:pycewise:bottomup}), adjacent intervals are greedily merged
                 (thereby removing breakpoints), starting by fusions that decrease the least the RSS. All the different
                 iterations of the loop are kept in memory, the merging operation is carried until there is no breakpoint
                 left. In the end, we keep the iteration that minimized the BIC.
@@ -962,7 +962,7 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                         \KwRet{\(L\)}\;
                     }
                     \caption{Bottom-up step for computing the piecewise linear regression}
-                    \label{algo:pytree:bottomup}
+                    \label{algo:pycewise:bottomup}
                 \end{algorithm}
 
                 \pagebreak
