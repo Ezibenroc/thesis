@@ -1095,9 +1095,23 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 add a similar constraint for the other objective functions if they were also implemented with a gradient
                 descent instead of a simple formula.
 
-                This gradient descent comes with a cost. Computing the piecewise linear regression is now significantly
-                slower.
-                \todo{compare the durations}
+                This gradient descent comes with a cost, computing the piecewise linear regression is now significantly
+                slower. Figure~\ref{fig:prediction:pycewise_duration} compares the three different objective functions
+                from our implementation. The logarithmic least square is one order of magnitude slower than the weighted
+                least square, which is itself one order of magnitude slower than the ordinary least square. The nature
+                of the noise does not affect the duration, but we expect that a dataset with more breakpoints would lead
+                to a larger duration.
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/prediction/modeling/network/pycewise_duration.pdf}
+                    \caption{Duration of a complete regression with pycewise for different numbers of observations.}%
+                    \label{fig:prediction:pycewise_duration}
+                \end{figure}
+
+                In our context of network calibration, each communication for a given message size is repeated several
+                time. Then, to generate a model, we start by averaging the durations per message size before doing the
+                regression, as discussed previously. We can therefore safely expect to have only a few hundreds of
+                observations: the logarithmic approach is perfectly reasonable.
 
     \section{Conclusion}%
         %% TODO

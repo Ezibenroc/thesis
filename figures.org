@@ -972,6 +972,137 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-Kejzdq/figure8FQI9S.png]]
+*** Pycewise durations
+**** Running the experiment
+This experiment was done with the following script (file named
+=script_pycewise_duration.py=):
+#+begin_src python :results output :session *python* :exports both
+import pycewise
+import random
+import pandas
+import numpy
+import itertools
+import time
+
+print(pycewise.__version__)
+print(pycewise.__git_version__)
+
+NB_RUNS = 10
+SIZES = [100, 200, 300, 400, 500]
+
+
+def model(x):
+    if x <= 1.450e+04:
+        y = 1.739e-11*x + 4.181e-08
+    elif x <= 9.925e+05:
+        y = 5.457e-11*x
+    elif x <= 5.630e+06:
+        y = 8.929e-11*x
+    else:
+        y = 1.935e-10*x + 1.294e-05
+    return y
+
+
+def generate_model(func, N):
+    x = 10**numpy.random.uniform(1, 9, N)
+    y = numpy.array(list(map(func, x)))
+    return pandas.DataFrame({'x': x, 'y': y})
+
+
+def run_test(N, seed):
+    numpy.random.seed(seed)
+    random.seed(seed)
+    df = {}
+    base_df = generate_model(model, N)
+    df['no noise'] = base_df
+    df['homoscedastic'] = base_df.copy()
+    df['homoscedastic']['y'] += numpy.random.normal(0, 5e-9, len(base_df))
+    df['heteroscedastic'] = base_df.copy()
+    df['heteroscedastic']['y'] += numpy.random.normal(0, 2e-12, len(base_df)) * base_df['x']
+    exp = list(df.items())
+    exp = list(itertools.product(exp, ['BIC', 'weighted', 'log']))
+    random.shuffle(exp)
+    result = []
+    for (name, data), mode in exp:
+        start = time.time()
+        try:
+            reg = pycewise.compute_regression(data['x'], data['y'], mode=mode).auto_simplify()
+        except Exception:
+            raise Exception(f'Problem with N={N} and seed={seed} and mode={mode} and noise={name}')
+        duration = time.time() - start
+        result.append({'duration': duration, 'timestamp': start, 'mode': mode, 'noise': name,
+                        'nb_breaks': len(reg.breakpoints), 'seed': seed, 'size': N})
+    return pandas.DataFrame(result)
+
+start = time.time()
+exp = list(itertools.product(SIZES, range(NB_RUNS)))
+random.seed(42)
+random.shuffle(exp)
+
+dataframes = []
+for N, seed in exp:
+    dataframes.append(run_test(N, seed))
+dataframes = pandas.concat(dataframes)
+
+dataframes.to_csv('pycewise_durations.csv', index=False)
+print(f'Terminated in {time.time()-start:.2f} seconds')
+#+end_src
+
+Then, the script has been copied to G5K and a job submitted:
+#+begin_src sh :results output :exports both
+scp script_pycewise_duration.py 'grenoble.g5k:~'
+ssh grenoble.g5k 'oarsub -l "walltime=02:00:00" -n "pycewise" "sudo-g5k pip3 install pycewise numpy pandas && python3 script_pycewise_duration.py"'
+#+end_src
+
+Output of the job (that was scheduled on node dahu-28):
+#+begin_src sh :results output :exports both
+ssh grenoble.g5k 'cat OAR*pycewise*out'
+#+end_src
+
+#+RESULTS:
+: Collecting pycewise
+:   Downloading https://files.pythonhosted.org/packages/5e/6b/3563ee6f7c28ac490d2f936b557bc8a2e10aff1ae57d81e249236a1ef35a/pycewise-0.1.2-py3-none-any.whl
+: Requirement already satisfied: numpy in /usr/lib/python3/dist-packages (1.16.2)
+: Requirement already satisfied: pandas in /usr/lib/python3/dist-packages (0.23.3+dfsg)
+: Installing collected packages: pycewise
+: Successfully installed pycewise-0.1.2
+: 0.1.2
+: 27f261d5aada4d0bce84394bfe29d3cd3bc89d46
+: Terminated in 1602.16 seconds
+
+Finally, I downloaded the file on my laptop:
+#+begin_src sh :results output :exports both
+scp 'grenoble.g5k:*pycewise*.csv' .
+#+end_src
+**** Drawing the plot
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(dplyr)
+library(ggplot2)
+library(ggbeeswarm)
+library(cowplot)
+
+plot = read.csv("data/prediction/modeling/network/pycewise/pycewise_durations.csv") %>%
+    mutate(noise=factor(noise, levels=c("no noise", "homoscedastic", "heteroscedastic"))) %>%
+    mutate(mode=ifelse(mode=="BIC", "ordinary", as.character(mode))) %>%
+    mutate(mode=factor(mode, levels=c("ordinary", "weighted", "log"))) %>%
+    ggplot() +
+        aes(x=factor(size), y=duration, color=noise) +
+        geom_quasirandom(dodge.width=0.5, key_glyph=rectangle_key_glyph(fill=color)) +
+        facet_wrap('mode')+#, scales='free') +
+        expand_limits(y=0) +
+        theme_bw() +
+        scale_color_brewer(palette="Dark2") +
+        xlab("Number of observations") +
+        ylab("Duration of the regression (seconds)") +
+        theme(legend.position=c(0.11, 0.75), legend.background=element_rect(color="black"), legend.title=element_blank())
+
+ggsave(filename='img/prediction/modeling/network/pycewise_duration.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Ot77lg/figurelmTCpr.png]]
+
 * Experimental control
 ** Parameter space
 No dataset here, we generate the data.
