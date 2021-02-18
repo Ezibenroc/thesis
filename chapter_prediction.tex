@@ -1123,7 +1123,23 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
         %% - Pas parfait, c'est un modèle, mais une fois tout ça posé proprement
         %%   on va pouvoir 1) essayer de trouver le bon niveau de modélisation 2)
         %%   détecter des situations à problème 3) faire du whatif.
-        Some text\dots
+        We have presented different models for both the network communications and the computation kernels. One
+        diffuclty resides in instanciating the models, \ie computing the best fit for some observations, in the most
+        automated way possible. Bayesian formalism is an interesting candidate for such a task. With bayesian sampling
+        tools like Stan, we should be able to fit arbitrarily complex models and even have an estimation of the
+        uncertainty of the resulting paremeters. However, the benefit of these tools is not clear for our context, their
+        computation time was particularly slow and we had great difficulties in writing down our models in their
+        formalism. In the end, a simpler approach like the method of moments revealed to be enough for our needs.
+
+        The model instance, \ie the fit we compute, will obviously depend on the input data. The experimental protocol
+        for collecting the said data will therefore be as important as the statistical tools. This will be further
+        discussed in Part~\ref{part:experiment}.
+
+        No model can capture the complexity of the real world perfectly. In Chapter~\ref{chapter:prediction:validation},
+        we will discuss what level of complexity is required for achieving a sufficiently faithful performance
+        prediction. We will also demonstrate in Chapter~\ref{chapter:prediction:sensibility} how these models can be
+        used for sensibility analysis.
+
 
 \chapter{Validation}%
 \label{chapter:prediction:validation}
