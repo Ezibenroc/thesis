@@ -1095,6 +1095,26 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
                 add a similar constraint for the other objective functions if they were also implemented with a gradient
                 descent instead of a simple formula.
 
+                The quality of the fit computed by pycewise with the logarithmic objective function is demonstrated in
+                Figure~\ref{fig:prediction:pycewise_demo}. We executed our MPI calibration program on four clusters of
+                Grid'5000: dahu, gros, paravance and pyxis. For each of them, we measured the duration of individual
+                \recv, \send and a whole ping-pong for various message sizes. Once again, we aggregated the data by
+                taking the average duration for each message size. In this figure, one piecewise regression is computed
+                for each cluster/operation pair.
+
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/prediction/modeling/network/pycewise_demo.pdf}
+                    \caption{With the logarithmic objective function, pycewise finds acceptable fits for the 12 datasets}%
+                    \label{fig:prediction:pycewise_demo}
+                \end{figure}
+
+                Since this is real experimental data, there is no "ground truth" that could serve as reference for
+                evaluating the quality of the fit. Computing the optimal solution which minimizes the objective function
+                would be computationally intractable. Therefore, we can only rely on a visual evalution of the
+                regression lines to decide if the fits are satisfying. In Figure~\ref{fig:prediction:pycewise_demo}, all
+                the obvious breaks have been found and the lines match the points very closely.
+
                 This gradient descent comes with a cost, computing the piecewise linear regression is now significantly
                 slower. Figure~\ref{fig:prediction:pycewise_duration} compares the three different objective functions
                 from our implementation. The logarithmic least square is one order of magnitude slower than the weighted
