@@ -1594,7 +1594,46 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     \label{sec:factorial_experiment}
         %% TODO On arrive à prédire pour toutes les configurations de paramètres.
         %% Plusieurs difficultés (cf. section expérimentation).
-        Some text\dots
+
+        Although geometry is among the most important parameter to tune, six other parameters control the behavior of
+        HPL. In Figure~\ref{fig:validation_factorial}, we compare the performance reported by HPL when fixing the matrix
+        rank to \Num{250000} and varying the following parameters: block size (128 or 256), depth (0 or 1), broadcast
+        (the six available algorithms), swap (the three available algorithms). The geometry was fixed to
+        \(\text{P}\times\text{Q}=32\times32=1024\) as it is optimal (the simpler calibration procedure and the network
+        model depicted on the leftmost plot of Figure~\ref{fig:mpi_calibration} were thus used). The parameters
+        \texttt{pfact} and \texttt{rfact} (panel factorization) were respectively fixed to \texttt{Crout} and
+        \texttt{Right}, as they had nearly no influence on HPL performance in our early experiments.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/prediction/validation/factorial/validation_factorial.pdf}
+            \caption{Influence of HPL configuration on the performance (factorial experiment). Parameters have been
+                reorganized based on their influence on performance to improve readibility. The boxed configuration
+                corresponds to the one boxed in Figure~\ref{fig:validation_performance}.
+            }
+            \label{fig:validation_factorial}
+        \end{figure}
+
+        Figure~\ref{fig:validation_factorial} depicts the 72 parameter combinations we tested. These parameters account
+        for up to \SI{30}{\percent} of variability in the performance, which is less important than the geometry but is
+        still quite significant. For 61 of them, the prediction error is lower than \SI{5}{\percent}. Only two
+        combinations have shown a large error of approximately \SI{15}{\percent}, obtained with a block size of 256, a
+        depth of 1, the \texttt{2-ring} broadcast algorithm, and either the \texttt{long} or the \texttt{mix} swap
+        algorithm. This demonstrates the soundness of our approach, as our predictions are reasonably accurate most of
+        the time.  This experiment confirms that, although the prediction of HPL performance for a given parameter
+        combination has a systematic bias, the error remains within a few percent most of the time. Therefore, this
+        surrogate is good enough for parameter tuning and should be considered when preparing a large-scale run.
+
+        While testing all the parameter combinations is the safest method to discover the combination that provides the
+        highest performance, its cost can be prohibitive due to the high number of combinations. An alternative often
+        used in practice is to explore only a small subset of the parameter space and to analyze variance (ANOVA) to
+        identify the parameters with the more substantial effect on performance and then select the appropriate
+        combination.  We applied this procedure on samples of both datasets (the one obtained from real runs and the one
+        obtained in simulation). In both cases, the two parameters with the highest effect were the block size
+        \texttt{NB} and the \texttt{depth}, as shown in Figure~\ref{fig:validation_factorial}, followed by
+        \texttt{bcast} and \texttt{swap}. The best combinations selected in both cases were also identical,
+        demonstrating once again the faithfulness of our simulation approach and how it can be used to reduce the
+        experimental cost of parameter tuning.
 
     \section{Conclusion}%
         %% TODO - Un travail de fourmi et d'expert. Plusieurs difficultés:

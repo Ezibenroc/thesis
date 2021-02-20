@@ -2219,7 +2219,7 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figurezMfxrY.png]]
 
-*** MPI calibration plots generation
+*** MPI calibration
 **** Downloading and extracting the CSV
 See the following entries in Tom's journal for the analysis of those
 calibrations:
@@ -2402,7 +2402,7 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figureTfxZx7.png]]
-*** Geometry plots generation
+*** Geometry
 For this plot, the CSV files are small, so they are stored directly in the
 repository, no need to download them. They have been dumped by [[https://github.com/Ezibenroc/calibration_analysis/blob/98fa2d901f5ea2fd43a140eac6f12c80d37ccb96/dahu/smpi_hpl/simple_geometry.ipynb][this notebook]]
 (cell 2).
@@ -2486,6 +2486,176 @@ p
 
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figureL8vch7.png]]
+*** Factorial experiment
+Again, the CSV files are small, so they are stored directly in the
+repository. They have been dumped by [[https://github.com/Ezibenroc/calibration_analysis/blob/eb857051cb94e2f4390cedb002ed491a43d3c914/dahu/smpi_hpl/hpl_factors.ipynb][this notebook]] (cell 2).
+
+The zip archives for these files are:
+- Simulations: [[https://github.com/Ezibenroc/calibration_analysis/tree/eb857051cb94e2f4390cedb002ed491a43d3c914/dahu/smpi_hpl/factor_exp/2][these archives]]
+- Real executions: [[https://github.com/Ezibenroc/calibration_analysis/tree/eb857051cb94e2f4390cedb002ed491a43d3c914/dahu/hpl/factor_exp/2][these archives]]
+**** Drawing the plot
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+df = read.csv("data/prediction/validation/factorial/hpl_factorial.csv")
+str(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	648 obs. of  11 variables:
+ $ filename   : Factor w/ 24 levels "../hpl/factor_exp/2/grenoble_2020-01-20_1912032.zip",..: 23 22 14 14 14 14 14 14 14 14 ...
+ $ matrix_size: int  250000 250000 250000 250000 250000 250000 250000 250000 250000 250000 ...
+ $ gflops     : num  21160 25240 20890 21850 21770 ...
+ $ time       : num  492 413 499 477 478 ...
+ $ mode       : Factor w/ 2 levels "Reality","Simulation": 2 2 2 2 2 2 2 2 2 2 ...
+ $ bcast      : int  0 1 0 2 5 5 0 2 3 4 ...
+ $ block_size : int  128 128 256 256 256 256 256 256 256 256 ...
+ $ depth      : int  1 0 0 0 0 1 0 1 0 1 ...
+ $ swap       : int  1 1 0 2 1 0 2 2 0 0 ...
+ $ pfact      : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ rfact      : int  2 2 2 2 2 2 2 2 2 2 ...
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+df %>%
+    filter(matrix_size == 250000) %>%
+    filter(block_size == 128) %>%
+    filter(depth == 1) %>%
+    filter(bcast == 2) %>%
+    filter(swap == 0)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+                                             filename matrix_size gflops   time
+1        factor_exp/2/grenoble_2020-01-16_1909235.zip      250000  24880 418.73
+2 ../hpl/factor_exp/2/grenoble_2020-01-22_1912418.zip      250000  24010 433.92
+3 ../hpl/factor_exp/2/grenoble_2020-01-26_1912919.zip      250000  23880 436.21
+4 ../hpl/factor_exp/2/grenoble_2020-01-20_1912032.zip      250000  23970 434.55
+5 ../hpl/factor_exp/2/grenoble_2020-01-24_1912915.zip      250000  23950 434.86
+6 ../hpl/factor_exp/2/grenoble_2020-01-25_1912917.zip      250000  23890 436.03
+7 ../hpl/factor_exp/2/grenoble_2020-01-25_1912916.zip      250000  23920 435.53
+8 ../hpl/factor_exp/2/grenoble_2020-01-26_1912918.zip      250000  23870 436.48
+9 ../hpl/factor_exp/2/grenoble_2020-01-26_1912920.zip      250000  24070 432.76
+        mode bcast block_size depth swap pfact rfact
+1 Simulation     2        128     1    0     1     2
+2    Reality     2        128     1    0     1     2
+3    Reality     2        128     1    0     1     2
+4    Reality     2        128     1    0     1     2
+5    Reality     2        128     1    0     1     2
+6    Reality     2        128     1    0     1     2
+7    Reality     2        128     1    0     1     2
+8    Reality     2        128     1    0     1     2
+9    Reality     2        128     1    0     1     2
+#+end_example
+
+The factors are, from most significant to least:
+- block_size
+- depth
+- bcast
+- broadcast
+- swap
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+# #+begin_src R :results output :session *R* :exports both
+df = df %>% mutate(Depth = depth) # using capital letters everywhere
+dfreal = df %>%
+    filter(mode == "Reality") %>%
+    group_by(bcast, block_size, swap, Depth) %>%
+    summarise(gflops = 1/mean(1/gflops)) # harmonic mean since this is a rate
+tmp = df %>%
+    filter(mode == "Simulation") %>%
+    full_join(dfreal, by=c("bcast", "block_size", "swap", "Depth"), suffix=c("_simulation", "_reality")) %>%
+    mutate(error = abs(gflops_simulation - gflops_reality) / gflops_reality * 100) %>%
+    mutate(error_str = ifelse(
+        error > 10, "> 10%", ifelse(
+        error > 5, "5% - 10%",
+        "0% - 5%")))
+tmp$error_str = factor(tmp$error_str,
+        levels = c("0% - 5%", "5% - 10%", "> 10%"))
+
+do_plot = function(df, tmp, bsize, label_y) {
+    swap_func = function(x) {
+        x = as.integer(substring(x, 1, 1)) # x is interaction(swap, bcast), so this just returns swap
+        result = ifelse(x==0, "bin-exch",
+                 ifelse(x==1, "long",
+                 ifelse(x==2, "mix",
+                 "ERROR"
+        )))
+    }
+    original_tmp = tmp
+    ymin = 0 # min(df$gflops)
+    ymax = max(df$gflops)
+    stopifnot(label_y >= ymin)
+    stopifnot(label_y <= ymax)
+    xmin_rect = c(1,3,5)*3+0.5
+    df = df %>% filter(block_size == bsize)
+    tmp = tmp %>% filter(block_size == bsize)
+    return(ggplot() +
+    aes(x=interaction(swap, bcast, sep=":"), y=gflops, shape=mode, fill=mode) +
+    geom_rect(
+        data=data.frame(xmin=xmin_rect, xmax=xmin_rect+3),
+        aes(xmin=xmin, xmax=xmax, x=NULL, y=NULL, shape=NULL),
+        fill="black", alpha=0.2, ymin=-as.double("inf"), ymax=as.double("inf")
+    ) +
+    # The following is an invisible geom_segment to get the legend right if there misses some values in the given data.
+    geom_segment(data=original_tmp, aes(xend=interaction(swap, bcast, sep=":"), y=gflops_reality, yend=gflops_simulation, color=error_str), alpha=0) +
+    geom_segment(data=tmp, size=1.5, aes(xend=interaction(swap, bcast, sep=":"), y=gflops_reality, yend=gflops_simulation, color=error_str)) +
+    geom_point(data=df %>% filter(mode=="Reality"), size=2, alpha=.5, color="black") +
+    geom_point(data=df %>% filter(mode=="Simulation"), size=2, color="NA") +
+    geom_label(
+        data=data.frame(txt=c("1rg", "1rM", "2rg", "2rM", "Lng", "LnM"),
+                          x=c("1:0", "1:1", "1:2", "1:3", "1:4", "1:5")),
+        aes(label=txt, x=x, shape=NULL),
+        size=2, y=label_y, fill="white"#, family="mono", 
+    ) +
+    theme_bw() +
+    facet_wrap("Depth", labeller="label_both", nrow=1) +
+    ylab("Gflop/s") +
+    xlab("Swap") +
+    labs(color="Error", fill="Mode", shape="Mode") +
+    theme(axis.text.x = element_text(angle=60, hjust=1, size=6)) + #, family="mono"
+    theme(strip.background = element_rect(fill="NA")) +
+#    theme(legend.position = "bottom") +
+    scale_fill_brewer(palette="Dark2", guide = guide_legend()) +
+    scale_shape_manual(values=c(23, 21)) +
+    scale_color_brewer(palette="BuPu", guide = guide_legend()) +
+    scale_x_discrete(labels = swap_func) +
+    theme(legend.position="bottom", legend.direction="horizontal") +
+    theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0, 'cm'))+
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    guides(color = guide_legend(label.position = "bottom")) +
+    guides(fill = guide_legend(label.position = "bottom")) +
+    expand_limits(y=c(ymin, ymax)) +
+    ggtitle(paste("Block size:", bsize)) +
+    theme(plot.title = element_text(hjust = 0.5))
+    )
+}
+
+p128 = do_plot(df, tmp, 128, label_y=18500) +
+    geom_rect(data=data.frame(Depth=1), aes(x=NULL, y=NULL, shape=NULL), xmin=6, xmax=8, ymin=23000, ymax=25700, linetype="dashed", alpha=0, fill="black", color="black")
+p256 = do_plot(df, tmp, 256, label_y=24500) + theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
+
+layout <- c(
+    area(t = 0, l = 0, b = 20, r = 30),
+    area(t = 0, l = 31, b = 20, r = 61),
+    area(t=15, l=10, b=15, r=50)
+)
+# For visualizing the layout, uncomment the next line and comment the following one
+#p=plot(layout)
+p = p128 + p256 + guide_area() + plot_layout(design = layout, guides="collect")
+ggsave("img/prediction/validation/factorial/validation_factorial.pdf", plot=p, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-1gNT9F/figurefutQBh.png]]
+
+
 * Experimental control
 ** Parameter space
 No dataset here, we generate the data.
