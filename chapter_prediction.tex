@@ -1428,18 +1428,30 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         \tikzstyle{model_label}=[anchor=south west, font=\scriptsize]
         \begin{figure}[htpb]
             \centering
-            \begin{tikzpicture}
-                \node[anchor=south west,inner sep=0] at (0,0)
-                {\hbox{\hspace{-.05\linewidth}\resizebox{0.9\linewidth}{!}{\input{img/prediction/validation/matrix_size/validation_performance.tex}}\hspace{-.05\linewidth}}};
-                \draw[-latex] (11.6, 7) to[bend left] node [midway, right, model_label, anchor=west] {\textbf{(1)}}
-                (11.6, 6) ;
-                \draw[-latex] (11.6, 6) to[bend left] node [midway, right, model_label, anchor=west] {\textbf{(2)}}
-                (11.6, 5.5) ;
-                \node[model_label, fill=white] at (10, 3.8) {\textbf{(1)} spatial var.};
-                \node[model_label, fill=white] at (10, 3.4) {\textbf{(2)} temporal var.};
-            \end{tikzpicture}
-            \caption{HPL performance: predictions vs. reality for various matrix ranks}
-            \label{fig:validation_performance}
+            \begin{minipage}{0.8\linewidth}
+                \begin{tikzpicture}
+                    \node[anchor=south west,inner sep=0] at (0,0)
+                    {\hbox{\hspace{-.05\linewidth}\resizebox{\linewidth}{!}{\input{img/prediction/validation/matrix_size/validation_performance.tex}}\hspace{-.05\linewidth}}};
+                    \draw[-latex] (10.35, 6.3) to[bend left] node [midway, right, model_label, anchor=west] {spatial var.}
+                    (10.35, 5.25) ;
+                    \draw[-latex] (10.35, 5.25) to[bend left] node [midway, right, model_label, anchor=west] {temporal var.}
+                    (10.35, 4.8) ;
+                \end{tikzpicture}
+                \caption{HPL performance: predictions vs. reality for various matrix ranks}
+                \label{fig:validation_performance}
+            \end{minipage}%
+            \begin{minipage}{0.2\linewidth}
+                \scalebox{.8}{\begin{tabular}{l|l}
+                $N$         & \Num{50000} \dots \Num{500000}               \\
+                \texttt{NB}        & \Num{128}          \\
+                \texttt{P}$\times$\texttt{Q}             & 32$\times$32        \\
+                \texttt{PFACT}     & Crout         \\
+                \texttt{RFACT}     & Right         \\
+                \texttt{SWAP}      & Binary-exch.  \\
+                \texttt{BCAST}     & 2 Ring        \\
+                \texttt{DEPTH}     & 1             \\
+                \end{tabular}}
+            \end{minipage}
         \end{figure}
 
         As illustrated in Figure~\ref{fig:validation_performance} (rightmost labels), we would like to stress again that
@@ -1448,7 +1460,6 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         needs to be carefully modeled with a \model[H]{2}-\noise[H]{2}. A detailed modeling of all (BLAS and HPL)
         kernels is possible but a minimal calibration of the \dgemm kernel over a representative set of nodes is thus
         sufficient to consistently predict the performance of HPL on this machine within a few percent of reality.
-
 
     \section{A platform change}%
     \label{sec:platform_change}
