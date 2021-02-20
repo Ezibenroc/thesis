@@ -1639,6 +1639,19 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         %% TODO - Un travail de fourmi et d'expert. Plusieurs difficultés:
         %% - être sûr que le simulateur fait bien ce qu'on veut (pas mal de paramètres "magiques")
         %% - cf. section expérimentation
+        Accurately predicting the performance of an application is not a trivial task. Discrepancies between reality and
+        simulation can be multiple: the platform may have changed (\eg the cooling issue that affected four nodes in
+        Section~\ref{sec:platform_change}), the model could be inaccurate (\eg the homogeneous and deterministic \dgemm
+        model is too simple as in Section~\ref{sec:different_problem_sizes}) or not correctly calibrated (\eg the
+        calibration procedure does not cover the appropriate parameter space, or the experimental conditions are too
+        different as in Section~\ref{sec:different_geometries}). As expected in any serious investigation of model
+        validity, our validation study is not a mere collection of positive cases. Instead, it is the result of a
+        thorough (we extensively covered the HPL parameter space) attempt to invalidate our model as well as
+        explanations on how we did so. By meticulously overcoming each of these issues, we have demonstrated the ability
+        of our approach to produce very faithful predictions of HPL performance on a given platform.
+
+        The difficulties encountered while conducting experiments will be discussed more thoroughly in
+        Part~\ref{part:experiment}.
 
 \chapter{Sensibility analysis}%
 \label{chapter:prediction:sensibility}
