@@ -816,6 +816,96 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
                 \label{fig:model:generative}
             \end{figure}
 
+            The relevance of model~\eqref{eq:dgemm.basic} will be discussed in
+            Chapter~\ref{chapter:prediction:validation}, but the relevance of models~\eqref{eq:dgemm.temporal}
+            and~\eqref{eq:dgemm.spatial} requires some attention.
+            Figure\ref{fig:whatif_calibration} represent the empirical distribution of \(\mu_{p,d} =
+            (\alpha_{p,d},\beta_{p,d},\gamma_{p,d})\) (the result of the linear regression) for the 32 nodes of the Dahu
+            cluster on 40 different days from November 2019 to February 2020. The distribution for each node appears
+            approximately normal and passed a Shapiro-Wilk normality test. Although the distribution of the
+            \(\beta_{p,d}\) appears slightly skewed toward larger values and one of the nodes (the one with the larger
+            \(\alpha_{p,d}\)) stands out, there is no good reason for using a more complex distribution than a Gaussian
+            one. Although the correlation between \(\alpha\), \(\beta\), and \(\gamma\) is very weak, it appeared to be
+            statistically significant (most ellipses are slightly tilted toward North-East), hence a full variance
+            matrix is needed (at least for \(\Sigma_T\)).
+
+            \begin{figure}[pt]
+                \centering
+                \subfigure[Distribution of $\alpha$, $\beta$, and $\gamma$ (observations on $2\times32$ CPUs from
+                    November 2019 to February 2020).  \label{fig:whatif_calibration}]{
+                    \raisebox{2em}{\rotatebox{90}{\fbox{\vphantom{y}Real data}}}~%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_calibration_1.pdf}%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_calibration_2.pdf}
+                }
+
+                \subfigure[ Distribution of $\alpha$, $\beta$, and $\gamma$ (synthetic data for 16 CPUs).
+                    \label{fig:whatif_model}]{
+                    \raisebox{1em}{\rotatebox{90}{\fbox{Synthetic data}}}~%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_1.pdf}%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_2.pdf}
+                }
+                \caption{Distribution of the regression parameters for around 20 \texttt{dgemm} calibrations made on
+                each of the 32 nodes. Each color/ellipse corresponds to a different CPU.}
+                \label{fig:whatif}
+                \subfigure[Distribution of $\alpha$, $\beta$, and $\gamma$ (observations on $2\times32$ CPUs
+                    from October to November 2019). \label{fig:whatif_slow_calibration}]{
+                    \centering
+                    \raisebox{2em}{\rotatebox{90}{\fbox{\vphantom{y}Real data}}}~%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_calibration_slownodes_1.pdf}%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_calibration_slownodes_2.pdf}
+                }
+
+                \subfigure[Distribution of $\alpha$, $\beta$, and $\gamma$ (synthetic data for 16 CPUs).
+                    \label{fig:whatif_slow_model}]{
+                    \raisebox{1em}{\rotatebox{90}{\fbox{Synthetic data}}}~%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_slow_1.pdf}%
+                    \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_slow_2.pdf}
+                }
+                \caption{Distribution of the regression parameters for around 20
+                    \texttt{dgemm} calibrations made on each of the 32 nodes. 4 of
+                    these nodes had a cooling problem, leading to longer and more
+                    variable durations. Each
+                    color/ellipse corresponds to a different group of CPUs.}
+                \label{fig:whatif_slow}
+            \end{figure}
+
+            It is thus easy to estimate \(\mu_{p}\) and \(\Sigma_T\) by averaging over the \(\mu_{p,d}\) of each node,
+            and then to estimate \(\mu\) and \(\Sigma_S\) by averaging over all the nodes. This moment-matching method
+            is simple and provides very good estimates for \(\mu\), \(\Sigma_T\), and \(\Sigma_S\) because we have
+            enough measurements at our disposal and because it is particularly suited to the Gaussian modeling
+            assumption. Should more complex models (e.g., a mixture to account for ``outlier'' nodes or a SkewNormal
+            distribution to account for the distribution's skewness) be used, a general Bayesian sampling framework like
+            STAN\cite{stan} would be more adapted. Such frameworks allow to easily specify hierarchical generative
+            models like the one presented in Figure~\ref{fig:model:generative} and to draw samples from the posterior
+            distribution of \(\mu\), \(\Sigma_T\), and \(\Sigma_S\), which can be used to generate realistic
+            \(\mu_{p,d}\) values for a new hypothetical cluster easily.
+
+            Such a process is depicted in Figure~\ref{fig:whatif_model} where hypothetical regression parameters for 16
+            nodes have been generated. Comparing such synthetic data with the original samples from
+            Figures~\ref{fig:whatif_calibration} allows us to evaluate the model's potential weaknesses. Although the
+            orders of magnitude of all parameters and the ellipses are excellent, a few subtle differences are visible.
+            First, the variability of \(\alpha_{p}\) seems a bit overestimated (the spread along the x-axis is larger).
+            This can be explained by the fact that one of the nodes seemed to be significantly slower (with much larger
+            \(\alpha_{p}\)), which artificially increased the spatial variability. Second, as expected from a Gaussian
+            model, the distributions of the \(\beta_{p,d}\) are symmetrical whereas there was a slight negative skew in
+            the original samples but this should be of little significance for our study. The distributions of the
+            \(\gamma_{p,d}\) however are particularly realistic.
+
+            We also illustrate the generality of this model with the data from Figure~\ref{fig:whatif_slow_calibration}.
+            These measurements were obtained from October to November 2019 where the cluster was less stable and where
+            some nodes particularly misbehaved. Three nodes (in orange, hence a total of 6 CPUs) are distinguished from
+            the 28 others (in green) and have lower performance (higher values for \(\alpha\), \(\beta\), and
+            \(\gamma\)) and one node (in blue) is particularly unstable. Although this last node may be considered too
+            abnormal to represent anything, it would be reasonable to assume that a larger cluster would present at
+            least the two kinds of behaviors (green for stable nodes, and orange for slower nodes). The higher layer of
+            the model in Figure~\ref{fig:model:generative} should then be replaced by a mixture of normal distributions
+            (whose weights would then be sampled from a Dirichlet distribution). Again, hypothetical regression
+            parameters for 16 CPUs have been generated with such a process on Figure~\ref{fig:whatif_slow_model} are
+            very similar, although different, to the original measurements.
+
+            Overall this model is therefore of excellent quality and can be used to generate large configurations very
+            easily and evaluate the influence of different kinds of variability on the performance of HPL.
+
         \subsection{Conclusion}%
             %% TODO
             %% - Limitation: distinction niveaux de caches, ou bien comportement
