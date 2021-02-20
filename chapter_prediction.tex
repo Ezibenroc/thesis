@@ -1465,13 +1465,47 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     \label{sec:platform_change}
         %% TODO Problème de température. On est capable de reproduire en simulation un changement de la plateforme, il
         %% suffit de recalibrer.
-        Some text\dots
+        This validation study has been carried out over several years (from 2018 to 2020). Despite our efforts to keep
+        the experimental setup stable for the sake of reproducibility, the platform has evolved. The Linux kernel had a
+        minor update, from version 4.9.0-6 to version 4.9.0-13, and the BIOS and firmware of the nodes have been
+        upgraded. During this time frame, the cluster has also suffered from hardware issues, like a cooling malfunction
+        on four of its nodes. This malfunction had an enormous impact on the performance of HPL, which significantly
+        complicated our validation study but also makes it more meaningful as it has been conducted on a particularly
+        challenging setup.
 
-    \section{Factorial experiment}%
-    \label{sec:factorial_experiment}
-        %% TODO On arrive à prédire pour toutes les configurations de paramètres.
-        %% Plusieurs difficultés (cf. section expérimentation).
-        Some text\dots
+        \begin{figure}[htpb]
+            \begin{minipage}{0.8\linewidth}
+                \centering
+                \includegraphics[width=\linewidth]{img/prediction/validation/temperature/validation_temperature.pdf}
+            \end{minipage}%
+            \begin{minipage}{0.2\linewidth}
+                \scalebox{.8}{\begin{tabular}{l|l}
+                $N$         & \Num{50000} \dots \Num{500000}               \\
+                \texttt{NB}        & \Num{128}          \\
+                \texttt{P}$\times$\texttt{Q}             & 32$\times$32        \\
+                \texttt{PFACT}     & Crout         \\
+                \texttt{RFACT}     & Right         \\
+                \texttt{SWAP}      & Binary-exch.  \\
+                \texttt{BCAST}     & 2 Ring        \\
+                \texttt{DEPTH}     & 1             \\
+                \end{tabular}}
+            \end{minipage}
+            \caption{HPL performance: predictions vs. reality (effect of the cooling issue on the nodes dahu-\{13,14,15,16\}).}
+            \label{fig:validation_temperature}
+        \end{figure}
+
+        Our simulation approach makes it possible to predict the performance of HPL for a new platform state by merely
+        making a new calibration whenever a significant change is detected.  This ability to reflect in simulation a
+        platform change is illustrated in Figure~\ref{fig:validation_temperature} which, similarly to
+        Figure~\ref{fig:validation_performance} (acquired in March 2019), showcases the influence of matrix size on the
+        performance but at different periods.  The left plot represents the \emph{normal} state of the cluster (in
+        September 2020), whereas the right plot has been obtained (in March-April 2019) when 4 of the 32 nodes had a
+        cooling issue which lowered their performance by about \NSI{10}{\percent}. In all cases, we consistently predict
+        performance within a few percent and performing a new \dgemm calibration on these four nodes was all
+        that was needed to reflect this platform change in the simulation.
+        This result illustrates both the faithfulness of our simulations and a potential use case for predictive
+        simulations: a discrepancy between the reality and the predictions can sometimes indicate a real issue on the
+        platform (similar situations have already been reported with SMPI\cite{smpi}).
 
     \section{Different geometries}%
     \label{sec:different_geometries}
@@ -1479,6 +1513,12 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         %% géometries. Encore une fois, des difficultés (cette fois qu'on on utilise des
         %% géométries trés élongées, avec un petit P par exemple), voir section
         %% expérimentation.
+        Some text\dots
+
+    \section{Factorial experiment}%
+    \label{sec:factorial_experiment}
+        %% TODO On arrive à prédire pour toutes les configurations de paramètres.
+        %% Plusieurs difficultés (cf. section expérimentation).
         Some text\dots
 
     \section{Conclusion}%

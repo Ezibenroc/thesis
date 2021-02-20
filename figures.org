@@ -1792,7 +1792,7 @@ Scale for 'x' is already present. Adding another scale for 'x', which will
 replace the existing scale.
 #+end_example
 
-*** Performance plots generation
+*** Matrix size
 For this plot, the CSV files are small, so they are stored directly in the
 repository, no need to download them. They have been dumped by [[https://github.com/Ezibenroc/calibration_analysis/blob/5cc53b7b1bdaa8746e6ca8822a04c9259571d851/dahu/smpi_hpl/hpl_simulation.ipynb][this notebook]]
 (cell 2).
@@ -2119,6 +2119,106 @@ entering extended mode
 null device 
           1
 #+end_example
+*** Problematic cooling
+Again, the CSV is stored locally. It has been dumped by [[https://github.com/Ezibenroc/calibration_analysis/blob/4e4e6780ca9036dd2aac4fa8bea066848f23ba7c/dahu/smpi_hpl/hpl_simulation_simple.ipynb][this notebook]] (cell 2).
+
+The zip archives for these files are:
+- Simulations:
+  - Bad  cooling: [[https://github.com/Ezibenroc/calibration_analysis/tree/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/smpi_hpl/paper_sc19/performance/11][these archives]] (a subset of them, in fact).
+  - Good cooling: [[https://github.com/Ezibenroc/calibration_analysis/tree/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/smpi_hpl/scaling/1][these archives]].
+- Real executions:
+  - Bad cooling:
+    - [[https://github.com/Ezibenroc/calibration_analysis/tree/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/hpl/grenoble_2019-03-15_1855885.zip][archive 1]],
+    - [[https://github.com/Ezibenroc/calibration_analysis/tree/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/hpl/grenoble_2019-03-18_1856059.zip][archive 2]],
+    - [[https://github.com/Ezibenroc/calibration_analysis/tree/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/hpl/grenoble_2019-10-30_1891433.zip][archive 3]].
+  - Good cooling:
+    - [[https://github.com/Ezibenroc/calibration_analysis/tree/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/hpl/grenoble_2018-10-10_1811810.zip][archive 1]],
+    - [[https://github.com/Ezibenroc/calibration_analysis/tree/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/hpl/grenoble_2018-10-10_1811847.zip][archive 2]],
+    - [[https://github.com/Ezibenroc/calibration_analysis/tree/4e4e6780ca9036dd2aac4fa8bea066848f23ba7c/dahu/hpl/scaling/1][archive directory]].
+**** Drawing the plot
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+options(warn=-1)
+df = read.csv('data/prediction/validation/temperature/hpl_matrix_size.csv')
+head(df)
+#+end_src
+
+#+RESULTS:
+: 
+:   matrix_size gflops    time       mode cooling       date   jobid
+: 1      175000  22940  155.72 Simulation    good 2020-09-07 1946997
+: 2      500000  25490 3269.59 Simulation    good 2020-09-07 1946995
+: 3       75000  17630   15.96 Simulation    good 2020-09-07 1946996
+: 4      300000  24570  732.56 Simulation    good 2020-09-07 1946994
+: 5       50000  13960    5.97 Simulation    good 2020-09-07 1946992
+: 6      450000  25270 2404.44 Simulation    good 2020-09-07 1947004
+
+
+Removing the two outliers in the real executions. These two points are
+"abnormaly fast", each of them was the first to be made in the sequence of runs
+(the machines were not overheating yet).
+#+begin_src R :results output :session *R* :exports both
+print(length(df$gflops))
+df = df %>% filter(matrix_size != 175000 | gflops < 22000 | mode == "Simulation" | cooling == "good")
+print(length(df$gflops))
+#+end_src
+
+#+RESULTS:
+: [1] 468
+: 
+: [1] 466
+
+
+We also remove the results from the real run of 2018, the platform appears to
+have significantly changed since then.
+#+begin_src R :results output :session *R* :exports both
+print(length(df$gflops))
+df = df %>% filter(date != "2018-10-10")
+print(length(df$gflops))
+#+end_src
+
+#+RESULTS:
+: [1] 466
+: 
+: [1] 453
+
+Then, we can generate the plot.
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+df %>%
+    mutate(cooling_txt = ifelse(cooling=="good", "Normal cooling", "Problematic cooling")) %>% {(
+    ggplot(.) +
+        aes(x=matrix_size, y=gflops, color=mode, fill=mode, shape=mode) +
+        geom_point(data=filter(., mode=="Reality"), size=2, alpha=.5, color="black") +
+        geom_point(data=filter(., mode!="Reality"), size=2, color="NA") +
+        stat_summary(fun.y='mean', geom='line') +
+        facet_wrap("cooling_txt") +
+        expand_limits(y=0) +
+        scale_shape_manual(values=c(23, 21, 21)) +
+        ylim(0, 30000) +
+        ylab('Gflop/s') +
+        xlab('Matrix rank') +
+        labs(color="Mode", fill="Mode", shape="Mode") +
+        scale_fill_brewer(palette="Dark2", guide = guide_legend()) +
+        scale_color_brewer(palette="Dark2", guide = guide_legend()) +
+        theme_bw() +
+        theme(text=element_text(size=16)) +
+        theme(legend.position=c(0.5, 0.07), legend.direction="horizontal", legend.box="horizontal") +
+        theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0, 'cm'))+
+        theme(legend.background = element_rect(color="black", size=0.1)) +
+        theme(legend.title = element_blank()) +
+        theme(strip.background = element_rect(fill="NA")) +
+        guides(color = guide_legend(override.aes=list(linetype=0))) +
+        guides(fill = guide_legend(label.position = "bottom"))
+    )} -> plot
+ggsave(filename='img/prediction/validation/temperature/validation_temperature.pdf', plot=plot)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-1gNT9F/figurezMfxrY.png]]
+
 * Experimental control
 ** Parameter space
 No dataset here, we generate the data.
