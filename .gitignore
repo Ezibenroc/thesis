@@ -21,3 +21,4 @@ data/prediction/modeling/kernels/trace_functions.csv
 data/prediction/modeling/network/dahu/
 data/prediction/modeling/network/stampede
 figures_ipynb/.ipynb_checkpoints
+data/prediction/validation/traces/

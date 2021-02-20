@@ -1373,6 +1373,35 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         \num{50000} to \num{500000}). We used a a look-ahead \texttt{depth} of 1, the \texttt{increasing-2-ring}
         broadcast with the \texttt{Crout} panel factorization algorithms.
 
+        Our first evaluation consists in comparing the traces of the simulations with reality. We instrumented HPL to
+        collect the start and end timestamps of each kernel and MPI call. We limited the execution to 256 ranks and the
+        first five iterations.  A first qualitative validation can be done by visually comparing the Gantt charts of the
+        simulations with reality (see Figure~\ref{fig:gantt_simulation}). Calls to \dgemm are depicted in yellow, \send
+        in red, \recv in blue. Although the structure is similar in all charts, the shape and the duration of the
+        communication phases can be overly optimistic in simulations compared to reality.  The charts show that, at this
+        scale, using a deterministic or a stochastic model for the network has no noticeable impact on HPL simulation.
+        However, having a more complex model for the kernels leads to much more realistic traces. The variability in the
+        computation durations leads to an increase of the time spent in communications and an overall slightly longer
+        execution. In HPL, computation variability directly translates to late senders/receivers that destroy the
+        efficiency of collective operations.
+
+        \newcommand{\ganttcaption}[2]{\rotatebox{90}{\hspace{.6cm}$\text{#1}\atop \text{#2}$\hspace{-1cm}}}
+        \begin{figure}[t]
+            \centering
+            \begin{tabular}{c@{}c}
+            \ganttcaption{\hspace{.3cm}Reality}{}                        &
+            \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_reality.png} \\
+            \ganttcaption{Simple kernel}{Simple network}    &
+            \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_simulation_deterministic-CPU_linear-DGEMM_deterministic-network.png}\\
+            \ganttcaption{Complex kernel}{Simple network}   &
+            \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_simulation_stochastic-CPU_polynomial-DGEMM_deterministic-network.png}\\
+            \ganttcaption{Complex kernel}{Complex network}  &
+            \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_simulation_stochastic-CPU_polynomial-DGEMM_stochastic-network.png}\\
+            \end{tabular}
+            \caption{Gantt charts of HPL first iterations in simulation}\vspace{-1em}
+            \label{fig:gantt_simulation}
+        \end{figure}
+
 
     \section{A platform change}%
     \label{sec:platform_change}
