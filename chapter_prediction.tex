@@ -660,6 +660,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     \label{sec:dgemm_model}
 
         \subsection{Different linear models}%
+        \label{sub:dgemm_model:different_models}
 
             %% TODO
             %% - Différents niveaux de modélisation, du plus simple au plus compliqué.
@@ -724,6 +725,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
             other kernels.
 
         \subsection{Bayesian modeling and generative models}%
+        \label{sub:dgemm_model:generative_models}
 
             %% TODO
             %% - Présenter la structure du modèle et la justifier
@@ -905,6 +907,22 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
 
             Overall this model is therefore of excellent quality and can be used to generate large configurations very
             easily and evaluate the influence of different kinds of variability on the performance of HPL.
+
+        \subsection{Conclusion}%
+            %% TODO
+            %% - Limitation: distinction niveaux de caches, ou bien comportement
+            %%   spécifique de la MKL sur KNL. Du piece-wise serait probablement
+            %%   bienvenu. Attention aux tailles spécifiques.
+            We have described in Section~\ref{sub:dgemm_model:different_models} different models with various levels of
+            complexity, from the most basic linear, homogeneous and deterministic model to more elaborated ones with
+            heterogeneity and random noise. The objective of Chapter~\ref{chapter:prediction:validation} will be to
+            discuss the required level of complexity and (in)validate the quality of these models for faithful
+            performance predictions of HPL.
+
+            Then in Section~\ref{sub:dgemm_model:generative_models} we have presented a method for generating new model
+            instances based on observed data. This allows to \emph{extrapolate} a given cluster to a larger one or even
+            to modify some characteristics of the model such as the temporal or spatial variability. This will be used
+            in Chapter~\ref{chapter:prediction:sensibility} for sensibility analysis.
 
     \section{Modeling the network}
     \label{sec:network_model}
