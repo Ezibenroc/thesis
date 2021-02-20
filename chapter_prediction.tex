@@ -736,7 +736,86 @@ chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
             %%   - Note: pourquoi ne pas donner les données brutes à STAN (trop lent
             %%     car trop de données, et convergence super difficile à moins de
             %%     mettre un modèle super sioux).
-            Some text\dots
+            In Chapter~\ref{chapter:prediction:validation}, we will show that the model \model[H]{2}\noise[H]{2} is
+            required for the \dgemm kernel to make reliable performance predictions for HPL. We recall here the meaning
+            of this notation:
+            \begin{equation}
+                \label{eq:dgemm.complex}
+                \begin{split}
+                    \text{For each processor $p$, } \textsf{dgemm}_{p}(M, N, K) \sim \mathcal{H}(\mu_{p}, \sigma_{p})\\
+                    \begin{cases}
+                        \mu_p &= \alpha_pMNK + \beta_pMN + \gamma_pMK + \delta_pNK + \epsilon_p\\
+                        \sigma_p &= \omega_pMNK + \psi_pMN + \phi_pMK + \tau_pNK + \rho_p
+                    \end{cases},
+                \end{split}
+            \end{equation}
+            where \(\mathcal{H}(\mu, \sigma)\) denotes a random variable following a half-normal distribution with
+            parameters \(\mu,\sigma\) accounting for the expectation and the standard deviation. The dependency on \(p\)
+            allows to account for platform heterogeneity (since \(\alpha_p,\beta_p, \dots,\rho_p\) can be specific to
+            each node), \ie the aforementioned spatial variability. The \(\sigma_p\) parameter allows to account for
+            (short-term) temporal variability, \ie to model the fact that the duration of two successive calls to \dgemm
+            with the same parameters \(M, N, K\) are never identical.
+
+            As we will show, the performance of nodes exhibits several kinds of variability: i) a spatial variability
+            (between nodes) ii) a ``short-term'' temporal variability (the one experienced within an HPL run) but also
+            iii) a ``long term'' temporal variability (from a day to another). As illustrated in
+            Chapter~\ref{chapter:prediction:validation}, accounting for the first two kinds of variability is essential
+            but during our investigation of the simulation validity, which spanned over several months, we also had to
+            deal with the fact that the node performance from a day to another could significantly vary, thereby making
+            our comparisons between a real experiment and the simulation driven by model obtained with past measurements
+            sometimes irrelevant.
+
+            This section explains how all sources of variability can be accounted for in a single unified model. This
+            will mainly be used in Chapter~\ref{chapter:prediction:sensibility}. From our observations, we assume that
+            on a given node \(p\) and a given day \(d\), the duration of the \dgemm kernel can be modeled as follows:
+            \begin{equation}
+                \label{eq:dgemm.basic}
+                \forall M,N,K, \textsf{dgemm}_{p,d}(M, N, K) \sim \mathcal{H}(\alpha_{p,d}MNK + \beta_{p,d}, \,\, \gamma_{p,d}MNK)\\
+            \end{equation}
+            Compared to the model~\eqref{eq:dgemm.complex}, this model includes the daily variability but drops the
+            complexity of a full-fledged polynomial. Such complexity may be important whenever trying to model a
+            particular platform. However, when performing sensibility analysis, a simpler model is preferred, especially
+            as not all terms of the polynomial may be statistically significant. In this model, the short-term temporal
+            variability stems from the \(\gamma_{p,d}\) term while the average performance of the node stems from the
+            \(\alpha_{p,d}\) and \(\beta_{p,d}\) terms, which we gather in a single 3-dimensional vector
+            \begin{equation}
+              \mu_{p,d}=(\alpha_{p,d},\beta_{p,d},\gamma_{p,d}).
+            \end{equation}
+            Now, since every machine is unique it is natural to assume that for each machine:
+            \begin{equation}
+                \label{eq:dgemm.temporal}
+                \forall d, \mu_{p,d} \sim \mathcal{N}(\mu_{p},\Sigma_T)
+            \end{equation}
+            In this model, \(\mu_{p}\) accounts for the average performance of the machine \(p\), while \(\Sigma_T\)
+            accounts for its day-to-day variability. From our observation we had no particular reason to assume that
+            this variability was different from a machine to another, hence, \(\Sigma_T\) is not indexed by \(p\) but
+            global to all machines. However, the parameters \(\alpha_{p,d},\beta_{p,d},\gamma_{p,d}\) are generally
+            correlated to each others, hence \(\Sigma_T\) is full covariance matrix to account for interactions.  The
+            choice of a Normal distribution is natural since it is the simpler distribution that accounts for a specific
+            mean and variance, but we will discuss its relevance later in this section.
+
+            Finally, we need to account for the spatial variability, which we propose to model as follows:
+            \begin{equation}
+                \label{eq:dgemm.spatial}
+                \forall p, \mu_{p} \sim \mathcal{N}(\mu,\Sigma_S)
+            \end{equation}
+            Again, in such a model \(\mu\) accounts for the machines' average performance while \(\Sigma_S\) accounts
+            for the (weak) heterogeneity. This hierarchical model is depicted in Figure~\ref{fig:model:generative}.
+            \begin{figure}[pt]
+                \centering
+                \includegraphics{img/prediction/modeling/kernels//generative_model.pdf}
+
+                \caption{Generative model of kernel duration accounting for the
+                  spatial ($\Sigma_S$), long-term ($\Sigma_T$) and short-term variability ($\gamma_{p,d}$). The shaded node
+                  represents observed variables and diamond node represents
+                  deterministic variables, while non-shaded nodes represent latent
+                  variables. The solid node is the variable which is estimated
+                  when conducting (in)validation studies while the dashed ones are
+                  useful when conducting sensibility analysis and extrapolating to
+                  an hypothetical cluster.}
+                \label{fig:model:generative}
+                \labspace
+            \end{figure}
 
         \subsection{Conclusion}%
             %% TODO

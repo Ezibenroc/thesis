@@ -855,6 +855,34 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figurep6JTMv.png]]
+*** Generative model
+**** Graphical representation of the model
+#+header: :headers '("\\usepackage{graphicx}")
+#+header: :exports results :results raw :file generative_model.pdf :tangle img/prediction/modeling/kernels/generative_model.tex
+#+begin_src latex 
+\documentclass{standalone}
+\usepackage{color}
+\usepackage{graphicx}
+\DeclareGraphicsRule{.pdftex}{pdf}{*}{}%
+%\graphicspath{{figures/}}
+\begin{document}
+\input{generative_model.pdftex_t}
+\end{document}
+#+end_src
+
+
+#+begin_src shell :results output raw :exports both
+base_dir=img/prediction/modeling/kernels/
+filename=generative_model
+base_path=${base_dir}/${filename}
+fig2dev -L pdftex ${base_path}.fig > ${base_path}.pdftex
+fig2dev -L pdftex_t -p generative_model.pdftex ${base_path}.fig > ${base_path}.pdftex_t
+cd ${base_dir}; pdflatex ${filename}.tex >/dev/null 2>&1
+echo file:${base_path}.pdf
+#+end_src
+
+#+RESULTS:
+file:img/prediction/modeling/kernels//generative_model.pdf
 *** Network plots                                                :noexport:
 **** Downloading the CSV
 #+begin_src sh :results output :exports both
