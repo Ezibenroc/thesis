@@ -1386,7 +1386,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         efficiency of collective operations.
 
         \newcommand{\ganttcaption}[2]{\rotatebox{90}{\hspace{.6cm}$\text{#1}\atop \text{#2}$\hspace{-1cm}}}
-        \begin{figure}[t]
+        \begin{figure}[htpb]
             \centering
             \begin{tabular}{c@{}c}
             \ganttcaption{\hspace{.3cm}Reality}{}                        &
@@ -1401,6 +1401,53 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
             \caption{Gantt charts of HPL first iterations in simulation}\vspace{-1em}
             \label{fig:gantt_simulation}
         \end{figure}
+
+        We now provide a more quantitative comparison using the whole cluster and varying matrix sizes, focusing on the
+        \si{\giga\flops} rate reported by HPL (see Figure\ref{fig:validation_performance}).  The real executions are
+        depicted in black, for each matrix size we performed 8 runs of HPL, to illustrate the temporal variability of
+        the performance.  The line (a), on the top, is our first attempt to simulate HPL. The simulation was done with a
+        simple model: \model{1} for the kernels and \modelp{1} for the network with no noise (\noise{0}) in both cases.
+        This model overestimates HPL performance by more than \SI{30}{\percent}. We initially thought that the network
+        model was too optimistic, however, switching to a stochastic multi-modal network model (\noisep{1}, the line
+        (b)), does not significantly improve the prediction precision.
+
+        Figure \ref{fig:blas_var} shows that there is an important heterogeneity in the cluster. For this reason, we
+        started using a \model[H]{1}/\noise{0} model for \dgemm while keeping the models for the other kernels and the
+        network as before. This increases very significantly the realism of the simulation as the performance is now
+        overestimated by only \SI{9}{\percent} (the line (c)).  Using a polynomial model for \dgemm instead of a linear
+        model (thus switching from \model[H]{1} to \model[H]{2}) further improves the performance prediction, in
+        particular for smaller matrices.  This new model (the line (d)), is very close to reality at the beginning but
+        becomes equivalent to the previous model for larger matrices.  We found that adding the temporal variability
+        noise (\noise{2} for all kernels, \noise[H]{2} for \dgemm) is the key ingredient to obtain the last bit of
+        realism. The prediction (the line (e)) is now extremely close to reality as it slightly underestimates the
+        performance by less than \SI{5}{\percent} and even as little as \SI{1}{\percent} for the larger matrices. Adding
+        back temporal variability to the network model (\noisep{1}, line (f)) still has no significant effect but this
+        can be explained by the fact that HPL mostly communicates very large amounts of data in bulk. Network temporal
+        variability is however very important aspect to model for applications that are more \emph{latency-bound}.
+
+        \tikzstyle{model_label}=[anchor=south west, font=\scriptsize]
+        \begin{figure}[htpb]
+            \centering
+            \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0)
+                {\hbox{\hspace{-.05\linewidth}\resizebox{0.9\linewidth}{!}{\input{img/prediction/validation/matrix_size/validation_performance.tex}}\hspace{-.05\linewidth}}};
+                \draw[-latex] (11.6, 7) to[bend left] node [midway, right, model_label, anchor=west] {\textbf{(1)}}
+                (11.6, 6) ;
+                \draw[-latex] (11.6, 6) to[bend left] node [midway, right, model_label, anchor=west] {\textbf{(2)}}
+                (11.6, 5.5) ;
+                \node[model_label, fill=white] at (10, 3.8) {\textbf{(1)} spatial var.};
+                \node[model_label, fill=white] at (10, 3.4) {\textbf{(2)} temporal var.};
+            \end{tikzpicture}
+            \caption{HPL performance: predictions vs. reality for various matrix ranks}
+            \label{fig:validation_performance}
+        \end{figure}
+
+        As illustrated in Figure~\ref{fig:validation_performance} (rightmost labels), we would like to stress again that
+        accurate predictions require a careful modeling of both spatial and temporal variability. Overall, although this
+        was not particularly foreseeable and could have been different with an other application, only the \dgemm kernel
+        needs to be carefully modeled with a \model[H]{2}-\noise[H]{2}. A detailed modeling of all (BLAS and HPL)
+        kernels is possible but a minimal calibration of the \dgemm kernel over a representative set of nodes is thus
+        sufficient to consistently predict the performance of HPL on this machine within a few percent of reality.
 
 
     \section{A platform change}%
