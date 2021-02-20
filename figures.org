@@ -2219,6 +2219,273 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figurezMfxrY.png]]
 
+*** MPI calibration plots generation
+**** Downloading and extracting the CSV
+See the following entries in Tom's journal for the analysis of those
+calibrations:
+- Old calibration: [2018-09-11 Tue] and [2018-09-20 Thu] and [2019-03-08 Fri]
+  (and more... look for the "remote_calibration.html" attachment)
+- New calibration: [2020-08-20 Thu] (MPI RingRong calibration of dahu)
+
+First, we download the archives:
+#+begin_src sh :results output :exports both
+wget https://github.com/Ezibenroc/calibration_analysis/raw/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/mpi/grenoble_2018-08-29_1808878.zip        -O /tmp/mpi_old_calibration.zip
+wget https://github.com/Ezibenroc/calibration_analysis/raw/2f1cc31b9ce7792c94805276d54248c087cfcdbe/dahu/mpi/ring/3/grenoble_2020-08-19_1944943.zip -O /tmp/mpi_new_calibration.zip
+du -sh /tmp/mpi*calibration.zip
+#+end_src
+
+#+RESULTS:
+: 8,4M	/tmp/mpi_new_calibration.zip
+: 11M	/tmp/mpi_old_calibration.zip
+
+Then, we extract the relevant CSV files:
+#+begin_src sh :results output :exports both
+unzip -p /tmp/mpi_old_calibration.zip exp/exp_PingPong.csv > data/prediction/validation/mpi_calibration/mpi_calibration_old.csv
+unzip -p /tmp/mpi_new_calibration.zip result.csv > data/prediction/validation/mpi_calibration/mpi_calibration_new.csv
+wc -l data/prediction/validation/mpi_calibration/*.csv
+du -sh data/prediction/validation/mpi_calibration/*.csv
+#+end_src
+
+#+RESULTS:
+:   721921 data/prediction/validation/mpi_calibration/mpi_calibration_new.csv
+:   724000 data/prediction/validation/mpi_calibration/mpi_calibration_old.csv
+:  1445921 total
+: 33M	data/prediction/validation/mpi_calibration/mpi_calibration_new.csv
+: 26M	data/prediction/validation/mpi_calibration/mpi_calibration_old.csv
+**** Drawing the plots
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(ggrepel)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output :session *R* :exports both
+df_old = read.csv("data/prediction/validation/mpi_calibration/mpi_calibration_old.csv", header=F,
+    col.names=c("func", "size", "timestamp", "duration")) %>%
+    mutate(index=0:(length(func)-1), exp_id=index%/%2) %>%
+    group_by(exp_id) %>%
+    summarise(size=unique(size), duration=sum(duration)) %>%
+    mutate(experiment="Optimistic calibration") %>%
+    as.data.frame()
+
+df_old %>% head()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+`summarise()` ungrouping output (override with `.groups` argument)
+
+  exp_id   size   duration             experiment
+1      0 154133 5.4884e-05 Optimistic calibration
+2      1 154133 6.0543e-05 Optimistic calibration
+3      2 154133 5.4087e-05 Optimistic calibration
+4      3 154133 5.0987e-05 Optimistic calibration
+5      4 154133 5.1168e-05 Optimistic calibration
+6      5 154133 5.1763e-05 Optimistic calibration
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+df_new = read.csv("data/prediction/validation/mpi_calibration/mpi_calibration_new.csv") %>%
+    rename_at(1,~"func") %>%
+    rename_at(2,~"mpi_rank") %>%
+    mutate(index=0:(length(func)-1), exp_id=index%/%2, op_kind=exp_id%%2) %>%
+    mutate(op_kind=ifelse(op_kind==0, "recv-send", "send-recv")) %>%
+    group_by(mpi_rank, op_id, exp_id, op_kind) %>%
+    summarise(size=unique(size), duration=sum(duration)) %>%
+    mutate(experiment="Realistic calibration")
+
+df_new_remote = df_new %>%
+    filter(op_kind=="send-recv", mpi_rank==31) %>% # here we keep only the PingPong 31<->32 started by 31, this is a remote communication
+    as.data.frame()
+
+df_new_local = df_new %>%
+    filter(op_kind=="send-recv", mpi_rank==12) %>% # here we keep only the PingPong 12<->13 started by 13, this is a local communication
+    as.data.frame()
+
+df_new_remote %>% head()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+`summarise()` regrouping output by 'mpi_rank', 'op_id', 'exp_id' (override with `.groups` argument)
+
+  mpi_rank op_id exp_id   op_kind size    duration            experiment
+1       31     0 135361 send-recv    8 0.000566898 Realistic calibration
+2       31     1 135363 send-recv    8 0.000001457 Realistic calibration
+3       31     2 135365 send-recv    8 0.000001190 Realistic calibration
+4       31     3 135367 send-recv    8 0.000001124 Realistic calibration
+5       31     4 135369 send-recv    8 0.000001272 Realistic calibration
+6       31     5 135371 send-recv    8 0.000001118 Realistic calibration
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+df_old %>%
+    group_by(size) %>%
+    mutate(med_duration = median(duration)) %>%
+    ungroup() %>%
+    mutate(outlier=duration > 10*med_duration) %>%
+    head() %>% as.data.frame()
+#+end_src
+
+#+RESULTS:
+: 
+:   exp_id   size   duration             experiment med_duration outlier
+: 1      0 154133 5.4884e-05 Optimistic calibration  5.01175e-05   FALSE
+: 2      1 154133 6.0543e-05 Optimistic calibration  5.01175e-05   FALSE
+: 3      2 154133 5.4087e-05 Optimistic calibration  5.01175e-05   FALSE
+: 4      3 154133 5.0987e-05 Optimistic calibration  5.01175e-05   FALSE
+: 5      4 154133 5.1168e-05 Optimistic calibration  5.01175e-05   FALSE
+: 6      5 154133 5.1763e-05 Optimistic calibration  5.01175e-05   FALSE
+
+#+begin_src R :results output :session *R* :exports both
+draw_plot = function(df, breakpoints, nb_sizes, nb_point_per_size, color) {
+    limits = c(0, breakpoints, 1e9)
+    set.seed(42)
+    # First, let's remove the outliers
+    df = df %>%
+        group_by(size) %>%
+        mutate(med_duration = median(duration)) %>%
+        ungroup() %>%
+        filter(duration < 10*med_duration)
+    sizes = df %>% select(size) %>% unique() %>% sample_n(nb_sizes) %>% pull(size)
+    df_aggr = df %>% group_by(size) %>% summarise(duration=mean(duration))
+    df_sampled = df %>% filter(size %in% sizes) %>% sample_n(nb_sizes*nb_point_per_size)  # TODO make it so that we have the right amount?
+    plot = ggplot() +
+        aes(x=size, y=duration) +
+        geom_point(data=df_sampled, color=color, alpha=0.1) +
+        theme_bw() +
+        scale_x_log10() +
+        scale_y_log10() +
+        expand_limits(x=c(1, 1e9), y=c(1e-6, 1)) +
+        xlab("Message size (B)") +
+        ylab("Ping-pong duration (s)")
+    for(i in 1:(length(breakpoints)+1)) {
+        inf = limits[i]
+        sup = limits[i+1]
+        tmp = df_aggr %>% filter(size > inf, size < sup)
+        reg = lm("duration ~ size", data=tmp)
+        slope = coef(summary(reg))["size", "Estimate"]
+        inter = coef(summary(reg))["(Intercept)", "Estimate"]
+        tmp=data.frame(size=c(inf, sup, runif(1000, inf, sup)))
+        tmp$duration = inter + tmp$size * slope
+        plot = plot +
+            geom_line(data=tmp)
+    }
+    for(b in breakpoints) {
+        plot = plot + geom_vline(xintercept=b, linetype="dashed")
+    }
+    return(plot) #  + theme(plot.margin = unit(c(0,60,0,0), "pt"))
+}
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 200 :session *R*
+plot = draw_plot(df_old, c(8133, 33956, 63305, 158541), 92, 25, "#d95f02") + ggtitle("Optimistic calibration (remote)")
+plot = plot + plot_spacer()
+plot = plot + (draw_plot(df_new_remote, c(8000, 5951087, 42672591, 160097505), 92, 25, "#7570b3") +
+       ggtitle("Realistic calibration (remote)") +
+       theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
+)
+plot = plot + (draw_plot(df_new_local, c(16000, 6000000, 36900419, 160097505), 92, 25, "#7570b3") +
+       ggtitle("Realistic calibration (local)") +
+       theme(axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
+)
+ggsave(filename='img/prediction/validation/mpi_calibration/mpi_calibration.png', plot=plot + plot_layout(widths = c(2, .2,2,2)))
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-1gNT9F/figureTfxZx7.png]]
+*** Geometry plots generation
+For this plot, the CSV files are small, so they are stored directly in the
+repository, no need to download them. They have been dumped by [[https://github.com/Ezibenroc/calibration_analysis/blob/98fa2d901f5ea2fd43a140eac6f12c80d37ccb96/dahu/smpi_hpl/simple_geometry.ipynb][this notebook]]
+(cell 2).
+
+The zip archives for these files are:
+- Real executions: [[https://github.com/Ezibenroc/calibration_analysis/blob/d3aae055b3b296397906e7214eaac4f41445fbb9/dahu/hpl/geometry/4][these archives]].
+- Simulations: [[https://github.com/Ezibenroc/calibration_analysis/blob/98fa2d901f5ea2fd43a140eac6f12c80d37ccb96/dahu/smpi_hpl/geometry/33][these archives]].
+- Old simulations (wrong network model): [[https://github.com/Ezibenroc/calibration_analysis/blob/d3aae055b3b296397906e7214eaac4f41445fbb9/dahu/smpi_hpl/geometry/13][these archives]].
+**** Drawing the plot
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(ggrepel)
+df = read.csv("data/prediction/validation/geometry/hpl_geometry.csv") %>%
+    mutate(network_model="good")
+old_df = read.csv("data/prediction/validation/geometry/old_hpl_geometry.csv") %>%
+    mutate(network_model="bad") %>%
+    filter(mode != "reality") # the real runs are duplicated in the two files
+df = rbind(df, old_df) %>%
+    mutate(geometry = paste(proc_p, proc_q, sep="×")) %>%
+    mutate(network_model = ifelse(network_model=="good", "realistic", "optimistic")) %>%
+    mutate(mode = ifelse(mode == "reality", "Reality", paste("Simulation (", network_model, "\nnetwork calibration)", sep="")))
+str(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	252 obs. of  9 variables:
+ $ filename     : Factor w/ 42 levels "../hpl/geometry/4/grenoble_2020-06-26_1937786.zip",..: 18 10 17 33 26 15 14 31 25 35 ...
+ $ matrix_size  : int  250000 250000 250000 250000 250000 250000 250000 250000 250000 250000 ...
+ $ proc_p       : int  48 80 30 96 2 160 60 20 8 480 ...
+ $ proc_q       : int  20 12 32 10 480 6 16 48 120 2 ...
+ $ mode         : chr  "Simulation (realistic\nnetwork calibration)" "Simulation (realistic\nnetwork calibration)" "Simulation (realistic\nnetwork calibration)" "Simulation (realistic\nnetwork calibration)" ...
+ $ time         : num  511 626 482 679 896 ...
+ $ gflops       : num  20380 16640 21630 15340 11630 ...
+ $ network_model: chr  "realistic" "realistic" "realistic" "realistic" ...
+ $ geometry     : chr  "48×20" "80×12" "30×32" "96×10" ...
+#+end_example
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+set.seed(42) # deterministic geom_text_repel
+tmp = df %>%
+    filter(mode == "Reality") %>%
+    group_by(mode, proc_p, proc_q, geometry) %>%
+    summarise(gflops = 1/mean(1/gflops)) # harmonic mean since this is a rate
+
+# Uncomment the following
+#df = df %>% filter(network_model == "bad" | mode == "Reality")
+p = ggplot() +
+    aes(x=proc_p, y=gflops, shape=mode, fill=mode) +
+    stat_summary(data=df, aes(color=mode), fun.y = mean, geom="line") +
+    geom_point(data=df %>% filter(mode=="Reality"), size=2, alpha=.5, color="black") +
+    geom_point(data=df %>% filter(mode!="Reality"), size=2, color="NA") +
+    geom_text_repel(data=tmp, size=3.5, direction="y", segment.alpha=0.2, nudge_y=-1500, aes(label=geometry, y=gflops)) +
+    geom_label_repel(data=df %>% filter(proc_p == 2 & network_model == "optimistic"), label="Optimistic calibration", nudge_y=+5000, nudge_x=-.27, segment.alpha=0.5, show_guide  = F, alpha=.7) +
+    geom_label_repel(data=df %>% filter(proc_p == 2 & network_model == "optimistic"), label="Optimistic calibration", nudge_y=+5000, nudge_x=-.27, segment.alpha=0, show_guide  = F, fill=NA) +    
+#    geom_label_repel(data=df %>% filter(proc_p == 3 & network_model == "realistic" & mode!= "Reality"), aes(label="Realistic\ncalibration"), nudge_y=+3500, nudge_x=-500, segment.alpha=0.5, show_guide  = F) +
+    geom_label_repel(data=df %>% filter(proc_p == 3 & network_model == "realistic" & mode!= "Reality"), label="Realistic\ncalibration", nudge_y=+300, nudge_x=-.27, segment.alpha=0.5, show_guide  = F, alpha=.7,seed=1234) +
+    geom_label_repel(data=df %>% filter(proc_p == 3 & network_model == "realistic" & mode!= "Reality"), label="Realistic\ncalibration", nudge_y=+300, nudge_x=-.27, segment.alpha=0, show_guide  = F, fill=NA,seed=1234) +
+    theme_bw() +
+    ylab("Gflop/s") +
+    xlab("P") +
+    labs(color="Mode", fill="Mode", shape="Mode") +
+    scale_fill_brewer(palette="Dark2", guide = guide_legend()) +
+    scale_color_brewer(palette="Dark2", guide = guide_legend()) +
+    scale_shape_manual(values=c(23, 21, 21)) +
+    scale_x_log10() +
+    expand_limits(y=0) +
+    theme(legend.position=c(0.4, 0.1), legend.direction="horizontal", legend.box="horizontal") +
+    theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0, 'cm'))+
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    theme(legend.title = element_blank()) +
+    guides(color = guide_legend(override.aes=list(linetype=0))) +
+    guides(fill = guide_legend(label.position = "bottom"))
+
+ggsave("img/prediction/validation/geometry/validation_geometry.pdf", plot=p, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-1gNT9F/figureL8vch7.png]]
 * Experimental control
 ** Parameter space
 No dataset here, we generate the data.

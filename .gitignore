@@ -22,3 +22,4 @@ data/prediction/modeling/network/dahu/
 data/prediction/modeling/network/stampede
 figures_ipynb/.ipynb_checkpoints
 data/prediction/validation/traces/
+data/prediction/validation/mpi_calibration

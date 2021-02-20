@@ -846,7 +846,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
                     \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_1.pdf}%
                     \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_2.pdf}
                 }
-                \caption{Distribution of the regression parameters for around 20 \texttt{dgemm} calibrations made on
+                \caption{Distribution of the regression parameters for around 20 \dgemm calibrations made on
                 each of the 32 nodes. Each color/ellipse corresponds to a different CPU.}
                 \label{fig:whatif}
                 \subfigure[Distribution of $\alpha$, $\beta$, and $\gamma$ (observations on $2\times32$ CPUs
@@ -864,7 +864,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
                     \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_slow_2.pdf}
                 }
                 \caption{Distribution of the regression parameters for around 20
-                    \texttt{dgemm} calibrations made on each of the 32 nodes. 4 of
+                    \dgemm calibrations made on each of the 32 nodes. 4 of
                     these nodes had a cooling problem, leading to longer and more
                     variable durations. Each
                     color/ellipse corresponds to a different group of CPUs.}
@@ -1513,7 +1513,82 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         %% géometries. Encore une fois, des difficultés (cette fois qu'on on utilise des
         %% géométries trés élongées, avec un petit P par exemple), voir section
         %% expérimentation.
-        Some text\dots
+        Figure~\ref{fig:validation_geometry} illustrates the influence on the performance of the geometry of the virtual
+        topology (\texttt{P} and \texttt{Q}) used in HPL\@.  As expected, geometries that are too distorted lead to
+        degraded performance.  All the HPL parameters were fixed (matrix rank is fixed to \Num{250000} and the other
+        parameters are the same as in Section~\ref{sec:different_problem_sizes}) except for the geometry as we evaluate
+        all the pairs (\texttt{P}, \texttt{Q}) such that \(\texttt{P}\times\texttt{Q}=960\).  We used only 30 nodes
+        instead of 32 to cover a larger number of geometries, as \Num{960} has more divisors than \Num{1024}.
+
+        \begin{figure}[htpb]
+            \centering
+            \subfigure[Illustrating the effect of the two MPI calibration methods. The optimistic method merely samples
+            message size smaller than \SI{1}{\mega\byte} and extrapolates for larger sizes. Unfortunately, for messages
+            larger than \SI{160}{\mega\byte}, the effective bandwidth significantly drops. The more realistic
+            calibration measures MPI communication duration for messages up to \SI{2}{\giga\byte} while injecting some
+            computation load in the background.  \label{fig:mpi_calibration}]{
+                    \includegraphics[width=\linewidth]{img/prediction/validation/mpi_calibration/mpi_calibration.png}
+            }
+
+            \subfigure[HPL performance: predictions vs. reality (testing all the
+            possible geometries for 960 MPI ranks).\label{fig:validation_geometry}]{
+                \begin{minipage}{0.8\linewidth}
+                    \centering
+                    \includegraphics[width=\linewidth]{img/prediction/validation/geometry/validation_geometry.pdf}
+
+                \end{minipage}%
+                \begin{minipage}{0.2\linewidth}
+                    \scalebox{.8}{\begin{tabular}{l|l}
+                    \texttt{N}         & \Num{250000}               \\
+                    \texttt{NB}        & \Num{128}          \\
+                    \texttt{P}$\times$\texttt{Q}             & 960        \\
+                    \texttt{PFACT}     & Crout         \\
+                    \texttt{RFACT}     & Right         \\
+                    \texttt{SWAP}      & Binary-exch.  \\
+                    \texttt{BCAST}     & 2 Ring        \\
+                    \texttt{DEPTH}     & 1             \\
+                    \end{tabular}}
+                \end{minipage}
+            }
+            \caption{The first (optimistic) network calibration gave poor
+              predictions for very elongated geometries while the improved
+              calibration provides perfect predictions.}
+            \label{fig:validation_geometry_global}
+        \end{figure}
+
+        As in all our previous studies, we report both the predicted performance and the one measured in reality. Like
+        the comparisons presented in the previous section, the simulation was done with the \dgemm model from
+        Eq~\eqref{eq:dgemm.complex} (stochastic, heterogeneous, and polynomial) and the simplest linear models for the
+        other kernels.  In our first simulation attempt that relied on a relatively simple network model (deterministic
+        yet piecewise-linear to account for protocol switch) depicted on the leftmost plot of
+        Figure~\ref{fig:mpi_calibration}, we obtained the unsatisfying orange line on top of
+        Figure~\ref{fig:validation_geometry} for the prediction.  The simulations with the smallest value of \texttt{P}
+        had relatively large prediction errors, with a systematic over-estimation that reaches up to +50\% for the
+        \(1\times960\) and \(2\times480\) geometries.  A qualitative comparison of the execution traces obtained in
+        reality and simulation showed that the broadcast phases' duration was greatly underestimated in simulation. We
+        found out that with such elongated geometries, the message size is significantly larger than what we had used in
+        our calibration, and the performance surprisingly and significantly drops for such size (compare with the
+        rightmost plots of Figure~\ref{fig:mpi_calibration}). This performance drop is explained by poor optimization of
+        the DMA locking mechanism in the Infiniband network layer\cite{denis:inria-00586015}. A similar performance drop
+        also happens for intra-node communications that poorly manage the caches above a given size. Furthermore, the
+        communication patterns generated by HPL during the ring broadcast are significantly impacted by the busy waiting
+        of HPL that intensively calls \texttt{MPI\_Probe} and \dgemm on small sub-matrices. Our initial
+        procedure for calibrating the network did not capture this phenomenon since we did not inject any additional CPU
+        load. This problem is further discussed in Section~\ref{sec:beware_of_experimental_conditions}.
+
+        We addressed this problem by improving our network calibration procedure: (1) we use a distinct model for local
+        and remote calibrations, (2) we sample the message sizes in a larger interval, and (3) we add calls to \dgemm
+        and \texttt{MPI\_Iprobe} between each call to \send and \recv. The goal was to make the calibration environment
+        more similar to what happens in HPL\@.  The resulting network model is illustrated in the rightmost plots of
+        Figure~\ref{fig:mpi_calibration}.  This more realistic network model solved every previous misprediction and
+        allows us to produce very faithful simulations (purple line on Figure~\ref{fig:validation_geometry}), which are
+        now a few percent of the reality regardless of the geometry.  This figure also illustrates the influence of the
+        geometry on overall performance since there is almost a factor of ten between the worst configuration
+        (\(960\times1\)) and the best one (\(30\times32\)). Although it is not surprising to see that the geometries
+        which are as square as possible lead to better performance as they minimize the overall amount of data
+        movements, it is interesting to observe the asymmetric role of \texttt{P} and \texttt{Q} in the overall
+        performance (smaller values for \texttt{P} lead to better performance) and which can be explained by the
+        structure of the collective operations but requires a close look at the code.
 
     \section{Factorial experiment}%
     \label{sec:factorial_experiment}
