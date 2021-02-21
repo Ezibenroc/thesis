@@ -1824,3 +1824,59 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         Generating random node configurations allows avoiding potential bias, in particular against perfectly
         homogeneous scenarios. We believe such a tool can be quite useful in the earlier steps of a supercomputer design
         when performing capacity planning to adjust the network capacity to a given cost and power envelope.
+
+\chapter{Conclusion}%
+\label{chapter:conclusion}
+
+    HPC application developers implement many elaborate algorithmic strategies whose impact on performance is often
+    dependent on both the input workload and the target platform. This structure makes it very difficult to model and
+    accurately forecast the overall application performance, and many HPC application developers and users are often
+    left with no other option but to study and tune their applications at scale, which can be very time- and
+    resource-consuming. We believe that being capable of precisely predicting an application's performance on a given
+    platform is useful for application developers and users and will become invaluable in the future as it can, for
+    example, help computing centers with deciding which one of the envisioned technologies for a new machine would work
+    best for a given application or if an upgrade of the current machine should be considered.
+
+    Simulation is an effective approach in this context and SimGrid/SMPI has previously been successfully validated in
+    several small-scale studies with simple HPC benchmarks\cite{smpi,heinrich:hal-01523608}. In this work, we have
+    explained how SMPI could be used to efficiently emulate HPL. The proposed approach only requires minimal code
+    modifications and applies to any application whose behavior does not strongly depend on data-dependent intermediate
+    computation results.  Although HPL is not a \emph{real} application, it is quite optimized from an algorithmic point
+    of view and its behavior can be controlled through 6 different parameters (granularity, geometry of the virtual
+    topology, broadcast/swapping/factorization algorithm, and the number of concurrent iterations). HPL features
+    classical optimization techniques such as heavily relying on \texttt{MPI\_Iprobe} to overlap communication with
+    computations, making it particularly challenging both in terms of tuning and simulation.
+
+    We present in Chapter~\ref{chapter:prediction:validation} an extensive validation study which covers the whole
+    parameter space of HPL. Our study emphasizes the importance of carefully modeling (1) the platform heterogeneity
+    (not all nodes have exactly the same performance), (2) the short-term temporal variability (e.g., system noise) for
+    compute kernels as it may propagate in communication patterns, and (3) the complexity of MPI (performance often
+    wildly differs between small and large messages and between intra-node and extra-node communications). We show that
+    disregarding any of these aspects may lead to wildly inaccurate predictions even on an application as regular as
+    HPL. By building on a few well-identified micro-benchmarks of the BLAS and MPI, we show that these aspects can be
+    well modeled, which allows us to systematically predict the overall performance of HPL within a few percent. Our
+    experimental results span over two years and we report situations (in Sections~\ref{sec:platform_change}
+    and\ref{sec:different_geometries}) where the simulation helped us to identify performance regression or anomalies
+    incurred by the platform when the prediction did not match the real experiments.
+
+    We show in Chapter~\ref{chapter:prediction:validation} how this faithful surrogate can be used to evaluate the
+    significance of application parameters and tune them accordingly solely through simulations.  We also propose a
+    generative model for the compute nodes' performance that can easily be fit from daily measurements and used to
+    produce synthetic platforms similar to the ones at hand. We demonstrate in
+    Chapter~\ref{chapter:prediction:sensibility} how this model, which allows us to easily control temporal and spatial
+    variability, can feed our simulations to assess the impact of variability on the performance of the application or
+    of mitigation strategies (e.g., the eviction of the slower nodes). Likewise, the simulation allows to easily assess
+    the influence of the physical network on the overall performance. Most of these \emph{what-if} studies would be
+    particularly difficult to conduct through real experiments because of the difficulty to finely control the platform.
+    This is to the best of our knowledge one of the first sensitivity analyses of a real HPC code accounting for
+    platform uncertainty.
+
+    As future work, building on the effort of SimGrid developers on supporting the emulation of a wide variety of
+    applications with SMPI\cite{smpi_proxy_apps}, we also intend to conduct similar studies with other HPC benchmarks
+    (\eg HPCG\cite{HPCG} or HPGMG\cite{HPGMG}), real applications (\eg BigDFT\cite{bigdft}) and larger infrastructures.
+    As explained in this article, a good model of compute kernels and the MPI library is essential. Thereby, the main
+    challenge for systematic use of our simulation technique now lies in the automation of measurements through
+    well-designed experiments and the automatic detection of when the envisioned models miss essential characteristics
+    of the platform (multi-modal behaviors, heteroscedasticity, discontinuities,\dots{}). We intend to provide a fully
+    automatic calibration procedure for MPI as well as for every BLAS function, which would allow us to effortlessly
+    predict the performance of many applications by simply linking against a BLAS-replacement library.
