@@ -2900,7 +2900,69 @@ p
 
 #+RESULTS:
 [[file:/tmp/babel-MSRWKo/figureJYPzVd.png]]
+*** Physical topology
+The CSV file is stored directly in the repository, it has been dumped by this
+[[https://github.com/Ezibenroc/calibration_analysis/blob/0da08274d347e87afb80024a2f2266ac32920984/dahu/smpi_hpl/remove_switches.ipynb][notebook]] (cell 2).
 
+The zip archives used for this file are [[https://github.com/Ezibenroc/calibration_analysis/tree/ab38ec93b1835af6c5d63fcc1915180b0f49c5cc/dahu/smpi_hpl/synthetic_model/2/][here]] and [[https://github.com/Ezibenroc/calibration_analysis/tree/ab38ec93b1835af6c5d63fcc1915180b0f49c5cc/dahu/smpi_hpl/synthetic_model/3/][here]].
+**** Drawing the plot
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(Cairo)  # unicode characters in PDF output (need to install the Debian packages libxt-dev and libcairo2-dev)
+library(ggrepel)
+df = read.csv("data/prediction/sensibility/topology/removing_switches.csv")
+str(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	250 obs. of  8 variables:
+ $ filename   : Factor w/ 50 levels "synthetic_model/2/nancy_2020-03-25_2325746.zip",..: 6 6 6 6 6 2 2 2 2 2 ...
+ $ dgemm_file : Factor w/ 10 levels "dgemm_synthetic_1.yaml",..: 7 7 7 7 7 3 3 3 3 3 ...
+ $ platform_id: int  6 6 6 6 6 2 2 2 2 2 ...
+ $ matrix_size: int  300000 500000 100000 200000 400000 300000 500000 100000 200000 400000 ...
+ $ topo       : Factor w/ 5 levels "2;32,8;1,1;1,8",..: 5 5 5 5 5 5 5 5 5 5 ...
+ $ nb_switches: int  NA NA NA NA NA NA NA NA NA NA ...
+ $ time       : num  193.8 704 16.4 74.7 395.7 ...
+ $ gflops     : num  92880 118400 40790 71450 107800 ...
+#+end_example
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+set.seed(42)
+p = df %>%
+    filter(nb_switches != "NA") %>%
+    mutate(nb_removed_switches = (select(., nb_switches) %>% max()) - nb_switches) %>%
+    full_join(filter(., nb_removed_switches==0), by=c("platform_id", "matrix_size"), suffix=c("", "_base")) %>%
+    mutate(overhead=time/time_base-1) %>%
+    filter(nb_removed_switches > 0) %>%
+
+    ggplot() +
+    aes(x=nb_removed_switches, y=overhead, group=interaction(nb_removed_switches, matrix_size), color=factor(matrix_size), fill=factor(matrix_size)) +
+
+    geom_bar(stat="summary", fun.y="median", position=position_dodge(0.8), key_glyph="rect", color="black") +
+    geom_point(aes(x=nb_removed_switches+platform_id/100-0.05), shape=21, color="black", position=position_dodge(width=0.8), key_glyph="rect") +
+
+    theme_bw() +
+    xlab("Number of top-level switches removed") +
+    ylab("Overhead on HPL duration (%)") +
+    scale_x_continuous(breaks=0:4) +
+    scale_y_continuous(labels = scales::percent_format(accuracy=1)) +
+    labs(fill="Matrix rank", color="Matrix rank") +
+    expand_limits(y=0) +
+    scale_color_brewer(palette="Blues") +
+    scale_fill_brewer(palette="Blues") +
+    theme(legend.position=c(0.08,0.65)) +
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank())
+
+ggsave("img/prediction/sensibility/topology/whatif_removing_switches.pdf", plot=p, width=7, height=3, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-MSRWKo/figureXXXeVp.png]]
 
 * Experimental control
 ** Parameter space

@@ -1796,4 +1796,31 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
 
     \section{Influence of the physical topology}%
     \label{sec:influence_of_physical_topology}
-        Some text\dots
+
+        Finally, since virtual topology and communications appear to significantly influence the overall performance,
+        one may wonder how much the physical topology influences the performance. Indeed, several recent
+        articles\cite{tapered_fat_tree_16,tapered_fat_tree_19} report that interconnect networks are often oversized
+        compared to the actual need of applications and that turning off some switches could sometimes go completely
+        unnoticed by end-users. In this section we consider ten 256 node clusters with variable node performance (as in
+        Figure~\ref{fig:whatif}) interconnected by a 2-level fat-tree and quantify by how much performance degrades when
+        the top-tier switches are gradually deactivated. More formally, we use a \texttt{(2;32,8;1,N;1,8)} fat-tree with
+        \(\texttt{N}\in\{1,2,3,4\}\).
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/prediction/sensibility/topology/whatif_removing_switches.pdf}
+
+            \caption{Influence of the physicical topology on the overall performance. It is possible to remove up to 2
+            of the top-level switches without significantly hurting performances for large matrices. Beyond this point,
+            communications become the main performance bottleneck.}
+            \label{fig:whatif_removing_switches}
+        \end{figure}
+
+        Figure~\ref{fig:whatif_removing_switches} depicts this degradation as a function of matrix size. As one could
+        expect, the impact is more significant for smaller matrix sizes (where the execution is more network bound).
+        Although removing one switch leads to absolutely no visible performance loss, removing two or three switches can
+        have a dramatic effect. Again, such degradation depends on the broadcast and swap algorithms and may be slightly
+        mitigated. To the best of our knowledge, it is the first time such sensibility analysis is conducted faithfully.
+        Generating random node configurations allows avoiding potential bias, in particular against perfectly
+        homogeneous scenarios. We believe such a tool can be quite useful in the earlier steps of a supercomputer design
+        when performing capacity planning to adjust the network capacity to a given cost and power envelope.
