@@ -2654,6 +2654,72 @@ p
 
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figurefutQBh.png]]
+** Sensibility analysis
+The CSV file is stored directly in the repository, it has been dumped by this
+[[https://github.com/Ezibenroc/calibration_analysis/blob/0da08274d347e87afb80024a2f2266ac32920984/dahu/smpi_hpl/dgemm_variability.ipynb][notebook]] (cell 8).
+
+The zip archives used for this file are [[https://github.com/Ezibenroc/calibration_analysis/tree/f1a83c093430e2552c52278d34a0c4c3f4d355f0/dahu/smpi_hpl/dgemm_variability/4][here]].
+*** Drawing the plot
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+df = read.csv("data/prediction/sensibility/temporal/dgemm_variability.csv")
+str(df)
+#+end_src
+
+#+RESULTS:
+: 
+: 'data.frame':	300 obs. of  7 variables:
+:  $ filename             : Factor w/ 60 levels "dgemm_variability/4/grenoble_2020-06-09_1935105.zip",..: 44 44 44 44 44 53 53 53 53 53 ...
+:  $ dgemm_file           : Factor w/ 60 levels "dgemm_synthetic_1_sigma-0e+00.yaml",..: 14 14 14 14 14 23 23 23 23 23 ...
+:  $ platform_id          : int  2 2 2 2 2 3 3 3 3 3 ...
+:  $ matrix_size          : int  300000 500000 100000 200000 400000 300000 500000 100000 200000 400000 ...
+:  $ variation_coefficient: num  0.1 0.1 0.1 0.1 0.1 0.06 0.06 0.06 0.06 0.06 ...
+:  $ time                 : num  163.4 647.4 11.5 58.9 348.5 ...
+:  $ gflops               : num  110100 128700 57780 90630 122400 ...
+
+For a given matrix size and a given coefficient of variation, denote X the
+durations for this size and the coefficient 0 and Y the durations for this size
+and this coefficient.  We want to estimate the overhead caused by this larger
+coefficient. We want an estimation of the value (Y-X)/X = Y/X - 1.
+
+A naive (but still legit) solution consists in computing the mean and confidence
+interval for X and Y separately, then combining them. Hence, our estimate of the
+average overhead is mean(Y)/mean(X) - 1. The lower bound of the confidence
+interval of the overhead is computed with the lower bound of the interval for Y
+divided by the higher bound of the interval for X. This will overestimate a bit
+the width of those intervals.
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R* 
+set.seed(42)  # deterministic position for the jitter
+p = df %>%
+    full_join(filter(., variation_coefficient==0), by=c("platform_id", "matrix_size"), suffix=c("", "_base")) %>%
+    mutate(overhead=time/time_base-1) %>%
+    filter(variation_coefficient > 0) %>%
+    ggplot() +
+    aes(x=variation_coefficient, y=overhead, group=interaction(variation_coefficient, matrix_size), color=factor(matrix_size), fill=factor(matrix_size)) +
+    geom_bar(stat="summary", fun.y="median", position=position_dodge(0.018), key_glyph="rect", color="black") +
+    geom_point(aes(x=variation_coefficient+platform_id/5000-0.001), shape=21, color="black", position=position_dodge(width=0.018), key_glyph="rect") +
+    theme_bw() +
+    xlab("DGEMM coefficient of variation") +
+    ylab("Overhead on HPL duration (%)") +
+    scale_x_continuous(labels = scales::percent_format(accuracy=1), breaks=seq(0,10,2)/100) +
+    scale_y_continuous(labels = scales::percent_format(accuracy=1), breaks=seq(0, 10, 2)/100) +
+    labs(fill="Matrix rank") +
+    expand_limits(y=0) +
+    scale_color_brewer(palette="Greens") +
+    scale_fill_brewer(palette="Greens") +
+    theme(legend.position=c(0.08,0.65)) +
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank())
+
+ggsave("img/prediction/sensibility/temporal/whatif_variability.pdf", plot=p, width=7, height=3, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-MSRWKo/figurebawPH5.png]]
+
+
 * Experimental control
 ** Parameter space
 No dataset here, we generate the data.

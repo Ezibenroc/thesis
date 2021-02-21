@@ -1679,9 +1679,47 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     influence of the physical network topology on overall performance. Most of these studies are particularly difficult
     to conduct through real experiments because of the difficulty to finely control the platform.
 
-    \section{Influence of temporal variability}%
+    \section{Influence of \dgemm temporal variability}%
     \label{sec:influence_of_temporal_variability}
-        Some text\dots
+        In Section~\ref{sec:different_problem_sizes}, we could highlight the importance of accounting for temporal
+        variability of the \dgemm kernel to obtain faithful HPL predictions. To the best of our knowledge, HPL
+        developers and experts are often aware of this influence (or at least suspect it). However, they have never
+        fully quantified it since designing and performing real experiments to evaluate this would be quite difficult.
+        Although increasing this variability wouldn't be too hard, reducing it would be particularly complicated. This
+        can however easily be done through simulation using the hierarchical model of the previous section. In our
+        experiments, the order of magnitude of the temporal variability with respect to actual performance (i.e., the
+        ratio between \(\gamma_{p,d}\) and \(\alpha_{p,d}\) in Equation~\eqref{eq:dgemm.basic}) was around
+        \NSI{3}{\percent}. This may be a ``normal'' value or could be considered too high and possibly improved by
+        better controlling thread mapping or Operating System noise. Such a task can be quite tedious and knowing how
+        much performance gain can be expected beforehand is thus quite useful. In this section, we study the influence
+        of this variability by generating 10 cluster scenarios using the previous model (as in Figure~\ref{fig:whatif}),
+        comprising \Num{1024} nodes each, but by constraining \(\gamma_{p,d}\) to be equal to \(\gamma.\alpha_{p,d}\)
+        with \(\gamma\in[0,0.1]\), which represents the coefficient of variation of the \dgemm kernel. We evaluate the
+        performance of HPL with one multi-threaded MPI rank per node, a block size of 512, a look-ahead \texttt{depth}
+        of 1.  We used the \texttt{increasing-2-ring} broadcast with the \texttt{Crout} panel factorization algorithms
+        and \(\texttt{P}\times\texttt{Q}=8\times32\) and we tested matrix sizes ranging from 100,000 to 500,000. Let us
+        denote by \(T(N,C_i,\gamma)\) the performance of HPL when factorizing a matrix of rank \(N\) on cluster \(C_i\)
+        with a temporal variability of \(\gamma\). The overhead for this configuration is the ratio
+
+        \begin{equation*}
+            O(N,C_i,\gamma) = \frac{\mathbb{E}[T(N,C_i,\gamma)]}{T(N,C_i,0)}-1.
+        \end{equation*}
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/prediction/sensibility/temporal/whatif_variability.pdf}
+
+            \caption{The overhead on HPL duration appears to be linear in \dgemm temporal variability. Although
+            it is negligible for small matrices, it severely inflates for larger matrices.}
+            \label{fig:whatif_variability}
+        \end{figure}
+
+        Each bubble in Figure~\ref{fig:whatif_variability} represents one such overhead. For any \(\gamma\), this
+        overhead appears to be negligible for small matrices and to increase and flatten when \(N\) grows large. In most
+        TOP5000 qualification runs, the matrix is made as large as possible and the overhead would thus appear to grow
+        roughly linearly with \(\gamma\). On a new cluster, a simple statistical evaluation of the nodes' performance
+        using the model of Section~\ref{sub:dgemm_model:generative_models} would thus be a good first diagnosis of
+        whether trying to decreasing temporal variability is a promising tuning target or not.
 
     \section{Influence of spatial variability}%
     \label{sec:influence_of_spatial_variability}
