@@ -2655,11 +2655,12 @@ p
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figurefutQBh.png]]
 ** Sensibility analysis
+*** Temporal variability
 The CSV file is stored directly in the repository, it has been dumped by this
 [[https://github.com/Ezibenroc/calibration_analysis/blob/0da08274d347e87afb80024a2f2266ac32920984/dahu/smpi_hpl/dgemm_variability.ipynb][notebook]] (cell 8).
 
 The zip archives used for this file are [[https://github.com/Ezibenroc/calibration_analysis/tree/f1a83c093430e2552c52278d34a0c4c3f4d355f0/dahu/smpi_hpl/dgemm_variability/4][here]].
-*** Drawing the plot
+**** Drawing the plot
 #+begin_src R :results output :session *R* :exports both
 library(ggplot2)
 library(dplyr)
@@ -2718,6 +2719,187 @@ p
 
 #+RESULTS:
 [[file:/tmp/babel-MSRWKo/figurebawPH5.png]]
+*** Spatial variability
+The CSV file is stored directly in the repository, it has been dumped by this
+[[https://github.com/Ezibenroc/calibration_analysis/blob/0da08274d347e87afb80024a2f2266ac32920984/dahu/smpi_hpl/remove_nodes.ipynb][notebook]] (cell 2).
+
+The zip archives used for this file are [[https://github.com/Ezibenroc/calibration_analysis/tree/5763cd151826060d3bcbbe1528b9d29ebc237b0e/dahu/smpi_hpl/synthetic_model/2/][here]] and [[https://github.com/Ezibenroc/calibration_analysis/tree/c135ce7ff888c0254f9f319b61e607365604bbe6/dahu/smpi_hpl/synthetic_model/5/][here]].
+
+The 3rd plot (same simulations but with a higher spatial variability) uses a
+CSV dumped by this [[https://github.com/Ezibenroc/calibration_analysis/blob/f30825e7ad4229bc9122d4f57fceea83c5586215/dahu/smpi_hpl/remove_nodes.ipynb][notebook]] (cell 2) which is based on these [[https://github.com/Ezibenroc/calibration_analysis/tree/f30825e7ad4229bc9122d4f57fceea83c5586215/dahu/smpi_hpl/synthetic_model/6/][archives]].
+
+The last plot (same simulations, but with an extrapolation of dahu with the
+cooling issue) uses a CSV dumped by this [[https://github.com/Ezibenroc/calibration_analysis/blob/395e9f7c9c1b1234cd7200e111f9741299ad1da3/dahu/smpi_hpl/remove_nodes.ipynb][notebook]] (cell 2) which is based on
+these [[https://github.com/Ezibenroc/calibration_analysis/tree/395e9f7c9c1b1234cd7200e111f9741299ad1da3/dahu/smpi_hpl/synthetic_model/7/][archives]].
+**** Drawing the plot
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(Cairo)  # unicode characters in PDF output (need to install the Debian packages libxt-dev and libcairo2-dev)
+library(ggrepel)
+library(patchwork)
+df = read.csv("data/prediction/sensibility/spatial/removing_nodes.csv")
+str(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	2745 obs. of  10 variables:
+ $ filename        : Factor w/ 549 levels "synthetic_model/2/grenoble_2020-04-01_1924074.zip",..: 314 314 314 314 314 90 90 90 90 90 ...
+ $ dgemm_file      : Factor w/ 150 levels "dgemm_synthetic_1.yaml",..: 56 56 56 56 56 141 141 141 141 141 ...
+ $ platform_id     : int  5 5 5 5 5 1 1 1 1 1 ...
+ $ matrix_size     : int  300000 500000 100000 200000 400000 300000 500000 100000 200000 400000 ...
+ $ proc_p          : int  4 4 4 4 4 13 13 13 13 13 ...
+ $ proc_q          : int  61 61 61 61 61 19 19 19 19 19 ...
+ $ nb_nodes        : int  244 244 244 244 244 247 247 247 247 247 ...
+ $ nb_removed_nodes: int  12 12 12 12 12 9 9 9 9 9 ...
+ $ time            : num  156.7 594.2 12.8 54.5 328.1 ...
+ $ gflops          : num  114900 140200 51880 97880 130100 ...
+#+end_example
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+set.seed(42)  # deterministic geom_text_repel
+confidence = 0.95
+alpha = 1-(1-confidence)/2
+p = df %>%
+    mutate(geometry = paste(proc_p, "×", proc_q, sep="")) %>%
+    filter(matrix_size == select(., matrix_size) %>% max()) %>%
+    group_by(matrix_size, geometry, nb_nodes, nb_removed_nodes, proc_p, proc_q) %>%
+    summarize(mu=mean(time), sigma=sd(time), nb=length(time)) %>%
+    ungroup() %>%
+    mutate(factor=qt(alpha, nb-1)/sqrt(nb)) %>%
+    mutate(low_bound=mu-factor*sigma, high_bound=mu+factor*sigma) %>%
+    full_join(filter(., proc_p==4, proc_q==64), by="matrix_size", suffix=c("", "_base")) %>%
+    mutate(avg=mu/mu_base-1, lb=low_bound/high_bound_base-1, hb=high_bound/low_bound_base-1) %>%
+    mutate(x_within=log(proc_p)) %>%
+    group_by(nb_removed_nodes) %>%
+    mutate(min_x=min(x_within), max_x=max(x_within)) %>%
+    ungroup() %>%
+    mutate(x_norm=(x_within-min_x)/(max_x-min_x)-0.5) %>%
+    mutate(global_x = nb_removed_nodes + x_norm/3) %>%
+    mutate(kind=ifelse(
+        proc_p > proc_q, "P > Q",
+                         "P ≤ Q")) %>%
+    mutate(selection = (proc_p == 4 | (proc_p == 5 & proc_q > 48))) %>% {(
+#    head() %>% as.data.frame()
+
+    ggplot(.) +
+    aes(x=global_x, y=avg) +
+    geom_line(aes(group=nb_removed_nodes), alpha=0.3) +
+    geom_point(aes(group=geometry), size=0.5) +
+    geom_errorbar(aes(group=geometry, ymin=lb, ymax=hb), width=0.005) +
+    #geom_text(aes(label=geometry), position=position_nudge(y=0.03)) +
+    geom_label_repel(data=filter(., selection, (proc_p!=4 | proc_q != 64)), aes(group=geometry, label=geometry), direction="both", ylim=c(NA, -0.05), segment.alpha=0.5) +
+    geom_label_repel(data=filter(., selection, proc_p==4, proc_q==64), aes(group=geometry, label=geometry), direction="both", nudge_x=-1, ylim=c(NA, -0.05), segment.alpha=0.5, fill="#BBBBBB", color="black") +
+    geom_text_repel(data=filter(., !selection), aes(group=geometry, label=geometry), direction="both", segment.alpha=0.5) +
+    expand_limits(y=-0.1) +
+    theme_bw() +
+    xlab("Number of nodes removed") +
+    ylab("Overhead on HPL duration (%)") +
+    scale_x_continuous(breaks=seq(0, 16, 2)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy=1))
+)}
+ggsave("img/prediction/sensibility/spatial/whatif_removing_nodes.pdf", plot=p, width=8, height=4, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-MSRWKo/figure3r5pan.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+set.seed(42)
+p = df %>%
+    mutate(geometry = paste(proc_p, "×", proc_q, sep="")) %>%
+    full_join(filter(., proc_p==4, proc_q==64), by=c("platform_id", "matrix_size"), suffix=c("", "_base")) %>%
+    mutate(overhead=time/time_base-1) %>%
+    mutate(selection = (proc_p == 4 | (proc_p == 5 & proc_q > 48))) %>%
+    filter(nb_removed_nodes > 0 & selection) %>%
+    # The goal of the following line is to have a continuous axis that looks discrete...
+    mutate(base_x = match(nb_removed_nodes, select(., nb_removed_nodes) %>% unique() %>% arrange(nb_removed_nodes) %>% pull(nb_removed_nodes))) %>% {(
+
+    ggplot(.) +
+    aes(x=base_x, y=overhead, group=interaction(nb_removed_nodes, matrix_size), color=factor(matrix_size), fill=factor(matrix_size)) +
+
+    geom_bar(stat="summary", fun.y="median", position=position_dodge(0.9), key_glyph="rect", color="black") +
+    geom_point(aes(x=base_x+platform_id/100-0.05), shape=21, color="black", position=position_dodge(width=0.9), key_glyph="rect") +
+
+    geom_text_repel(data=filter(., matrix_size==300000) %>% group_by(matrix_size, geometry, nb_removed_nodes, base_x) %>% summarize(overhead=mean(overhead)), aes(label=geometry), color="black", direction="y", nudge_y=0.2, segment.alpha=0) +
+
+    expand_limits(y=c(-0.08, 0.08)) +
+
+    theme_bw() +
+    xlab("Number of nodes removed") +
+    ylab("Overhead on HPL duration (%)") +
+    scale_x_continuous(breaks=(select(., base_x) %>%min()):(select(., base_x) %>%max()), labels = select(., nb_removed_nodes) %>% unique() %>% arrange(nb_removed_nodes) %>% pull(nb_removed_nodes)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy=1)) +
+    labs(fill="Matrix rank") +
+    expand_limits(y=0) +
+    scale_fill_brewer(palette="Oranges") +
+    scale_color_brewer(palette="Oranges") +
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    theme(legend.direction="horizontal") +
+    theme(legend.position=c(0.5, 0.15)) +
+    theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0.2, 'cm'))+
+    guides(fill = guide_legend(label.position = "bottom", title.position="top", title.hjust=0.5)) +
+
+    theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank())
+    )}
+
+
+ggsave("img/prediction/sensibility/spatial/whatif_removing_nodes_2.pdf", plot=p, width=8, height=4, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-MSRWKo/figure5ruBXE.png]]
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+set.seed(42)
+p = read.csv("data/prediction/sensibility/spatial/removing_nodes_heterogeneous.csv") %>%
+    mutate(geometry = paste(proc_p, "×", proc_q, sep="")) %>%
+    full_join(filter(., proc_p==4, proc_q==64), by=c("platform_id", "matrix_size"), suffix=c("", "_base")) %>%
+    mutate(overhead=time/time_base-1) %>%
+    mutate(selection = (proc_p == 4 | (proc_p == 5 & proc_q > 48))) %>%
+    filter(nb_removed_nodes > 0 & selection) %>%
+    # The goal of the following line is to have a continuous axis that looks discrete...
+    mutate(base_x = match(nb_removed_nodes, select(., nb_removed_nodes) %>% unique() %>% arrange(nb_removed_nodes) %>% pull(nb_removed_nodes))) %>% {(
+
+    ggplot(.) +
+    aes(x=base_x, y=overhead, group=interaction(nb_removed_nodes, matrix_size), color=factor(matrix_size), fill=factor(matrix_size)) +
+
+    geom_bar(stat="summary", fun.y="median", position=position_dodge(0.9), key_glyph="rect", color="black") +
+    geom_point(aes(x=base_x+platform_id/100-0.05), shape=21, color="black", position=position_dodge(width=0.9), key_glyph="rect") +
+    # Comment the previous line and uncomment the following to color the points by platform id.
+#    geom_point(aes(color=factor(platform_id), x=base_x+platform_id/100-0.05), position=position_dodge(width=0.9), key_glyph="rect") +
+
+    geom_text_repel(data=filter(., matrix_size==300000) %>% group_by(matrix_size, geometry, nb_removed_nodes, base_x) %>% summarize(overhead=mean(overhead)), aes(label=geometry), color="black", direction="y", nudge_y=0.2, segment.alpha=0) +
+
+    expand_limits(y=c(-0.08, 0.08)) +
+
+    theme_bw() +
+    xlab("Number of nodes removed") +
+    ylab("Overhead on HPL duration (%)") +
+    scale_x_continuous(breaks=(select(., base_x) %>%min()):(select(., base_x) %>%max()), labels = select(., nb_removed_nodes) %>% unique() %>% arrange(nb_removed_nodes) %>% pull(nb_removed_nodes)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy=1)) +
+    labs(fill="Matrix rank") +
+    expand_limits(y=0) +
+    scale_fill_brewer(palette="Oranges") +
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    theme(legend.direction="horizontal") +
+    theme(legend.position=c(0.81, 0.8)) +
+    theme(legend.spacing.x = unit(0.3, 'cm'), legend.spacing.y = unit(0.2, 'cm'))+
+    guides(fill = guide_legend(label.position = "bottom", title.position="top", title.hjust=0.5)) +
+
+    theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank())
+    )}
+
+ggsave("img/prediction/sensibility/spatial/whatif_removing_nodes_2_heterogeneous.pdf", plot=p, width=8, height=4, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-MSRWKo/figureJYPzVd.png]]
 
 
 * Experimental control

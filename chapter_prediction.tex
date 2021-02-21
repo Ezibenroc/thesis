@@ -1721,9 +1721,78 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         using the model of Section~\ref{sub:dgemm_model:generative_models} would thus be a good first diagnosis of
         whether trying to decreasing temporal variability is a promising tuning target or not.
 
-    \section{Influence of spatial variability}%
+    \section{Influence of \dgemm spatial variability}%
     \label{sec:influence_of_spatial_variability}
-        Some text\dots
+        Although we showed in Section~\ref{sec:different_problem_sizes} that temporal variability could account for
+        about \NSI{9}{\percent} of performance, spatial variability was even more important as it was responsible for
+        \NSI{22}{\percent} of overhead compared to a fully homogeneous cluster. In practice, the replacement of a few
+        nodes may be possible but such spatial variability is expected and common\cite{rountree_15} and a workaround
+        would have to be found. A common approach consists in dropping out a few of the slowest nodes. Indeed, since the
+        matrix is evenly divided between the nodes, the computation inevitably progresses at the speed of the slowest
+        node. However, removing the slowest nodes also decreases the overall processing capability and impacts the
+        virtual topology's geometry (the \texttt{P} and \texttt{Q} parameters of HPL). Such adjustment is often done by
+        trial and error and is all the more tricky as temporal variability and uncertainty from real experiments come
+        into play. In this section, we show how such a subtle trade-off can be studied in simulation.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/prediction/sensibility/spatial/whatif_removing_nodes.pdf}
+            \caption{Influence of the number of nodes on the performance of HPL\@. The geometry of the virtual topology
+                is particularly influent and it appears that $\mathtt{P}\times\mathtt{Q}$ configurations with a small
+                $\mathtt{P}$ perform significantly better then those with a larger $\mathtt{P}$. Each configuration is
+                summarized through the average overhead over the 10 clusters and errorbars represent a 95\% confidence
+            interval.}
+            \label{fig:whatif_removing_nodes}
+        \end{figure}
+
+        Using the model from Section~\ref{sub:dgemm_model:generative_models}, we generate 10 mildly heterogeneous 256
+        node clusters (i.e., where nodes are similar to the ones of our cluster when operating in the normal state as in
+        Figure~\ref{fig:whatif_calibration}) and we study the performance obtained when removing 1 to 16 of the slowest
+        nodes. When removing nodes, the geometry should be adjusted depending on how the number of remaining nodes
+        decomposes in prime factors. As observed in Figure~\ref{fig:validation_geometry}, having \texttt{P} \(\approx\)
+        \texttt{Q} is generally a good idea to reduce the total amount of communication. However it may be
+        counter-productive for a given broadcast or swap algorithm that serializes communications.
+        Figure~\ref{fig:whatif_removing_nodes} shows the average (over the 10 clusters) overhead for a matrix of rank
+        \Num{250000} compared to the best performance obtained using the whole cluster. We group the different
+        \(\texttt{P}\times\texttt{Q}\) decompositions and order them by increasing \texttt{P}. Again, we use the
+        \texttt{2-Ring} and \texttt{Binary-exch} algorithms, which are among the best configurations according to the
+        study of Section~\ref{sec:factorial_experiment}. It appears that the \(4\times64\) geometry now achieves the
+        best trade-off between the total amount of communications and how well they overlap with each other. The optimal
+        configuration for each number of nodes is boxed in Figure~\ref{fig:whatif_removing_nodes}. It reveals that there
+        is not much to gain, probably because of the mild spatial heterogeneity of our cluster, but that optimizing the
+        virtual topology is particularly important.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/prediction/sensibility/spatial/whatif_removing_nodes_2.pdf}
+            \caption{Influence of node removal on performance while taking into account the matrix rank. Due to the mild
+            heterogeneity of these scenarios, evicting nodes brings no benefit.}
+            \label{fig:whatif_removing_nodes_2}
+        \end{figure}
+
+        Figure~\ref{fig:whatif_removing_nodes_2} investigates how this overhead for the best geometry and node selection
+        also depends on the matrix rank. It appears that in this scenario, except for very small matrices, removing
+        nodes cannot help improving performance. Note that the overhead for \(5\times\texttt{Q}\) configurations with a
+        matrix rank 200,000 appears to behave differently from what happens for other matrix sizes. This surprising
+        effect probably arises from a subtle combination of matrix size and virtual topology. We could indeed observe on
+        our cluster that such configurations had a weakly but significantly worse performance than the other
+        configurations. Such interaction also explains why designing a faithful analytical model of HPL is so difficult
+        and why a full simulation of the whole application is generally required.  Although absolute performance should
+        be taken with a grain of salt when studying such subtle effects, they are easily overlooked when conducting real
+        experiments. In this particular small scale mild heterogeneity scenario, there is thus no gain in removing nodes
+        but, as illustrated in Figure~\ref{fig:whatif_removing_nodes_heterogeneous} where we used a multimodal spatial
+        heterogeneity (as in Figure~\ref{fig:whatif_slow}), this may be a relevant approach.  This sensibility analysis
+        shows how, for a given supercomputer, a simple statistical evaluation of the spatial heterogeneity allows
+        evaluating whether spatial variability is a promising tuning target or not.
+
+        \begin{figure}[!t]
+            \centering
+            \includegraphics[width=\linewidth]{img/prediction/sensibility/spatial/whatif_removing_nodes_2_heterogeneous.pdf}
+            \caption{Influence of node removal on performance in a stronger heterogeneity scenario (extrapolation of our
+            test cluster when it had a cooling problem on 4 of its nodes). Removing 6 to 12 nodes our of 256 nodes may
+            bring substential improvement and such optimization would therefore be worth investigating.}
+            \label{fig:whatif_removing_nodes_heterogeneous}
+        \end{figure}
 
     \section{Influence of the physical topology}%
     \label{sec:influence_of_physical_topology}
