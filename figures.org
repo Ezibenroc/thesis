@@ -2654,8 +2654,6 @@ p
 
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figurefutQBh.png]]
-
-
 * Experimental control
 ** Parameter space
 No dataset here, we generate the data.

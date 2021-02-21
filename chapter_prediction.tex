@@ -1664,6 +1664,21 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     %% Également ma tentative de modélisation de la performance de HPL en fonction de P et Q avec un modèle linéaire
     %% (échec, ce qui montre la difficulté de la chose).
 
+
+    We have shown that many typical HPL case studies could be conducted in simulation. However, their conclusions
+    (optimal geometry and parameters) are specific to the cluster we used and they require a precise model of several
+    aspects of the target cluster, which may not be possible at early experimental stages. In particular, only a few
+    cluster nodes may be available at first and the whole cluster model should then be constructed from a limited set of
+    observations and carefully extrapolated. This section shows how typical \emph{what-if} simulation studies should be
+    conducted given such uncertainty. We have presented in Section~\ref{sub:dgemm_model:generative_models} a generative
+    model of node performance that can easily be fit from daily measurements and used to produce a similar platform.
+    This model is used to quantify the importance on overall performance of temporal variability of the \dgemm kernel in
+    Section~\ref{sec:influence_of_temporal_variability} and of spatial variability of nodes in
+    Section~\ref{sec:influence_of_spatial_variability}. In particular, we show how to study the efficiency of a simple
+    \emph{slow node eviction} strategy. Finally, we study in Section~\ref{sec:influence_of_physical_topology} the
+    influence of the physical network topology on overall performance. Most of these studies are particularly difficult
+    to conduct through real experiments because of the difficulty to finely control the platform.
+
     \section{Influence of temporal variability}%
     \label{sec:influence_of_temporal_variability}
         Some text\dots
