@@ -1,10 +1,10 @@
 \part{Performance prediction through simulation}
 \label{part:prediction}
 
-The work presented in this part has been published at a conference\cite{cornebize:cluster19} and has been submitted
-for publication in a journal\cite{cornebize:jpdc}. The content of this part is therefore a near-verbatim copy of these
-articles. This work also directly follows my master thesis\cite{cornebize:master_thesis} whose main contribution is
-summarized in chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
+The work presented in this part has been published at a conference~\cite{cornebize:cluster19} and has been submitted
+for publication in a journal~\cite{cornebize:jpdc}. The content of this part is therefore a near-verbatim copy of these
+articles. This work also directly follows my master thesis~\cite{cornebize:master_thesis} whose main contribution is
+summarized in Chapter~\ref{chapter:prediction:emulation} for the sake of completeness.
 
 \chapter{Related work}%
 \label{chapter:prediction:related_work}
@@ -132,14 +132,14 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     \section{Simgrid/SMPI}%
     \label{sec:simgrid_smpi}
 
-        SimGrid\cite{simgrid} is a flexible and open-source simulation framework that was originally designed in 2000 to
+        SimGrid~\cite{simgrid} is a flexible and open-source simulation framework that was originally designed in 2000 to
         study scheduling heuristics tailored to heterogeneous grid computing environments but has later been extended to
         study cloud and HPC infrastructures. The main development goal for SimGrid has been to provide validated performance
         models particularly for scenarios making heavy use of the network.  Such a validation usually consists of comparing
         simulation predictions with results from real experiments to confirm or debunk network and application models.
 
         SMPI, a simulator based on SimGrid, has been developed and used to simulate unmodified MPI applications written in
-        C/C++ or FORTRAN\cite{smpi}.
+        C/C++ or FORTRAN~\cite{smpi}.
         The complex network optimizations done in real MPI implementations need to be considered when predicting the
         performance of MPI applications.  For instance, the "eager" and "rendez-vous" protocols are selected based on the
         message size, with each protocol having its own synchronization semantics, which strongly impact performance.  SMPI
@@ -147,7 +147,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         model network topologies and contention. SMPI relies on SimGrid's communication models where each ongoing
         communication is represented as a whole (as opposed to single packets) by a \emph{flow}. Assuming steady-state,
         contention between active communications can then be modeled as a bandwidth sharing problem that accounts for
-        non-trivial phenomena (\eg cross-traffic interference\cite{Velho_TOMACS13}). If needed, communications that start or
+        non-trivial phenomena (\eg cross-traffic interference~\cite{Velho_TOMACS13}). If needed, communications that start or
         end trigger a re-computation of the bandwidth share.  In this fluid model, the time to simulate a message passing
         through the network is independent of its size, which is advantageous for large-scale applications frequently
         sending large messages and orders of magnitude faster than packet-level simulation.  SimGrid does not model
@@ -161,7 +161,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         virtual delay.  This time may be scaled up or down depending on the speed of the simulated machine with respect to
         the simulation machine.
         Recent results report consistent performance predictions within a few percent for standard benchmarks on small-scale
-        clusters (up to \(12\times12\) cores \cite{heinrich:hal-01523608} and up to \(128\times1\) cores \cite{smpi}). In
+        clusters (up to \(12\times12\) cores~\cite{heinrich:hal-01523608} and up to \(128\times1\) cores~\cite{smpi}). In
         this thesis, I validate this approach at a much larger scale with HPL, whose emulation comes with at least two
         challenges:
         \begin{itemize}
@@ -223,7 +223,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
             \label{fig:hpl_overview}
         \end{figure}
 
-        In this work, we use the freely-available reference-implementation of HPL\cite{hpl}, which relies on MPI.  HPL
+        In this work, we use the freely-available reference-implementation of HPL~\cite{hpl}, which relies on MPI.  HPL
         implements a matrix factorization based on a right-looking variant of the LU factorization with row partial pivoting
         and allows multiple look-ahead depths. The principle of the factorization is depicted in
         Figure~\ref{fig:hpl_overview}. It consists of a series of panel factorizations followed by an update of the trailing
@@ -326,7 +326,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
 
     In this chapter, we present the changes to SimGrid and HPL that were required for a scalable simulation.  The
     experiments were done using a single core from nodes of the Nova cluster provided by the Grid'5000
-    testbed\cite{grid5000} (\NSI{32}{\giga\byte} of RAM, two 8-core Intel Xeon E5-2620 v4 CPUs, Debian Stretch OS
+    testbed~\cite{grid5000} (\NSI{32}{\giga\byte} of RAM, two 8-core Intel Xeon E5-2620 v4 CPUs, Debian Stretch OS
     (Linux 4.9)).
 
     %% TODO
@@ -547,7 +547,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         As explained above, SMPI maps MPI processes to threads of a single process, effectively folding them into the
         same address space.  Consequently, global variables in the MPI application are shared between threads unless
         these variables are \emph{privatized} and the simulated MPI ranks thus isolated from each other. Several
-        technical solutions are possible to handle this issue\cite{smpi}. The default strategy in SMPI consists in
+        technical solutions are possible to handle this issue~\cite{smpi}. The default strategy in SMPI consists in
         making a copy of the \texttt{data} segment (containing all global variables) per MPI rank at startup and, when
         context switching to another rank, to remap the \texttt{data} segment via \texttt{mmap} to the private copy of
         that rank.  SMPI also implements another mechanism relying on the \texttt{dlopen} function that allows to load
@@ -878,7 +878,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
             enough measurements at our disposal and because it is particularly suited to the Gaussian modeling
             assumption. Should more complex models (e.g., a mixture to account for ``outlier'' nodes or a SkewNormal
             distribution to account for the distribution's skewness) be used, a general Bayesian sampling framework like
-            STAN\cite{stan} would be more adapted. Such frameworks allow to easily specify hierarchical generative
+            STAN~\cite{stan} would be more adapted. Such frameworks allow to easily specify hierarchical generative
             models like the one presented in Figure~\ref{fig:model:generative} and to draw samples from the posterior
             distribution of \(\mu\), \(\Sigma_T\), and \(\Sigma_S\), which can be used to generate realistic
             \(\mu_{p,d}\) values for a new hypothetical cluster easily.
@@ -1505,7 +1505,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         that was needed to reflect this platform change in the simulation.
         This result illustrates both the faithfulness of our simulations and a potential use case for predictive
         simulations: a discrepancy between the reality and the predictions can sometimes indicate a real issue on the
-        platform (similar situations have already been reported with SMPI\cite{smpi}).
+        platform (similar situations have already been reported with SMPI~\cite{smpi}).
 
     \section{Different geometries}%
     \label{sec:different_geometries}
@@ -1569,7 +1569,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         found out that with such elongated geometries, the message size is significantly larger than what we had used in
         our calibration, and the performance surprisingly and significantly drops for such size (compare with the
         rightmost plots of Figure~\ref{fig:mpi_calibration}). This performance drop is explained by poor optimization of
-        the DMA locking mechanism in the Infiniband network layer\cite{denis:inria-00586015}. A similar performance drop
+        the DMA locking mechanism in the Infiniband network layer~\cite{denis:inria-00586015}. A similar performance drop
         also happens for intra-node communications that poorly manage the caches above a given size. Furthermore, the
         communication patterns generated by HPL during the ring broadcast are significantly impacted by the busy waiting
         of HPL that intensively calls \texttt{MPI\_Probe} and \dgemm on small sub-matrices. Our initial
@@ -1726,7 +1726,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
         Although we showed in Section~\ref{sec:different_problem_sizes} that temporal variability could account for
         about \NSI{9}{\percent} of performance, spatial variability was even more important as it was responsible for
         \NSI{22}{\percent} of overhead compared to a fully homogeneous cluster. In practice, the replacement of a few
-        nodes may be possible but such spatial variability is expected and common\cite{rountree_15} and a workaround
+        nodes may be possible but such spatial variability is expected and common~\cite{rountree_15} and a workaround
         would have to be found. A common approach consists in dropping out a few of the slowest nodes. Indeed, since the
         matrix is evenly divided between the nodes, the computation inevitably progresses at the speed of the slowest
         node. However, removing the slowest nodes also decreases the overall processing capability and impacts the
@@ -1799,7 +1799,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
 
         Finally, since virtual topology and communications appear to significantly influence the overall performance,
         one may wonder how much the physical topology influences the performance. Indeed, several recent
-        articles\cite{tapered_fat_tree_16,tapered_fat_tree_19} report that interconnect networks are often oversized
+        articles~\cite{tapered_fat_tree_16,tapered_fat_tree_19} report that interconnect networks are often oversized
         compared to the actual need of applications and that turning off some switches could sometimes go completely
         unnoticed by end-users. In this section we consider ten 256 node clusters with variable node performance (as in
         Figure~\ref{fig:whatif}) interconnected by a 2-level fat-tree and quantify by how much performance degrades when
@@ -1838,7 +1838,7 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     best for a given application or if an upgrade of the current machine should be considered.
 
     Simulation is an effective approach in this context and SimGrid/SMPI has previously been successfully validated in
-    several small-scale studies with simple HPC benchmarks\cite{smpi,heinrich:hal-01523608}. In this work, we have
+    several small-scale studies with simple HPC benchmarks~\cite{smpi,heinrich:hal-01523608}. In this work, we have
     explained how SMPI could be used to efficiently emulate HPL. The proposed approach only requires minimal code
     modifications and applies to any application whose behavior does not strongly depend on data-dependent intermediate
     computation results.  Although HPL is not a \emph{real} application, it is quite optimized from an algorithmic point
@@ -1872,8 +1872,8 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
     platform uncertainty.
 
     As future work, building on the effort of SimGrid developers on supporting the emulation of a wide variety of
-    applications with SMPI\cite{smpi_proxy_apps}, we also intend to conduct similar studies with other HPC benchmarks
-    (\eg HPCG\cite{HPCG} or HPGMG\cite{HPGMG}), real applications (\eg BigDFT\cite{bigdft}) and larger infrastructures.
+    applications with SMPI~\cite{smpi_proxy_apps}, we also intend to conduct similar studies with other HPC benchmarks
+    (\eg HPCG~\cite{HPCG} or HPGMG~\cite{HPGMG}), real applications (\eg BigDFT~\cite{bigdft}) and larger infrastructures.
     As explained in this article, a good model of compute kernels and the MPI library is essential. Thereby, the main
     challenge for systematic use of our simulation technique now lies in the automation of measurements through
     well-designed experiments and the automatic detection of when the envisioned models miss essential characteristics
