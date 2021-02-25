@@ -118,22 +118,13 @@ summarized in chapter~\ref{chapter:prediction:emulation} for the sake of complet
                 \label{tab:prediction:state_of_the_art}
                 \begin{tabular}{p{0.15\linewidth} | p{0.13\linewidth} p{0.13\linewidth} p{0.13\linewidth} p{0.13\linewidth}
                     p{0.13\linewidth} p{0.13\linewidth} }
-                    Approach & Extrapolation on the problem size & Extrapolation on the configuration & No full-scale real
+                    & Extrapolation on the problem size & Extrapolation on the configuration & No full-scale real
                     run & Hypothetical platform & Efficiency & Accuracy\\
-                    \hline
-                    \rowcolor{gray80} Big-O analysis          & \yess & \yess & \yess & \yess & \yess \yess & \nope\nope\\
+                    Analytical model          & \yess & \yess & \yess & \yess & \yess \yess & \nope\nope\\
                     \cite{hpl_prediction}   & \yess & \nope & \yess & \nope & \yess & \yess\\
                     \cite{Singh_2007}       & \nope & \yess & \nope & \nope & \yess & \yess\\
-                    \hline
-                    \rowcolor{gray80} Ideal off-line sim.     & \nope & \nope & \nope & \yess & \yess & \yess\\
-                    BigSim\cite{bigsim_04}  & \\
-                    Dimemas\cite{dimemas}   & \\
-                    CODES\cite{CODES}       & \\
-                    \hline
-                    \rowcolor{gray80} Ideal on-line sim.      & \yess & \yess & \yess & \yess & \yess & \yess\\
-                    xSim\cite{xsim}         & \\
-                    SST\cite{sstmacro}      & \\
-                    Simgrid\cite{simgrid}   & \yess & \yess & \yess & \yess & \yess & \yess\\
+                    Off-line simulation     & \nope & \nope & \nope & \yess & \yess & \yess\\
+                    On-line simulation      & \yess & \yess & \yess & \yess & \yess & \yess\\
                 \end{tabular}
             \end{table}
         \end{landscape}
