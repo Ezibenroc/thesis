@@ -114,29 +114,6 @@ summarized in Chapter~\ref{chapter:prediction:emulation} for the sake of complet
         achieve such impressive results and they did not publish their code. Given the context, we believe their claims
         should be interpreted with caution.
 
-        The differences between these prediction approaches are summarized in
-        Table~\ref{tab:prediction:state_of_the_art}.
-
-        \begin{landscape}
-            \newcommand{\yess}{\textcolor{green}{\cmark}}
-            \newcommand{\nope}{\textcolor{red}{\xmark}}
-            \begin{table}[htpb]
-                \centering
-                \caption{Summary of the different prediction approaches}
-                \label{tab:prediction:state_of_the_art}
-                \begin{tabular}{p{0.15\linewidth} | p{0.13\linewidth} p{0.13\linewidth} p{0.13\linewidth} p{0.13\linewidth}
-                    p{0.13\linewidth} p{0.13\linewidth} }
-                    & Extrapolation on the problem size & Extrapolation on the configuration & No full-scale real
-                    run & Hypothetical platform & Efficiency & Accuracy\\
-                    Analytical model          & \yess & \yess & \yess & \yess & \yess \yess & \nope\nope\\
-                    \cite{hpl_prediction}   & \yess & \nope & \yess & \nope & \yess & \yess\\
-                    \cite{Singh_2007}       & \nope & \yess & \nope & \nope & \yess & \yess\\
-                    Off-line simulation     & \nope & \nope & \nope & \yess & \yess & \yess\\
-                    On-line simulation      & \yess & \yess & \yess & \yess & \yess & \yess\\
-                \end{tabular}
-            \end{table}
-        \end{landscape}
-
     \section{Simgrid/SMPI}%
     \label{sec:simgrid_smpi}
 
