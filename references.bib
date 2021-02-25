@@ -48,31 +48,6 @@
     license = {BSD},
 }
 
-@incollection{hpl_prediction,
-    author = "Luszczek, Piotr and Dongarra, Jack",
-    doi = "10.1007/978-3-642-31464-3_74",
-    url = "https://doi.org/10.1007%2F978-3-642-31464-3_74",
-    year = "2012",
-    publisher = "Springer Berlin Heidelberg",
-    pages = "730--739",
-    title = "Reducing the Time to Tune Parallel Dense Linear Algebra Routines with Partial Execution and Performance
-    Modeling",
-    booktitle = "Parallel Processing and Applied Mathematics"
-}
-
-@article{Singh_2007,
-    author = "Singh, Karan and {\.{I}}pek, Engin and McKee, Sally A. and de Supinski, Bronis R. and Schulz, Martin and Caruana, Rich",
-    doi = "10.1002/cpe.1171",
-    url = "https://doi.org/10.1002%2Fcpe.1171",
-    year = "2007",
-    publisher = "Wiley",
-    volume = "19",
-    number = "17",
-    pages = "2219--2235",
-    title = "Predicting parallel application performance via machine learning approaches",
-    journal = "Concurrency and Computation: Practice and Experience"
-}
-
 @incollection{grid5000,
     title = {Adding Virtualization Capabilities to the {Grid'5000} Testbed},
     author = {Balouek, Daniel and Carpen-Amarie, Alexandra and Charrier, Ghislain and Desprez, Fr{\'e}d{\'e}ric and
@@ -220,6 +195,125 @@
     PDF = {https://hal.inria.fr/hal-03141988/file/paper.pdf},
     HAL_ID = {hal-03141988},
     HAL_VERSION = {v1},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Other performance predictions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@incollection{hpl_prediction,
+    author = "Luszczek, Piotr and Dongarra, Jack",
+    doi = "10.1007/978-3-642-31464-3_74",
+    url = "https://doi.org/10.1007%2F978-3-642-31464-3_74",
+    year = "2012",
+    publisher = "Springer Berlin Heidelberg",
+    pages = "730--739",
+    title = "Reducing the Time to Tune Parallel Dense Linear Algebra Routines with Partial Execution and Performance
+    Modeling",
+    booktitle = "Parallel Processing and Applied Mathematics"
+}
+
+@article{Singh_2007,
+    author = "Singh, Karan and {\.{I}}pek, Engin and McKee, Sally A. and de Supinski, Bronis R. and Schulz, Martin and Caruana, Rich",
+    doi = "10.1002/cpe.1171",
+    url = "https://doi.org/10.1002%2Fcpe.1171",
+    year = "2007",
+    publisher = "Wiley",
+    volume = "19",
+    number = "17",
+    pages = "2219--2235",
+    title = "Predicting parallel application performance via machine learning approaches",
+    journal = "Concurrency and Computation: Practice and Experience"
+}
+
+@INPROCEEDINGS{aspen,
+    author = "{Spafford}, K. L. and {Vetter}, J. S.",
+    booktitle = "SC '12: Proceedings of the International Conference on High Performance Computing, Networking, Storage and Analysis",
+    title = "Aspen: A domain specific language for performance modeling",
+    year = "2012",
+    volume = "",
+    number = "",
+    pages = "1-11",
+    abstract = "We present a new approach to analytical performance modeling using Aspen, a domain specific langauge. Aspen (Abstract Scalable Performance Engineering Notation) fills an important gap in existing performance modeling techniques and is designed to enable rapid exploration of new algorithms and architectures. It includes a formal specification of an application's performance behavior and an abstract machine model. We provide an overview of Aspen's features and demonstrate how it can be used to express a performance model for a three dimensional Fast Fourier Transform. We then demonstrate the composability and modularity of Aspen by importing and reusing the FFT model in a molecular dynamics model. We have also created a number of tools that allow scientists to balance application and system factors quickly and accurately.",
+    keywords = "fast Fourier transforms;formal specification;molecular dynamics method;physics computing;specification languages;Aspen language;domain specific language;analytical performance modeling;abstract scalable performance engineering notation;formal specification;abstract machine model;application performance behavior;fast Fourier transform;FFT model;molecular dynamics model;Analytical models;Kernel;Computer architecture;Computational modeling;Predictive models;Hardware;Mathematical model",
+    doi = "10.1109/SC.2012.20",
+    ISSN = "2167-4337",
+    month = "Nov"
+}
+
+@article{pram,
+    author = "Karp, R M and Ramachandran, V",
+    title = "A survey of parallel algorithms for shared-memory machines",
+    abstractNote = "This book is a survey of the growing body of theory concerned with parallel algorithms and the complexity of parallel computation. The principle model of computation that the authors consider is the parallel random-access machine (PRAM), in which it is assumed that each processor has random access in unit time to any cell of a global memory. This model permits the logical structure of parallel computation to be studied in a context divorced from issues of interprocessor communication.",
+    url = "https://www.osti.gov/biblio/5805553",
+    place = "United States",
+    year = "1989",
+    month = "1"
+}
+
+@article{logp,
+    author = "Culler, David and Karp, Richard and Patterson, David and Sahay, Abhijit and Schauser, Klaus Erik and
+    Santos, Eunice and Subramonian, Ramesh and von Eicken, Thorsten",
+    doi = "10.1145/173284.155333",
+    url = "https://doi.org/10.1145%2F173284.155333",
+    year = "1993",
+    month = "jul",
+    publisher = "Association for Computing Machinery ({ACM})",
+    volume = "28",
+    number = "7",
+    pages = "1--12",
+    title = "{LogP}: towards a realistic model of parallel computation",
+    journal = "{ACM} {SIGPLAN} Notices"
+}
+
+@article{loggp,
+    author = "Alexandrov, Albert and Ionescu, Mihai F. and Schauser, Klaus E. and Scheiman, Chris",
+    title = "LogGP: Incorporating Long Messages into the LogP Model for Parallel Computation",
+    journal = "Journal of Parallel and Distributed Computing",
+    volume = "44",
+    number = "1",
+    pages = "71-79",
+    year = "1997",
+    issn = "0743-7315",
+    doi = "https://doi.org/10.1006/jpdc.1997.1346",
+    url = "https://www.sciencedirect.com/science/article/pii/S0743731597913460"
+}
+
+@article{bsp,
+    author = "Valiant, Leslie G.",
+    title = "A Bridging Model for Parallel Computation",
+    year = "1990",
+    issue_date = "Aug. 1990",
+    publisher = "Association for Computing Machinery",
+    address = "New York, NY, USA",
+    volume = "33",
+    number = "8",
+    issn = "0001-0782",
+    url = "https://doi.org/10.1145/79173.79181",
+    doi = "10.1145/79173.79181",
+    journal = "Commun. ACM",
+    month = "August",
+    pages = "103–111",
+    numpages = "9"
+}
+
+@article{cache_oblivious,
+    author = "Frigo, Matteo and Leiserson, Charles E. and Prokop, Harald and Ramachandran, Sridhar",
+    title = "Cache-Oblivious Algorithms",
+    year = "2012",
+    issue_date = "January 2012",
+    publisher = "Association for Computing Machinery",
+    address = "New York, NY, USA",
+    volume = "8",
+    number = "1",
+    issn = "1549-6325",
+    url = "https://doi.org/10.1145/2071379.2071383",
+    doi = "10.1145/2071379.2071383",
+    journal = "ACM Trans. Algorithms",
+    month = "January",
+    articleno = "4",
+    numpages = "22",
+    keywords = "matrix transpose, sorting, cache-oblivious, fast Fourier transform, caching, Algorithm, matrix multiplication, I/O complexity"
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
