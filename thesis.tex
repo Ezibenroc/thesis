@@ -288,8 +288,12 @@
 \renewcommand*{\thepage}{A\arabic{page}}  % prepend A to appendix page number
 \pagestyle{scrheadings}  % display header and footer
 \addtocontents{toc}{\bigskip}  % visual hint for numbering change in ToC
+\fi
 
 \appendix
+\inputchapter{\includechapterappendix}{chapter_appendix.tex}
+
+\iftotalcompilation
 \cleardoublepage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  COMMENTED OUT FOR SEPARATE CHAPTER COMPILATIONS
 
 {

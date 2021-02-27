@@ -53,6 +53,12 @@ chapter_experiment: $(THESIS_ALL_TEX) Makefile references.bib
 	echo "\\\watermarkfalse" >> macros.include.tex
 	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
 
+chapter_appendix: $(THESIS_ALL_TEX) Makefile references.bib
+	echo "\\\def \\\includechapterappendix {true}" > macros.include.tex
+	echo "\\\totalcompilationfalse" >> macros.include.tex
+	echo "\\\watermarkfalse" >> macros.include.tex
+	rubber --pdf --unsafe -Wall --jobname $@ thesis.tex
+
 #########################
 # Convenience shortcuts #
 #########################
