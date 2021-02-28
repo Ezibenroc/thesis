@@ -4099,4 +4099,164 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-LlZHec/figureHwoaVK.png]]
+* Appendix
+** Total amount of core hours
+*** Collecting the data
+The data used in this section comes from OAR logs. Here, I describe how I
+collected it.
 
+First, I connected to one of the Grid'5000 frontend. Then, for each of the 8
+Grid'5000 sites, I repeated the following procedure (here using grenoble as an
+example):
+- Launch a postgresql client connected to the desired server:
+  #+begin_src sh :results output :exports both
+  psql -h oardb.grenoble.grid5000.fr -U oarreader oar2
+  #+end_src
+  I entered the password 'read' when prompted.
+- Run the following SQL querry (do not forget to change the filename in the
+  end):
+  #+BEGIN_SRC sql
+  \copy (Select string_agg(Distinct host, '/') as hosts, Count(Distinct host) as nb_hosts, Count(Distinct resources.resource_id) as nb_cores,cluster,submission_time,start_time,stop_time,job_id,job_name,job_type,command,initial_request From jobs Inner Join assigned_resources on jobs.assigned_moldable_job = assigned_resources.moldable_job_id Inner Join resources on assigned_resources.resource_id = resources.resource_id Where job_user = 'tocornebize' Group By jobs.submission_time,jobs.start_time,jobs.stop_time,jobs.job_id,jobs.job_name,jobs.job_type,jobs.command,resources.cluster) To '~/oardata.csv' With CSV;
+  #+END_SRC
+*** Plots and analysis
+#+begin_src R :results output :session *R* :exports both
+library(dplyr)
+library(ggplot2)
+library(anytime)
+base_path = "data/appendix/carbon/"
+df = data.frame()
+for(site in c("grenoble","lille","luxembourg","lyon","nancy","nantes","rennes","sophia")) {
+    tmp = read.csv(paste(base_path, site, ".csv", sep=""), header=F)
+    df = rbind(df, tmp)
+}
+colnames(df) = c("hosts", "nb_hosts", "nb_cores", "cluster", "submission_time", "start_time", "stop_time", "job_id", "job_name", "job_type", "command", "initial_request")
+df = df %>%
+    mutate(duration=stop_time-start_time) %>%
+    mutate(timestamp=anytime(start_time)) %>%
+    arrange(timestamp) %>%
+    mutate(cumtime = cumsum(as.numeric(nb_cores*duration/3600))) %>%
+    mutate(jobkind=ifelse(grepl("BLASCalibration", command), "G5K test",
+                   ifelse(grepl("SMPIHPL", command), "HPL simulation",
+                   ifelse(grepl("HPL", command), "HPL execution",
+                   ifelse(grepl("CI", job_name), "G5K test",
+                   ifelse(grepl("MPICalibration", command), "MPI Calibration",
+                   ifelse(grepl("MPIRing", command), "MPI Calibration",
+                   ifelse(grepl("-t container", initial_request), "container",
+                   ifelse(grepl("INTERACTIVE", job_type), "Interactive", "other"
+    ))))))))) %>%
+    mutate(core_hours=nb_cores*duration/3600, node_hours=nb_hosts*duration/3600) %>%
+    group_by(jobkind) %>%
+    mutate(cumtime_perkind = cumsum(as.numeric(nb_cores*duration/3600))) %>%
+    ungroup()
+
+str(df)
+df %>% filter(jobkind != "container") %>% summarise(core_hours=sum(core_hours), node_hours=sum(node_hours)) %>% as.data.frame()
+df %>% group_by(jobkind) %>% summarise(core_hours=sum(core_hours), node_hours=sum(node_hours)) %>% as.data.frame()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	24465 obs. of  19 variables:
+ $ hosts          : Factor w/ 2207 levels "dahu-1.grenoble.grid5000.fr",..: 440 439 434 433 436 438 431 438 440 439 ...
+ $ nb_hosts       : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ nb_cores       : int  8 8 8 8 8 8 8 8 8 8 ...
+ $ cluster        : Factor w/ 36 levels "dahu","drac",..: 4 4 4 4 4 4 3 4 4 4 ...
+ $ submission_time: int  1489392369 1489393906 1489397491 1489408950 1489593125 1490777851 1490961701 1492072941 1492173413 1492174086 ...
+ $ start_time     : int  1489392370 1489393907 1489397492 1489408959 1489593127 1490777852 1490961703 1492072943 1492173414 1492174087 ...
+ $ stop_time      : int  1489393625 1489395695 1489401973 1489423379 1489594285 1490780789 1490962466 1492087936 1492187170 1492187169 ...
+ $ job_id         : int  1743334 1743344 1743358 1743385 1743413 1745366 1746061 1748260 1748330 1748331 ...
+ $ job_name       : Factor w/ 30 levels "","☕","🎉 2020 🎉",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ job_type       : Factor w/ 2 levels "INTERACTIVE",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ command        : Factor w/ 2630 levels "",":w","/grid5000/code/bin/g5k-setup-docker && curl https://raw.githubusercontent.com/Ezibenroc/cashew/master/Docker_CI.sh | bash",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ initial_request: Factor w/ 8138 levels "oarsub --checkpoint 120 -n BitFlips -q default -t deploy -l {cluster in ('dahu')}/nodes=1,walltime=01:00:00 -r "| __truncated__,..: 1476 1325 1325 1325 1325 1325 1325 1325 1325 1325 ...
+ $ duration       : int  1255 1788 4481 14420 1158 2937 763 14993 13756 13082 ...
+ $ timestamp      : POSIXct, format: "2017-03-13 09:06:10" "2017-03-13 09:31:47" ...
+ $ cumtime        : num  2.79 6.76 16.72 48.76 51.34 ...
+ $ jobkind        : chr  "Interactive" "Interactive" "Interactive" "Interactive" ...
+ $ core_hours     : num  2.79 3.97 9.96 32.04 2.57 ...
+ $ node_hours     : num  0.349 0.497 1.245 4.006 0.322 ...
+ $ cumtime_perkind: num  2.79 6.76 16.72 48.76 51.34 ...
+
+  core_hours node_hours
+1    2112014   94677.88
+
+`summarise()` ungrouping output (override with `.groups` argument)
+          jobkind  core_hours node_hours
+1       container  369792.256 14316.9653
+2        G5K test 1152530.717 56886.4125
+3   HPL execution  603109.008 22025.0483
+4  HPL simulation  227025.657  8546.7622
+5     Interactive   87077.794  5827.2897
+6 MPI Calibration    5673.268   201.2664
+7           other   36598.039  1191.1033
+#+end_example
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+plot = bind_rows(df,
+    df %>% group_by(jobkind) %>% summarise(cumtime_perkind=max(cumtime_perkind)) %>% mutate(timestamp=max(df$timestamp)),
+    df %>% group_by(jobkind) %>% summarise(cumtime_perkind=0) %>% mutate(timestamp=min(df$timestamp))
+) %>%
+    filter(jobkind != "container") %>%
+    ggplot() +
+    aes(x=timestamp, y=cumtime_perkind, color=jobkind) +
+    geom_step() +
+    theme_bw() +
+    xlab('Year') +
+    ylab('Cumulated core.hours') +
+    scale_color_brewer(palette="Dark2") +
+    theme(legend.title=element_blank(), legend.position=c(0.12, 0.63), legend.background=element_rect(color="black"))
+ggsave(filename='img/appendix/carbon/node_hours.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-bQXrhC/figureqG7qe9.png]]
+** CO2 emission of one cor hour
+The data comes from the paper "Estimation de l'empreinte carbone d'une
+heure.coeur de calcul" (Berthoud et al).
+
+Let's redo a plot equivalent to the pie chart from page 11, but simplified and
+with bars.
+
+#+NAME: co2_gricad
+| source                               | kind          |  co2 |
+|--------------------------------------+---------------+------|
+| Serveurs de calcul (fabrication)     | manufacturing | 1.16 |
+| Serveurs environnement (fabrication) | manufacturing | 0.38 |
+| Serveurs de calcul (electricité)     | consumption   | 1.79 |
+| Serveurs environnement (électricité) | consumption   | 0.64 |
+| Déplacements domicile-travail        | commute       | 0.55 |
+| Équipements du personnel             | Autre         | 0.06 |
+| Énergie du personnel                 | Autre         | 0.05 |
+| Déplacements professionnels          | Autre         | 0.06 |
+
+# #+begin_src R :var df=co2_gricad :results output  :exports both :session *R*
+#+begin_src R :var df=co2_gricad :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+library(dplyr)
+library(ggplot2)
+plot = df %>%
+    group_by(kind) %>%
+    summarise(co2=sum(co2)) %>%
+    mutate(ratio=co2/sum(co2)) %>%
+    mutate(kind=ifelse(
+        kind=="manufacturing", "Manufacturing", ifelse(
+        kind=="consumption", "Electrical consumption", ifelse(
+        kind=="commute", "Daily commute of employees", "Other")))) %>%
+    arrange(-ratio) %>%
+    mutate(kind=factor(kind, unique(kind))) %>%
+    as.data.frame() %>%
+    ggplot() +
+        aes(x=kind, y=ratio, fill=kind) +
+        geom_bar(stat="identity", width=0.4, show.legend=F) +
+        scale_y_continuous(labels = scales::percent_format(accuracy=1)) +
+        ylab("Share of CO2e emission") +
+        xlab("Emission source") +
+        scale_fill_brewer(palette="Dark2") +
+        theme_bw()
+ggsave(filename='img/appendix/carbon/co2_per_hour.pdf', plot=plot, width=7, height=3)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-bQXrhC/figuredAFOVg.png]]

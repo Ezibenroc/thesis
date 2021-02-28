@@ -84,24 +84,80 @@
     The goal is not to compute an exact figure, which would be extremely tedious, but rather to make a rough estimate
     and compare it to the \NSI{2}{\tonne} target.
 
-    Several business trips done during this thesis required to take a plane. In the following, we will use the value of
-    \NSI{195}{\gram/\kilo\meter} of CO2eq for long haul flight and \NSI{254}{\gram/\kilo\meter} for short haul
-    flights~\cite{co2_flight}. We will neglect the emissions caused by the train travels, as this transportation mean is
-    much less problematic (a French high speed train emits about \NSI{2}{\gram/\kilo\meter} for each passenger).
-    \begin{itemize}
-        \item On April 2017, I attended a Simgrid meeting in Bordeaux. I had to go by plane from Lyon
-            (\NSI{435}{\kilo\meter}) as the train lines are very Paris-centered in France. This trip emitted
-            about \NSI{0.2}{\kilo\meter} of CO2eq.
-        \item From October to December 2017, I visited Argonne National Laboratory in Chicago, USA. The outward flights
-            went from Lyon to Francfort (\NSI{562}{\kilo\meter}) then to Chicago (\NSI{6967}{\kilo\meter}).
-            The return flight went directly from Chicago to Paris (\NSI{6653}{\kilo\meter}).  In total, tis trip has
-            emitted approximately \NSI{2.8}{\tonne} of CO2eq.
-        \item In November 2017, I attended the Supercomputing conference in Denver, USA. I went there with a direct
-            flight from Chicago (\NSI{1475}{\kilo\meter}), emitting about \NSI{0.7}{\tonne} of CO2eq.
-        \item In September 2019, I presented a paper at the Cluster conference, in Albuquerque, USA. The outward flights
-            went from Paris to Los Angeles (\NSI{9085}{\kilo\meter}) then to Albuquerque (\NSI{1067}{\kilo\meter}). The
-            return flights passed by Dallas (\NSI{586}{\kilo\meter}), then New York City (\NSI{2206}{\kilo\meter})
-            and finally Paris (\NSI{5837}{\kilo\meter}). This trip emitted approximately \NSI{3.9}{\tonne} of CO2eq.
-    \end{itemize}
-    Hence, the total amount of greenhouse gases emissions of this thesis due to airplane transportation is
-    \NSI{7.6}{\tonne} of CO2eq.
+    \subsection*{Business trips}%
+
+        Several business trips done during this thesis required to take a plane. In the following, we will use the value
+        of \NSI{195}{\gram/\kilo\meter} of CO2eq for long haul flight and \NSI{254}{\gram/\kilo\meter} for short haul
+        flights~\cite{co2_flight}. We will neglect the emissions caused by the train travels, as this transportation
+        mean is much less problematic (a French high speed train emits about \NSI{2}{\gram/\kilo\meter} for each
+        passenger).
+        \begin{itemize}
+            \item On April 2017, I attended a Simgrid meeting in Bordeaux. I had to go by plane from Lyon
+                (\NSI{435}{\kilo\meter}) as the train lines are very Paris-centered in France. This trip emitted about
+                \NSI{0.2}{\kilo\meter} of CO2eq.
+            \item From October to December 2017, I visited Argonne National Laboratory in Chicago, USA. The outward
+                flights went from Lyon to Francfort (\NSI{562}{\kilo\meter}) then to Chicago (\NSI{6967}{\kilo\meter}).
+                The return flight went directly from Chicago to Paris (\NSI{6653}{\kilo\meter}).  In total, tis trip has
+                emitted approximately \NSI{2.8}{\tonne} of CO2eq.
+            \item In November 2017, I attended the Supercomputing conference in Denver, USA. I went there with a direct
+                flight from Chicago (\NSI{1475}{\kilo\meter}), emitting about \NSI{0.7}{\tonne} of CO2eq.
+            \item In September 2019, I presented a paper at the Cluster conference, in Albuquerque, USA. The outward
+                flights went from Paris to Los Angeles (\NSI{9085}{\kilo\meter}) then to Albuquerque
+                (\NSI{1067}{\kilo\meter}). The return flights passed by Dallas (\NSI{586}{\kilo\meter}), then New York
+                City (\NSI{2206}{\kilo\meter}) and finally Paris (\NSI{5837}{\kilo\meter}). This trip emitted
+                approximately \NSI{3.9}{\tonne} of CO2eq.
+        \end{itemize}
+        Hence, the total amount of greenhouse gas emissions of this thesis due to airplane transportation is
+        \NSI{7.6}{\tonne} of CO2eq.
+
+    \subsection*{Computing time}%
+
+        This thesis had a very important experimental component, it is therefore natural to expect a large amount of
+        computing time usage. Figure~\ref{fig:appendix:node_hours} summarizes the cummulated computing time spent on
+        Grid'5000 clusters during these years, grouped by usage type, for a total of \Num{2112014} core hours. The
+        performance tests described in Chapter~\ref{chapter:experiment:tests} represents slightly more than half of this
+        total time, which is very large. However, this should be contrasted by the consumption of the official Grid'5000
+        tests: the \texttt{ajenkins} user, a bot responsible for periodically verifying the integrity of the platform,
+        spent \Num{3272044} cores hours in the year 2020
+        alone.\footnote{\url{https://intranet.grid5000.fr/stats/users.html}}
+
+        Berthoud~\etal estimate the greenhouse gas emissions caused by GRICAD another French computing
+        center~\cite{corehour_co2}. They tried to account for several parameters, including the electrical consumption
+        of the hardware (computing nodes, storage nodes, network, cooling system), the manufacturing of this hardware,
+        but also the emissions caused by the employees responsible of operating this computing center in their daily
+        commute to work. They estimate that one hour of computation on one core is responsible for the emission of
+        \NSI{5}{\gram} of CO2eq. The distribution of these emissions is depicted in
+        Figure~\ref{fig:appendix:co2_per_hour}, slightly more than half of these \NSI{5}{\gram} is caused by the
+        electrical consumption of the machine. It should be noted that French electricity is particularly low-carbon,
+        this figure might be significantly larger in other countries that rely more on fuel and coal.
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/appendix/carbon/node_hours.pdf}
+            \caption{Core hours used throughout this thesis for each experiment kind. In total, more than
+            \Num{2112014} core hours have been used.}%
+            \label{fig:appendix:node_hours}
+        \end{figure}
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/appendix/carbon/co2_per_hour.pdf}
+            \caption{Source of greenhouse gases emission in a French scientific computing center, one core hour emits
+            approximately \NSI{5}{\gram} of CO2eq~\cite{corehour_co2}.}%
+            \label{fig:appendix:co2_per_hour}
+        \end{figure}
+
+        We can therefore estimate that the total amount of greenhouse gas emissions of this thesis due to computing is
+        \NSI{10.6}{\tonne} of CO2eq.
+
+        \subsection*{Conclusion}
+
+            In this chapter, we tried to estimate the carbon footprint of this thesis. We do not claim to have an
+            accurate figure to present, these back-of-the-envelope calculations are themselves based on rough
+            approximations, but we should have the correct order of magnitude.
+
+            We estimate that this thesis was responsible for the emission of \NSI{18.2}{\tonne} of CO2eq. This is
+            significantly larger than the average yearly emission of a French person (\NSI{11}{\tonne} of CO2eq) and six
+            times larger than the yearly target emission to limit the warming to \NSI{2}{\celsius} (\NSI{2}{\tonne} of
+            CO2eq). Maybe counter-intuitively, this thesis emitted more greenhouse gases with computations than with
+            airplane transportation, despite four transatlantic flights.
