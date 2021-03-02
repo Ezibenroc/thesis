@@ -3944,7 +3944,7 @@ plot = ggplot(df) +
     theme_bw() +
     xlab("Date") + ylab("Performance (Gflop/s)") +
     geom_vline(xintercept=anytime("2017-12-15"), linetype="dashed") +
-    annotate("label", x=anytime("2017-12-15"), y=3000, label="Hardware migration") +
+    annotate("label", x=anytime("2017-12-15"), y=3000, label="Hardware upgrade") +
     expand_limits(y=0) +
     scale_color_brewer(palette="Dark2") +
     theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt")) +  # sadly required, otherwise the "2020" gets cut off...
@@ -3954,7 +3954,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-bJC7jD/figuresNlJkO.png]]
+[[file:/tmp/babel-0ck1Ia/figureadW14W.png]]
 
 *** Statistical tests
 **** Single point
