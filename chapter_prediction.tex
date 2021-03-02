@@ -997,7 +997,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             %% - Comparaison des trois méthodes sur tous les exemples que j'ai.
             In this section, we present our solution for automatically computing a piecewise linear regression. This has
             been implemented as a Python package named
-            \texttt{pycewise}\footnote{\url{https://github.com/Ezibenroc/pycewise}}.
+            \pyce\footnote{\url{https://github.com/Ezibenroc/pycewise}}.
 
             \subsubsection{Model}%
 
@@ -1210,7 +1210,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \centering
                     \includegraphics[width=\linewidth]{img/prediction/modeling/network/pycewise.pdf}
                     \caption{Illustrating different piecewise linear regression approaches on different datasets. Only
-                    the logarithmic objective function works well for all datasets.}%
+                    our implementation (\pyce) with the logarithmic objective function works well for all datasets.}%
                     \label{fig:prediction:pycewise}
                 \end{figure}
 
@@ -1264,12 +1264,16 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 Grid'5000: dahu, gros, paravance and pyxis. For each of them, we measured the duration of individual
                 \recv, \send and a whole ping-pong for various message sizes. Once again, we aggregated the data by
                 taking the average duration for each message size. In this figure, one piecewise regression is computed
-                for each cluster/operation pair.
+                for each cluster/operation pair. We also plotted with a small dotted line the regression we would get
+                without breakpoints, with the logarithmic objective function. This dotted lines shows that without
+                breakpoints, we would make large prediction errors in some cases (for instance, in the \texttt{send}
+                experiment for clusters gros and paravance, the durations of \NSI{20}{\kilo\byte} communications would
+                be greatly over-estimated by a simple regression).
 
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/prediction/modeling/network/pycewise_demo.pdf}
-                    \caption{With the logarithmic objective function, pycewise finds acceptable fits for the 12 datasets}%
+                    \caption{With the logarithmic objective function, \pyce finds acceptable fits for the 12 datasets}%
                     \label{fig:prediction:pycewise_demo}
                 \end{figure}
 
