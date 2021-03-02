@@ -149,6 +149,7 @@ wheel = ">=0.33.6"
 reference = "fdff221d3cd29c8dfc91a6c99447316a1e25bb2d"
 type = "git"
 url = "https://github.com/Ezibenroc/cashew.git"
+
 [[package]]
 category = "main"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -851,6 +852,7 @@ lxml = "^4.4"
 reference = "45eae5c006cc6f07632903f1ea40385739a69c63"
 type = "git"
 url = "https://github.com/Ezibenroc/peanut.git"
+
 [[package]]
 category = "main"
 description = "Pexpect allows easy control of interactive console applications."
@@ -889,6 +891,7 @@ plotting = ["matplotlib (>=1.4.3)"]
 reference = "0e3c7f50d1e9fc8a251823edab13704e368aa1d4"
 type = "git"
 url = "https://github.com/DataDog/piecewise.git"
+
 [[package]]
 category = "main"
 description = "Python Imaging Library (Fork)"
@@ -964,7 +967,7 @@ description = "Piecewise linear regressions, based on model trees."
 name = "pycewise"
 optional = false
 python-versions = "*"
-version = "0.1.2"
+version = "0.1.3"
 
 [[package]]
 category = "main"
@@ -1917,7 +1920,7 @@ py = [
     {file = "py-1.10.0.tar.gz", hash = "sha256:21b81bda15b66ef5e1a777a21c4dcd9c20ad3efd0b3f817e7a809035269e1bd3"},
 ]
 pycewise = [
-    {file = "pycewise-0.1.2-py3-none-any.whl", hash = "sha256:f9aab93a29dee57a1d9a2f51a36cd20521a41634ab156438fd1cbb6a6bf57250"},
+    {file = "pycewise-0.1.3-py3-none-any.whl", hash = "sha256:8231cd13d8e5b4ff8e14ea7852190a708c2e125668b60cb33d104e270150d624"},
 ]
 pycparser = [
     {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},
