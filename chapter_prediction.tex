@@ -162,7 +162,6 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         in SMPI, but this is of little significance in this article as HPL ships with its own implementation of
         collective operations.
 
-
         SMPI maps every MPI rank of the application onto a lightweight simulation thread. These threads are then run one at
         a time, \ie in mutual exclusion.  Every time a thread enters an MPI call, SMPI takes control and the time that was
         spent computing (isolated from the other threads) since the previous MPI call is injected into the simulator as a
@@ -1002,6 +1001,81 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     clustering the data manually with a visual inspection and then computing a simple linear regression
                     for each mode.
             \end{enumerate}
+
+        \subsection{Finding semantic breakpoints}%
+        \label{sub:finding_semantic_breakpoints}
+
+            In network calibration experiments such as Figure~\ref{fig:nw_var}, we can observe sudden performance
+            changes, \aka breakpoints. As discussed previously, these breakpoints happen because of a protocol change in
+            MPI implementation. Some of these changes also affect the semantic of the \send operation: we described in
+            Section~\ref{sec:simgrid_smpi} three communication modes, \emph{asynchronous}, \emph{detached} and
+            \emph{asynchronous}. This section presents how to detect automatically such semantic breakpoints.
+            \todo{Should we acknowledge the Simgrid collaborators who started this idea?}
+
+            We define two MPI programs, each taking in input a message size \texttt{N}.
+            \begin{algorithm}
+                \DontPrintSemicolon
+                \SetKwFunction{Fdeadlock}{deadlocktest}
+                \SetKwProg{Fn}{Function}{:}{}
+                \Fn{\Fdeadlock{N}}{
+                    MPI\_Comm\_rank(\&myself)\;
+                    other = 1-myself\;
+                    buff = \{0, \dots, 0\}\;
+                    \send(buff, N, other)\;
+                    \recv(buff, N, other)\;
+                    print("OK")\;
+                }
+                \caption{Prints "OK" if the communication for size N is not synchronous}
+                \label{algo:semantic:deadlock}
+            \end{algorithm}
+
+            \begin{algorithm}
+                \DontPrintSemicolon
+                \SetKwFunction{Fcorruption}{corruptiontest}
+                \SetKwProg{Fn}{Function}{:}{}
+                \Fn{\Fcorruption{N}}{
+                    MPI\_Comm\_rank(\&myself)\;
+                    other = 1-myself\;
+                    buff = \{0, \dots, 0\}\;
+                    \If{myself = 0}{
+                        \isend(buff, N, other)\;
+                        \For{\(i=1\) \KwTo \(N-1\)}{
+                            buff[i] = 1\;
+                        }
+                    }
+                    \Else{
+                        sleep(1)\;
+                        \recv(buff, N, other)\;
+                        corrupted=False\;
+                        \For{\(i=1\) \KwTo \(N-1\)}{
+                            \If{buff[i] = 1}{
+                                corrupted=True\;
+                            }
+                        }
+                        \If{corrupted} {
+                            print("CORRUPTED")\;
+                        }
+                        \Else {
+                            print("OK")\;
+                        }
+                    }
+                }
+                \caption{Prints "OK" if the communication for size N is asynchronous}
+                \label{algo:semantic:corruption}
+            \end{algorithm}
+
+            Then, we repeatedly call the programs~\ref{algo:semantic:deadlock} and~\ref{algo:semantic:corruption},
+            performing a binary search on the argument \texttt{N} (we set a timeout of \NSI{1}{\second} to kill
+            program~\ref{algo:semantic:deadlock} in case of deadlock). This allows to find the two semantic breakpoints
+            easily:
+            \begin{itemize}
+                \item In \emph{asynchronous} mode, we have no deadlock and no corruption.
+                \item In \emph{detached} mode, we have no deadlock but we have corruption.
+                \item In \emph{synchronous} mode, we have a deadlock.
+            \end{itemize}
+
+            Note that in program~\ref{algo:semantic:corruption}, the function \isend is used instead of \send.
+            \todo{finish that...}
 
         \subsection{Learning breakpoints}%
         \label{sub:pycewise}
