@@ -1331,7 +1331,6 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         prediction. We will also demonstrate in Chapter~\ref{chapter:prediction:sensibility} how these models can be
         used for sensibility analysis.
 
-
 \chapter{Validation}%
 \label{chapter:prediction:validation}
 
@@ -1357,8 +1356,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             obtain.
         \end{itemize}
 
-    \section{Different problem sizes}%
-    \label{sec:different_problem_sizes}
+    \section{Analyzing the internal behavior of the application}%
+    \label{sec:internal_behavior}
         %% TODO Importance du modlèe dgemm. Validation qualitative (Gantt chart) et quantitative (scatter plot).
 
         In this section, HPL executions were done using a block size of 128 and a matrix of varying size (from
@@ -1370,12 +1369,18 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         first five iterations.  A first qualitative validation can be done by visually comparing the Gantt charts of the
         simulations with reality (see Figure~\ref{fig:gantt_simulation}). Calls to \dgemm are depicted in yellow, \send
         in red, \recv in blue. Although the structure is similar in all charts, the shape and the duration of the
-        communication phases can be overly optimistic in simulations compared to reality.  The charts show that, at this
-        scale, using a deterministic or a stochastic model for the network has no noticeable impact on HPL simulation.
-        However, having a more complex model for the kernels leads to much more realistic traces. The variability in the
-        computation durations leads to an increase of the time spent in communications and an overall slightly longer
-        execution. In HPL, computation variability directly translates to late senders/receivers that destroy the
-        efficiency of collective operations.
+        communication phases can be overly optimistic in simulations compared to reality. The major difference are the
+        calls to \send at the start of the execution, they take a much longer duration in reality (large red rectangles)
+        than in simulation. This discrepancy is then attenuated in the rest of the execution. Furthermore, the charts
+        show that, at this scale, using a deterministic or a stochastic model for the network has no noticeable impact
+        on HPL simulation.  However, having a more complex model for the kernels leads to much more realistic traces.
+        The variability in the computation durations leads to an increase of the time spent in communications and an
+        overall slightly longer execution. In HPL, computation variability directly translates to late senders/receivers
+        that destroy the efficiency of collective operations.
+
+        This demonstrates one of the interests of simulation over other prediction methods. By generating a trace, we
+        can have a very thorough inspection of the simulated execution, which gives a fine understanding of what
+        happens.
 
         \newcommand{\ganttcaption}[2]{\rotatebox{90}{\hspace{.6cm}$\text{#1}\atop \text{#2}$\hspace{-1cm}}}
         \begin{figure}[htpb]
@@ -1393,6 +1398,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \caption{Gantt charts of HPL first iterations in simulation}\vspace{-1em}
             \label{fig:gantt_simulation}
         \end{figure}
+
+    \section{Evaluating the influence of the problem sizes}%
+    \label{sec:different_problem_sizes}
 
         We now provide a more quantitative comparison using the whole cluster and varying matrix sizes, focusing on the
         \si{\giga\flops} rate reported by HPL (see Figure~\ref{fig:validation_performance}).  The real executions are
@@ -1453,7 +1461,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         kernels is possible but a minimal calibration of the \dgemm kernel over a representative set of nodes is thus
         sufficient to consistently predict the performance of HPL on this machine within a few percent of reality.
 
-    \section{A platform change}%
+    \section{Evaluating the influence of a platform change}%
     \label{sec:platform_change}
         %% TODO Problème de température. On est capable de reproduire en simulation un changement de la plateforme, il
         %% suffit de recalibrer.
@@ -1499,7 +1507,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         simulations: a discrepancy between the reality and the predictions can sometimes indicate a real issue on the
         platform (similar situations have already been reported with SMPI~\cite{smpi}).
 
-    \section{Different geometries}%
+    \section{Evaluating the influence of the geometry}%
     \label{sec:different_geometries}
         %% TODO - Validation de la géométrie. On arrive également à prédire pour toutes les
         %% géometries. Encore une fois, des difficultés (cette fois qu'on on utilise des
@@ -1582,7 +1590,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         performance (smaller values for \texttt{P} lead to better performance) and which can be explained by the
         structure of the collective operations but requires a close look at the code.
 
-    \section{Factorial experiment}%
+    \section{Evaluating the influence of the other parameters}%
     \label{sec:factorial_experiment}
         %% TODO On arrive à prédire pour toutes les configurations de paramètres.
         %% Plusieurs difficultés (cf. section expérimentation).
