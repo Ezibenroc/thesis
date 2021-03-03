@@ -1896,6 +1896,33 @@
                 power, which results in a power drop, a frequency drop and a performance drop on some nodes of dahu
                 cluster.
 
+            \subsubsection{System upgrade}%
+
+                On March 2021, we decided to upgrade both the operating system and the BLAS library used to perform
+                these tests. We upgraded Debian from version 9 to version 10 (thereby upgrading GCC from version 6.3.0
+                to version 8.3.0 and the Linux kernel from version 4.9.0 to version 4.19.0). We also upgraded OpenBLAS
+                from version 0.3.1 to version 0.3.13.  OpenBLAS had several changes between these two versions,
+                including the AVX512 support for \dgemm (until now, they only used AVX2).
+
+                This resulted in huge changes on a lot of clusters. For instance, on cluster dahu:
+                \begin{itemize}
+                    \item The average performance increased from \NSI{27}{\giga\flop/\second} per core to
+                        \NSI{45}{\giga\flop/\second}.
+                    \item The average frequency decreased from \NSI{2.2}{\giga\hertz} to \NSI{1.8}{\giga\hertz}.
+                    \item The mean power consumption of the DRAM increased from \NSI{12}{\watt} to \NSI{15}{\watt}.
+                    \item The mean power consumption of the CPU and the temperature were not affected significantly.
+                \end{itemize}
+                The same observations could be made on nearly all clusters. We also observed significant drops of CPU
+                power consumption on some nodes of a few clusters (\eg on troll or gros clusters).
+
+                The performance increase is understandable, \dgemm is a compute intensive kernel for dense linear
+                algebra, it was expected that wider vector instructions would be more efficient. It is also expected
+                that the maximal turbo frequency of processors depends on the workload, for instance Intel Xeon Gold
+                6130 CPU (the processor of the dahu nodes) has a maximal frequency of \NSI{2.8}{\giga\hertz} when all
+                cores are active with normal instructions, \NSI{2.4}{\giga\hertz} when all cores are active with AVX2
+                instructions and \NSI{1.9}{\giga\hertz} when all cores are active with AVX512
+                instructions\footnote{\url{https://en.wikichip.org/wiki/intel/xeon\_gold/6130}}.
+
             \subsubsection{Other issues}%
 
                 Several other significant and durable changes have been detected on individual nodes. To this day, we
