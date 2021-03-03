@@ -140,6 +140,21 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         attention to the modeling of collective communication algorithms has also been paid in SMPI, but this is of little
         significance in this article as HPL ships with its own implementation of collective operations.
 
+        \begin{figure}[htpb]
+            \centering
+            \subfigure[Asynchronous mode \label{fig:smpi_model:asynchronous}]{
+                    \includegraphics[width=0.3\linewidth]{img/prediction/state_of_art/asynchronous.pdf}
+            }
+            \subfigure[Detached mode \label{fig:smpi_model:detached}]{
+                    \includegraphics[width=0.3\linewidth]{img/prediction/state_of_art/detached.pdf}
+            }
+            \subfigure[Synchronous mode \label{fig:smpi_model:synchronous}]{
+                    \includegraphics[width=0.3\linewidth]{img/prediction/state_of_art/synchronous.pdf}
+            }
+            \caption{The ``hybrid'' network model of SMPI in a nutshell~\cite{smpi}}%
+            \label{fig:smpi_model}
+        \end{figure}
+
         SMPI maps every MPI rank of the application onto a lightweight simulation thread. These threads are then run one at
         a time, \ie in mutual exclusion.  Every time a thread enters an MPI call, SMPI takes control and the time that was
         spent computing (isolated from the other threads) since the previous MPI call is injected into the simulator as a
