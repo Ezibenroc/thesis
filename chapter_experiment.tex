@@ -215,8 +215,8 @@
         \begin{enumerate}
             \item Deploy and install a fresh OS on the node.
             \item Run the \texttt{stress} command for 10 minutes to warm the node.
-            \item Start a background process\footnote{\url{https://github.com/Ezibenroc/ratatouille}} to monitor the
-                core frequencies and temperature every second.
+            \item Start a background process~\cite{ratatouille} to monitor the core frequencies and temperature every
+                second.
             \item On each core, run a custom
                 code\footnote{\url{https://github.com/Ezibenroc/platform-calibration/src/calibration}}
                 to measure the durations of a given operation (either \dgemm or several MPI functions, depending
