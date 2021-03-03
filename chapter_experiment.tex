@@ -1868,8 +1868,9 @@
                 \NSI{119.4}{\watt}. The largest power drop happened on node \emph{dahu-26} on 2020/12/04, where its CPU
                 n°0 consumed only \NSI{97.5}{\watt}. For reasons we ignore, such power drops happened particularly
                 frequently on the four nodes \emph{dahu-29}, \emph{dahu-30}, \emph{dahu-31} and \emph{dahu-32} between
-                November 2020 and January 2021. Since the four nodes are part of the same chassis and therefore share
-                their power supply, our hypothesis is that there could be an issue with the power supply itself.
+                November 2020 and February 2021. Since the four nodes are part of the same chassis and therefore share
+                their power supply, our hypothesis first hypothesis was that there could be an issue with the power
+                supply itself.
 
                 Whenever these power drops happens, both the frequency and the \dgemm performance also have a huge drop,
                 up to \NSI{10}{\percent}, whereas the temperature is unaffected.
@@ -1877,6 +1878,23 @@
                 Every time, this was a temporary anomaly, the affected nodes were back to normal on the following
                 experiments. For this reason, we did not add a new platform change for these events, instead we marked
                 them as outliers in the plots.
+
+                After some investigations with Grid'5000 staff, we realised that most of these power drops started to
+                happen when a new cluster, called drac, was installed in the same machine room. It also appears that the
+                jobs where we observed a power drop had been scheduled when most of the drac nodes were used, on the
+                other hand we did not observe any drop when no job was scheduled on the drac nodes. Submitting an idle
+                job on the whole drac cluster (\ie all the nodes were booted, but idle) was enough to cause a power drop
+                on some dahu nodes.
+
+                This drac cluster is made of 12 nodes, each node has two Power8 CPUs and four Nvidia Tesla P100 GPU.
+                When booted but idle, a single node has a power consumption between \NSI{600}{\watt} and
+                \NSI{800}{\watt}, this consumption can rise to more than \NSI{2000}{\watt} when the nodes are under
+                heavy load. This is a large consumption compared to other Grid'5000 nodes (the dahu nodes consume about
+                \NSI{350}{\watt} at most).
+
+                These later findings tend to confirm our initial hypothesis: the power supply cannot sustain enough
+                power, which results in a power drop, a frequency drop and a performance drop on some nodes of dahu
+                cluster.
 
             \subsubsection{Other issues}%
 
