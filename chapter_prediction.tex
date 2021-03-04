@@ -1009,10 +1009,20 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             changes, \aka breakpoints. As discussed previously, these breakpoints happen because of a protocol change in
             MPI implementation. Some of these changes also affect the semantic of the \send operation: we described in
             Section~\ref{sec:simgrid_smpi} three communication modes, \emph{asynchronous}, \emph{detached} and
-            \emph{asynchronous}. This section presents how to detect automatically such semantic breakpoints.
-            \todo{Should we acknowledge the Simgrid collaborators who started this idea?}
+            \emph{asynchronous}. This section presents how to detect automatically such semantic breakpoints.  In this
+            section as well as Section~\ref{sub:pycewise}, MPI is seen as a black box, we use retro-ingeneering
+            techniques to find a suitable model.
 
-            We define two MPI programs, each taking in input a message size \texttt{N}.
+            This work was done in collaboration with several Simgrid collaborators, we wish to thank them for the ideas
+            and the code prototype.
+
+            We define two MPI codes, program~\ref{algo:semantic:deadlock} and program~\ref{algo:semantic:corruption}.
+            They both take in input a message size \texttt{N}. We expect program~\ref{algo:semantic:deadlock} to produce
+            a deadlock and not print any message when \texttt{N} is large enough (the communication was
+            \emph{synchronous}) while it should print the message ``OK'' for smaller values of \texttt{N}. Likewise, we
+            expect program~\ref{algo:semantic:corruption} to have corrupted data and print the message ``CORRUPTED''
+            when \texttt{N} is large enough (the communication was not \emph{asynchronous}) while it should print the
+            message ``OK'' for smaller values of \texttt{N}.
             \begin{algorithm}
                 \DontPrintSemicolon
                 \SetKwFunction{Fdeadlock}{deadlocktest}
@@ -1065,17 +1075,30 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \end{algorithm}
 
             Then, we repeatedly call the programs~\ref{algo:semantic:deadlock} and~\ref{algo:semantic:corruption},
-            performing a binary search on the argument \texttt{N} (we set a timeout of \NSI{1}{\second} to kill
+            performing a binary search on the argument \texttt{N} (we set a timeout of \NSI{3}{\second} to kill
             program~\ref{algo:semantic:deadlock} in case of deadlock). This allows to find the two semantic breakpoints
             easily:
             \begin{itemize}
                 \item In \emph{asynchronous} mode, we have no deadlock and no corruption.
                 \item In \emph{detached} mode, we have no deadlock but we have corruption.
-                \item In \emph{synchronous} mode, we have a deadlock.
+                \item In \emph{synchronous} mode, we have corruption and a deadlock.
             \end{itemize}
 
-            Note that in program~\ref{algo:semantic:corruption}, the function \isend is used instead of \send.
-            \todo{finish that...}
+            Note that in program~\ref{algo:semantic:corruption}, the function \isend is used instead of \send. Indeed,
+            the MPI standard specifies that the buffer of function \send can be immediately reused once the function
+            returns, this means that even if the function returns before the communication is actually performed, the
+            data is copied in an auxiliary buffer to prevent any corruption. Since we rely on this data corruption to
+            detect whether we are in \emph{asynchronous} or \emph{detached} mode, we need to use function \isend which
+            does not make such guarantees. Here we suppose that the thresholds used in both functions are the same.
+
+            In our tests, we found that the three protocols did not always exist, the threshold will depend on the
+            harware. For instance, on dahu cluster, the semantic breakpoints found by the two binary search are equal.
+            This means that the \emph{detached} mode does not exist on this cluster (for a given size \texttt{N}, either
+            we have both a deadlock with program~\ref{algo:semantic:deadlock} and a corruption with
+            program~\ref{algo:semantic:corruption}, or we have none, there is no alternative combination).
+            On clusters paravance and grisou, the search with program~\ref{algo:semantic:corruption} does not find any
+            breakpoint, the message is always corrupted. This means that the \emph{asynchronous} mode does not exist
+            here.
 
         \subsection{Learning breakpoints}%
         \label{sub:pycewise}
@@ -1095,8 +1118,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             %% - Détailler un peu l'implémentation, ces méthodes sont moins rapides
             %%   que la première version.
             %% - Comparaison des trois méthodes sur tous les exemples que j'ai.
-            In this section, we present our solution for automatically computing a piecewise linear regression. This has
-            been implemented as a Python package named
+            In this section, we present our solution for automatically computing a piecewise linear regression. The goal
+            is to find performance breakpoints with a statistical approach and not a semantic approach as described in
+            Section~\ref{sub:finding_semantic_breakpoints}. This has been implemented as a Python package named
             \pyce\footnote{\url{https://github.com/Ezibenroc/pycewise}}.
 
             \subsubsection{Model}%
