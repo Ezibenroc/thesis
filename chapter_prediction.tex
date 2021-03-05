@@ -297,9 +297,97 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 threshold triggering a switch from one variant to the other.
             \item \texttt{BCAST} sets the algorithm used to broadcast a panel of columns over the process columns. Legacy
                 versions of the MPI standard only supported non-blocking point-to-point communications, which is why HPL
-                ships with in total 6 self-implemented variants to overlap the time spent waiting for an incoming panel with
-                updates to the trailing matrix: \texttt{ring}, \texttt{ring-modified}, \texttt{2-ring},
-                \texttt{2-ring-modified}, \texttt{long}, and \texttt{long-modified}. The \texttt{modified} versions
+                ships with in total six self-implemented variants to overlap the time spent waiting for an incoming
+                panel with updates to the trailing matrix: \texttt{ring}, \texttt{ring-modified}, \texttt{2-ring},
+                \texttt{2-ring-modified}, \texttt{long}, and \texttt{long-modified}, as illustrated by
+                Figure~\ref{fig:hpl_broadcasts}.
+
+                \tikzstyle{mpi_rank}=[draw, anchor=west, font=\scriptsize, rectangle]
+                \tikzstyle{comm}=[-latex]
+                \tikzstyle{comm_label}=[anchor=south, font=\scriptsize]
+                \begin{figure}[htpb]
+                    \centering
+
+                    % 1ring
+                    \subfigure[Broadcast \texttt{ring}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                        \node (a) [mpi_rank] {a};
+                        \node[right of=a] (b) [mpi_rank] {b};
+                        \node[right of=b] (c) [mpi_rank] {c};
+                        \node[right of=c] (d) [mpi_rank] {d};
+                        \node[right of=d] (e) [mpi_rank] {e};
+                        \node[right of=e] (f) [mpi_rank] {f};
+                        \node[right of=f] (g) [mpi_rank] {g};
+                        \node[right of=g] (h) [mpi_rank] {h};
+                        \draw [comm] (a.north) to[bend left] node[comm_label] {t=0} (b.north);
+                        \draw [comm] (b.north) to[bend left] node[comm_label] {t=1} (c.north);
+                        \draw [comm] (c.north) to[bend left] node[comm_label] {t=2} (d.north);
+                        \draw [comm] (d.north) to[bend left] node[comm_label] {t=3} (e.north);
+                        \draw [comm] (e.north) to[bend left] node[comm_label] {t=4} (f.north);
+                        \draw [comm] (f.north) to[bend left] node[comm_label] {t=5} (g.north);
+                        \draw [comm] (g.north) to[bend left] node[comm_label] {t=6} (h.north);
+                    \end{tikzpicture}}
+
+                    % 1rinM
+                    \subfigure[Broadcast \texttt{ring-modified}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                        \node (a) [mpi_rank] {a};
+                        \node[right of=a] (b) [mpi_rank] {b};
+                        \node[right of=b] (c) [mpi_rank] {c};
+                        \node[right of=c] (d) [mpi_rank] {d};
+                        \node[right of=d] (e) [mpi_rank] {e};
+                        \node[right of=e] (f) [mpi_rank] {f};
+                        \node[right of=f] (g) [mpi_rank] {g};
+                        \node[right of=g] (h) [mpi_rank] {h};
+                        \draw [comm] (a.south) to[bend right] node[comm_label,anchor=north] {t=0} (b.south);
+                        \draw [comm] (a.north) to[bend left] node[comm_label] {t=1} (c.north);
+                        \draw [comm] (c.north) to[bend left] node[comm_label] {t=2} (d.north);
+                        \draw [comm] (d.north) to[bend left] node[comm_label] {t=3} (e.north);
+                        \draw [comm] (e.north) to[bend left] node[comm_label] {t=4} (f.north);
+                        \draw [comm] (f.north) to[bend left] node[comm_label] {t=5} (g.north);
+                        \draw [comm] (g.north) to[bend left] node[comm_label] {t=6} (h.north);
+                    \end{tikzpicture}}
+
+                    % 2ring
+                    \subfigure[Broadcast \texttt{2-ring}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                        \node (a) [mpi_rank] {a};
+                        \node[right of=a] (b) [mpi_rank] {b};
+                        \node[right of=b] (c) [mpi_rank] {c};
+                        \node[right of=c] (d) [mpi_rank] {d};
+                        \node[right of=d] (e) [mpi_rank] {e};
+                        \node[right of=e] (f) [mpi_rank] {f};
+                        \node[right of=f] (g) [mpi_rank] {g};
+                        \node[right of=g] (h) [mpi_rank] {h};
+                        \draw [comm] (a.north) to[bend left] node[comm_label] {t=0} (b.north);
+                        \draw [comm] (b.north) to[bend left] node[comm_label] {t=1} (c.north);
+                        \draw [comm] (c.north) to[bend left] node[comm_label] {t=2} (d.north);
+                        \draw [comm] (a.south) to[bend right] node[comm_label,anchor=north] {t=1} (e.south);
+                        \draw [comm] (e.north) to[bend left] node[comm_label] {t=2} (f.north);
+                        \draw [comm] (f.north) to[bend left] node[comm_label] {t=3} (g.north);
+                        \draw [comm] (g.north) to[bend left] node[comm_label] {t=4} (h.north);
+                    \end{tikzpicture}}
+
+                    % 2rinM
+                    \subfigure[Broadcast \texttt{2-ring-modified}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                        \node (a) [mpi_rank] {a};
+                        \node[right of=a] (b) [mpi_rank] {b};
+                        \node[right of=b] (c) [mpi_rank] {c};
+                        \node[right of=c] (d) [mpi_rank] {d};
+                        \node[right of=d] (e) [mpi_rank] {e};
+                        \node[right of=e] (f) [mpi_rank] {f};
+                        \node[right of=f] (g) [mpi_rank] {g};
+                        \node[right of=g] (h) [mpi_rank] {h};
+                        \draw [comm] (a.east) to node[comm_label,anchor=north] {t=0} (b.west);
+                        \draw [comm] (a.north) to[bend left] node[comm_label] {t=1} (c.north);
+                        \draw [comm] (c.north) to[bend left] node[comm_label] {t=2} (d.north);
+                        \draw [comm] (a.south) to[bend right] node[comm_label,anchor=north] {t=2} (e.south);
+                        \draw [comm] (e.north) to[bend left] node[comm_label] {t=3} (f.north);
+                        \draw [comm] (f.north) to[bend left] node[comm_label] {t=4} (g.north);
+                        \draw [comm] (g.north) to[bend left] node[comm_label] {t=5} (h.north);
+                    \end{tikzpicture}}
+                    \caption{Illustration of the six HPL broadcast algorithms}%
+                    \label{fig:hpl_broadcasts}
+                \end{figure}
+
+                The \texttt{modified} versions
                 guarantee that the process right after the root (\ie the process that will become the root in the next
                 iteration) receives data first and does not further participate in the broadcast. This process can thereby
                 start working on the panel as soon as possible. The \texttt{ring} and \texttt{2-ring} versions each
