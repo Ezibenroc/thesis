@@ -320,15 +320,6 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         capacity and the previously listed parameters (\texttt{RFACT}, \texttt{SWAP}, \texttt{BCAST},
         \texttt{DEPTH}, \ldots) and is very difficult to predict.
 
-        The emulation of HPL therefore comes with at least two challenges:
-        \begin{itemize}
-        \item The time-complexity of the algorithm is \(\Theta(N^3)\) and \(\Theta(N^2)\) communications are performed, with
-            \(N\) being very large. The execution on the Stampede cluster took roughly two hours on \Num{6006}~compute
-            nodes. Using only a single node, a naive emulation of HPL at the scale of the Stampede run would take about
-            500 days if perfect scaling was reached.
-        \item The tremendous memory consumption and amount of memory accesses need to be drastically reduced.
-        \end{itemize}
-
     \section{Typical runs on a supercomputer}%
     \label{sec:hpl:typical_runs}
 
@@ -367,7 +358,6 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \end{tabular}}
         \end{table}
 
-
         The performance typically achieved by supercomputers (\texttt{Rmax}) needs to be compared to the much larger
         peak performance (\texttt{Rpeak}). This difference can be attributed to the node usage, to the MPI library, to
         the network topology that may be unable to deal with the intense communication workload, to load imbalance among
@@ -379,9 +369,18 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         effect of HPL's six different broadcast algorithms on network contention). Additionally, these expressions do
         not allow engineers to improve the performance through actively identifying performance bottlenecks.  For
         complex optimizations such as partially non-blocking collective communication algorithms intertwined with
-        computations, a very faithful modeling of both the application and the platform is required. One goal of this
-        thesis was to simulate systems at the scale of Stampede. Given the scale of this scenario (3,785~steps on
-        6,006 nodes in two hours), detailed simulations quickly become intractable without significant effort.
+        computations, a very faithful modeling of both the application and the platform is required.
+
+        One goal of this thesis was to simulate systems at the scale of Stampede. Given the scale of this scenario
+        (\Num{3785}~steps on \Num{6006}~nodes in two hours), detailed simulations quickly become intractable without
+        significant effort. The emulation of HPL therefore comes with at least two challenges:
+        \begin{itemize}
+            \item The time-complexity of the algorithm is \(\Theta(N^3)\) and \(\Theta(N^2)\) communications are
+                performed, with \(N\) being very large. The execution on the Stampede cluster took roughly two hours on
+                \Num{6006}~compute nodes. Using only a single node, a naive emulation of HPL at the scale of the
+                Stampede run would take about 500 days if perfect scaling was reached.
+            \item The tremendous memory consumption and amount of memory accesses need to be drastically reduced.
+        \end{itemize}
 
 \chapter{Emulating HPL at large scale}%
 \label{chapter:prediction:emulation}
