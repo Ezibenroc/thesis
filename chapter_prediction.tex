@@ -95,16 +95,44 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         The second approach discussed in the literature is \emph{online simulation}.  Here, the application is executed
         (emulated) on top of a simulator that is responsible to determine when each process is run. This approach allows
         researchers to study directly the behavior of MPI applications but only a few recent simulators such as SST
-        Macro~\cite{sstmacro}, SimGrid/SMPI~\cite{simgrid} and the closed-source xSim~\cite{xsim} support it. To the best
-        of our knowledge, only SST Macro and SimGrid/SMPI are mature enough to faithfully emulate an MPI application.
-        This work relies on SimGrid as its performance models and its emulation capabilities seemed quite solid but the
-        proposed developments would a priori also be possible with SST.  Note that the emulation described in
-        chapter~\ref{chapter:prediction:emulation} should not be confused with the application
+        Macro~\cite{sstmacro}, SimGrid/SMPI~\cite{simgrid} and the closed-source xSim~\cite{xsim} support it. To the
+        best of our knowledge, only SST Macro and SimGrid/SMPI are mature enough to faithfully emulate an MPI
+        application.  This work relies on SimGrid as its performance models and its emulation capabilities seemed quite
+        solid but the proposed developments would a priori also be possible with SST.  Note that the emulation described
+        in Chapter~\ref{chapter:prediction:emulation} should not be confused with the application
         skeletonization~\cite{sst_skeleton} commonly used with SST. Skeletons are code extractions of the most important
-        parts of a complex application whereas we only modify a few dozens of lines of the source code before emulating
-        it with SMPI.  Finally, it is important to understand that the proposed approach is intended to help studies at
-        the level of the whole machine and application, not the influence of microarchitectural details as intended by
-        MUSA~\cite{musa_16}.
+        parts of a complex application, as illustrated in Figure~\ref{fig:sst_skeleton} (\eg the original Fortran code
+        from Figure~\ref{fig:sst_skeleton:comp_orig} has been translated into the skeleton from
+        Figure~\ref{fig:sst_skeleton:comp_skel}). In our work, we only modify a few dozens of lines of the source code
+        before emulating it with SMPI.  Finally, it is important to understand that the proposed approach is intended to
+        help studies at the level of the whole machine and application, not the influence of microarchitectural details
+        as intended by MUSA~\cite{musa_16}.
+
+        \begin{figure}[htpb]
+            \centering
+            \subfigure[Original fortran \texttt{dm\_x\_bcs}
+                subroutine\label{fig:sst_skeleton:comm_orig}]{\begin{minipage}[b]{\linewidth}
+                \lstset{frame=bt,language=fortran,numbers=none}
+                \lstinputlisting{img/prediction/state_of_art/sst1.f}
+            \end{minipage}}
+            \subfigure[Model \texttt{dm\_x\_bcs}
+            subroutine\label{fig:sst_skeleton:comm_skel}]{\begin{minipage}[b]{\linewidth}
+                \lstset{frame=bt,language=C++,numbers=none}
+                \lstinputlisting{img/prediction/state_of_art/sst1.c}
+            \end{minipage}}
+            \subfigure[Original fortran \texttt{remap\_x}
+            subroutine\label{fig:sst_skeleton:comp_orig}]{\begin{minipage}[b]{\linewidth}
+                \lstset{frame=bt,language=fortran,numbers=none}
+                \lstinputlisting{img/prediction/state_of_art/sst2.f}
+            \end{minipage}}
+            \subfigure[Model \texttt{remap\_x}
+            subroutine\label{fig:sst_skeleton:comp_skel}]{\begin{minipage}[b]{\linewidth}
+                \lstset{frame=bt,language=C++,numbers=none}
+                \lstinputlisting{img/prediction/state_of_art/sst2.c}
+            \end{minipage}}
+            \caption{Example of skeletonization done by SST~\cite{sst_skeleton}}%
+            \label{fig:sst_skeleton}
+        \end{figure}
 
         Some researchers from Intel unaware of our recent work recently applied the same methodology as the one we
         proposed in~\cite{cornebize:cluster19} to both Intel HPL and OpenHPL in the closed-source CoFluent
@@ -374,13 +402,13 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \subfigure[Non-intrusive macro replacement with a very simple computation model.\label{fig:macro_simple}]{
                     \begin{minipage}[b]{\linewidth}
                         \lstset{frame=bt,language=C,numbers=none,escapechar=|}\lstinputlisting{img/prediction/emulating/HPL_dgemm_macro_simple.c}
-                    \end{minipage}}\vspace{-1em}
+                    \end{minipage}}
                 \subfigure[Gain in terms of simulation time.\label{fig:kernel_sampling}]{
                     \begin{minipage}[b]{\linewidth}
                         \includegraphics[width=\linewidth,page=2]{img/prediction/emulating/kernel_modeling.pdf}
                     \end{minipage}}%\vspace{-1em}
                 \caption{Replacing the calls to computationally expensive functions by a model allows to emulate HPL at
-                a larger scale.}\vspace{-1em}
+                a larger scale.}
             \end{figure}
 
             Skipping kernels renders the content of some variables invalid but in simulation, only the behavior of the

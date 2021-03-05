@@ -1,0 +1,6 @@
+void remap_x(int rank) {
+    ...
+    sstmac::timestamp t(remap_x_w*nx*ny);
+    compute(t);
+    ...
+}
