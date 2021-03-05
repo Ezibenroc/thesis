@@ -58,8 +58,20 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         hardware (\eg the von Neumann model, cache model~\cite{cache_oblivious}, PRAM~\cite{pram}, LogP~\cite{logp},
         LogGP~\cite{loggp}, BSP~\cite{bsp}). There also exists more systematic approaches, like Aspen~\cite{aspen},
         which defines a domain specific language (DSL) for specifying formally the characteristics of small components
-        and combining them to model a whole application. However, these techniques can only provide rough estimates,
-        subtle phenomena like network contention cannot be captured by these models.
+        and combining them to model a whole application. Figure~\ref{fig:aspen:example} illustrates an Aspen model of a
+        Fast Fourier Transform that can be used within a larger application model. The main downside of these analytical
+        techniques is their inability to provide accurate estimates, subtle phenomena like network contention cannot be
+        captured by these models.
+
+        \begin{figure}[htpb]
+            \centering
+            \begin{minipage}[b]{\linewidth}
+                \lstset{frame=bt,language=C,numbers=none,escapechar=|}
+                \lstinputlisting{img/prediction/state_of_art/aspen.c}
+            \end{minipage}
+            \caption{Example of model written in Aspen for a local 1D FFT~\cite{aspen}.}
+            \label{fig:aspen:example}
+        \end{figure}
 
         Another approach for estimating the performance of MPI applications is statistical modeling of the application
         as a whole~\cite{hpl_prediction}.  By running the application several times with small and medium problem (of a
@@ -106,7 +118,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         Figure~\ref{fig:sst_skeleton:comp_skel}). In our work, we only modify a few dozens of lines of the source code
         before emulating it with SMPI.  Finally, it is important to understand that the proposed approach is intended to
         help studies at the level of the whole machine and application, not the influence of microarchitectural details
-        as intended by MUSA~\cite{musa_16}.
+        as intended by gem5~\cite{lowepower2020gem5} or by MUSA~\cite{musa_16}.
 
         \begin{figure}[htpb]
             \centering
@@ -130,7 +142,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \lstset{frame=bt,language=C++,numbers=none}
                 \lstinputlisting{img/prediction/state_of_art/sst2.c}
             \end{minipage}}
-            \caption{Example of skeletonization done by SST~\cite{sst_skeleton}}%
+            \caption{Example of skeletonization done by SST~\cite{sst_skeleton}.}%
             \label{fig:sst_skeleton}
         \end{figure}
 
