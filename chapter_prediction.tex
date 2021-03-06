@@ -295,12 +295,13 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 based on \emph{binary exchange} (along a virtual tree topology) and the other one based on a
                 \emph{spread-and-roll} (with a higher number of parallel communications). HPL also provides a panel-size
                 threshold triggering a switch from one variant to the other.
+            \item \texttt{DEPTH} controls how many iterations of the outer loop can overlap with each other.
             \item \texttt{BCAST} sets the algorithm used to broadcast a panel of columns over the process columns. Legacy
                 versions of the MPI standard only supported non-blocking point-to-point communications, which is why HPL
                 ships with in total six self-implemented variants to overlap the time spent waiting for an incoming
                 panel with updates to the trailing matrix: \texttt{ring}, \texttt{ring-modified}, \texttt{2-ring},
                 \texttt{2-ring-modified}, \texttt{long}, and \texttt{long-modified}, as illustrated by
-                Figure~\ref{fig:hpl_broadcasts}.
+                Figure~\ref{fig:hpl_broadcasts} and Figure~\ref{fig:hpl_broadcasts:long}.
 
                 \tikzstyle{mpi_rank}=[draw, anchor=west, font=\scriptsize, rectangle, minimum size=12pt]
                 \tikzstyle{subpart}=[mpi_rank, node distance=6pt, anchor=north]
@@ -522,7 +523,6 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 communication with computations.  In HPL 2.1 and 2.2, this capability has been deactivated for the
                 \texttt{long} and \texttt{long-modified} algorithms. A comment in the source code states that some machines
                 apparently get stuck when there are too many ongoing messages.
-            \item \texttt{DEPTH} controls how many iterations of the outer loop can overlap with each other.
         \end{itemize}
 
         The sequential complexity of this factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 + \landauO(N)\] where $N$ is
