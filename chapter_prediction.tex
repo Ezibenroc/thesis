@@ -330,7 +330,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \centering
 
                     % 1ring
-                    \subfigure[Broadcast \texttt{ring}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \subfigure[Broadcast \texttt{ring}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -349,7 +349,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \end{tikzpicture}}
 
                     % 1rinM
-                    \subfigure[Broadcast \texttt{ring-modified}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \subfigure[Broadcast \texttt{ring-modified}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -368,7 +368,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \end{tikzpicture}}
 
                     % 2ring
-                    \subfigure[Broadcast \texttt{2-ring}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \subfigure[Broadcast \texttt{2-ring}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -387,7 +387,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \end{tikzpicture}}
 
                     % 2rinM
-                    \subfigure[Broadcast \texttt{2-ring-modified}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \subfigure[Broadcast \texttt{2-ring-modified.}]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -404,14 +404,14 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \draw [comm] (f.north) to[bend left] node[comm_label] {t=4} (g.north);
                         \draw [comm] (g.north) to[bend left] node[comm_label] {t=5} (h.north);
                     \end{tikzpicture}}
-                    \caption{Illustration of the four HPL ring-broadcast algorithms}%
+                    \caption{Illustration of the four HPL ring-broadcast algorithms.}%
                     \label{fig:hpl_broadcasts}
                 \end{figure}
 
                 \begin{figure}[htpb]
                     \centering
                     % long (scatter phase)
-                    \subfigure[Broadcast \texttt{long}, scatter phase]{
+                    \subfigure[Broadcast \texttt{long}, scatter phase.]{
                         \begin{tikzpicture}[>=latex',line join=bevel,]
                             \node[mpi_buffer={1}{1}{1}{1}{1}{1}{1}{1}{a}] (aa) {};
                             \node[mpi_buffer={0}{1}{0}{0}{0}{0}{0}{0}{b}, right of=aa] (bb) {};
@@ -443,7 +443,71 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                             \draw [comm] (e 7.south east) -- (e7f7.south) -- (e9f9.center) -- (f9g9.center) -- (f7g7.south) -- node[comm_label] {t=4} (g 7.south west);
                         \end{tikzpicture}
                     }
-                    \caption{Illustration of the two HPL long-broadcast algorithms}%
+
+                    \subfigure[Broadcast \texttt{long}, roll phase.]{
+                        \newcommand{\drawif}[2]{
+                            \unless\ifnum #1<#2
+                            1
+                            \else
+                            0
+                            \fi
+                        }
+                        % https://tex.stackexchange.com/a/34434/71579
+                        \makeatletter
+                        \newcommand\modulo[2]{\@tempcnta=#1
+                                \divide\@tempcnta by #2
+                                \multiply\@tempcnta by #2
+                                \multiply\@tempcnta by -1
+                                \advance\@tempcnta by #1\relax
+                                \the\@tempcnta}
+                        \makeatother
+
+                        \tikzset{
+                          mpi_cluster/.style n args={1}{%
+                            append after command={\pgfextra{\let\mainnode=\tikzlastnode}
+                                node[anchor=north, node distance=1pt] at (\mainnode.north west) (root)  {t=#1}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{0}}{\drawif{#1}{1}}{\drawif{#1}{3}}{\drawif{#1}{5}}{\drawif{#1}{7}}{\drawif{#1}{6}}{\drawif{#1}{4}}{\drawif{#1}{2}}{a}, below right=3pt and 3pt of root] (aa)  {}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{1}}{\drawif{#1}{0}}{\drawif{#1}{2}}{\drawif{#1}{4}}{\drawif{#1}{6}}{\drawif{#1}{7}}{\drawif{#1}{5}}{\drawif{#1}{3}}{b}, right of=aa] (bb)  {}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{4}}{\drawif{#1}{2}}{\drawif{#1}{0}}{\drawif{#1}{1}}{\drawif{#1}{3}}{\drawif{#1}{5}}{\drawif{#1}{7}}{\drawif{#1}{6}}{c}, right of=bb] (cc)  {}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{5}}{\drawif{#1}{3}}{\drawif{#1}{1}}{\drawif{#1}{0}}{\drawif{#1}{2}}{\drawif{#1}{4}}{\drawif{#1}{6}}{\drawif{#1}{7}}{d}, right of=cc] (dd)  {}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{7}}{\drawif{#1}{6}}{\drawif{#1}{4}}{\drawif{#1}{2}}{\drawif{#1}{0}}{\drawif{#1}{1}}{\drawif{#1}{3}}{\drawif{#1}{5}}{e}, right of=dd] (ee)  {}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{6}}{\drawif{#1}{7}}{\drawif{#1}{5}}{\drawif{#1}{3}}{\drawif{#1}{1}}{\drawif{#1}{0}}{\drawif{#1}{2}}{\drawif{#1}{4}}{f}, right of=ee] (ff)  {}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{3}}{\drawif{#1}{5}}{\drawif{#1}{7}}{\drawif{#1}{6}}{\drawif{#1}{4}}{\drawif{#1}{2}}{\drawif{#1}{0}}{\drawif{#1}{1}}{g}, right of=ff] (gg)  {}%
+                                node[anchor=south,mpi_buffer={\drawif{#1}{2}}{\drawif{#1}{4}}{\drawif{#1}{6}}{\drawif{#1}{7}}{\drawif{#1}{5}}{\drawif{#1}{3}}{\drawif{#1}{1}}{\drawif{#1}{0}}{h}, right of=gg] (hh)  {}%
+                            },
+                          }
+                        }
+                        \newcommand{\drawcluster}[1]{
+                            \scalebox{0.7}{\begin{tikzpicture}[>=latex',line join=bevel,]
+                                \node[mpi_cluster={#1}] (x) {};
+                                \node[emptynode, left = 6pt of a 0] (left) {};
+                                \node[emptynode, right = 6pt of h 0] (right) {};
+                                \ifodd #1
+                            %        \draw[latex-latex] (a 0) to[looseness=0.2]  (h 0);
+                                    \draw[latex-,dashed]      (a 0) -- (left.west);
+                                    \draw[latex-,dashed]      (h 0) -- (right.east);
+                                    \draw[latex-latex] (b 0) -- (c 0);
+                                    \draw[latex-latex] (d 0) -- (e 0);
+                                    \draw[latex-latex] (f 0) -- (g 0);
+                                \else
+                                    \draw[latex-latex] (a 0) -- (b 0);
+                                    \draw[latex-latex] (c 0) -- (d 0);
+                                    \draw[latex-latex] (e 0) -- (f 0);
+                                    \draw[latex-latex] (g 0) -- (h 0);
+                                \fi
+                            \end{tikzpicture}}
+                        }
+
+
+                        \begin{tabular}{cc}
+                            \drawcluster{0} & \drawcluster{1}\\
+                            \drawcluster{2} & \drawcluster{3}\\
+                            \drawcluster{4} & \drawcluster{5}\\
+                            \drawcluster{6} & \drawcluster{7}\\
+                        \end{tabular}
+
+                    }
+                    \caption{Illustration of the two phases of the HPL \texttt{long} broadcast algorithm.}%
                     \label{fig:hpl_broadcasts:long}
                 \end{figure}
 
