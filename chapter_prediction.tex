@@ -307,6 +307,25 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \tikzstyle{emptynode}=[node distance=6pt, minimum size=12pt, font=\scriptsize, anchor=north]
                 \tikzstyle{comm}=[-latex]
                 \tikzstyle{comm_label}=[anchor=south, font=\scriptsize]
+
+                \tikzset{
+                  mpi_buffer/.style n args={9}{%
+                    append after command={\pgfextra{\let\mainnode=\tikzlastnode}
+                        node[anchor=west] at (\mainnode.north west) (#9 0)  {#9}%
+                        node[fill=\ifnum#1>0 red\else white\fi,    below of=#9 0] (#9 1) [subpart] {}%
+                        node[fill=\ifnum#2>0 orange\else white\fi, below of=#9 1] (#9 2) [subpart] {}%
+                        node[fill=\ifnum#3>0 yellow\else white\fi, below of=#9 2] (#9 3) [subpart] {}%
+                        node[fill=\ifnum#4>0 green\else white\fi,  below of=#9 3] (#9 4) [subpart] {}%
+                        node[fill=\ifnum#5>0 cyan\else white\fi,   below of=#9 4] (#9 5) [subpart] {}%
+                        node[fill=\ifnum#6>0 blue\else white\fi,   below of=#9 5] (#9 6) [subpart] {}%
+                        node[fill=\ifnum#7>0 purple\else white\fi, below of=#9 6] (#9 7) [subpart] {}%
+                        node[fill=\ifnum#8>0 pink\else white\fi,   below of=#9 7] (#9 8) [subpart] {}%
+                        node[                                      below of=#9 8] (#9 9) [emptynode] {}%
+
+                    },
+                  }
+                }
+
                 \begin{figure}[htpb]
                     \centering
 
@@ -394,115 +413,34 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     % long (scatter phase)
                     \subfigure[Broadcast \texttt{long}, scatter phase]{
                         \begin{tikzpicture}[>=latex',line join=bevel,]
-                            \node[anchor=west] (a0)  {a};
-                            \node[fill=red,    below of=a0] (a1) [subpart] {};
-                            \node[fill=orange, below of=a1] (a2) [subpart] {};
-                            \node[fill=yellow, below of=a2] (a3) [subpart] {};
-                            \node[fill=green,  below of=a3] (a4) [subpart] {};
-                            \node[fill=cyan,   below of=a4] (a5) [subpart] {};
-                            \node[fill=blue,   below of=a5] (a6) [subpart] {};
-                            \node[fill=purple, below of=a6] (a7) [subpart] {};
-                            \node[fill=pink,   below of=a7] (a8) [subpart] {};
-                            \node[             below of=a8] (a9) [emptynode] {};
+                            \node[mpi_buffer={1}{1}{1}{1}{1}{1}{1}{1}{a}] (aa) {};
+                            \node[mpi_buffer={0}{1}{0}{0}{0}{0}{0}{0}{b}, right of=aa] (bb) {};
+                            \node[mpi_buffer={0}{0}{1}{1}{0}{0}{0}{0}{c}, right of=bb] (cc) {};
+                            \node[mpi_buffer={0}{0}{0}{1}{0}{0}{0}{0}{d}, right of=cc] (dd) {};
+                            \node[mpi_buffer={0}{0}{0}{0}{1}{1}{1}{1}{e}, right of=dd] (ee) {};
+                            \node[mpi_buffer={0}{0}{0}{0}{0}{1}{0}{0}{f}, right of=ee] (ff) {};
+                            \node[mpi_buffer={0}{0}{0}{0}{0}{0}{1}{1}{g}, right of=ff] (gg) {};
+                            \node[mpi_buffer={0}{0}{0}{0}{0}{0}{0}{1}{h}, right of=gg] (hh) {};
 
-                            \node[anchor=west, right of=a0] (b0)  {b};
-                            \node[             below of=b0] (b1) [subpart] {};
-                            \node[fill=orange, below of=b1] (b2) [subpart] {};
-                            \node[             below of=b2] (b3) [subpart] {};
-                            \node[             below of=b3] (b4) [subpart] {};
-                            \node[             below of=b4] (b5) [subpart] {};
-                            \node[             below of=b5] (b6) [subpart] {};
-                            \node[             below of=b6] (b7) [subpart] {};
-                            \node[             below of=b7] (b8) [subpart] {};
-                            \node[             below of=b8] (b9) [emptynode] {};
-
-                            \node[anchor=west, right of=b0] (c0)  {c};
-                            \node[             below of=c0] (c1) [subpart] {};
-                            \node[             below of=c1] (c2) [subpart] {};
-                            \node[fill=yellow, below of=c2] (c3) [subpart] {};
-                            \node[fill=green,  below of=c3] (c4) [subpart] {};
-                            \node[             below of=c4] (c5) [subpart] {};
-                            \node[             below of=c5] (c6) [subpart] {};
-                            \node[             below of=c6] (c7) [subpart] {};
-                            \node[             below of=c7] (c8) [subpart] {};
-                            \node[             below of=c8] (c9) [emptynode] {};
-
-                            \node[anchor=west, right of=c0] (d0)  {d};
-                            \node[             below of=d0] (d1) [subpart] {};
-                            \node[             below of=d1] (d2) [subpart] {};
-                            \node[             below of=d2] (d3) [subpart] {};
-                            \node[fill=green,  below of=d3] (d4) [subpart] {};
-                            \node[             below of=d4] (d5) [subpart] {};
-                            \node[             below of=d5] (d6) [subpart] {};
-                            \node[             below of=d6] (d7) [subpart] {};
-                            \node[             below of=d7] (d8) [subpart] {};
-                            \node[             below of=d8] (d9) [emptynode] {};
-
-                            \node[anchor=west, right of=d0] (e0)  {e};
-                            \node[             below of=e0] (e1) [subpart] {};
-                            \node[             below of=e1] (e2) [subpart] {};
-                            \node[             below of=e2] (e3) [subpart] {};
-                            \node[             below of=e3] (e4) [subpart] {};
-                            \node[fill=cyan,   below of=e4] (e5) [subpart] {};
-                            \node[fill=blue,   below of=e5] (e6) [subpart] {};
-                            \node[fill=purple, below of=e6] (e7) [subpart] {};
-                            \node[fill=pink,   below of=e7] (e8) [subpart] {};
-                            \node[             below of=e8] (e9) [emptynode] {};
-
-                            \node[anchor=west, right of=e0] (f0)  {f};
-                            \node[             below of=f0] (f1) [subpart] {};
-                            \node[             below of=f1] (f2) [subpart] {};
-                            \node[             below of=f2] (f3) [subpart] {};
-                            \node[             below of=f3] (f4) [subpart] {};
-                            \node[             below of=f4] (f5) [subpart] {};
-                            \node[fill=blue,   below of=f5] (f6) [subpart] {};
-                            \node[             below of=f6] (f7) [subpart] {};
-                            \node[             below of=f7] (f8) [subpart] {};
-                            \node[             below of=f8] (f9) [emptynode] {};
-
-                            \node[anchor=west, right of=f0] (g0)  {g};
-                            \node[             below of=g0] (g1) [subpart] {};
-                            \node[             below of=g1] (g2) [subpart] {};
-                            \node[             below of=g2] (g3) [subpart] {};
-                            \node[             below of=g3] (g4) [subpart] {};
-                            \node[             below of=g4] (g5) [subpart] {};
-                            \node[             below of=g5] (g6) [subpart] {};
-                            \node[fill=purple, below of=g6] (g7) [subpart] {};
-                            \node[fill=pink,   below of=g7] (g8) [subpart] {};
-                            \node[             below of=g8] (g9) [emptynode] {};
-
-                            \node[anchor=west, right of=g0] (h0)  {h};
-                            \node[             below of=h0] (h1) [subpart] {};
-                            \node[             below of=h1] (h2) [subpart] {};
-                            \node[             below of=h2] (h3) [subpart] {};
-                            \node[             below of=h3] (h4) [subpart] {};
-                            \node[             below of=h4] (h5) [subpart] {};
-                            \node[             below of=h5] (h6) [subpart] {};
-                            \node[             below of=h6] (h7) [subpart] {};
-                            \node[fill=pink,   below of=h7] (h8) [subpart] {};
-                            \node[             below of=h8] (h9) [emptynode] {};
-
-                          %  \node[right of=a1] (b) [mpi_rank] {b};
-                          %  \node[right of=b] (c) [mpi_rank] {c};
-                            \draw [comm] (a2.east) to node[comm_label] {t=6} (b2.west);
-                            \draw [comm] (c4.east) to node[comm_label] {t=6} (d4.west);
-                            \path (a3.east) -- (b3.west) node [emptynode, pos=0.65, below, anchor=center] (a3b3) {} ;
-                            \path (b3.east) -- (c3.west) node [emptynode, pos=0.22, below, anchor=center] (b3c3) {} ;
-                            \path (a9.east) -- (b9.west) node [emptynode, pos=0.65, below, anchor=center] (a9b9) {} ;
-                            \path (b9.east) -- (c9.west) node [emptynode, pos=0.22, below, anchor=center] (b9c9) {} ;
-                            \path (a6.east) -- (b6.west) node [emptynode, pos=0.35, below, anchor=center] (a6b6) {} ;
-                            \path (a9.east) -- (b9.west) node [emptynode, pos=0.35, below, anchor=center] (a9b9p) {} ;
-                            \path (d9.east) -- (e9.west) node [emptynode, pos=0.22, below, anchor=center] (d9e9) {} ;
-                            \path (d6.east) -- (e6.west) node [emptynode, pos=0.22, below, anchor=center] (d6e6) {} ;
-                            \draw [comm] (a3.south east) -- (a3b3.south) -- (a9b9.center) -- (b9c9.center) -- (b3c3.south) -- node[comm_label] {t=4} (c3.south west);
-                            \draw [comm] (a6.south east) -- (a6b6.south) -- (a9b9p.south) -- (d9e9.south) -- (d6e6.south) -- node[comm_label]  {t=0} (e6.south west);
-                            \draw [comm] (e6.east) to node[comm_label] {t=6} (f6.west);
-                            \draw [comm] (g8.east) to node[comm_label] {t=6} (h8.west);
-                            \path (e7.east) -- (f7.west) node [emptynode, pos=0.5, below, anchor=center] (e7f7) {} ;
-                            \path (e9.east) -- (f9.west) node [emptynode, pos=0.5, below, anchor=center] (e9f9) {} ;
-                            \path (f9.east) -- (g9.west) node [emptynode, pos=0.22, below, anchor=center] (f9g9) {} ;
-                            \path (f7.east) -- (g7.west) node [emptynode, pos=0.22, below, anchor=center] (f7g7) {} ;
-                            \draw [comm] (e7.south east) -- (e7f7.south) -- (e9f9.center) -- (f9g9.center) -- (f7g7.south) -- node[comm_label] {t=4} (g7.south west);
+                            \draw [comm] (a 2.east) to node[comm_label] {t=6} (b 2.west);
+                            \draw [comm] (c 4.east) to node[comm_label] {t=6} (d 4.west);
+                            \path (a 3.east) -- (b 3.west) node [emptynode, pos=0.65, below, anchor=center] (a3b3) {} ;
+                            \path (b 3.east) -- (c 3.west) node [emptynode, pos=0.22, below, anchor=center] (b3c3) {} ;
+                            \path (a 9.east) -- (b 9.west) node [emptynode, pos=0.65, below, anchor=center] (a9b9) {} ;
+                            \path (b 9.east) -- (c 9.west) node [emptynode, pos=0.22, below, anchor=center] (b9c9) {} ;
+                            \path (a 6.east) -- (b 6.west) node [emptynode, pos=0.35, below, anchor=center] (a6b6) {} ;
+                            \path (a 9.east) -- (b 9.west) node [emptynode, pos=0.35, below, anchor=center] (a9b9p) {} ;
+                            \path (d 9.east) -- (e 9.west) node [emptynode, pos=0.22, below, anchor=center] (d9e9) {} ;
+                            \path (d 6.east) -- (e 6.west) node [emptynode, pos=0.22, below, anchor=center] (d6e6) {} ;
+                            \draw [comm] (a 3.south east) -- (a3b3.south) -- (a9b9.center) -- (b9c9.center) -- (b3c3.south) -- node[comm_label] {t=4} (c 3.south west);
+                            \draw [comm] (a 6.south east) -- (a6b6.south) -- (a9b9p.south) -- (d9e9.south) -- (d6e6.south) -- node[comm_label]  {t=0} (e 6.south west);
+                            \draw [comm] (e 6.east) to node[comm_label] {t=6} (f 6.west);
+                            \draw [comm] (g 8.east) to node[comm_label] {t=6} (h 8.west);
+                            \path (e 7.east) -- (f 7.west) node [emptynode, pos=0.5, below, anchor=center] (e7f7) {} ;
+                            \path (e 9.east) -- (f 9.west) node [emptynode, pos=0.5, below, anchor=center] (e9f9) {} ;
+                            \path (f 9.east) -- (g 9.west) node [emptynode, pos=0.22, below, anchor=center] (f9g9) {} ;
+                            \path (f 7.east) -- (g 7.west) node [emptynode, pos=0.22, below, anchor=center] (f7g7) {} ;
+                            \draw [comm] (e 7.south east) -- (e7f7.south) -- (e9f9.center) -- (f9g9.center) -- (f7g7.south) -- node[comm_label] {t=4} (g 7.south west);
                         \end{tikzpicture}
                     }
                     \caption{Illustration of the two HPL long-broadcast algorithms}%
