@@ -527,9 +527,24 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \texttt{long} algorithms generally lead to better bandwidth exploitation, these algorithms send a larger
                 number of messages but the total volume of communication is independent of \texttt{Q}: this algorithm is
                 particularly well suited for platforms where the nodes are comparatively much faster than the network.
+
                 The \texttt{ring} and \texttt{2-ring} variants rely on \iprobe, meaning they return control
                 if no message has been fully received yet, hence facilitating partial overlap of communication with
-                computations.  In HPL 2.1 and 2.2, this capability has been deactivated for the \texttt{long} and
+                computations as illustrated in Algorithm~\ref{algo:hpl:bcast_probe}.
+
+                \begin{minipage}{\linewidth}\begin{algorithm}[H]
+                    \DontPrintSemicolon
+                    probe for a message\;
+                    \While{no message is available}{
+                        perform computations (including calls to \dgemm)\;
+                        probe for a message\;
+                    }
+                    broadcast\;
+                    \caption{Illustrating the probing mechanism used in HPL broadcasts.}
+                    \label{algo:hpl:bcast_probe}
+                \end{algorithm}\end{minipage}
+
+                In HPL 2.1 and 2.2, this capability has been deactivated for the \texttt{long} and
                 \texttt{long-modified} algorithms. A comment in the source code states that some machines apparently get
                 stuck when there are too many ongoing messages.
         \end{itemize}
