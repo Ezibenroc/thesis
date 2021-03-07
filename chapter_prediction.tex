@@ -412,7 +412,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \begin{figure}[htpb]
                     \centering
                     % long (scatter phase)
-                    \subfigure[Broadcast \texttt{long}, scatter phase.]{
+                    \subfigure[Broadcast \texttt{long}, scatter phase.\label{fig:hpl_broadcasts:long:scatter}]{
                         \begin{tikzpicture}[>=latex',line join=bevel,]
                             \node[mpi_buffer={1}{1}{1}{1}{1}{1}{1}{1}{a}] (aa) {};
                             \node[mpi_buffer={0}{1}{0}{0}{0}{0}{0}{0}{b}, right of=aa] (bb) {};
@@ -445,7 +445,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \end{tikzpicture}
                     }
 
-                    \subfigure[Broadcast \texttt{long}, roll phase.]{
+                    \subfigure[Broadcast \texttt{long}, roll phase.\label{fig:hpl_broadcasts:long:roll}]{
                         \newcommand{\drawif}[2]{
                             \unless\ifnum #1<#2
                             1
@@ -508,28 +508,37 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \end{tabular}
 
                     }
-                    \caption{Illustration of the two phases of the HPL \texttt{long} broadcast algorithm.}%
+                    \caption{Illustration of the two phases of the HPL \texttt{long} broadcast algorithm. The
+                    \texttt{long-modified} algorithm (not shown) is very similar, except that process \texttt{A} starts
+                    by sending the whole message to process \texttt{B}, then the \texttt{long} broadcast is performed
+                    among all processes except process \texttt{B} which starts its computations.}%
                     \label{fig:hpl_broadcasts:long}
                 \end{figure}
 
-                The \texttt{modified} versions
-                guarantee that the process right after the root (\ie the process that will become the root in the next
-                iteration) receives data first and does not further participate in the broadcast. This process can thereby
-                start working on the panel as soon as possible. The \texttt{ring} and \texttt{2-ring} versions each
-                broadcast along the corresponding virtual topologies while the \texttt{long} version is a \emph{spread and
-                roll} algorithm where messages are chopped into \texttt{Q} pieces. This generally leads to better bandwidth
-                exploitation. The \texttt{ring} and \texttt{2-ring} variants rely on \texttt{MPI\_Iprobe}, meaning they
-                return control if no message has been fully received yet, hence facilitating partial overlap of
-                communication with computations.  In HPL 2.1 and 2.2, this capability has been deactivated for the
-                \texttt{long} and \texttt{long-modified} algorithms. A comment in the source code states that some machines
-                apparently get stuck when there are too many ongoing messages.
+                The \texttt{modified} versions guarantee that the process right after the root (\ie the process that
+                will become the root in the next iteration) receives data first and does not further participate in the
+                broadcast. This process can therefore start working on the panel as soon as possible. The \texttt{ring}
+                and \texttt{2-ring} versions each broadcast along the corresponding virtual topologies (see
+                Figure~\ref{fig:hpl_broadcasts}) while the
+                \texttt{long} version is a \emph{spread and roll} algorithm: messages are chopped into \texttt{Q}
+                pieces, these \texttt{Q} pieces are scattered across the \texttt{Q} processes with a binary tree as in
+                Figure~\ref{fig:hpl_broadcasts:long:scatter}, then the pices are rolled in \texttt{Q}-1 steps using
+                mutual exchanges as in Figure~\ref{fig:hpl_broadcasts:long:roll}. According to HPL authors, the two
+                \texttt{long} algorithms generally lead to better bandwidth exploitation, these algorithms send a larger
+                number of messages but the total volume of communication is independent of \texttt{Q}: this algorithm is
+                particularly well suited for platforms where the nodes are comparatively much faster than the network.
+                The \texttt{ring} and \texttt{2-ring} variants rely on \iprobe, meaning they return control
+                if no message has been fully received yet, hence facilitating partial overlap of communication with
+                computations.  In HPL 2.1 and 2.2, this capability has been deactivated for the \texttt{long} and
+                \texttt{long-modified} algorithms. A comment in the source code states that some machines apparently get
+                stuck when there are too many ongoing messages.
         \end{itemize}
 
-        The sequential complexity of this factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 + \landauO(N)\] where $N$ is
-        the order of the matrix to factorize. The time complexity can be approximated by \[T(N) \approx
-        \frac{\left(\frac{2}{3}N^3 + 2N^2\right)}{P\cdot{}Q\cdot{}w} + \Theta((P+Q)\cdot{}N^2)\] where $w$ is the flop rate
-        of a single node and the second term corresponds to the communication overhead which is influenced by the network
-        capacity and the previously listed parameters (\texttt{RFACT}, \texttt{SWAP}, \texttt{BCAST},
+        The sequential complexity of HPL factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 + \landauO(N)\]
+        where $N$ is the order of the matrix to factorize. The time complexity can be approximated by \[T(N) \approx
+        \frac{\left(\frac{2}{3}N^3 + 2N^2\right)}{P\cdot{}Q\cdot{}w} + \Theta((P+Q)\cdot{}N^2)\] where $w$ is the flop
+        rate of a single node and the second term corresponds to the communication overhead which is influenced by the
+        network capacity and the previously listed parameters (\texttt{RFACT}, \texttt{SWAP}, \texttt{BCAST},
         \texttt{DEPTH}, \ldots) and is very difficult to predict.
 
     \section{Typical runs on a supercomputer}%
@@ -1965,7 +1974,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         We addressed this problem by improving our network calibration procedure: (1) we use a distinct model for local
         and remote calibrations, (2) we sample the message sizes in a larger interval, and (3) we add calls to \dgemm
-        and \texttt{MPI\_Iprobe} between each call to \send and \recv. The goal was to make the calibration environment
+        and \iprobe between each call to \send and \recv. The goal was to make the calibration environment
         more similar to what happens in HPL\@.  The resulting network model is illustrated in the rightmost plots of
         Figure~\ref{fig:mpi_calibration}.  This more realistic network model solved every previous misprediction and
         allows us to produce very faithful simulations (purple line on Figure~\ref{fig:validation_geometry}), which are
@@ -2231,7 +2240,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     computation results.  Although HPL is not a \emph{real} application, it is quite optimized from an algorithmic point
     of view and its behavior can be controlled through 6 different parameters (granularity, geometry of the virtual
     topology, broadcast/swapping/factorization algorithm, and the number of concurrent iterations). HPL features
-    classical optimization techniques such as heavily relying on \texttt{MPI\_Iprobe} to overlap communication with
+    classical optimization techniques such as heavily relying on \iprobe to overlap communication with
     computations, making it particularly challenging both in terms of tuning and simulation.
 
     We present in Chapter~\ref{chapter:prediction:validation} an extensive validation study which covers the whole
