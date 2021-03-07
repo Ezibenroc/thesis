@@ -549,6 +549,28 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 stuck when there are too many ongoing messages.
         \end{itemize}
 
+        The \emph{panel} mentionned in Figure~\ref{fig:hpl_overview} is an intricate data structure used throughout
+        multiple functions of the application.  It contains both \texttt{int}s (accounting for matrix indices, error
+        codes, MPI tags, and pivoting information) and \texttt{double}s (corresponding to a copy of a sub-matrix of
+        \texttt{A}). To optimize data transfers, HPL flattens this structure into a single allocation of
+        \texttt{double}s, as in Figure~\ref{fig:hpl_panel_sourcecode}.
+        \begin{figure}[htpb]
+            \centering
+            \lstset{frame=bt,language=C,numbers=none}
+            \subfigure[Definition of the panel structure.\label{fig:hpl_panel_sourcecode:typedef}]{
+                \begin{minipage}{\linewidth}
+                    \lstinputlisting{img/prediction/state_of_art/hpl_panel_typedef.c}
+                \end{minipage}
+            }
+            \subfigure[Sample of the panel structure initialization.\label{fig:hpl_panel_sourcecode:init}]{
+                \begin{minipage}{\linewidth}
+                    \lstinputlisting{img/prediction/state_of_art/hpl_panel_init.c}
+                \end{minipage}
+            }
+            \caption{HPL panel data structure.}%
+            \label{fig:hpl_panel_sourcecode}
+        \end{figure}
+
         The sequential complexity of HPL factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 + \landauO(N)\]
         where $N$ is the order of the matrix to factorize. The time complexity can be approximated by \[T(N) \approx
         \frac{\left(\frac{2}{3}N^3 + 2N^2\right)}{P\cdot{}Q\cdot{}w} + \Theta((P+Q)\cdot{}N^2)\] where $w$ is the flop
@@ -810,10 +832,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \end{figure}
 
         Although using the default \texttt{SHARED\_MALLOC} mechanism works flawlessly for \texttt{A}, a more careful
-        strategy needs to be used for the \texttt{panel}, which is an intricate data structure with both \texttt{int}s
-        (accounting for matrix indices, error codes, MPI tags, and pivoting information) and \texttt{double}s
-        (corresponding to a copy of a sub-matrix of \texttt{A}). To optimize data transfers, HPL flattens this structure
-        into a single allocation of \texttt{double}s (see Figure~\ref{fig:panel_structure}). Using a fully shared memory
+        strategy needs to be used for the \texttt{panel}, the complex data structure presented in
+        Figure~\ref{fig:hpl_panel_sourcecode}. As already discussed, HPL flattens the whole structure  into a single
+        allocation (including matrix parts, but also integer indices) to optimize data transfers (illustrated in
+        Figure~\ref{fig:panel_structure}). Using a fully shared memory
         allocation for the \texttt{panel} therefore leads to index corruption that results in classic invalid memory
         accesses. Since \texttt{int}s and \texttt{double}s are stored in non-contiguous parts of this flat allocation,
         it is therefore essential to have a mechanism that preserves the process-specific content. We have thus
