@@ -1333,7 +1333,15 @@
             execution of the experiment on the target machines to the generation of the final plots. It discusses
             several technical choices that have been made and gives some insights to their advantages and limitations.
 
-            The workflow consists in three main steps:
+            \begin{figure}[htpb]
+                \centering
+                \includegraphics[height=0.74\textheight]{img/experiment/non_regression/implementation/workflow.pdf}
+                \caption{Full workflow implemented by our tests.}%
+                \label{fig:experiment:g5k_test:workflow}
+            \end{figure}
+
+            The workflow, illustrated in Figure~\ref{fig:experiment:g5k_test:workflow}, consists in three main steps.
+            The first one is implemented with \texttt{peanut} while the two others are implemented with \texttt{cashew}.
             \begin{description}
                 \item[Experiment execution] The \dgemm calibration program is executed on the desired nodes. We obtain
                     a \texttt{zip} archive containing the experiment data and metadata.
@@ -1345,6 +1353,7 @@
                 \item[Statistical test computation] Several statistical tests are done on the sequence of aggregated
                     data. The result is presented as several \texttt{jupyter} notebooks containing plots.
             \end{description}
+
 
             \subsubsection{Experiment execution}%
 
