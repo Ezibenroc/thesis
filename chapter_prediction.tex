@@ -571,12 +571,16 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \label{fig:hpl_panel_sourcecode}
         \end{figure}
 
-        The sequential complexity of HPL factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 + \landauO(N)\]
-        where $N$ is the order of the matrix to factorize. The time complexity can be approximated by \[T(N) \approx
-        \frac{\left(\frac{2}{3}N^3 + 2N^2\right)}{P\cdot{}Q\cdot{}w} + \Theta((P+Q)\cdot{}N^2)\] where $w$ is the flop
-        rate of a single node and the second term corresponds to the communication overhead which is influenced by the
-        network capacity and the previously listed parameters (\texttt{RFACT}, \texttt{SWAP}, \texttt{BCAST},
-        \texttt{DEPTH}, \ldots) and is very difficult to predict.
+        We would like to stress through these examples that although HPL is only a benchmark (as opposed to a real
+        application used in physics simulations for instance), it is already a complex program with ellaborated
+        programming techniques to reach the highest available performance.  It is possible to get a very rough
+        estimation of HPL duration with an analytical model, but more accurate predictions require the simulation of the
+        application. The sequential time complexity of HPL factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 +
+        \landauO(N)\] where $N$ is the order of the matrix to factorize.  The parallel time complexity can be
+        approximated by \[T(N) \approx \frac{\left(\frac{2}{3}N^3 + 2N^2\right)}{P\cdot{}Q\cdot{}w} +
+        \Theta((P+Q)\cdot{}N^2)\] where $w$ is the flop rate of a single node and the second term corresponds to the
+        communication overhead which is influenced by the network capacity and the previously listed parameters
+        (\texttt{RFACT}, \texttt{SWAP}, \texttt{BCAST}, \texttt{DEPTH}, \ldots) and is very difficult to predict.
 
     \section{Typical runs on a supercomputer}%
     \label{sec:hpl:typical_runs}
