@@ -186,7 +186,17 @@ platform-calibration}
         race for performance was to design multicore processors. Nowadays, nearly all laptops and smartphones have
         several cores, while high-end servers can have two or four sockets with up to 64 cores per socket.
 
-        TODO: talk about dark silicon~\cite{Esmaeilzadeh_2011}.
+        Yet, it appears that using several cores was only a short-term help for increasing the CPU
+        performance. With the end of Dennard scaling, the power density increases with each generation of processor.
+        Hence, to stay within a safe thermal design power (TDP), it is no longer possible to power at the nominal
+        voltage all the components of the processors (notion named \emph{dark silicon}). Esmaeilzadeh~\etal estimate
+        that with the \NSI{8}{\nano\metre} processor generation, more than \NSI{50}{\percent} of their transistors might
+        be unpowered at each given time~\cite{Esmaeilzadeh_2011}.
+
+        % First, performance gains are limited by Amdahl's law, stating that the maximal speedup obtained by running an
+        % application on \(P\) cores is \(\frac{1}{(1-f) + f/P}\) where \(f\) is the fraction of the application that can
+        % be run in parallel. For instance, an application whose \NSI{95}{\percent} of the execution can be made in
+        % parallel will have a speedup of at most \(20\), even with an infinite number of cores.
 
 
         \begin{figure}[htbp]
