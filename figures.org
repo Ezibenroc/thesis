@@ -395,6 +395,19 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 
+double_duration = 2  # Moore's law estimation of the number of years needed to observe a x2 of the number of transistors
+growth_rate = 2**(1/double_duration)  # Yearly growth rate
+
+evolution_line <- function(df, column, rate) {
+    df=data.frame(
+        date=(pull(df, date) %>% min()):(pull(df, date) %>% max()),
+                value=filter(df, key==column) %>% arrange(date) %>% head(n=3) %>% pull(value) %>% median(na.rm=T),
+                key=column
+            ) %>%
+        mutate(value=value*rate**(date-min(date)))
+    return(geom_line(data=df, show.legend=F))
+}
+
 plot = bind_rows(
         read.csv('data/context/microprocessor_chronology.csv'),
         read.csv('data/context/transistor_count.csv') %>% mutate(core_per_die_min=-42, core_per_die_max=-42)  # dirty hack to remove these points
@@ -405,13 +418,21 @@ plot = bind_rows(
     replace_na(list(core_per_die_min=1, core_per_die_max=1)) %>%
     select(-processor, -designer, -word_size, -die_per_module_min, -die_per_module_max, -area) %>%
     gather(key, value, -date) %>%
+    mutate(short_key=key) %>%
     mutate(key=ifelse(grepl("frequency", key), "Frequency (MHz)", key)) %>%
     mutate(key=ifelse(grepl("process", key), "Process (nm)", key)) %>%
     mutate(key=ifelse(grepl("core_per_die", key), "Cores (count)", key)) %>%
-    mutate(key=ifelse(grepl("transistor_count", key), "Transistors (thousands)", key)) %>%
-    ggplot() +
-        aes(x=date, y=value, color=key, shape=key) +
-        geom_point(size=2) +
+    mutate(key=ifelse(grepl("transistor_count", key), "Transistors (thousands)", key)) %>% {(
+    ggplot(.) +
+        aes(x=date, y=value, color=key) +
+        geom_point(aes(shape=key), size=2) +
+        evolution_line(., "Transistors (thousands)", growth_rate) +
+#        evolution_line(., "Process (nm)", 1/growth_rate) +
+        annotate(
+            geom = "curve", x = 1990, y = 2.6e5, xend = 1993, yend = 7.5e3, 
+            curvature = .2, arrow = arrow(length = unit(2, "mm"))
+        ) +
+        annotate('label', x=1990, y=1e6, label="Predicted growth\n(×2 every two years)", fill="#f9cbe2") +
         theme_bw() +
         scale_color_brewer(palette="Dark2") +
         scale_shape_manual(values=c(0,1,2,6)) +
@@ -424,12 +445,13 @@ plot = bind_rows(
         theme(axis.title.y = element_blank()) +
         theme(legend.position = c(0.15, 0.81), legend.title=element_blank()) +
         theme(legend.background=element_rect(color="black"))
+    )}
 ggsave(filename='img/context/49_years.pdf', plot=plot, width=7, height=4)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-REZPeJ/figurerSwaSp.png]]
+[[file:/tmp/babel-yrfOF2/figureMc3oM0.png]]
 
 * Performance prediction through simulation
 ** Modeling HPL kernels and communications
