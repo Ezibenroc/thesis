@@ -129,22 +129,63 @@ platform-calibration}
         Ten years later, Moore revised his forecast to a doubling every two year~\cite{moore:1975}. This prediction,
         which revealed to be true, is now known as \emph{Moore's law}.
 
-        One of the main contributions for this exponential growth of the number of transistors is the exponential
-        decrease of their size, as plotted in Figure~\ref{fig:context:49_years}. While the IBM 608 calculator
-        commercialized in the 50's had transistors ``no bigger than a paper clip''~\cite{ibm608}, the latest processors
-        commercialized in 2020 have \NSI{5}{\nano\meter} transistors.
-
-        In 1974, Dennard~\etal observed that the power density of chip remained constant as transistors
-        shrinked~\cite{dennard}. This law, named \emph{Dennard scaling} [...]
-        TODO: cite \cite{Esmaeilzadeh_2011}.
-
         \begin{figure}[htbp]
             \centering
             \includegraphics[width=\textwidth]{img/context/49_years.pdf}
             \caption{\label{fig:context:49_years}
             Evolution of the processor characteristics between 1971 and 2020. Plot inspired from the work of Pedro Bruel,
-            generated with data from wikipedia~\cite{wiki2021chronology,wiki2021transistor}.}
+            generated with data from Wikipedia~\cite{wiki2021chronology,wiki2021transistor}.}
         \end{figure}
+
+        One of the main contributions for this exponential growth of the number of transistors is the exponential
+        decrease of their size, as plotted in Figure~\ref{fig:context:49_years}. While the IBM 608 calculator
+        commercialized in the 50's had transistors ``no bigger than a paper clip''~\cite{ibm608}, the latest processors
+        commercialized in 2020 have \NSI{5}{\nano\meter} transistors.
+
+        In 1974, Dennard~\etal listed a set of rules for scaling silmutaneously the transistor density, clock frequency
+        and power dissipation of processors~\cite{dennard}, which would eventually be named \emph{Dennard scaling}. The
+        effect of this scaling on the device is summarized in Table~\ref{tab:dennard}. A scaling of \(\kappa\) will
+        result in a clock frequency multiplied by a factor \(\kappa\) while the power density of the chip remains
+        constant, \ie if the size of the processor does not change, it will have the same power consumption and generate
+        the same amount of heat.
+
+        \begin{table}[htpb]
+            \centering
+            \caption{Dennard scaling with a factor \(\kappa\) (table reproduced from~\cite[Table 1]{dennard}).}
+            \label{tab:dennard}
+            \begin{tabular}{l|c}
+                Device or Circuit Parameter & Scaling Factor\\
+                \hline
+                Device dimension \(t_{ox}, L, W\) & \(1/\kappa\)\\
+                Doping concentration \(N_a\) & \(\kappa\)\\
+                Voltage \(V\) & \(1/\kappa\)\\
+                Current \(I\) & \(1/\kappa\)\\
+                Capacitance \(C=\epsilon A/t\) & \(1/\kappa\)\\
+                Delay time/circuit \(VC/I\) & \(1/\kappa\)\\
+                Power dissipation/circuit \(VI\) & \(1/\kappa^2\)\\
+                Power density \(VI/A\) & 1\\
+            \end{tabular}
+        \end{table}
+
+        Unfortunately, Dennard scaling came to an end 15 years ago. Indeed, it is no longer possible to scale the
+        operating voltage and the gate oxide thickness~\cite{Bohr_2007}, as transistors have reached scales where power
+        leakage is no longer negligible. With a voltage that cannot be scaled anymore, the power density cannot remain
+        constant and reaches alarming levels of more than \NSI{4}{\watt/\milli\metre\squared}
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/context/power_density.pdf}
+            \caption{Evolution of the power density in the last 20 years (plot reproduced form ~\cite[Figure
+            3]{Hennessy_2019}).}%
+            \label{fig:context:power_density}
+        \end{figure}
+
+        Consequently, it has became impossible to increase further the CPU frequency, which has reached a limit of about
+        \NSI{5}{\giga\hertz} since 2006, as shown by Figure~\ref{fig:context:49_years}.
+
+        TODO: cite~\cite{Hennessy_2019,Hennessy_youtube} and.
+
+        TODO: talk about dark silicon~\cite{Esmaeilzadeh_2011}.
 
 
         \begin{figure}[htbp]
