@@ -145,9 +145,9 @@ platform-calibration}
         In 1974, Dennard~\etal listed a set of rules for scaling silmutaneously the transistor density, clock frequency
         and power dissipation of processors~\cite{dennard}, which would eventually be named \emph{Dennard scaling}. The
         effect of this scaling on the device is summarized in Table~\ref{tab:dennard}. A scaling of \(\kappa\) will
-        result in a clock frequency multiplied by a factor \(\kappa\) while the power density of the chip remains
-        constant, \ie if the size of the processor does not change, it will have the same power consumption and generate
-        the same amount of heat.
+        result in a clock frequency multiplied by a factor \(\kappa\) and a number of transistors multiplied by
+        \(\kappa^2\) while the power density of the chip remains constant, \ie if the size of the processor does not
+        change, it will have the same power consumption and generate the same amount of heat.
 
         \begin{table}[htpb]
             \centering
@@ -182,16 +182,20 @@ platform-calibration}
         \end{figure}
 
         Consequently, it has become impossible to increase further the CPU frequency, which has reached a limit of about
-        \NSI{5}{\giga\hertz} since 2006, as shown by Figure~\ref{fig:context:49_years}. One of the response to keep the
-        race for performance was to design multicore processors. Nowadays, nearly all laptops and smartphones have
-        several cores, while high-end servers can have two or four sockets with up to 64 cores per socket.
+        \NSI{5}{\giga\hertz} since 2006 after an exponential growth of several decades, as shown by
+        Figure~\ref{fig:context:49_years}. One of the response to keep the race for performance was to design multicore
+        processors. Nowadays, nearly all laptops and smartphones have several cores, while high-end servers can have two
+        or four sockets with up to 64 cores per socket.
 
         Yet, it appears that using several cores was only a short-term help for increasing the CPU
         performance. With the end of Dennard scaling, the power density increases with each generation of processor.
         Hence, to stay within a safe thermal design power (TDP), it is no longer possible to power at the nominal
         voltage all the components of the processors (notion named \emph{dark silicon}). Esmaeilzadeh~\etal estimate
         that with the \NSI{8}{\nano\metre} processor generation, more than \NSI{50}{\percent} of their transistors might
-        be unpowered at each given time~\cite{Esmaeilzadeh_2011}.
+        be unpowered at each given time~\cite{Esmaeilzadeh_2011}. With these constraints, Hennessy and
+        Patterson~\cite{Hennessy_2019,Hennessy_youtube} estimate that the single-processor performance is now only
+        growing by a mere \NSI{3}{\percent} per year, which is a much slower pace than the \NSI{50}{\percent} yearly
+        growth rate that the industry got used to for decades.
 
         % First, performance gains are limited by Amdahl's law, stating that the maximal speedup obtained by running an
         % application on \(P\) cores is \(\frac{1}{(1-f) + f/P}\) where \(f\) is the fraction of the application that can
