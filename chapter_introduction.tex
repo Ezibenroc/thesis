@@ -190,7 +190,7 @@ platform-calibration}
         Yet, it appears that using several cores was only a short-term help for increasing the CPU
         performance. With the end of Dennard scaling, the power density increases with each generation of processor.
         Hence, to stay within a safe thermal design power (TDP), it is no longer possible to power at the nominal
-        voltage all the components of the processors (notion named \emph{dark silicon}). Esmaeilzadeh~\etal estimate
+        voltage all the components of the processors (notion named \emph{dark silicon}). Esmaeilzadeh~\etal predict
         that with the \NSI{8}{\nano\metre} processor generation, more than \NSI{50}{\percent} of their transistors might
         be unpowered at each given time~\cite{Esmaeilzadeh_2011}. With these constraints, Hennessy and
         Patterson~\cite{Hennessy_2019,Hennessy_youtube} estimate that the single-processor performance is now only
@@ -202,6 +202,21 @@ platform-calibration}
         % be run in parallel. For instance, an application whose \NSI{95}{\percent} of the execution can be made in
         % parallel will have a speedup of at most \(20\), even with an infinite number of cores.
 
+    \section{Scientific computing today}%
+    \label{sec:scientific_computing_today}
+
+        Computations are now used in every scientific fields, from small statistical calculations to large numerical
+        simulations. Science as a whole has immensely benefited from this exponential performance improvement. For
+        instance, the price for sequencing an entire human genome has dropped from \SI{100000000}[\$]{} in 2001 to
+        \SI{1000}[\$]{} in 2020~\cite{genome_sequencing}.
+
+        To reach the highest performance, a single processor is not enough, the benefit of doing computations in
+        parallel was already obvious at the time of human computers, as discussed in Section~\ref{sec:first_computers}.
+        For this reason, the largest computations are now performed on supercomputers, large machines made of many
+        processors connected through a fast network. The 500 fastest non-confidential supercomputers of the world are
+        ranked biannually in the Top500~\cite{top500}. As shown by Figure~\ref{fig:context:top500}, they suffered from
+        the same frequency staling as the rest of the industry in 2006, yet their performance kept an exponential
+        increase, in part explained by the exponential increase of their total number of cores.
 
         \begin{figure}[htbp]
             \centering
@@ -212,11 +227,15 @@ platform-calibration}
             values.\\ Data compiled by Dan Lenski~\cite{top500_compiled} and plotted by ourselves.}
         \end{figure}
 
+        The largest supercomputers now have thousands of processors, millions of cores and power consumptions of several
+        megawatts. Operating and using such large machines require a lot of automation, notably for scheduling and
+        running experiments, upgrading the software, detecting anomalies or monitoring the machine usage.
 
-    \section{Increased complexity}%
-    \label{sec:increased_complexity}
+
+   % \section{Increased complexity}%
+   % \label{sec:increased_complexity}
 
         % TODO increased complexity everywhere (HW and SW), deterministic at micro-level but the macro-level is random
         % no complete understanding of the whole thing, we need experimental CS, we need models (very similarly to what
         % is done in physics or biology)
-        Some horror stories~\cite{Petrini_2003}\dots
+   %     Some horror stories~\cite{Petrini_2003}\dots
