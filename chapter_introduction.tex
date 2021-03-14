@@ -228,9 +228,25 @@ platform-calibration}
         \end{figure}
 
         The largest supercomputers now have thousands of processors, millions of cores and power consumptions of several
-        megawatts. Operating and using such large machines require a lot of automation, notably for scheduling and
-        running experiments, upgrading the software, detecting anomalies or monitoring the machine usage.
-
+        megawatts. At these scales, and with the hardware and software complexity required to reach the highest
+        performance, it is extremely difficult to have an accurate picture of the whole platform. Even if all the
+        individual components are deterministic at a microscopic level, a supercomputer observed at a macroscopic level
+        can arguably be seen as a stochastic object. Hence, it is very common for the operators or the users of these
+        machines to stumble on performance anomalies, \ie the \emph{observed} performance is different from the
+        \emph{expected} performance. For instance, Petrini~\etal~\cite{Petrini_2003} found a severe but previously
+        undetected performance problem on the supercomputer they were using, responsible of a \NSI{100}{\percent}
+        performance variation and caused by operating system perturbations. Likewise,
+        Tuncer~\etal~\cite[Section~1]{Tuncer_2017} list several examples of performance problems observed in operation:
+        \begin{itemize}
+            \item The amount of variation in application running time can reach \NSI{100}{\percent} on real-life
+                systems~\cite{Bhatele_2013,Skinner}.
+            \item Orphan processes left over from previous jobs consumming system resources~\cite{Brandt_2010}.
+            \item Firmware bugs, affecting the CPU usage on the server and making the user programs
+                fail~\cite{cisco_bug}.
+            \item Memory leaks in applications, eventually leading to job failure~\cite{Agelastos_2015}.
+            \item CPU throttling of the nodes for thermal control~\cite{Brandt2015EnablingAO}.
+            \item Resource contention~\cite{Bhatele_2013,dorier:hal-00916091}.
+        \end{itemize}
 
    % \section{Increased complexity}%
    % \label{sec:increased_complexity}
