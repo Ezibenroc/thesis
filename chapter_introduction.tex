@@ -195,67 +195,76 @@
     \section{Scientific computing today}%
     \label{sec:scientific_computing_today}
 
-        Computations are now used in every scientific fields, from small statistical calculations to large numerical
-        simulations. Science as a whole has immensely benefited from this exponential performance improvement. For
-        instance, the price for sequencing an entire human genome has dropped from \SI{100000000}[\$]{} in 2001 to
-        \SI{1000}[\$]{} in 2020~\cite{genome_sequencing}.
+        \subsection{High performance computing}%
+        \label{sub:hpc}
 
-        To reach the highest performance, a single processor is not enough, the benefit of doing computations in
-        parallel was already obvious at the time of human computers, as discussed in Section~\ref{sec:first_computers}.
-        For this reason, the largest computations are now performed on supercomputers, large machines made of many
-        processors connected through a fast network. The 500 fastest non-confidential supercomputers of the world are
-        ranked biannually in the Top500~\cite{top500}. As shown by Figure~\ref{fig:context:top500}, they suffered from
-        the same frequency staling as the rest of the industry in 2006, yet their performance kept an exponential
-        increase, in part explained by the exponential increase of their total number of cores.
+            Computations are now used in every scientific fields, from small statistical calculations to large numerical
+            simulations. Science as a whole has immensely benefited from this exponential performance improvement. For
+            instance, the price for sequencing an entire human genome has dropped from \SI{100000000}[\$]{} in 2001 to
+            \SI{1000}[\$]{} in 2020~\cite{genome_sequencing}.
 
-        \begin{figure}[htbp]
-            \centering
-            \includegraphics[width=\textwidth]{img/context/top500.pdf}
-            \caption{\label{fig:context:top500}
-            Evolution of the Top500~\cite{top500} supercomputers between 1993 and 2020.  The line denotes the median, the inner ribbon
-            contains the \([\NSI{10}{\percent}, \NSI{90}{\percent}]\) interval, the outer ribbon contains all the
-            values.\\ Data compiled by Dan Lenski~\cite{top500_compiled} and plotted by ourselves.}
-        \end{figure}
+            To reach the highest performance, a single processor is not enough, the benefit of doing computations in
+            parallel was already obvious at the time of human computers, as discussed in Section~\ref{sec:first_computers}.
+            For this reason, the largest computations are now performed on supercomputers, large machines made of many
+            processors connected through a fast network. The 500 fastest non-confidential supercomputers of the world are
+            ranked biannually in the Top500~\cite{top500}. As shown by Figure~\ref{fig:context:top500}, they suffered from
+            the same frequency staling as the rest of the industry in 2006, yet their performance kept an exponential
+            increase, in part explained by the exponential increase of their total number of cores.
 
-        The largest supercomputers now have thousands of processors, millions of cores and power consumptions of several
-        megawatts. At these scales, and with the hardware and software complexity required to reach the highest
-        performance, it is extremely difficult to have an accurate picture of the whole platform. Even if all the
-        individual components are deterministic at a microscopic level, a supercomputer observed at a macroscopic level
-        can arguably be seen as a stochastic object. Hence, it is very common for the operators or the users of these
-        machines to stumble on performance anomalies, \ie the \emph{observed} performance is different from the
-        \emph{expected} performance. For instance, Petrini~\etal~\cite{Petrini_2003} found a severe but previously
-        undetected performance problem on the supercomputer they were using, responsible of a \NSI{100}{\percent}
-        performance variation and caused by operating system perturbations. Likewise,
-        Tuncer~\etal~\cite[Section~1]{Tuncer_2017} list several examples of performance problems observed in operation:
-        \begin{itemize}
-            \item The amount of variation in application running time can reach \NSI{100}{\percent} on real-life
-                systems~\cite{Bhatele_2013,Skinner}.
-            \item Orphan processes left over from previous jobs consumming system resources~\cite{Brandt_2010}.
-            \item Firmware bugs, affecting the CPU usage on the server and making the user programs
-                fail~\cite{cisco_bug}.
-            \item Memory leaks in applications, eventually leading to job failure~\cite{Agelastos_2015}.
-            \item CPU throttling of the nodes for thermal control~\cite{Brandt2015EnablingAO}.
-            \item Resource contention~\cite{Bhatele_2013,dorier:hal-00916091}.
-        \end{itemize}
+            \begin{figure}[htbp]
+                \centering
+                \includegraphics[width=\textwidth]{img/context/top500.pdf}
+                \caption{\label{fig:context:top500}
+                Evolution of the Top500~\cite{top500} supercomputers between 1993 and 2020.  The line denotes the median, the inner ribbon
+                contains the \([\NSI{10}{\percent}, \NSI{90}{\percent}]\) interval, the outer ribbon contains all the
+                values.\\ Data compiled by Dan Lenski~\cite{top500_compiled} and plotted by ourselves.}
+            \end{figure}
 
-    \section{A reproducibility crisis}%
-    \label{sec:reproducibility_crisis}
+            The largest supercomputers now have thousands of processors, millions of cores and power consumptions of several
+            megawatts. At these scales, and with the hardware and software complexity required to reach the highest
+            performance, it is extremely difficult to have an accurate picture of the whole platform. Even if all the
+            individual components are deterministic at a microscopic level, a supercomputer observed at a macroscopic level
+            can arguably be seen as a stochastic object. Hence, it is very common for the operators or the users of these
+            machines to stumble on performance anomalies, \ie the \emph{observed} performance is different from the
+            \emph{expected} performance. For instance, Petrini~\etal~\cite{Petrini_2003} found a severe but previously
+            undetected performance problem on the supercomputer they were using, responsible of a \NSI{100}{\percent}
+            performance variation and caused by operating system perturbations. Likewise,
+            Tuncer~\etal~\cite[Section~1]{Tuncer_2017} list several examples of performance problems observed in operation:
+            \begin{itemize}
+                \item The amount of variation in application running time can reach \NSI{100}{\percent} on real-life
+                    systems~\cite{Bhatele_2013,Skinner}.
+                \item Orphan processes left over from previous jobs consumming system resources~\cite{Brandt_2010}.
+                \item Firmware bugs, affecting the CPU usage on the server and making the user programs
+                    fail~\cite{cisco_bug}.
+                \item Memory leaks in applications, eventually leading to job failure~\cite{Agelastos_2015}.
+                \item CPU throttling of the nodes for thermal control~\cite{Brandt2015EnablingAO}.
+                \item Resource contention~\cite{Bhatele_2013,dorier:hal-00916091}.
+            \end{itemize}
 
-        For several years there has been an ongoing concern of a reproducibility crisis in science. An online survey
-        done in 2016 found that among the \Num{1576} scientists who responded, \NSI{70}{\percent} have failed at least
-        once to reproduce the work of another scientist, \NSI{50}{\percent} have even failed to reproduce their own
-        work~\cite{nature_survey}. This crisis is particularly concerning in medical science, where it is estimated that
-        a large part of claimed research findings are false~\cite{Ioannidis_2005,freedman}.
+        \subsection{A reproducibility crisis}%
+        \label{sub:reproducibility_crisis}
 
-        Computer science is not immune to these concerns. Researchers may be faced to numerical replicability
-        issues~\cite{Revol_2014} but also experimental biases when running experiments. For instance, Mytkowicz~\etal
-        show that simply changing the envifonment variable size can account for a performance variability of more
-        than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting and avoiding such
-        measurement bias. Part of this reproducibility crisis is also caused by the frequent unavailability of the
-        softwares, methods and data on which are based the research articles. For instance, Collberg~\etal examined
-        601 papers from ACM conferences and journals, they were able to personally build the software
-        of only 194 of them while they simply could not access the code of 176 of these
-        papers~\cite{collberg2015repeatability}.
+            For several years there has been an ongoing concern of a reproducibility crisis in science. An online survey
+            done in 2016 found that among the \Num{1576} scientists who responded, \NSI{70}{\percent} have failed at least
+            once to reproduce the work of another scientist, \NSI{50}{\percent} have even failed to reproduce their own
+            work~\cite{nature_survey}. This crisis is particularly concerning in medical science, where it is estimated that
+            a large part of claimed research findings are false~\cite{Ioannidis_2005,freedman}.
+
+            Computer science is not immune to these concerns. Researchers may be faced to numerical replicability
+            issues~\cite{Revol_2014} but also experimental biases when running experiments. For instance, Mytkowicz~\etal
+            show that simply changing the envifonment variable size can account for a performance variability of more
+            than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting and avoiding such
+            measurement bias. Part of this reproducibility crisis is also caused by the frequent unavailability of the
+            softwares, methods and data on which are based the research articles. For instance, Collberg~\etal examined
+            601 papers from ACM conferences and journals, they were able to personally build the software
+            of only 194 of them while they simply could not access the code of 176 of these
+            papers~\cite{collberg2015repeatability}.
+
+    \section{This thesis}%
+    \label{sec:this_thesis}
+
+        In this thesis, we argue that a large part of computer science, and in particular high performance computing,
+        is an experimental science.
 
         \todo{
         Performance anomalies $\rightarrow$ reproductibility problem (eg. if we compare two implementations, how can we be sure
