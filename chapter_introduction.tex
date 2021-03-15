@@ -263,18 +263,47 @@
     \section{This thesis}%
     \label{sec:this_thesis}
 
-        In this thesis, we argue that a large part of computer science, and in particular high performance computing,
-        is an experimental science.
+        In this thesis, we argue that a large part of computer science, and in particular high performance computing, is
+        an experimental science. It is commonplace for computer scientists to run experiments, \eg for comparing the
+        performance of several algorithms. With the kind of variability described in
+        Section~\ref{sec:scientific_computing_today}, such experiments could easily lead to false conclusions. We
+        therefore advocate for using similar methods to the natural sciences, which have been faced with the same issues
+        for decades.
 
-        \todo{
-        Performance anomalies $\rightarrow$ reproductibility problem (eg. if we compare two implementations, how can we be sure
-        that the difference we observe really come from the two implementations).
-        $\rightarrow$ Need a way for the users to have more confidence in their experiments.
-        $\rightarrow$ Several contributions towards this goal:
-        (1) Simulation of application, to remove the need of doing experiments.
-        (2) Automation of experiments (peanut), to reduce a lot the possibility of human mistakes.
-        (3) List several experimental difficulties, some of them very unsettling, to be aware of what can happen.
-        (4) Performance non regression tests of the platform, to detect significant changes.}
+        Our contribution towards this goal of improving the confidence in the experimental results is multiple:
+        \begin{itemize}
+            \item In Part~\ref{part:prediction}, we propose a methodology for predicting the performance of an
+                application through simulation. Similarly to biology or physics, making an experiment in simulation
+                can be of great help to rule out part of the experimental bias. It can also enable the researchers to
+                test scenarios that would be too costly in reality.
+                \begin{itemize}
+                    \item We contextualize this work in Chapters~\ref{chapter:prediction:related_work}
+                        and~\ref{chapter:prediction:hpl}.
+                    \item We explain how to improve the efficiency of the simulation in
+                        Chapter~\ref{chapter:prediction:emulation}.
+                    \item The models we used for the predictions are presented in
+                        Chapter~\ref{chapter:prediction:modeling}.
+                    \item Chapter~\ref{chapter:prediction:validation} is a thorough validation of the simulations, where
+                        we compare the predicted performance with the observations made on real experiments.
+                    \item We illustrate an important use case of such simulations in
+                        Chapter~\ref{chapter:prediction:sensibility} by performing several sensibility studies.
+                \end{itemize}
+            \item In Part~\ref{part:experiment}, we present additional tools and methods to help experimenters increase
+                the quality of their work.
+                \begin{itemize}
+                    \item [...]
+                \end{itemize}
+        \end{itemize}
+
+        % \todo{
+        % Performance anomalies $\rightarrow$ reproductibility problem (eg. if we compare two implementations, how can we be sure
+        % that the difference we observe really come from the two implementations).
+        % $\rightarrow$ Need a way for the users to have more confidence in their experiments.
+        % $\rightarrow$ Several contributions towards this goal:
+        % (1) Simulation of application, to remove the need of doing experiments.
+        % (2) Automation of experiments (peanut), to reduce a lot the possibility of human mistakes.
+        % (3) List several experimental difficulties, some of them very unsettling, to be aware of what can happen.
+        % (4) Performance non regression tests of the platform, to detect significant changes.}
 
     % \section{Increased complexity}%
     % \label{sec:increased_complexity}
