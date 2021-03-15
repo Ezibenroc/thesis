@@ -238,6 +238,23 @@
             \item Resource contention~\cite{Bhatele_2013,dorier:hal-00916091}.
         \end{itemize}
 
+    \section{A reproducibility crisis}%
+    \label{sec:reproducibility_crisis}
+
+        For several years there has been an ongoing concern of a reproducibility crisis in science. While this is
+        particularly concerning in medical science, where it is estimated that a large part of claimed research findings
+        are false~\cite{Ioannidis_2005,freedman}, these problems also happen in other fields.
+
+        Computer science is not immune to these concerns. Researchers may be faced to numerical replicability
+        issues~\cite{Revol_2014} but also experimental biases when running experiments. For instance, Mytkowicz~\etal
+        show that simply changing the envifonment variable size can account for a performance variability of more
+        than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting and avoiding such
+        measurement bias. Part of this reproducibility crisis is also caused by the frequent unavailability of the
+        softwares, methods and data on which are based the research articles. For instance, Collberg~\etal examined
+        601 papers from ACM conferences and journals, they were able to personally build the software
+        of only 194 of them while they simply could not access the code of 176 of these
+        papers~\cite{collberg2015repeatability}.
+
         \todo{
         Performance anomalies $\rightarrow$ reproductibility problem (eg. if we compare two implementations, how can we be sure
         that the difference we observe really come from the two implementations).
@@ -248,10 +265,10 @@
         (3) List several experimental difficulties, some of them very unsettling, to be aware of what can happen.
         (4) Performance non regression tests of the platform, to detect significant changes.}
 
-   % \section{Increased complexity}%
-   % \label{sec:increased_complexity}
+    % \section{Increased complexity}%
+    % \label{sec:increased_complexity}
 
         % TODO increased complexity everywhere (HW and SW), deterministic at micro-level but the macro-level is random
         % no complete understanding of the whole thing, we need experimental CS, we need models (very similarly to what
         % is done in physics or biology)
-   %     Some horror stories~\cite{Petrini_2003}\dots
+    %     Some horror stories~\cite{Petrini_2003}\dots
