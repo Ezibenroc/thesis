@@ -291,7 +291,26 @@
             \item In Part~\ref{part:experiment}, we present additional tools and methods to help experimenters increase
                 the quality of their work.
                 \begin{itemize}
-                    \item [...]
+                    \item Automation is a great way to improve both reliability and productivity. It helped tremendously
+                        throughout the last century for scientific computations, as shown in
+                        Section~\ref{sec:first_computers}, machines make much less mistakes than humans (if any) and
+                        are much faster. For these reasons, we implemented several softwares during this thesis. We
+                        automatized the execution of experiments with an experiment engine, presented in
+                        Chapter~\ref{chapter:experiment:testbed}. We also implemented several tools, listed in
+                        Chapter~\ref{chapter:zenodo}, for automating some parts of the analyses as well as cumbersome
+                        daily tasks.
+                    \item Several times during this thesis, our performance models were not in agreement with the
+                        reality we observed. In some instances, our models were too simple and we needed to add
+                        complexity to capture some real phenomena, as described in
+                        Chapters~\ref{chapter:prediction:modeling} and~\ref{chapter:prediction:validation}. But, most of
+                        the time, we suffered from an experimental bias (or the lack thereof). These difficulties are
+                        described in depth in Chapter~\ref{chapter:experiment:difficulties}.
+                    \item In an experimental work that span several years, like this thesis, it is very likely that the
+                        experiment subject will evolve. In the case of high performance computing, the test machines can
+                        have hardware or software upgrades, or even deffects, that can all affect significantly the
+                        measured performance. In Chapter~\ref{chapter:experiment:tests}, we present the performance
+                        non-regression tests we implemented and used in the second half of this thesis. They helped us
+                        to detected numerous platform changes that could have lead to wrong conclusions if unnoticed.
                 \end{itemize}
         \end{itemize}
 
