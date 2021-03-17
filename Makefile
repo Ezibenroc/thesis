@@ -24,7 +24,10 @@ figures:
 # Compile the whole thesis
 whole_thesis: $(THESIS_ALL_TEX) Makefile references.bib
 	cp macros.include.default.tex macros.include.tex
-	rubber --pdf --unsafe -Wall thesis.tex
+	pdflatex thesis.tex
+	biber thesis.bcf
+	pdflatex thesis.tex
+	pdflatex thesis.tex
 
 ############################
 # Only compile one chapter #
