@@ -167,7 +167,7 @@
 
 % --- PDF SUPPORT ----------------------
 
-\usepackage{hyperref}  % import as last package
+\usepackage{bookmark,hyperref}  % import as last package
 
 %% Citing software
 \ExecuteBibliographyOptions{
@@ -268,8 +268,6 @@
 
 % --- MAIN MATTER ----------------------
 
-\pdfbookmark[-1]{Main Matter}{Main Matter}
-
 \pagenumbering{arabic}  % arabic page numbering (e.g., 1 2 3), reset counter
 \pagestyle{scrheadings}  % display header and footer
 \addtocontents{toc}{\bigskip}  % visual hint for numbering change in ToC
@@ -277,9 +275,13 @@
 
 
 % main chapters go here
+\bookmarksetup{startatroot}
 \inputchapter{\includechapterintroduction}{chapter_introduction.tex}
 \inputchapter{\includechapterprediction}{chapter_prediction.tex}
 \inputchapter{\includechapterexperiment}{chapter_experiment.tex}
+
+\bookmarksetup{startatroot}  % https://stackoverflow.com/questions/1483396/how-to-explicitly-end-a-part-in-latex-with-hyperref
+\addtocontents{toc}{\bigskip}
 \inputchapter{\includechapterconclusion}{chapter_conclusion.tex}
 
 % --- BACK MATTER ----------------------
