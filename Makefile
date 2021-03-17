@@ -24,10 +24,10 @@ figures:
 # Compile the whole thesis
 whole_thesis: $(THESIS_ALL_TEX) Makefile references.bib
 	cp macros.include.default.tex macros.include.tex
-	pdflatex thesis.tex
+	pdflatex -shell-escape thesis.tex
 	biber thesis.bcf
-	pdflatex thesis.tex
-	pdflatex thesis.tex
+	pdflatex -shell-escape thesis.tex
+	pdflatex -shell-escape thesis.tex
 
 ############################
 # Only compile one chapter #
