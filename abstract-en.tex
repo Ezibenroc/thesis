@@ -2,16 +2,17 @@ The scientific community relies more and more on computations, notably for numer
 While many scientific advances were made possible by the technological progress of computers, additional performance
 gains are still required for larger scale projects.
 
-The race for performance is obtained with a growing hardware and software complexity, which in turn increases the
+The race for performance is addressed with a growing hardware and software complexity, which in turn increases the
 performance variability. This can make the experimental study of performance extremely challenging, raising concerns of
 reproducibility of the experiments, akin to the problems already faced by natural sciences.
 
-Our contributions are twofold. First, we present a methodology for \emph{predicting} the performance of parallel
-non-trivial applications through simulation. We describe several models for the communications and the computations,
-with an increased complexity. We compare these models through an extensive validation by matching our predictions with
-real experiments. This validation shows that modeling the spatial and temporal variability of the platform is essential
-for faithful predictions, the effect of which is then quantified through several sensibility analyses.  Second, we
-present the lessons learned while making the numerous experiments required in the first part and how we improved our
-methodology. We show how we can suffer from multiple experimental bias while \emph{measuring} performance and how we can
-overcome this. We also present our implementation of performance non-regression \emph{testing}, which allowed us to
-detect many significant changes of the platform throughout this thesis.
+Our contributions are twofold. First, we present a methodology for predicting the performance of parallel non-trivial
+applications through simulation. We describe several models for communications and computations, with an increasing
+complexity. We compare these models through an extensive validation by matching our predictions with real experiments.
+This validation shows that modeling the spatial and temporal variability of the platform is essential for faithful
+predictions. As a consequence, predictions require careful sensibility analysis accounting for the uncertainty on the
+resource models, which we illustrate through several case studies.  Second, we present the lessons learned while making
+the numerous experiments required in the first part and how we improved our methodology. We show that measurements can
+suffer from multiple experimental bias and we explain how some of these bias can be overcome. We also present how we
+implemented systematic performance non-regression testing, which allowed us to detect many significant changes of the
+platform throughout this thesis.
