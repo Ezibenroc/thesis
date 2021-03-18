@@ -1,16 +1,17 @@
-The scientific community relies more and more on computations, notably for numerical simulations and data processing. An
-important fraction of the recent scientific advances was made possible by the technological progress of computers, whose
-increased performance enabled larger scale computations. Yet, additional performance gains are still required, as even
-larger projects will need computing capabilities that are currently not possible.
+The scientific community relies more and more on computations, notably for numerical simulations and data processing.
+While many scientific advances were made possible by the technological progress of computers, additional performance
+gains are still required for larger scale projects.
 
-The race for performance is obtained with a growing hardware and software complexity, which in turn increase the
+The race for performance is obtained with a growing hardware and software complexity, which in turn increases the
 performance variability. This can make the experimental study of performance extremely challenging, raising concerns of
 reproducibility of the experiments, akin to the problems already faced by natural sciences.
 
-In this thesis, we propose two main contributions, also inspired by the natural sciences. First, we present a
-methodology for \emph{predicting} the performance of a parallel non-trivial application through simulation. We describe
-several models for the communications and the computations, with an increased complexity. We compare these models in an
-extensive validation, by matching our predictions to reality. We also showcase several sensibility analyses, an
-important use-case of simulation. Second, we describe how we improved our experiments. We show how we can suffer of
-multiple experimental bias while \emph{measuring} performance and how we can overcome this. We also present a novel
-approach for performance non-regression \emph{testing}, to detect any significant change on the machine.
+Our contributions are twofold. First, we present a methodology for \emph{predicting} the performance of parallel
+non-trivial applications through simulation. We describe several models for the communications and the computations,
+with an increased complexity. We compare these models through an extensive validation by matching our predictions with
+real experiments. This validation shows that modeling the spatial and temporal variability of the platform is essential
+for faithful predictions, the impacf of which is then quantified through several sensibility analyses.  Second, we
+present the lessons learned while making the numerous experiments required in the first part and how we improved our
+methodology. We show how we can suffer from multiple experimental bias while \emph{measuring} performance and how we can
+overcome this. We also present our implementation of performance non-regression \emph{testing}, which allowed us to
+detect many significant changes of the platform throughout this thesis.
