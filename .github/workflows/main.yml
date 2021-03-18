@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  hello_world_job:
+  compilation:
     runs-on: ubuntu-latest
     name: Compilation of the thesis
     steps:
