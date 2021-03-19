@@ -28,11 +28,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         observed performance is as high as one could hope, or to estimate the gain they could get by upgrading their
         hardware.
 
-        Depending on the exact needs of its user, such a prediction should fulfill several of these criterions:
+        Depending on the exact needs of its user, such a prediction should have several qualities:
         \begin{description}
             \item[Extrapolation on the problem size] Most of the applications can take as input problems of various
                 size. The size may denote the number of particles in a physics simulator or the matrix rank in a linear
-                algebra solver. The total duration will usually grow with the problem size. This creterion denotes
+                algebra solver. The total duration will usually grow with the problem size. This criterion denotes
                 whether the considered approach can predict the performance of the application for an unforeseen problem
                 size.
             \item[Extrapolation on the configuration] It is often possible to tune the behavior of the application with
@@ -48,20 +48,19 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 than the ones available.
             \item[Efficiency] Some approaches have a much higher resource requirement than others. Several metrics can
                 be considered: node-hours, time to solution, energy consumption, memory footprint.
-            \item[Accuracy] While some predictions will only give an approximate trend, some others will be much more
+            \item[Accuracy] While some predictions would only give an approximate trend, some others would be much more
                 accurate, as close as a few percents, even in the presence of perturbations like network contention.
         \end{description}
 
         One very common prediction technique is the use of an analytical model. For instance, most of the publications
-        which present a new algorithm will give an estimation of its asymptotic complexity, \aka big-O analysis, while
-        some of them will even give an exact figure. These techniques implicitely use an abstraction of the underlying
-        hardware (\eg the von Neumann model, cache model~\cite{cache_oblivious}, PRAM~\cite{pram}, LogP~\cite{logp},
-        LogGP~\cite{loggp}, BSP~\cite{bsp}). There also exists more systematic approaches, like Aspen~\cite{aspen},
-        which defines a domain specific language (DSL) for specifying formally the characteristics of small components
-        and combining them to model a whole application. Figure~\ref{fig:aspen:example} illustrates an Aspen model of a
-        Fast Fourier Transform that can be used within a larger application model. The main downside of these analytical
-        techniques is their inability to provide accurate estimates, subtle phenomena like network contention cannot be
-        captured by these models.
+        which present a new algorithm will give an estimation of its asymptotic complexity, \aka big-O analysis. These
+        techniques implicitely use an abstraction of the underlying hardware (\eg the von Neumann model, cache
+        model~\cite{cache_oblivious}, PRAM~\cite{pram}, LogP~\cite{logp}, LogGP~\cite{loggp}, BSP~\cite{bsp}). There
+        also exists more systematic approaches, like Aspen~\cite{aspen}, which defines a domain specific language (DSL)
+        for specifying formally the characteristics of small components and combining them to model a whole application.
+        Figure~\ref{fig:aspen:example} illustrates an Aspen model of a Fast Fourier Transform that can be used within a
+        larger application model. The main downside of these analytical techniques is their inability to provide
+        accurate estimates, complex phenomena like network contention cannot be captured faithfully by these models.
 
         \begin{figure}[htpb]
             \centering
@@ -82,7 +81,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         the whole target machine.  Singh~\etal~\cite{Singh_2007} proposed the reverse approach. They fixed the problem
         size and sampled random parameter configurations to train a neural network. Again, this allowed them to make
         accurate predictions at a low cost, but it was not possible to predict the makespan with an unforeseen problem
-        size. Furthermore, this kind of approaches inherently prevent to study what-if scenarios (\eg to evaluate what
+        size. Furthermore, this kind of approaches inherently fail to study what-if scenarios (\eg to evaluate what
         would happen if the network bandwidth was increased or if node heterogeneity was decreased) that are
         particularly useful when investigating potential performance improvements.
 
@@ -95,23 +94,24 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         simulator that implements performance models for the CPUs and the network to derive predictions. Researchers
         interested in finding out how their application reacts to changes to the underlying platform can replay the
         trace on commodity hardware at will with different platform models.  Most HPC simulators available today,
-        notably BigSim~\cite{bigsim_04}, Dimemas~\cite{dimemas} and CODES~\cite{CODES}, rely on this approach.  The main
-        limitation of this approach comes from the trace acquisition requirement. Not only is a large machine required
-        but the compressed trace of a few iterations of an MPI application can quickly reach a few hundred MB, making
-        this approach quickly impractical~\cite{suter}.  Worse, tracing an application provides only information about
-        its behavior at the time of the run: slight modifications (\eg to communication patterns) may make the trace
-        inaccurate. The behavior of simple applications (\eg \texttt{stencil}) can be extrapolated from small-scale
-        traces~\cite{scalaextrap,pmac_lspp13} but this fails if the execution is non-deterministic, \eg whenever the
-        application relies on non-blocking communication patterns, which is unfortunately often the case.
+        notably BigSim~\cite{bigsim_04}, Dimemas~\cite{dimemas}, LogGOPSim~\cite{loggopsim_10} and CODES~\cite{CODES},
+        rely on this approach.  The main limitation of this approach comes from the trace acquisition requirement. Not
+        only is a large machine required but the compressed trace of a few iterations of an MPI application can quickly
+        reach a few hundred MB, making this approach quickly impractical~\cite{suter}.  Worse, tracing an application
+        provides only information about its behavior at the time of the run: slight modifications (\eg to communication
+        patterns) may make the trace inaccurate. The behavior of simple applications (\eg \texttt{stencil}) can be
+        extrapolated from small-scale traces~\cite{scalaextrap,pmac_lspp13} but this fails if the execution is
+        non-deterministic, \eg whenever the application relies on non-blocking communication patterns, which is
+        unfortunately often the case.
 
         The second approach discussed in the literature is \emph{online simulation}.  Here, the application is executed
         (emulated) on top of a simulator that is responsible to determine when each process is run. This approach allows
         researchers to study directly the behavior of MPI applications but only a few recent simulators such as SST
         Macro~\cite{sstmacro}, SimGrid/SMPI~\cite{simgrid} and the closed-source xSim~\cite{xsim} support it. To the
         best of our knowledge, only SST Macro and SimGrid/SMPI are mature enough to faithfully emulate an MPI
-        application.  This work relies on SimGrid as its performance models and its emulation capabilities seemed quite
-        solid but the proposed developments would a priori also be possible with SST.  Note that the emulation described
-        in Chapter~\ref{chapter:prediction:emulation} should not be confused with the application
+        application.  This work relies on SimGrid as its performance models and its emulation capabilities are now well
+        established, but the proposed developments would a priori also be possible with SST.  Note that the emulation
+        described in Chapter~\ref{chapter:prediction:emulation} should not be confused with the application
         skeletonization~\cite{sst_skeleton} commonly used with SST. Skeletons are code extractions of the most important
         parts of a complex application, as illustrated in Figure~\ref{fig:sst_skeleton} (\eg the original Fortran code
         from Figure~\ref{fig:sst_skeleton:comp_orig} has been translated into the skeleton from
@@ -197,7 +197,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         in SMPI would amount to model message communications on the network instead of MPI calls, the MPI calls would
         then be emulated like the rest of the code. One benefit of this approach is that it would remove some burden of
         the user, since it would no longer be required to provide the protocol thresholds and individual bandwidths and
-        latencies, a single bandwidth/latency pair would be enough. The downside is that the simulation would then
+        latencies, a few bandwidth/latency pairs would be enough. The downside is that the simulation would then
         depend on the MPI implementation (\eg OpenMPI, MPICH, Intel MPI) which should be provided either by SMPI or by
         the user. It would also be impossible to simulate closed-source MPI implementations.
 
@@ -219,7 +219,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         In SMPI, collective communications are simulated by emulation. Simgrid authors have ported in SMPI all the
         collective communication algorithms of the main MPI implementations, the user simply has to choose the
         implemtation of their choice. This is of little significance in this work, as HPL ships with its own
-        implementation of collective operations.
+        implementation of collective operations, but it can be critical for other applications.
 
         Recent results report consistent performance predictions within a few percent for standard benchmarks on
         small-scale clusters (up to \(12\times12\) cores~\cite{heinrich:hal-01523608} and up to
