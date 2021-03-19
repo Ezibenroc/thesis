@@ -1973,7 +1973,7 @@ model_ <- function(letter, het, prime, nb) {
     if(prime) {
         letter = paste(letter, "'", sep='')
     }
-    result = paste('\\mathcal{', letter, '}', sep='')
+    result = paste('\\mathbf{', letter, '}', sep='')
     if(het) {
         result = paste(result, '_{H}', sep='')
     }
@@ -2070,69 +2070,49 @@ print(plot)
 #+RESULTS:
 #+begin_example
 
-[1] "\\vspace{1cm} \\textbf{(a)} kernels$\\sim\\mathcal{M}\\!-\\!1 \\mathcal{N}\\!-\\!0$ \\vspace{1cm}"
-[1] "\\vspace{1cm} network$\\sim\\mathcal{M'}\\!-\\!1 \\mathcal{N}\\!-\\!0$ \\vspace{1cm}"
-[1] "\\vspace{1cm} network$\\sim\\mathcal{M'}\\!-\\!1 \\mathcal{N'}\\!-\\!1$ \\vspace{1cm}"
-[1] "\\vspace{1cm} dgemm$\\sim\\mathcal{M}_{H}\\!-\\!1 \\mathcal{N}\\!-\\!0$ \\vspace{1cm}"
-[1] "\\vspace{1cm} dgemm$\\sim\\mathcal{M}_{H}\\!-\\!2 \\mathcal{N}\\!-\\!0$ \\vspace{1cm}"
-[1] "\\vspace{1cm} kernels$\\sim\\mathcal{M}\\!-\\!1 \\mathcal{N}\\!-\\!2$ \\vspace{1cm}"
-[1] "\\vspace{1cm} dgemm$\\sim\\mathcal{M}_{H}\\!-\\!2 \\mathcal{N}_{H}\\!-\\!2$ \\vspace{1cm}"
-[1] "\\vspace{1cm} network$\\sim\\mathcal{M'}\\!-\\!1 \\mathcal{N'}\\!-\\!1$ \\vspace{1cm}"
+[1] "\\vspace{1cm} \\textbf{(a)} kernels$\\sim\\mathbf{M}\\!-\\!1 \\mathbf{N}\\!-\\!0$ \\vspace{1cm}"
+[1] "\\vspace{1cm} network$\\sim\\mathbf{M'}\\!-\\!1 \\mathbf{N}\\!-\\!0$ \\vspace{1cm}"
+[1] "\\vspace{1cm} network$\\sim\\mathbf{M'}\\!-\\!1 \\mathbf{N'}\\!-\\!1$ \\vspace{1cm}"
+[1] "\\vspace{1cm} dgemm$\\sim\\mathbf{M}_{H}\\!-\\!1 \\mathbf{N}\\!-\\!0$ \\vspace{1cm}"
+[1] "\\vspace{1cm} dgemm$\\sim\\mathbf{M}_{H}\\!-\\!2 \\mathbf{N}\\!-\\!0$ \\vspace{1cm}"
+[1] "\\vspace{1cm} kernels$\\sim\\mathbf{M}\\!-\\!1 \\mathbf{N}\\!-\\!2$ \\vspace{1cm}"
+[1] "\\vspace{1cm} dgemm$\\sim\\mathbf{M}_{H}\\!-\\!2 \\mathbf{N}_{H}\\!-\\!2$ \\vspace{1cm}"
+[1] "\\vspace{1cm} network$\\sim\\mathbf{M'}\\!-\\!1 \\mathbf{N'}\\!-\\!1$ \\vspace{1cm}"
 
+Measuring dimensions of: \vspace{1cm} network$\sim\mathbf{M'}\!-\!1 \mathbf{N'}\!-\!1$ \vspace{1cm}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580ce67aa31' '/tmp/RtmpaBaJ9c/tikzDevice580ce67aa31/tikzStringWidthCalc.tex'
 Measuring dimensions of: \char77
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e815444dc9' '/tmp/Rtmp6r2Il4/tikzDevice60e815444dc9/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char103
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e818964e5c' '/tmp/Rtmp6r2Il4/tikzDevice60e818964e5c/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char106
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e81fb6f04c' '/tmp/Rtmp6r2Il4/tikzDevice60e81fb6f04c/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char112
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e82660c329' '/tmp/Rtmp6r2Il4/tikzDevice60e82660c329/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char113
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e84515281d' '/tmp/Rtmp6r2Il4/tikzDevice60e84515281d/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char121
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e8a199219' '/tmp/Rtmp6r2Il4/tikzDevice60e8a199219/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char81
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e832ffe36f' '/tmp/Rtmp6r2Il4/tikzDevice60e832ffe36f/tikzStringWidthCalc.tex'
-Measuring dimensions of: gjpqyQ
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e8785b2678' '/tmp/Rtmp6r2Il4/tikzDevice60e8785b2678/tikzStringWidthCalc.tex'
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c4ffe020b' '/tmp/RtmpaBaJ9c/tikzDevice580c4ffe020b/tikzStringWidthCalc.tex'
+Measuring dimensions of: \textbf{(e)} model (a) with
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c6031c520' '/tmp/RtmpaBaJ9c/tikzDevice580c6031c520/tikzStringWidthCalc.tex'
+Measuring dimensions of: \vspace{1cm} kernels$\sim\mathbf{M}\!-\!1 \mathbf{N}\!-\!2$ \vspace{1cm}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c5c587041' '/tmp/RtmpaBaJ9c/tikzDevice580c5c587041/tikzStringWidthCalc.tex'
+Measuring dimensions of: \vspace{1cm} dgemm$\sim\mathbf{M}_{H}\!-\!2 \mathbf{N}_{H}\!-\!2$ \vspace{1cm}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c2dbb7abe' '/tmp/RtmpaBaJ9c/tikzDevice580c2dbb7abe/tikzStringWidthCalc.tex'
+Measuring dimensions of: \textbf{(d)} model (a) with
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c37f6b470' '/tmp/RtmpaBaJ9c/tikzDevice580c37f6b470/tikzStringWidthCalc.tex'
+Measuring dimensions of: \vspace{1cm} dgemm$\sim\mathbf{M}_{H}\!-\!2 \mathbf{N}\!-\!0$ \vspace{1cm}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c1cfab6e' '/tmp/RtmpaBaJ9c/tikzDevice580c1cfab6e/tikzStringWidthCalc.tex'
+Measuring dimensions of: \textbf{(c)} model (a) with
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c3799ea95' '/tmp/RtmpaBaJ9c/tikzDevice580c3799ea95/tikzStringWidthCalc.tex'
+Measuring dimensions of: \vspace{1cm} dgemm$\sim\mathbf{M}_{H}\!-\!1 \mathbf{N}\!-\!0$ \vspace{1cm}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c492be978' '/tmp/RtmpaBaJ9c/tikzDevice580c492be978/tikzStringWidthCalc.tex'
+Measuring dimensions of: \vspace{1cm} \textbf{(a)} kernels$\sim\mathbf{M}\!-\!1 \mathbf{N}\!-\!0$ \vspace{1cm}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c39a793c4' '/tmp/RtmpaBaJ9c/tikzDevice580c39a793c4/tikzStringWidthCalc.tex'
+Measuring dimensions of: \vspace{1cm} network$\sim\mathbf{M'}\!-\!1 \mathbf{N}\!-\!0$ \vspace{1cm}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c53be8778' '/tmp/RtmpaBaJ9c/tikzDevice580c53be8778/tikzStringWidthCalc.tex'
+Measuring dimensions of: \textbf{(b)} model (a) with
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c3175588d' '/tmp/RtmpaBaJ9c/tikzDevice580c3175588d/tikzStringWidthCalc.tex'
+Measuring dimensions of: \textbf{reality}
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c7c0ddd2f' '/tmp/RtmpaBaJ9c/tikzDevice580c7c0ddd2f/tikzStringWidthCalc.tex'
+Measuring dimensions of: +9\%
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c6925be55' '/tmp/RtmpaBaJ9c/tikzDevice580c6925be55/tikzStringWidthCalc.tex'
 Measuring dimensions of: \char77
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e81d199d2f' '/tmp/Rtmp6r2Il4/tikzDevice60e81d199d2f/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char103
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e8622041ae' '/tmp/Rtmp6r2Il4/tikzDevice60e8622041ae/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char106
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e84dcd0373' '/tmp/Rtmp6r2Il4/tikzDevice60e84dcd0373/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char112
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e86cce75a1' '/tmp/Rtmp6r2Il4/tikzDevice60e86cce75a1/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char113
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e84525c37b' '/tmp/Rtmp6r2Il4/tikzDevice60e84525c37b/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char121
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e83dd1526' '/tmp/Rtmp6r2Il4/tikzDevice60e83dd1526/tikzStringWidthCalc.tex'
-Measuring dimensions of: \char81
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e8188ee949' '/tmp/Rtmp6r2Il4/tikzDevice60e8188ee949/tikzStringWidthCalc.tex'
-Measuring dimensions of: gjpqyQ
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e84205b2df' '/tmp/Rtmp6r2Il4/tikzDevice60e84205b2df/tikzStringWidthCalc.tex'
-Measuring dimensions of: Gflop/s
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e84936deb' '/tmp/Rtmp6r2Il4/tikzDevice60e84936deb/tikzStringWidthCalc.tex'
-Measuring dimensions of: 0
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e848aa595c' '/tmp/Rtmp6r2Il4/tikzDevice60e848aa595c/tikzStringWidthCalc.tex'
-Measuring dimensions of: 10000
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e8579f48dc' '/tmp/Rtmp6r2Il4/tikzDevice60e8579f48dc/tikzStringWidthCalc.tex'
-Measuring dimensions of: 20000
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e84cfabe1' '/tmp/Rtmp6r2Il4/tikzDevice60e84cfabe1/tikzStringWidthCalc.tex'
-Measuring dimensions of: 30000
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e86acc1d45' '/tmp/Rtmp6r2Il4/tikzDevice60e86acc1d45/tikzStringWidthCalc.tex'
-Measuring dimensions of: Matrix rank
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e826fc41ac' '/tmp/Rtmp6r2Il4/tikzDevice60e826fc41ac/tikzStringWidthCalc.tex'
-Measuring dimensions of: 1e+05
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e85e6db47a' '/tmp/Rtmp6r2Il4/tikzDevice60e85e6db47a/tikzStringWidthCalc.tex'
-Measuring dimensions of: 2e+05
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e8252cef4' '/tmp/Rtmp6r2Il4/tikzDevice60e8252cef4/tikzStringWidthCalc.tex'
-Measuring dimensions of: 3e+05
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e899b0c79' '/tmp/Rtmp6r2Il4/tikzDevice60e899b0c79/tikzStringWidthCalc.tex'
-Measuring dimensions of: 4e+05
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e85e312ff4' '/tmp/Rtmp6r2Il4/tikzDevice60e85e312ff4/tikzStringWidthCalc.tex'
-Measuring dimensions of: 5e+05
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e85d1912d' '/tmp/Rtmp6r2Il4/tikzDevice60e85d1912d/tikzStringWidthCalc.tex'
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c1866a9e0' '/tmp/RtmpaBaJ9c/tikzDevice580c1866a9e0/tikzStringWidthCalc.tex'
+Measuring dimensions of: -1\%
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c78261f78' '/tmp/RtmpaBaJ9c/tikzDevice580c78261f78/tikzStringWidthCalc.tex'
+Measuring dimensions of: +33\%
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c18a760d3' '/tmp/RtmpaBaJ9c/tikzDevice580c18a760d3/tikzStringWidthCalc.tex'
 
 Active compiler:
 	/usr/bin/pdflatex
@@ -2140,7 +2120,7 @@ Active compiler:
 	kpathsea version 6.3.1/dev
 
 Measuring dimensions of: A1het
-Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/Rtmp6r2Il4/tikzDevice60e83c55a5db' '/tmp/Rtmp6r2Il4/tikzDevice60e83c55a5db/tikzStringWidthCalc.tex'
+Running command: '/usr/bin/pdflatex' -interaction=batchmode -halt-on-error -output-directory '/tmp/RtmpaBaJ9c/tikzDevice580c2ca1247' '/tmp/RtmpaBaJ9c/tikzDevice580c2ca1247/tikzStringWidthCalc.tex'
 This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex)
  restricted \write18 enabled.
 entering extended mode

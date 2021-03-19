@@ -534,12 +534,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
                 \begin{minipage}{\linewidth}\begin{algorithm}[H]
                     \DontPrintSemicolon
-                    probe for a message\;
-                    \While{no message is available}{
+                    try to broadcast\;
+                    \While{the broadcast did not succeed}{
                         perform computations (including calls to \dgemm)\;
-                        probe for a message\;
+                        try to broadcast\;
                     }
-                    broadcast\;
                     \caption{Illustrating the probing mechanism used in HPL broadcasts.}
                     \label{algo:hpl:bcast_probe}
                 \end{algorithm}\end{minipage}
@@ -835,8 +834,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \caption{Panel structure and allocation strategy.\label{fig:panel}}\vspace{-1em}
         \end{figure}
 
-        Although using the default \texttt{SHARED\_MALLOC} mechanism works flawlessly for \texttt{A}, a more careful
-        strategy needs to be used for the \texttt{panel}, the complex data structure presented in
+        Although using the default \texttt{SHARED\_MALLOC} mechanism works flawlessly for the main matrix \texttt{A}, a
+        more careful strategy needs to be used for the \texttt{panel}, the complex data structure presented in
         Figure~\ref{fig:hpl_panel_sourcecode}. As already discussed, HPL flattens the whole structure  into a single
         allocation (including matrix parts, but also integer indices) to optimize data transfers (illustrated in
         Figure~\ref{fig:panel_structure}). Using a fully shared memory
@@ -948,8 +947,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \end{itemize}
         There are two situations where more elaborate variations need to be considered:
         \begin{itemize}
-            \item Whenever the platform is slightly heterogeneous (spatial variability), the previous models should be
-                built for each host individually. This modeling option is denoted \model[H]{}.
+            \item Whenever the platform is slightly heterogeneous (\emph{spatial variability}), the previous models
+                should be built for each host individually. This modeling option is denoted \model[H]{}.
             \item The behavior of the operation may be mostly linear but only for specific parameter ranges. This is for
                 example the case for networking operations or for computing nodes on Stampede where Intel's Math Kernel
                 Library (MKL) uses the Xeon Phi accelerator only when the input is large enough to compensate for the
@@ -962,9 +961,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         However, an important hypothesis underlying all these methods is the homoscedasticity, \ie that the variability
         is independent on the parameters.
 
-        The residual (temporal) variability may be an important phenomenon to account for, as "system noise" is known to
-        be detrimental to the overall performance of parallel applications like HPL. We thus consider different modeling
-        options for this temporal variability:
+        The residual (\emph{temporal}) variability may be an important phenomenon to account for, as "system noise" is
+        known to be detrimental to the overall performance of parallel applications like HPL. We thus consider different
+        modeling options for this temporal variability:
         \begin{itemize}
             \item Noise option \noise{0} (no noise): This is the simplest option. It consists in injecting the value
                 predicted by the model
