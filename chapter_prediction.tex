@@ -1013,7 +1013,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \dgemm with randomized sizes over all the cores of each node (to reproduce experimental conditions
             similar to the one of HPL). The first observation (Figure~\ref{fig:dgemm_het}) is that a few nodes exhibit
             quite a different behavior (each color and each regression line under model \model[H]{1} corresponds to a
-            different cpu, whereas the black dotted line corresponds to model \model{1} over all the nodes). These nodes
+            different CPU, whereas the black dotted line corresponds to model \model{1} over all the nodes). These nodes
             will systematically be slightly slower than other nodes and accounting for this spatial heterogeneity is
             likely to be rather important for HPL.  Second, we took care of covering a wide variety of combinations for
             \(M\), \(N\), and \(K\) and it can be observed that \(M.N.K\) is not sufficient to describe correctly the
@@ -1301,15 +1301,16 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             than for the \dgemm model proposed in Section~\ref{sec:network_model}. It should be possible to compute it
             in one go with a Bayesian framework like STAN, but it would probably be computationally prohibitive. A more
             realistic solution is to perform two steps: (1) average the durations per message size and find the
-            breakpoints using this aggregated data, and (2) on each segment, compute the linear regression with a noise
-            mixture.
+            breakpoints using this aggregated data (\ie fit a \modelp{1}\noise{1} model), and (2) on each segment,
+            compute the linear regression with a noise mixture (\ie fit a \model{1}\noisep{1} model).
             \begin{enumerate}
                 \item We have tested two different solutions for computing a piecewise linear regression, a Python
                     package named \texttt{datadog-piecewise}~\cite{datadog}, and an R package named
                     \texttt{cubist}~\cite{cubist}.  Although both of them work perfectly on the simplest generated
                     datasets, they did not produce satisfying results with our real data. The likely reason is both the
-                    exponential distribution of the predictor variable and the heteroscedasticity of the noise. We made
-                    the choice  to implement our own solution, detailed in Section~\ref{sub:pycewise}.
+                    exponential distribution of the predictor variable and the heteroscedasticity of the noise. We
+                    decided to implement our own solution, named \texttt{pycewise}, which is detailed in
+                    Section~\ref{sub:pycewise} and compared to both \texttt{datadog-piecewise} and \texttt{cubist}.
                 \item We tested an existing R package named \texttt{flexmix} for computing a linear regression with a
                     Gaussian mixture noise~\cite{flexmix}. It revealed to be fragile, the result being
                     non-deterministic: the number of modes found by the algorithm was not constant. We ended up
@@ -1511,8 +1512,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                             \If{\(\text{new\_BIC} < \text{best\_BIC}\)}{
                                 \(\text{best\_BIC} = \text{new\_BIC}\)\;
                                 \(\text{best\_solution} = (\ell_1, \ell_2)\)\;
-                            }\;
-                        }\;
+                            }
+                        }
                         \uIf{\(\text{new\_BIC} < \text{BIC}(\ell)\)}{
                             \((\ell_1, \ell_2) = \text{best\_solution}\)\;
                             \(\text{lists}_1\) = \Ftopdown{\(\ell_1\)}\;
@@ -1556,11 +1557,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                                 \If{\(\text{new\_diff} < \text{best\_diff}\)}{
                                     \(\text{best\_diff} = \text{new\_diff}\)\;
                                     \(k = j\)\;
-                                }\;
-                            }\;
+                                }
+                            }
                             \(L = (\ell_1,\dots,\ell_{k}\bullet\ell_{k+1},\dots,\ell_n)\)\;
                             add \(L\) to \(S\)\;
-                        }\;
+                        }
                         let \(L \in S\) be the solution with minimal BIC\;
                         \KwRet{\(L\)}\;
                     }
