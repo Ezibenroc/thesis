@@ -240,6 +240,8 @@
                 \item CPU throttling of the nodes for thermal control~\cite{Brandt2015EnablingAO}.
                 \item Resource contention~\cite{Bhatele_2013,dorier:hal-00916091}.
             \end{itemize}
+            If unnoticed, this kind of performance anomalies can affect very significantly the conclusions of an
+            experimenter making performance measures on the machine.
 
         \subsection{A reproducibility crisis}%
         \label{sub:reproducibility_crisis}
@@ -250,15 +252,18 @@
             work~\cite{nature_survey}. This crisis is particularly concerning in medical science, where it is estimated that
             a large part of claimed research findings are false~\cite{Ioannidis_2005,freedman}.
 
-            Computer science is not immune to these concerns. Researchers may be faced to numerical replicability
-            issues~\cite{Revol_2014} but also experimental biases when running experiments. For instance, Mytkowicz~\etal
-            show that simply changing the envifonment variable size can account for a performance variability of more
-            than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting and avoiding such
-            measurement bias. Part of this reproducibility crisis is also caused by the frequent unavailability of the
-            softwares, methods and data on which are based the research articles. For instance, Collberg~\etal examined
-            601 papers from ACM conferences and journals, they were able to personally build the software
-            of only 194 of them while they simply could not access the code of 176 of these
+            Computer science is not immune to these concerns. First, researchers may be faced to the usual numerical
+            instability, software updates breaking their code or even statistical issues.  A recurrent problem is also
+            the unavailability of the softwares, methods and data on which are based the research articles. For
+            instance, Collberg~\etal examined 601 papers from ACM conferences and journals, they were able to personally
+            build the software of only 194 of them while they simply could not access the code of 176 of these
             papers~\cite{collberg2015repeatability}.
+
+            What may be more surprising is that computer science suffer from the same experiment reproductibility
+            problems than the other sciences, experimental biases exist and may even be larger. For instance,
+            Mytkowicz~\etal show that simply changing the envifonment variable size can account for a performance
+            variability of more than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting
+            and avoiding such measurement bias.
 
     \section{This thesis}%
     \label{sec:this_thesis}
