@@ -345,7 +345,7 @@
             generating experiment files for the \dgemm experiments, with two minor modifications:
             \begin{itemize}
                 \item Instead of sampling the product uniformly with \(MNK\sim\unif{1}{S}\), we made the choice to use a
-                    slightly more deterministic approach. We first compute $\gamma$ different values that are uniformly
+                    use a quasi-random approach. We first compute $\gamma$ different values that are uniformly
                     but deterministically spread in the given interval, \ie we compute the set
                     \(\left\{S, S-\frac{S}{\gamma},S-2\frac{S}{\gamma}, \dots\right\}\)
                     (typically, \(\gamma=30\)). Then we add a random noise independently to each of these sizes. The
@@ -411,7 +411,7 @@
         The aggregated data is presented in Figure~\ref{fig:randomizing_order:avg_data}. With the shuffled experiment
         (right plot), the average durations have a single-mode, as expected. However, in the non-shuffled case (left
         plot), at least two modes are clearly present. This contradicts the conclusion of the central limit theorem,
-        thereby proving that its hypotheses do not hold for this experiment. This is confirmed by
+        thereby threatening the analysis experiment. This is confirmed by
         Figure~\ref{fig:randomizing_order:distribution}, where we zoomed on a few distinct message sizes between
         \NSI{700}{\byte} and \NSI{800}{\byte}. Each point is the duration of an individual call to \recv,
         the crosses represent the average durations. In the shuffled experiment, on the right, the duration
