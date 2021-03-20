@@ -1633,6 +1633,16 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 the latency, it would make no sense for them to be negative. With the gradient descent approach, the
                 search space can easily be restricted to limit the possible solutions to positive values.
 
+                As a side note, the \(\text{RSS}_{\log}\) objective function is the RSS we would naturally have if we
+                supposed that the noise was following a log-normal distribution instead of a normal distribution. Two
+                justifications could be made to support this hypothesis. First, a random variable following a log-normal
+                distribution is positive, which is what we would expect of duration measures. Second, a log-normal
+                distribution is the product of many independent random variables (by using the central limit theorem in
+                the log domain). It would not be unreasonable to suppose that independent performance perturbations have
+                a multiplicative effect instead of an additive effect. However, these are only \emph{a posteriori}
+                justifications that were not considered at the time of implementing the solution. The next section shall
+                determine if one objective function is better than the others for our needs.
+
             \subsubsection{Comparison of the solutions}%
 
                 We compared different approaches for computing a piecewise linear regression. We used a typical dataset
