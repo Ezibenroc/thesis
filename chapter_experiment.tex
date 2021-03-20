@@ -169,6 +169,20 @@
             than Listing~\ref{lst:engine:execo}, as it produces a peanut archive with all the metadata related to the
             experiment.
 
+        \subsection{EnOSlib, a promising alternative}%
+        \label{sub:enoslib}
+
+            A recent experiment engine, called \texttt{EnOSlib}~\cite{enoslib}, appears to be promising. It is a Python
+            library that allows an easy deployment and execution of experiments. The experiment scripts written with
+            \texttt{EnOSlib} are concise and readable, thanks to well designed abstractions. Compared to \texttt{Peanut}
+            which has been solely implemented and used for Grid'5000 platform, \texttt{EnOSlib} offers multiple
+            backends.  One issue is that it currently does not support the archive building of \texttt{Peanut} with the
+            automatic collection of experiment data and meta-data.
+
+            At the time we started working on \texttt{Peanut}, we did not know about \texttt{EnOSlib}, which was at its
+            early stage of development and not yet advertised. Today, we believe it would be better to join forces and
+            port the main features of \texttt{Peanut} in \texttt{EnOSlib}.
+
 \chapter{On the difficulties of experimentation}%
 \label{chapter:experiment:difficulties}
     %% TODO
