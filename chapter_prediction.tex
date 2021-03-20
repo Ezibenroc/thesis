@@ -1762,7 +1762,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         %%   on va pouvoir 1) essayer de trouver le bon niveau de modélisation 2)
         %%   détecter des situations à problème 3) faire du whatif.
         We have presented different models for both the network communications and the computation kernels. One
-        diffuclty resides in instanciating the models, \ie computing the best fit for some observations, in the most
+        difficulty resides in instanciating the models, \ie computing the best fit for some observations, in the most
         automated way possible. Bayesian formalism is an interesting candidate for such a task. With bayesian sampling
         tools like Stan, we should be able to fit arbitrarily complex models and even have an estimation of the
         uncertainty of the resulting paremeters. However, the benefit of these tools is not clear for our context, their
@@ -2321,9 +2321,13 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     As future work, building on the effort of SimGrid developers on supporting the emulation of a wide variety of
     applications with SMPI~\cite{smpi_proxy_apps}, we also intend to conduct similar studies with other HPC benchmarks
     (\eg HPCG~\cite{HPCG} or HPGMG~\cite{HPGMG}), real applications (\eg BigDFT~\cite{bigdft}) and larger infrastructures.
-    As explained in this article, a good model of compute kernels and the MPI library is essential. Thereby, the main
+    As explained in this thesis, a good model of compute kernels and the MPI library is essential. Therefore, the main
     challenge for systematic use of our simulation technique now lies in the automation of measurements through
     well-designed experiments and the automatic detection of when the envisioned models miss essential characteristics
     of the platform (multi-modal behaviors, heteroscedasticity, discontinuities,\dots{}). We intend to provide a fully
     automatic calibration procedure for MPI as well as for every BLAS function, which would allow us to effortlessly
     predict the performance of many applications by simply linking against a BLAS-replacement library.
+
+    This work has required many experiments, notably for measuring the durations of the MPI and BLAS functions and for
+    performing real executions of HPL. In Part~\ref{part:experiment}, we will present the difficulties that were
+    encountered while doing these experiments and how they were overcome.
