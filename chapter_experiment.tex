@@ -941,7 +941,6 @@
 
     \section{Beware of extrapolations}%
     \label{sec:beware_of_extrapolations}
-        \todo{Should we remove this section? It seems pretty obvious and uninteresting...}
         %% TODO
         %% Le problème est survenu dans plusieurs cas de figure, notamment
         %% pour HPL avec des géométries très élongées.
@@ -978,7 +977,7 @@
         find that the parameters space used in the calibration was very different from the parameter space used during
         the execution. One way to limit the risk of missing such extrapolations would be to define explicitly in the
         model files the parameter ranges that were used for calibrating them. Then, during a simulation, we could raise
-        a warning whenever a model is used outside of its parameter space.
+        a warning whenever a model is used too often outside of its parameter space.
 
 
     \section{Beware of experimental conditions}%
@@ -1074,11 +1073,10 @@
     performance. The reasons are multiple, ranging from the hardware to the software. This motivated the implementation
     of performance non-regression tests, to help us detect any noteworthy change on the platform. In this chapter, we
     start by giving an overview of the existing state of the art and explaining the statistics we based our work on in
-    Section~\ref{sec:state_of_art}. Then, in Section~\ref{sec:test:implementation} we describe how we implemented the
+    Section~\ref{sec:test:state_of_art}. Then, in Section~\ref{sec:test:implementation} we describe how we implemented the
     tests, from the experiment execution to the final test result. We show and explain the graphical representation of
     our test results, and we describe the various events we were able to detect on Grid'5000 platform. Finally, in
     Section~\ref{sec:test:conclusion} we propose several ways to improve this work.
-    \todo{We should discuss the normality assumption somewhere, I am not sure of the best location though.}
 
     \section{State of the art}%
     \label{sec:test:state_of_art}
@@ -1533,7 +1531,7 @@
                     \approx \frac{F}{T}\left(1-\frac{\varepsilon}{T}\right)\). The last approximation is obtained by the
                     Taylor expansion, it holds because \(T \gg \varepsilon\), \ie the variability of the total duration
                     is small compared to its average. Since \(F\) and \(T\) are constant and \(\varepsilon\) is normally
-                    distributed, it follows that \(R\) is also normally distributed.
+                    distributed, it follows that \(R\) is also approximately normally distributed.
             \end{itemize}
 
         \subsection{Presentation of the test results}%
@@ -1894,8 +1892,7 @@
                 n°0 consumed only \NSI{97.5}{\watt}. For reasons we ignore, such power drops happened particularly
                 frequently on the four nodes \emph{dahu-29}, \emph{dahu-30}, \emph{dahu-31} and \emph{dahu-32} between
                 November 2020 and February 2021. Since the four nodes are part of the same chassis and therefore share
-                their power supply, our hypothesis first hypothesis was that there could be an issue with the power
-                supply itself.
+                their power supply, our first hypothesis was that there could be an issue with the power supply itself.
 
                 Whenever these power drops happens, both the frequency and the \dgemm performance also have a huge drop,
                 up to \NSI{10}{\percent}, whereas the temperature is unaffected.
@@ -1995,7 +1992,7 @@
         work does not reside on the statistics, our approach is entirely based on a 55-year-old paper. However, to the
         best of our knowledge, we are the first to apply these statistics for testing performance.
 
-        We have monitored 386 nodes from Grid'5000 testbed for more than one year, running new tests several times a
+        We have monitored 454 nodes from Grid'5000 testbed for more than one year, running new tests several times a
         week. This allowed us to detect multiple events that had a significant effect on the nodes, from subtle
         performance changes of \NSI{1}{\percent} to much more severe degradations of more than \NSI{10}{\percent}, or
         even nodes that were literally unusable when their memory was under heavy load. These events went unnoticed by
