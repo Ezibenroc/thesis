@@ -62,11 +62,34 @@
 \chapter{List of software and data}
 \label{chapter:zenodo}
 
-    \lipsum[1]
-    \begin{description}
-        \item[Ratatouille] \cite{ratatouille}
-        \item[Pycewise] \cite{pycewise}
-    \end{description}
+    \definecolor{myblue}{cmyk}{1, .50, .10, .01}  % see definition of "bluemagenta" in cleanthesis.sty
+    \newcommand\tbelt[1]{\texttt{\textcolor{myblue}{#1}}}
+    \begin{table}[htpb]
+        \centering
+        \caption{Software and data produced during this thesis}
+        \label{tab:software_and_data}
+        \begin{tabular}{p{0.1\linewidth}p{0.8\linewidth}}
+            \cite{peanut} &\tbelt{peanut} The experiment engine described in Section~\ref{sec:peanut}, written in
+                Python. It allows to easily write scripts for deploying and running experiments, producing an archive
+                with the experiment data and meta-data.\\
+            \cite{cashew} &\tbelt{cashew} The Python library described in Section~\ref{sec:test:implementation} used for extracting
+                the relevant data and meta-data from \texttt{peanut} archives, summarizing the data, computing
+                non-regression tests on the aggregated data and generating the notebooks.\\
+            \cite{org_attach} &\tbelt{org\_attach} A small Python script described in Appendix~\ref{chapter:orgmode} to add an entry in an
+                Org-mode laboratory journal with an attachment (either a paper or a Jupyter notebook).\\
+            &\tbelt{calibration\_analysis}  \\
+            &\tbelt{journa\_extract} \\
+            &\tbelt{g5k\_test} \\
+            &\tbelt{hpl} \\
+            &\tbelt{platform-calibration} \\
+            \cite{pycewise} & \tbelt{pycewise} The Python library described in Section~\ref{sub:pycewise} for
+                automatically computing piecewise linear regressions.\\
+            \cite{ratatouille} & \tbelt{ratatouille} A Python script launched as a background process in experiments
+                for monitoring system metrics such as the CPU temperature, core frequencies, CPU and DRAM power
+                consumption.  These metrics are collected at a fixed pace (\eg every five seconds) and written in a CSV
+                file.\\
+        \end{tabular}
+    \end{table}
 
 \chapter{Carbon footprint of this thesis}
 \label{chapter:carbon}
