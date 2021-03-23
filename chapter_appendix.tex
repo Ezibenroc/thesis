@@ -72,16 +72,23 @@
             \cite{peanut} &\tbelt{peanut} The experiment engine described in Section~\ref{sec:peanut}, written in
                 Python. It allows to easily write scripts for deploying and running experiments, producing an archive
                 with the experiment data and meta-data.\\
-            \cite{cashew} &\tbelt{cashew} The Python library described in Section~\ref{sec:test:implementation} used for extracting
-                the relevant data and meta-data from \texttt{peanut} archives, summarizing the data, computing
-                non-regression tests on the aggregated data and generating the notebooks.\\
-            \cite{org_attach} &\tbelt{org\_attach} A small Python script described in Appendix~\ref{chapter:orgmode} to add an entry in an
-                Org-mode laboratory journal with an attachment (either a paper or a Jupyter notebook).\\
-            &\tbelt{calibration\_analysis}  \\
-            &\tbelt{journa\_extract} \\
-            &\tbelt{g5k\_test} \\
-            &\tbelt{hpl} \\
-            &\tbelt{platform-calibration} \\
+            \cite{cashew} &\tbelt{cashew} The Python library described in Section~\ref{sec:test:implementation} used for
+                extracting the relevant data and meta-data from \texttt{peanut} archives, summarizing the data,
+                computing non-regression tests on the aggregated data and generating the notebooks.\\
+            \cite{org_attach} &\tbelt{org\_attach} A small Python script described in Appendix~\ref{chapter:orgmode} to
+                add an entry in an Org-mode laboratory journal with an attachment (either a paper or a Jupyter
+                notebook).\\
+            \cite{calibration_analysis} &\tbelt{calibration\_analysis} Nearly all the experiment data produced during
+                this thesis (\ie \texttt{peanut} archives) and the jupyter notebooks to analyze it. This includes MPI
+                calibrations, \dgemm calibrations, real and simulated runs of HPL, etc.\\
+     %       &\tbelt{journal\_extract} \\
+            &\tbelt{g5k\_test} The data and notebooks of the performance non-regression tests made on Grid'5000. This
+                includes all the \texttt{peanut} archives, the HDF5 files containing the raw data, the CSV files
+                containing the aggregated data and a full copy of the website presenting the test results.\\
+            \cite{hpl_smpi} &\tbelt{hpl} The source code of High Performance Linpack, with the modifications we had to
+                make for simulating its execution on top of SMPI.\\
+            \cite{platform_calibration} &\tbelt{platform-calibration} The micro-benchmarks used to calibrate the models
+                for the durations of \dgemm and MPI communications.\\
             \cite{pycewise} & \tbelt{pycewise} The Python library described in Section~\ref{sub:pycewise} for
                 automatically computing piecewise linear regressions.\\
             \cite{ratatouille} & \tbelt{ratatouille} A Python script launched as a background process in experiments
