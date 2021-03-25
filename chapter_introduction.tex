@@ -256,17 +256,23 @@
             disciplines such as computationnal biology or computationnal physics, reproducibility issues mainly come
             from numerical instability and the growing complexity of software environments~\cite{dong2021}.
 
-            Computer science is not immune to these concerns of statistical misusage, numerical errors or even frauds.
-            A recurrent problem is also the unavailability of the softwares, methods and data on which are based the
+            Computer science is not immune to these concerns of statistical misusage, numerical errors or frauds.  A
+            recurrent problem is also the unavailability of the softwares, methods and data on which are based the
             research articles. For instance, Collberg~\etal examined 601 papers from ACM conferences and journals, they
             were able to personally build the software of only 194 of them while they simply could not access the code
-            of 176 of these papers~\cite{collberg2015repeatability}.
+            of 176 of these papers~\cite{collberg2015repeatability}. Likewise, Papadopoulos~\etal propose eight
+            methodological principles for better reproducibility and show that most of the published articles
+            they surveyed followed all these principles~\cite{Papadopoulos_2019}.
 
-            What may be more surprising is that computer science suffer from the same experiment reproductibility
+            What may be more surprising is that computer science suffers from the same experiment reproductibility
             problems than the other sciences, experimental biases exist and may even be larger. For instance,
             Mytkowicz~\etal show that simply changing the envifonment variable size can account for a performance
             variability of more than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting
-            and avoiding such measurement bias.
+            and avoiding such measurement bias, based on experiment randomization. Similarly, Curtsinger and Berger have
+            implemented a software for repeatedly re-randomizing the layouts of code, stack and heap at runtime, to
+            avoid the bias introduced by a particular binary layout~\cite{stabilizer}. Again, the growing problem of
+            experimental reproducibility we are describing here is tightly coupled to the growing software and hardware
+            complexity.
 
     \section{This thesis}%
     \label{sec:this_thesis}
