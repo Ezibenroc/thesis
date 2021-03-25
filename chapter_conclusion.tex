@@ -32,4 +32,13 @@
         greatly benefit of such tests.
 
     \section{Future work}%
-        [...]
+
+        Besides the next steps already discussed in Chapter~\ref{chapter:prediction:conclusion} and
+        Section~\ref{sec:test:conclusion}, there also remains a unification work. By going a step further in the
+        automatization, we could use the data produced by the non-regression tests to generate new model instances for
+        Simgrid. It would then be possible to make new simulations with a platform model that reflects the latest
+        changes of the real platform. Then, by implementing the same statistical test on the performance predicted by
+        the simulation, we should be be able to detect whether a platform change has affected the application
+        performance and quantify this effect. A minor performance drop of the computation kernels could be amplified by
+        the synchronization phases of the application and become very concerning at a larger scale. Conversely, it could
+        also be attenuated by the global noise and go completely unnoticed.
