@@ -1,4 +1,4 @@
-\chapter{Conclusion}
+\chapter{Discussion}
 \label{chapter:conclusion}
 
     %% TODO
@@ -10,8 +10,26 @@
     %%   modélisation de plate-forme mais il y a encore beaucoup de
     %%   travail. LibSimBLAS ?
 
+    \section{Contribution}%
 
-Your beautiful conclusion.
-\lipsum[1]
+        This thesis has contributed to the improvement of experimental reproductibility in high performance computing.
 
+        In Part~\ref{part:prediction}, we described a method for predicting the performance of MPI applications through
+        simulation. Using Simgrid/SMPI simulator, we managed to emulate the High Performance Linpack benchmark at scale
+        by applying only a few modifications to its source code. We compared several computation and communication
+        models and showed the importance of modeling both the temporal and spatial variability of the platform. In a
+        thorough comparison of the simulations with real executions, we show that the prediction error remains very low,
+        only a few percent, thereby demonstrating the faithfulness of this approach. Several sensibility analyzes are
+        then performed to quantify the effect of platform variability and showcase an important use case of simulation.
 
+        The lessons learned during this work are then presented in Part~\ref{part:experiment}. We start by describing the
+        experiment engine we developed and that was used throughout this thesis. Then, we present an in-depth report of
+        the many experimental biases we faced, including very unsettling phenomenons we did not anticipate. While some
+        of these biases can be desirable if they are also occuring in the simulated application, most of them had to be
+        suppressed through randomization. Finally, we showcase the performance non-regression test we implemented. While
+        not a statistical novelty, they allowed us to detect many changes on Grid'5000 platform that affected
+        significantly the performance and could harm experiments if gone unnoticed. We believe the HPC community could
+        greatly benefit of such tests.
+
+    \section{Future work}%
+        [...]
