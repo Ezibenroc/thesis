@@ -1177,6 +1177,15 @@
 
             \subsubsection{Benchmarking software: long-term performance evolution of an application}%
 
+                Oliveira~\etal show how it is possible to implement performance non-regression tests as part of a
+                software development practice, akin to the usual unit tests and integration tests for verifying the
+                correctness of the software~\cite{De_Oliveira_2017}. Their goal is to avoid running the full benchmark
+                whenever a new commit is made. To this end, they perform static analysis on the binary and have a list
+                of several indicators to trigger a new execution of the benchmark (\eg if the number of functions
+                added or deleted by the commit is larger than some threshold). Their article also presents particularly
+                well the state of the art, notably regression benchmarking, continuous integration systems, regression
+                test selection and performance bug detection in the field.
+
                 Another interesting work is related to the StarPU project~\cite{AugThiNamWac11CCPE}. StarPU is a state
                 of the art C/C++ task programming library that handles task dependencies and optimized usage of
                 resources (heterogeneous scheduling and data transfers). It is also possible to accurately simulate a
