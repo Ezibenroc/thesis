@@ -547,7 +547,7 @@
             gives the highest cubic coefficient and the lowest quadratic coefficients. In other words, this means that
             with this experiment file, a larger fraction of the \dgemm durations is explained by the cubic coefficient.
 
-            \begin{figure}[htpb]
+            \begin{figure}[tpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_distribution.pdf}
                 \caption{Distribution of two of the regression parameters for CPU 1 of dahu-5, each point represents one
@@ -582,7 +582,7 @@
             \texttt{C}, which was the fastest, has the smallest DRAM power consumption. This suggests that the memory
             was used less intensively with this experiment, \ie there was a better cache utilization.
 
-            \begin{figure}[htpb]
+            \begin{figure}[tpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_power.pdf}
                 \caption{Average DRAM power consumption observed on CPU 1 of dahu-5, each point represents one
@@ -1356,7 +1356,7 @@
 
             \begin{figure}[htpb]
                 \centering
-                \includegraphics[height=0.74\textheight]{img/experiment/non_regression/implementation/workflow.pdf}
+                \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/experiment/non_regression/implementation/workflow.pdf}
                 \caption{Full workflow implemented by our tests.}%
                 \label{fig:experiment:g5k_test:workflow}
             \end{figure}
@@ -1710,14 +1710,14 @@
             \subsubsection{Website presentation}%
 
                 A screenshot of the landing page\footnote{The website presented here is publicly available at
-                \url{https://cornebize.net/g5k_test/} and permanently archived at [...]\todo{Add a Zenodo link}} of the
+                \url{https://cornebize.net/g5k_test/} and permanently archived on Zenodo~\cite{g5k_test}.} of the
                 Grid'5000 performance tests we implemented is presented in
                 Figure~\ref{fig:experiment:non_regression:home}. Each cluster is represented by a row, each factor by a
                 column. Clicking on a button will open the test notebook for the desired cluster and factor. The last
                 column is a drop-down menu showing all the coefficients for the linear regression, as well as a
                 multi-dimensional test made on the first eight coefficients together.
 
-                \begin{figure}[htpb]
+                \begin{figure}[htb]
                     \centering
                     \fbox{\includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/g5k_test_home.png}}
                     \caption{Landing page of the test website.}%
@@ -1751,7 +1751,7 @@
                 \tikzstyle{label}=[anchor=west]
                 \begin{figure}[htpb]
                     \centering
-                    \resizebox{!}{0.5\textheight}{\begin{tikzpicture}
+                    \resizebox{!}{0.6\textheight}{\begin{tikzpicture}
                         \def\labelx{14}
                         \def\leftcolx{3}
                         \def\rightcolx{9}

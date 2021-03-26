@@ -120,7 +120,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         help studies at the level of the whole machine and application, not the influence of microarchitectural details
         as intended by gem5~\cite{lowepower2020gem5} or by MUSA~\cite{musa_16}.
 
-        \begin{figure}[htpb]
+        \begin{figure}[tpb]
             \centering
             \subfigure[Original fortran \texttt{dm\_x\_bcs}
                 subroutine\label{fig:sst_skeleton:comm_orig}]{\begin{minipage}[b]{\linewidth}
@@ -189,17 +189,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \ie the call to \send will be blocking, waiting for the corresponding \recv call to be made. The medium messages
         are sent in a \emph{detached} way (Figure~\ref{fig:smpi_model:detached}), the call to \send returns immediately
         but the data is only transferred when the corresponding \recv call is made.  These different protocols strongly
-        impact the communication performance, it is therefore important to model them accurately. With SMPI, the user is
-        responsible for instanciating the model, \ie they have to provide the aforementionned thresholds where the
-        communication protocols change as well as the bandwidths and latencies for each protocol.  An alternative
-        approach was used by Emmanuel~\etal~\cite{emmanuel:hal-02972297} for modeling the Portals~4 protocol, they used
-        a lower abstraction level, at the message passing level instead of the application. Applying the same approach
-        in SMPI would amount to model message communications on the network instead of MPI calls, the MPI calls would
-        then be emulated like the rest of the code. One benefit of this approach is that it would remove some burden of
-        the user, since it would no longer be required to provide the protocol thresholds and individual bandwidths and
-        latencies, a few bandwidth/latency pairs would be enough. The downside is that the simulation would then
-        depend on the MPI implementation (\eg OpenMPI, MPICH, Intel MPI) which should be provided either by SMPI or by
-        the user. It would also be impossible to simulate closed-source MPI implementations.
+        impact the communication performance, it is therefore important to model them accurately.
 
         \begin{figure}[htpb]
             \centering
@@ -215,6 +205,17 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \caption{The ``hybrid'' network model of SMPI in a nutshell~\cite{smpi}}%
             \label{fig:smpi_model}
         \end{figure}
+
+        With SMPI, the user is responsible for instanciating the model, \ie they have to provide the aforementionned
+        thresholds where the communication protocols change as well as the bandwidths and latencies for each protocol.
+        An alternative approach was used by Emmanuel~\etal~\cite{emmanuel:hal-02972297} for modeling the Portals~4
+        protocol, they used a lower abstraction level, at the message passing level instead of the application. Applying
+        the same approach in SMPI would amount to model message communications on the network instead of MPI calls, the
+        MPI calls would then be emulated like the rest of the code. One benefit of this approach is that it would remove
+        some burden of the user, since it would no longer be required to provide the protocol thresholds and individual
+        bandwidths and latencies, a few bandwidth/latency pairs would be enough. The downside is that the simulation
+        would then depend on the MPI implementation (\eg OpenMPI, MPICH, Intel MPI) which should be provided either by
+        SMPI or by the user. It would also be impossible to simulate closed-source MPI implementations.
 
         In SMPI, collective communications are simulated by emulation. Simgrid authors have ported in SMPI all the
         collective communication algorithms of the main MPI implementations, the user simply has to choose the
@@ -669,7 +670,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             reduced by substituting \dgemm and \texttt{dtrsm} function calls with a performance model of the respective
             kernel.
 
-            \begin{figure}[htpb]
+            \begin{figure}[htb]
                 \centering
                 \subfigure[Non-intrusive macro replacement with a very simple computation model.\label{fig:macro_simple}]{
                     \begin{minipage}[b]{\linewidth}
@@ -994,7 +995,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             %% - Au final, régression linéaire OLS + méthode des moments avec
             %%   régression linéaire OLS des résidus
 
-            \begin{figure}[htpb]
+            \begin{figure}[htb]
                 \centering
                 \subfigure[\dgemm
                 heterogeneity\label{fig:dgemm_het}]{\includegraphics[width=\linewidth]{img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png}}
@@ -1026,7 +1027,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             actually very well explained by both the polynomial model (better fit for particular parameter combinations)
             and some temporal variability.
 
-            \begin{figure}[htpb]
+            \begin{figure}[htb]
                 \centering
                 \includegraphics[width=\linewidth]{img/prediction/modeling/kernels/dlatcpy_model.png}
                 \caption{Illustrating the realism of modeling for \texttt{HPL\_dlatcpy} function}
@@ -1126,7 +1127,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \end{equation}
             Again, in such a model \(\mu\) accounts for the machines' average performance while \(\Sigma_S\) accounts
             for the (weak) heterogeneity. This hierarchical model is depicted in Figure~\ref{fig:model:generative}.
-            \begin{figure}[htpb]
+            \begin{figure}[tpb]
                 \centering
                 \includegraphics[width=0.6\linewidth]{img/prediction/modeling/kernels//generative_model.pdf}
 
