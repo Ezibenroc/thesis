@@ -925,8 +925,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     of the operation are also possible. Likewise, communications between two nodes are mostly linear in message size, but
     the actual performance can wildly vary depending on the range of the message size as MPI switches from one
     protocol to another whenever needed. In this chapter we first introduce some notations to describe the complexity of
-    the models we have investigated. We then briefly compare the prediction of these models with individual measurements
-    of both computations and communications to illustrate the importance of the model complexity.
+    the models we have investigated, then we define these models and explain how we can instantiate them.
 
     \section{Modeling notations}%
 
@@ -953,7 +952,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \item The behavior of the operation may be mostly linear but only for specific parameter ranges. This is for
                 example the case for networking operations or for computing nodes on Stampede where Intel's Math Kernel
                 Library (MKL) uses the Xeon Phi accelerator only when the input is large enough to compensate for the
-                data transfer. In such situations, the models considered will be piece-wise linear, \[\text{e.g., }T
+                data transfer. In such situations, the models considered will be piecewise linear, \[\text{e.g., }T
                     \sim \begin{cases} \text{if } M<\theta_1 & \alpha_1.M+\beta_1 \\ \text{else if } M<\theta_2 &
                     \alpha_2.M+\beta_2 \\ ... \end{cases},\] where the \(\theta, \alpha, \beta\) should all be
                     estimated. This kind of model is denoted \modelp{}.
@@ -1226,7 +1225,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             least the two kinds of behaviors (green for stable nodes, and orange for slower nodes). The higher layer of
             the model in Figure~\ref{fig:model:generative} should then be replaced by a mixture of normal distributions
             (whose weights would then be sampled from a Dirichlet distribution). Again, hypothetical regression
-            parameters for 16 CPUs have been generated with such a process on Figure~\ref{fig:whatif_slow_model} are
+            parameters for 16 CPUs have been generated with such a process on Figure~\ref{fig:whatif_slow_model} and are
             very similar, although different, to the original measurements.
 
             Overall this model is therefore of excellent quality and can be used to generate large configurations very
@@ -1440,7 +1439,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             Section~\ref{sub:finding_semantic_breakpoints}. This has been implemented as a Python package named
             \pyce~\cite{pycewise}.
 
-            \subsubsection{Model}%
+            \subsubsection{Model and notations}%
 
                 We define here the base assumptions and notations for our optimization problem. The predictor variables
                 (\eg the message size) will be noted \(X\), the response variables (\eg the communication duration) will
@@ -1493,7 +1492,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 the solution. The first step is inspired by the work of Malerba~\etal~\cite{Malerba_2004}.
 
                 In the top-down step (Algorithm~\ref{algo:pycewise:topdown}), we recursively build a tree, where the inner
-                nodes represent a breakpoint and the leaves represent a simple linear regression. The function
+                nodes represent breakpoints and the leaves represent simple linear regressions. The function
                 \texttt{topdown} takes as input a list \(\ell\) of tuples \((X,Y)\) sorted by increasing \(X\) and
                 returns a list of sublists, each sublist representing an interval for the piecewise regression. On a
                 given call, we iterate on the list to test all the \(X\) as a possible breakpoint, we search for the
@@ -1569,8 +1568,6 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \caption{Bottom-up step for computing the piecewise linear regression.}
                     \label{algo:pycewise:bottomup}
                 \end{algorithm}
-
-                \pagebreak
 
             \subsubsection{Objective function}%
                 The breakpoint learning process relies entirely on the objective function we defined, based on the
@@ -1655,9 +1652,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 solution, the first two rows are Datadog-piecewise~\cite{datadog} and Cubist~\cite{cubist}. The last
                 three rows are our proposed implementation with the three discussed objective functions. The black
                 points represent the observations, the colored lines represent the linear regressions, while the
-                different breakpoints are marked with a dashed vertical line.
+                different breakpoints are marked with dashed vertical lines.
 
-                \begin{figure}[htpb]
+                \begin{figure}[htb]
                     \centering
                     \includegraphics[width=\linewidth]{img/prediction/modeling/network/pycewise.pdf}
                     \caption{Illustrating different piecewise linear regression approaches on different datasets. Only
@@ -1765,7 +1762,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         We have presented different models for both the network communications and the computation kernels. One
         difficulty resides in instantiating the models, \ie computing the best fit for some observations, in the most
         automated way possible. Bayesian formalism is an interesting candidate for such a task. With Bayesian sampling
-        tools like Stan, we should be able to fit arbitrarily complex models and even have an estimation of the
+        tools like STAN, we should be able to fit arbitrarily complex models and even have an estimation of the
         uncertainty of the resulting parameters. However, the benefit of these tools is not clear for our context, their
         computation time was particularly slow, and we had great difficulties in writing down our models in their
         formalism. In the end, a simpler approach like the method of moments revealed to be enough for our needs.
