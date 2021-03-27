@@ -202,7 +202,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \subfigure[Synchronous mode \label{fig:smpi_model:synchronous}]{
                     \includegraphics[width=0.3\linewidth]{img/prediction/state_of_art/synchronous.pdf}
             }
-            \caption{The ``hybrid'' network model of SMPI in a nutshell~\cite{smpi}}%
+            \caption{The ``hybrid'' network model of SMPI in a nutshell~\cite{smpi}.}%
             \label{fig:smpi_model}
         \end{figure}
 
@@ -273,7 +273,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \label{algo:hpl}
                 \end{algorithm}
             \end{minipage}
-            \caption{Overview of High Performance Linpack}
+            \caption{Overview of High Performance Linpack.}
             \label{fig:hpl_overview}
         \end{figure}
 
@@ -599,7 +599,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         named Dahu whose software stack could be fully controlled.
 
         \begin{table}[hb]
-            \caption{Typical runs of HPL}
+            \caption{Typical runs of HPL.}
             \label{fig:typical_run}
             \scalebox{.9}{\begin{tabular}{l|lll}
                 \multicolumn{1}{l|}{} & Stampede@TACC & Theta@ANL & Dahu@G5K\\
@@ -788,7 +788,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 (\smallstopx, \smallstopy) node [pos=0.5, xshift=1.2cm] {physical};
             \end{tikzpicture}
             \caption{\label{fig:global_shared_malloc}SMPI shared malloc mechanism: large area of virtual memory are
-            mapped onto the same physical pages.}\vspace{2em}
+            mapped onto the same physical pages.}
 
            \centering
            {\begin{minipage}{1.0\linewidth}
@@ -832,7 +832,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \end{minipage}%
             }%
             \end{minipage}}%\vspace{-1em}
-            \caption{Panel structure and allocation strategy.\label{fig:panel}}\vspace{-1em}
+            \caption{Panel structure and allocation strategy.\label{fig:panel}}
         \end{figure}
 
         Although using the default \texttt{SHARED\_MALLOC} mechanism works flawlessly for the main matrix \texttt{A}, a
@@ -1001,7 +1001,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 heterogeneity\label{fig:dgemm_het}]{\includegraphics[width=\linewidth]{img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png}}
                 \subfigure[\dgemm
                 model\label{fig:dgemm_poly}]{\includegraphics[width=\linewidth]{img/prediction/modeling/kernels/dgemm_model_calib.png}}
-                \caption{Illustrating the realism of modeling for \dgemm function}
+                \caption{Illustrating the realism of modeling for \dgemm function.}
                 \label{fig:blas_var}
             \end{figure}
 
@@ -1030,7 +1030,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \begin{figure}[htb]
                 \centering
                 \includegraphics[width=\linewidth]{img/prediction/modeling/kernels/dlatcpy_model.png}
-                \caption{Illustrating the realism of modeling for \texttt{HPL\_dlatcpy} function}
+                \caption{Illustrating the realism of modeling for \texttt{HPL\_dlatcpy} function.}
                 \label{fig:HPL_var}
             \end{figure}
 
@@ -1525,7 +1525,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                             \KwRet{\(\ell\)}\;
                         }
                     }
-                    \caption{Top-down step for computing the piecewise linear regression}
+                    \caption{Top-down step for computing the piecewise linear regression.}
                     \label{algo:pycewise:topdown}
                 \end{algorithm}
 
@@ -1724,7 +1724,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/prediction/modeling/network/pycewise_demo.pdf}
-                    \caption{With the logarithmic objective function, \pyce finds acceptable fits for the 12 datasets}%
+                    \caption{With the logarithmic objective function, \pyce finds acceptable fits for the 12 datasets.}%
                     \label{fig:prediction:pycewise_demo}
                 \end{figure}
 
@@ -1843,7 +1843,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \ganttcaption{Complex kernel}{Complex network}  &
             \includegraphics[width=\linewidth]{img/prediction/validation/traces/gantt_simulation_stochastic-CPU_polynomial-DGEMM_stochastic-network.png}\\
             \end{tabular}
-            \caption{Gantt charts of HPL first iterations in simulation}\vspace{-1em}
+            \caption{Gantt charts of HPL first iterations in simulation.}
             \label{fig:gantt_simulation}
         \end{figure}
 
@@ -1885,7 +1885,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \draw[-latex] (10.35, 5.25) to[bend left] node [midway, right, model_label, anchor=west] {temporal var.}
                     (10.35, 4.8) ;
                 \end{tikzpicture}
-                \caption{HPL performance: predictions vs. reality for various matrix ranks}
+                \caption{HPL performance: predictions vs. reality for various matrix ranks.}
                 \label{fig:validation_performance}
             \end{minipage}%
             \begin{minipage}{0.2\linewidth}

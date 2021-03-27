@@ -141,7 +141,7 @@
             First, Listing~\ref{lst:engine:execo} shows such an experiment using Execo. Run with: \verb#python script.py#\\
 
             \lstinputlisting[language={Python},label={lst:engine:execo},
-                caption={Small experiment example Execo}]{
+                caption={Small experiment example using Execo.}]{
                 img/experiment/engine/mweExeco.py
             }
 
@@ -161,7 +161,7 @@
             \verb#    --cluster dahu --nbnodes 2 --walltime 00:20:00#
 
             \lstinputlisting[language=Python,label={lst:engine:peanut_class},
-                caption={Small experiment example using Peanut}]{
+                caption={Small experiment example using Peanut.}]{
                 img/experiment/engine/mwePeanut.py
             }
 
@@ -763,7 +763,7 @@
             \centering
             \includegraphics[width=\linewidth]{img/experiment/bit-flips/generation_method_perf.png}
             \caption{\label{fig:exp:bit-flips:method-perf}
-            \dgemm durations are lower with constant values in the matrices}
+            \dgemm durations are lower with constant values in the matrices.}
         \end{figure}
 
         Such an observation was unforeseen. The function \dgemm implements the usual matrix product with cubic
@@ -780,7 +780,7 @@
             \centering
             \includegraphics[width=\linewidth]{img/experiment/bit-flips/generation_method_freq.png}
             \caption{\label{fig:exp:bit-flips:method-freq}
-            Core frequencies are higher with constant values in the matrices}
+            Core frequencies are higher with constant values in the matrices.}
         \end{figure}
 
         This experiment has been repeated on other Grid'5000 clusters, each time on at least four distinct nodes.
@@ -794,7 +794,7 @@
 
         \begin{table}[htbp]
             \caption{\label{tab:bit-flips}
-            Observation of the  performance anomaly on Grid'5000 clusters}
+            Observation of the  performance anomaly on Grid'5000 clusters.}
             \centering
             \begin{tabular}{lllll}
                 \toprule
@@ -862,7 +862,7 @@
                     \includesvg[width=\linewidth]{img/experiment/bit-flips/float_mask.svg}
                 \end{center}
                 \caption{Illustrating the effect of applying a mask on the random part of the matrix
-                elements\label{fig:exp:bit-flips:mask_illustration}}
+                elements.\label{fig:exp:bit-flips:mask_illustration}}
             \end{figure}
 
             The evolution and the distribution of the \dgemm durations is plotted in
@@ -874,7 +874,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/bit-flips/mask_size_perf.png}
                 \caption{\label{fig:exp:bit-flips:mask-perf}
-                \dgemm durations are lower with larger bit masks}
+                \dgemm durations are lower with larger bit masks.}
             \end{figure}
 
             This correlation with the mask size can also be seen with the frequencies in
@@ -884,7 +884,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/bit-flips/mask_size_freq.png}
                 \caption{\label{fig:exp:bit-flips:mask-freq}
-                Core frequencies are higher with larger bit masks}
+                Core frequencies are higher with larger bit masks.}
             \end{figure}
 
             This experiment has been repeated on two other Grid'5000 clusters, ecotype and gros. For both of them, the
@@ -1590,7 +1590,7 @@
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
                     }
                     \caption{Evolution of the mean performance of the two processors of two nodes from cluster \emph{dahu}
-                    (the fluctuation interval has a confidence of \NSI{99.99}{\percent})}%
+                    (the fluctuation interval has a confidence of \NSI{99.99}{\percent}).}%
                     \label{fig:experiment:non_regression:evolution_dahu}
                 \end{figure}
 
@@ -1647,7 +1647,7 @@
                     }
                     \caption{Evolution of the mean performance of the two processors of two nodes from cluster
                     \emph{dahu} using a window of five experiments (the fluctuation interval has a confidence of
-                    \NSI{99.99}{\percent})}%
+                    \NSI{99.99}{\percent}).}%
                     \label{fig:experiment:non_regression:evolution_dahu_windowed}
                 \end{figure}
 
@@ -1664,7 +1664,7 @@
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_windowed.pdf}
                     \caption{Overview of the test result for the mean performance on cluster \emph{dahu} using a window
-                    of five experiments}%
+                    of five experiments.}%
                     \label{fig:experiment:non_regression:overview_windowed}
                 \end{figure}
 
