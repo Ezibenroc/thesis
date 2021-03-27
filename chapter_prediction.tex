@@ -1902,7 +1902,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         As illustrated in Figure~\ref{fig:validation_performance} (rightmost labels), we would like to stress again that
         accurate predictions require a careful modeling of both spatial and temporal variability. Overall, although this
         was not particularly foreseeable and could have been different with another application, only the \dgemm kernel
-        needs to be carefully modeled with a \model[H]{2}-\noise[H]{2}. A detailed modeling of all (BLAS and HPL)
+        needs to be carefully modeled with a \model[H]{2}-\noise[H]{2} model. A detailed modeling of all (BLAS and HPL)
         kernels is possible but a minimal calibration of the \dgemm kernel over a representative set of nodes is thus
         sufficient to consistently predict the performance of HPL on this machine within a few percent of reality.
 
@@ -1970,7 +1970,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \subfigure[Illustrating the effect of the two MPI calibration methods. The optimistic method merely samples
             message size smaller than \SI{1}{\mega\byte} and extrapolates for larger sizes. Unfortunately, for messages
             larger than \SI{160}{\mega\byte}, the effective bandwidth significantly drops. The more realistic
-            calibration measures MPI communication duration for messages up to \SI{2}{\giga\byte} while injecting some
+            calibration measures MPI communication duration for messages up to \SI{1}{\giga\byte} while injecting some
             computation load in the background.  \label{fig:mpi_calibration}]{
                     \includegraphics[width=\linewidth]{img/prediction/validation/mpi_calibration/mpi_calibration.png}
             }
@@ -2247,7 +2247,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         one may wonder how much the physical topology influences the performance. Indeed, several recent
         articles~\cite{tapered_fat_tree_16,tapered_fat_tree_19} report that interconnect networks are often oversized
         compared to the actual need of applications and that turning off some switches could sometimes go completely
-        unnoticed by end-users. In this section we consider ten 256 node clusters with variable node performance (as in
+        unnoticed by end-users. In this section we consider ten 256-node clusters with variable node performance (as in
         Figure~\ref{fig:whatif}) interconnected by a 2-level fat-tree and quantify by how much performance degrades when
         the top-tier switches are gradually deactivated. More formally, we use a \texttt{(2;32,8;1,N;1,8)} fat-tree with
         \(\texttt{N}\in\{1,2,3,4\}\).
@@ -2302,7 +2302,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     HPL. By building on a few well-identified micro-benchmarks of the BLAS and MPI, we show that these aspects can be
     well modeled, which allows us to systematically predict the overall performance of HPL within a few percent. Our
     experimental results span over two years and we report situations (in Sections~\ref{sec:platform_change}
-    and\ref{sec:different_geometries}) where the simulation helped us to identify performance regression or anomalies
+    and~\ref{sec:different_geometries}) where the simulation helped us to identify performance regression or anomalies
     incurred by the platform when the prediction did not match the real experiments.
 
     We show in Chapter~\ref{chapter:prediction:validation} how this faithful surrogate can be used to evaluate the
