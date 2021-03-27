@@ -44,7 +44,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 the desired scale in terms of number of nodes. Note that this does not necessarily need to be done on
                 the target platform.
             \item[Hypothetical platform] This criterion denotes the ability to study \emph{what-if scenarios}, \eg to
-                predict the performance of the application on an hypothetical cluster with a higher network bandwidth
+                predict the performance of the application on a hypothetical cluster with a higher network bandwidth
                 than the ones available.
             \item[Efficiency] Some approaches have a much higher resource requirement than others. Several metrics can
                 be considered: node-hours, time to solution, energy consumption, memory footprint.
@@ -54,7 +54,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         One very common prediction technique is the use of an analytical model. For instance, most of the publications
         which present a new algorithm will give an estimation of its asymptotic complexity, \aka big-O analysis. These
-        techniques implicitely use an abstraction of the underlying hardware (\eg the von Neumann model, cache
+        techniques implicitly use an abstraction of the underlying hardware (\eg the von Neumann model, cache
         model~\cite{cache_oblivious}, PRAM~\cite{pram}, LogP~\cite{logp}, LogGP~\cite{loggp}, BSP~\cite{bsp}). There
         also exists more systematic approaches, like Aspen~\cite{aspen}, which defines a domain specific language (DSL)
         for specifying formally the characteristics of small components and combining them to model a whole application.
@@ -122,7 +122,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         \begin{figure}[tpb]
             \centering
-            \subfigure[Original fortran \texttt{dm\_x\_bcs}
+            \subfigure[Original Fortran \texttt{dm\_x\_bcs}
                 subroutine\label{fig:sst_skeleton:comm_orig}]{\begin{minipage}[b]{\linewidth}
                 \lstset{frame=bt,language=fortran,numbers=none}
                 \lstinputlisting{img/prediction/state_of_art/sst1.f}
@@ -132,7 +132,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \lstset{frame=bt,language=C++,numbers=none}
                 \lstinputlisting{img/prediction/state_of_art/sst1.c}
             \end{minipage}}
-            \subfigure[Original fortran \texttt{remap\_x}
+            \subfigure[Original Fortran \texttt{remap\_x}
             subroutine\label{fig:sst_skeleton:comp_orig}]{\begin{minipage}[b]{\linewidth}
                 \lstset{frame=bt,language=fortran,numbers=none}
                 \lstinputlisting{img/prediction/state_of_art/sst2.f}
@@ -151,7 +151,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         simulator\cite{intel_20}. To the best of our knowledge, their work reports two faithful predictions for two
         large-scale supercomputers but without investigating at all the impact of variability, heterogeneity, nor of
         communications as we do in this work. Unfortunately, they gave very little details on what allowed them to
-        achieve such impressive results and they did not publish their code. Given the context, we believe their claims
+        achieve such impressive results, and they did not publish their code. Given the context, we believe their claims
         should be interpreted with caution.
 
     \section{Simgrid/SMPI}%
@@ -180,7 +180,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         magnitude faster than packet-level simulation.  SimGrid does not model transient phenomena incurred by the
         network protocol but accounts for network topology and heterogeneity.
 
-        SMPI is responsible of modeling the MPI behavior, both in terms of semantic and performance. The complex network
+        SMPI is in charge of modeling the MPI behavior, both in terms of semantic and performance. The complex network
         optimizations done in real MPI implementations need to be considered when predicting the performance of MPI
         point-to-point communications. For instance, the behavior of \send depends on the message size, as illustrated
         by Figure~\ref{fig:smpi_model}. The smallest messages are sent \emph{asynchronously}
@@ -206,7 +206,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \label{fig:smpi_model}
         \end{figure}
 
-        With SMPI, the user is responsible for instanciating the model, \ie they have to provide the aforementionned
+        With SMPI, the user is responsible for instantiating the model, \ie they have to provide the aforementioned
         thresholds where the communication protocols change as well as the bandwidths and latencies for each protocol.
         An alternative approach was used by Emmanuel~\etal~\cite{emmanuel:hal-02972297} for modeling the Portals~4
         protocol, they used a lower abstraction level, at the message passing level instead of the application. Applying
@@ -219,7 +219,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         In SMPI, collective communications are simulated by emulation. Simgrid authors have ported in SMPI all the
         collective communication algorithms of the main MPI implementations, the user simply has to choose the
-        implemtation of their choice. This is of little significance in this work, as HPL ships with its own
+        implementation of their choice. This is of little significance in this work, as HPL ships with its own
         implementation of collective operations, but it can be critical for other applications.
 
         Recent results report consistent performance predictions within a few percent for standard benchmarks on
@@ -523,7 +523,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 Figure~\ref{fig:hpl_broadcasts}) while the
                 \texttt{long} version is a \emph{spread and roll} algorithm: messages are chopped into \texttt{Q}
                 pieces, these \texttt{Q} pieces are scattered across the \texttt{Q} processes with a binary tree as in
-                Figure~\ref{fig:hpl_broadcasts:long:scatter}, then the pices are rolled in \texttt{Q}-1 steps using
+                Figure~\ref{fig:hpl_broadcasts:long:scatter}, then the pieces are rolled in \texttt{Q}-1 steps using
                 mutual exchanges as in Figure~\ref{fig:hpl_broadcasts:long:roll}. According to HPL authors, the two
                 \texttt{long} algorithms generally lead to better bandwidth exploitation, these algorithms send a larger
                 number of messages but the total volume of communication is independent of \texttt{Q}: this algorithm is
@@ -549,7 +549,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 stuck when there are too many ongoing messages.
         \end{itemize}
 
-        The \emph{panel} mentionned in Figure~\ref{fig:hpl_overview} is an intricate data structure used throughout
+        The \emph{panel} mentioned in Figure~\ref{fig:hpl_overview} is an intricate data structure used throughout
         multiple functions of the application.  It contains both \texttt{int}s (accounting for matrix indices, error
         codes, MPI tags, and pivoting information) and \texttt{double}s (corresponding to a copy of a sub-matrix of
         \texttt{A}). To optimize data transfers, HPL flattens this structure into a single allocation of
@@ -572,7 +572,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \end{figure}
 
         We would like to stress through these examples that although HPL is only a benchmark (as opposed to a real
-        application used in physics simulations for instance), it is already a complex program with ellaborated
+        application used in physics simulations for instance), it is already a complex program with elaborated
         programming techniques to reach the highest available performance.  It is possible to get a very rough
         estimation of HPL duration with an analytical model, but more accurate predictions require the simulation of the
         application. The sequential time complexity of HPL factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 +
@@ -692,10 +692,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             to \texttt{smpi\_execute\_benched} that advances the clock of the executing rank by this estimate.  The effect
             on the simulation time for a small scenario is depicted in Figure~\ref{fig:kernel_sampling}. This modification
             speeds up the simulation by orders of magnitude. The precision of the simulation will be investigated in more
-            details in the next chapter but it can already be observed that this simple kernel model leads to a sound,
+            details in the next chapter, but it can already be observed that this simple kernel model leads to a sound,
             albeit slightly more optimistic, estimation of the performance.
 
-            In addition to the main compute kernels, a profiling of the code allowed to identify seven other BLAS functions
+            In addition to the main compute kernels, a profiling of the code allowed identifying seven other BLAS functions
             as computationally expensive enough to justify a specific handling: \texttt{dgemv}, \texttt{dswap},
             \texttt{daxpy}, \texttt{dscal}, \texttt{dtrsv}, \texttt{dger} and \texttt{idamax}. Similarly, a significant
             amount of time was spent in fifteen functions implemented in HPL: \texttt{HPL\_dlaswp*N},
@@ -707,7 +707,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             (\(N=\Num{30000}\)) and even more on large scenarios.
 
         \subsection{Specific Adjustments}
-            HPL uses pseudo-randomly generated matrices that are setup every time HPL is executed. This initialization, just
+            HPL uses pseudo-randomly generated matrices that are set up every time HPL is executed. This initialization, just
             like the factorization correctness verification at the end of the run, is not considered in the reported
             performance and can therefore be safely skipped.  Note that HPL implements an LU factorization with partial
             pivoting, which requires a special treatment of the \texttt{idamax} function that returns the index of the first
@@ -852,8 +852,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         iteration, with the size of the panel strictly decreasing from iteration to iteration. As explained above,
         the partial sharing of panels requires many calls to \texttt{mmap} and introduces an overhead that makes these
         repeated allocations / frees a bottleneck. Since the very first allocation can fit all subsequent panels, we
-        modified this allocation mechanism so that SMPI can reuse panels as much as possible from an iteration to an
-        other (see Figure~\ref{fig:panel_reuse}). Even for a very small matrix of order \(40,000\) and \(64\) MPI
+        modified this allocation mechanism so that SMPI can reuse panels as much as possible from an iteration to another
+        (see Figure~\ref{fig:panel_reuse}). Even for a very small matrix of order \(40,000\) and \(64\) MPI
         processes, the simulation time decreases from \NSI{20.5}{\sec} to \NSI{16.5}{\sec}.  The number of page faults
         decreased from \(2\) million to \(0.2\) million, confirming the devastating effect these
         allocations/deallocations would have at scale.
@@ -922,7 +922,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     functions for which a performance model has to be designed. Most compute kernels have several parameters from which
     a very simple model can generally easily be identified (\eg proportional to the product of the parameters) but
     refinements including the individual contribution of each parameter as well as the spatial and temporal variability
-    of the operation are also possible. Likewise, communications between two nodes are mostly linear in message size but
+    of the operation are also possible. Likewise, communications between two nodes are mostly linear in message size, but
     the actual performance can wildly vary depending on the range of the message size as MPI switches from one
     protocol to another whenever needed. In this chapter we first introduce some notations to describe the complexity of
     the models we have investigated. We then briefly compare the prediction of these models with individual measurements
@@ -937,7 +937,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \item Modeling option \model{0}: For simple and stable compute kernels, the duration can be modeled as a
                 constant duration independent of the input parameters, \ie \(T \sim \alpha\), where \(\alpha\) is
                 estimated through the sample average of the duration of the operation (or simply 0 if the kernel is
-                negligible) .
+                negligible).
             \item Modeling option \model{1}: A simple combination of the parameters (\eg \(S=M.N.K\)) may be the primary
                 factor driving the performance of the operation. Then \(T \sim \alpha.S ~(+ \beta)\) and \(\alpha\) and
                 \(\beta\) can be estimated through a classical least-square linear regression.
@@ -962,7 +962,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         However, an important hypothesis underlying all these methods is the homoscedasticity, \ie that the variability
         is independent on the parameters.
 
-        The residual (\emph{temporal}) variability may be an important phenomenon to account for, as "system noise" is
+        The residual (\emph{temporal}) variability may be an important phenomenon to account for, as ``system noise'' is
         known to be detrimental to the overall performance of parallel applications like HPL. We thus consider different
         modeling options for this temporal variability:
         \begin{itemize}
@@ -1017,7 +1017,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             different CPU, whereas the black dotted line corresponds to model \model{1} over all the nodes). These nodes
             will systematically be slightly slower than other nodes and accounting for this spatial heterogeneity is
             likely to be rather important for HPL.  Second, we took care of covering a wide variety of combinations for
-            \(M\), \(N\), and \(K\) and it can be observed that \(M.N.K\) is not sufficient to describe correctly the
+            \(M\), \(N\), and \(K\), and it can be observed that \(M.N.K\) is not sufficient to describe correctly the
             performance of \dgemm. Indeed, for \(M.N.K \approx \num{4.5E9}\) some duration are systematically
             higher regardless of the node. This happens for some particular (e.g., tall and skinny) matrix geometries,
             which strongly suggests using the full polynomial model. Figure~\ref{fig:dgemm_poly} depicts the performance
@@ -1077,8 +1077,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \end{equation}
             where \(\mathcal{H}(\mu, \sigma)\) denotes a random variable following a half-normal distribution with
             parameters \(\mu,\sigma\) accounting for the expectation and the standard deviation. The dependency on \(p\)
-            allows to account for platform heterogeneity (since \(\alpha_p,\beta_p, \dots,\rho_p\) can be specific to
-            each node), \ie the aforementioned spatial variability. The \(\sigma_p\) parameter allows to account for
+            allows accounting for platform heterogeneity (since \(\alpha_p,\beta_p, \dots,\rho_p\) can be specific to
+            each node), \ie the aforementioned spatial variability. The \(\sigma_p\) parameter allows accounting for
             (short-term) temporal variability, \ie to model the fact that the duration of two successive calls to \dgemm
             with the same parameters \(M, N, K\) are never identical.
 
@@ -1138,7 +1138,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                   variables. The solid node is the variable which is estimated
                   when conducting (in)validation studies while the dashed ones are
                   useful when conducting sensibility analysis and extrapolating to
-                  an hypothetical cluster.}
+                  a hypothetical cluster.}
                 \label{fig:model:generative}
             \end{figure}
 
@@ -1164,7 +1164,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_calibration_2.pdf}
                 }
 
-                \subfigure[ Distribution of $\alpha$, $\beta$, and $\gamma$ (synthetic data for 16 CPUs).
+                \subfigure[Distribution of $\alpha$, $\beta$, and $\gamma$ (synthetic data for 16 CPUs).
                     \label{fig:whatif_model}]{
                     \raisebox{1em}{\rotatebox{90}{\fbox{Synthetic data}}}~%
                     \includegraphics[width=.48\linewidth]{img/prediction/modeling/kernels/whatif_model_1.pdf}%
@@ -1199,7 +1199,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             and then to estimate \(\mu\) and \(\Sigma_S\) by averaging over all the nodes. This moment-matching method
             is simple and provides very good estimates for \(\mu\), \(\Sigma_T\), and \(\Sigma_S\) because we have
             enough measurements at our disposal and because it is particularly suited to the Gaussian modeling
-            assumption. Should more complex models (e.g., a mixture to account for ``outlier'' nodes or a SkewNormal
+            assumption. Should more complex models (e.g., a mixture to account for ``outlier'' nodes or a skew normal
             distribution to account for the distribution's skewness) be used, a general Bayesian sampling framework like
             STAN~\cite{stan} would be more adapted. Such frameworks allow to easily specify hierarchical generative
             models like the one presented in Figure~\ref{fig:model:generative} and to draw samples from the posterior
@@ -1254,7 +1254,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     \section{Modeling the network}
     \label{sec:network_model}
 
-        \subsection{Modelisation in Simgrid}%
+        \subsection{Modelization in Simgrid}%
 
             %% TODO
             %% 1. fluide, contention, expérience de saturation des switchs
@@ -1298,7 +1298,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             variability could explain some (overall bad) performance since they generally get amplified by broadcast and
             pipelined communication patterns.
 
-            Automatically computing the best fit for a complex model like the abovementionned one is way more difficult
+            Automatically computing the best fit for a complex model like the aforementioned one is way more difficult
             than for the \dgemm model proposed in Section~\ref{sec:network_model}. It should be possible to compute it
             in one go with a Bayesian framework like STAN, but it would probably be computationally prohibitive. A more
             realistic solution is to perform two steps: (1) average the durations per message size and find the
@@ -1327,7 +1327,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             MPI implementation. Some of these changes also affect the semantic of the \send operation: we described in
             Section~\ref{sec:simgrid_smpi} three communication modes, \emph{asynchronous}, \emph{detached} and
             \emph{asynchronous}. This section presents how to detect automatically such semantic breakpoints.  In this
-            section as well as Section~\ref{sub:pycewise}, MPI is seen as a black box, we use retro-ingeneering
+            section as well as Section~\ref{sub:pycewise}, MPI is seen as a black box, we use retro-engineering
             techniques to find a suitable model.
 
             This work was done in collaboration with several Simgrid collaborators, we wish to thank them for the ideas
@@ -1352,7 +1352,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \recv(buff, N, other)\;
                     print("OK")\;
                 }
-                \caption{Prints "OK" if the communication for size N is not synchronous}
+                \caption{Prints ``OK'' if the communication for size N is not synchronous.}
                 \label{algo:semantic:deadlock}
             \end{algorithm}
 
@@ -1387,7 +1387,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         }
                     }
                 }
-                \caption{Prints "OK" if the communication for size N is asynchronous}
+                \caption{Prints ``OK'' if the communication for size N is asynchronous.}
                 \label{algo:semantic:corruption}
             \end{algorithm}
 
@@ -1397,7 +1397,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             easily:
             \begin{itemize}
                 \item In \emph{asynchronous} mode, we have no deadlock and no corruption.
-                \item In \emph{detached} mode, we have no deadlock but we have corruption.
+                \item In \emph{detached} mode, we have no deadlock, but we have corruption.
                 \item In \emph{synchronous} mode, we have corruption and a deadlock.
             \end{itemize}
 
@@ -1409,7 +1409,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             does not make such guarantees. Here we suppose that the thresholds used in both functions are the same.
 
             In our tests, we found that the three protocols did not always exist, the threshold will depend on the
-            harware. For instance, on dahu cluster, the semantic breakpoints found by the two binary search are equal.
+            hardware. For instance, on dahu cluster, the semantic breakpoints found by the two binary search are equal.
             This means that the \emph{detached} mode does not exist on this cluster (for a given size \texttt{N}, either
             we have both a deadlock with program~\ref{algo:semantic:deadlock} and a corruption with
             program~\ref{algo:semantic:corruption}, or we have none, there is no alternative combination).
@@ -1442,7 +1442,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
             \subsubsection{Model}%
 
-                We define here the base asumptions and notations for our optimization problem. The predictor variables
+                We define here the base assumptions and notations for our optimization problem. The predictor variables
                 (\eg the message size) will be noted \(X\), the response variables (\eg the communication duration) will
                 be noted \(Y\). We will note \(\ell\) the list of tuples \((X,Y)\). We suppose there are \(N\) different
                 unknown breakpoints \(B_1 < \dots < B_N\), where \(N\) itself is also unknown. For convenience, we will
@@ -1472,7 +1472,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         of squares.
                     \item \(\text{BIC}(\ell, \theta) = K\log(S) + S\log(\text{RSS}(\ell, \theta))\) where \(S=|\ell|\)
                         is the number of observations, \(K = 3(N+1)+N = 4N+3\) is the number of parameters in the
-                        model. This is the usual bayesian information criterion.
+                        model. This is the usual Bayesian information criterion.
                 \end{itemize}
 
                 The goal of the optimization problem is to minimize the BIC. The \(K\log(S)\) term in this function is
@@ -1489,7 +1489,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \subsubsection{Main algorithm}%
 
                 The algorithm is made of two steps, it starts by a top-down step where new breakpoints are
-                greedily added, it finishes by a bottom-up step where some breakpoints are greedily removed to simpify
+                greedily added, it finishes by a bottom-up step where some breakpoints are greedily removed to simplify
                 the solution. The first step is inspired by the work of Malerba~\etal~\cite{Malerba_2004}.
 
                 In the top-down step (Algorithm~\ref{algo:pycewise:topdown}), we recursively build a tree, where the inner
@@ -1533,7 +1533,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 Algorithm~\ref{algo:pycewise:topdown} is executed in a constant time. This is possible because the list
                 \(\ell\) is sorted by increasing \(X\), no copies are made when splitting the list, and both the new linear
                 regressions and the new BIC are computed with online algorithms (\ie adding or removing one tuple
-                \((X,Y)\) from the sublists \(\ell_1\) and \(\ell_2\) does not require to recompute from scratch the new
+                \((X,Y)\) from the sublists \(\ell_1\) and \(\ell_2\) does not require recomputing from scratch the new
                 regression coefficients nor the BIC, it is possible to update the values from the previous iterations).
                 In the next sections, we changed the objective function and had to drop this quality of doing an
                 iteration in constant time, the effect on the computation duration will be discussed.
@@ -1566,7 +1566,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         let \(L \in S\) be the solution with minimal BIC\;
                         \KwRet{\(L\)}\;
                     }
-                    \caption{Bottom-up step for computing the piecewise linear regression}
+                    \caption{Bottom-up step for computing the piecewise linear regression.}
                     \label{algo:pycewise:bottomup}
                 \end{algorithm}
 
@@ -1578,7 +1578,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \begin{equation}
                     \text{RSS}(\ell, \theta) = \sum_{(X,Y)\in\ell} (Y-f_\theta(X))^2
                 \end{equation}
-                The algorithm is an heuristic to minimize the BIC, but the parameters of the linear regressions are
+                The algorithm is a heuristic to minimize the BIC, but the parameters of the linear regressions are
                 also the optimal estimators for this objective function.
 
                 In the case of heteroscedastic data, the noise is by definition not constant, it grows linearly with the
@@ -1728,9 +1728,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \label{fig:prediction:pycewise_demo}
                 \end{figure}
 
-                Since this is real experimental data, there is no "ground truth" that could serve as reference for
+                Since this is real experimental data, there is no ``ground truth'' that could serve as reference for
                 evaluating the quality of the fit. Computing the optimal solution which minimizes the objective function
-                would be computationally intractable. Therefore, we can only rely on a visual evalution of the
+                would be computationally intractable. Therefore, we can only rely on a visual evaluation of the
                 regression lines to decide if the fits are satisfying. In Figure~\ref{fig:prediction:pycewise_demo}, all
                 the obvious breaks have been found and the lines match the points very closely.
 
@@ -1748,7 +1748,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \end{figure}
 
                 In our context of network calibration, each communication for a given message size is repeated several
-                time. Then, to generate a model, we start by averaging the durations per message size before doing the
+                times. Then, to generate a model, we start by averaging the durations per message size before doing the
                 regression, as discussed previously. We can therefore safely expect to have only a few hundreds of
                 observations: the logarithmic approach is perfectly reasonable.
 
@@ -1763,11 +1763,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         %%   on va pouvoir 1) essayer de trouver le bon niveau de modélisation 2)
         %%   détecter des situations à problème 3) faire du whatif.
         We have presented different models for both the network communications and the computation kernels. One
-        difficulty resides in instanciating the models, \ie computing the best fit for some observations, in the most
-        automated way possible. Bayesian formalism is an interesting candidate for such a task. With bayesian sampling
+        difficulty resides in instantiating the models, \ie computing the best fit for some observations, in the most
+        automated way possible. Bayesian formalism is an interesting candidate for such a task. With Bayesian sampling
         tools like Stan, we should be able to fit arbitrarily complex models and even have an estimation of the
-        uncertainty of the resulting paremeters. However, the benefit of these tools is not clear for our context, their
-        computation time was particularly slow and we had great difficulties in writing down our models in their
+        uncertainty of the resulting parameters. However, the benefit of these tools is not clear for our context, their
+        computation time was particularly slow, and we had great difficulties in writing down our models in their
         formalism. In the end, a simpler approach like the method of moments revealed to be enough for our needs.
 
         The model instance, \ie the fit we compute, will obviously depend on the input data. The experimental protocol
@@ -1809,7 +1809,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         %% TODO Importance du modlèe dgemm. Validation qualitative (Gantt chart) et quantitative (scatter plot).
 
         In this section, HPL executions were done using a block size of 128 and a matrix of varying size (from
-        \num{50000} to \num{500000}). We used a a look-ahead \texttt{depth} of 1, the \texttt{increasing-2-ring}
+        \num{50000} to \num{500000}). We used a look-ahead \texttt{depth} of 1, the \texttt{increasing-2-ring}
         broadcast with the \texttt{Crout} panel factorization algorithms.
 
         Our first evaluation consists in comparing the traces of the simulations with reality. We instrumented HPL to
@@ -1904,7 +1904,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         As illustrated in Figure~\ref{fig:validation_performance} (rightmost labels), we would like to stress again that
         accurate predictions require a careful modeling of both spatial and temporal variability. Overall, although this
-        was not particularly foreseeable and could have been different with an other application, only the \dgemm kernel
+        was not particularly foreseeable and could have been different with another application, only the \dgemm kernel
         needs to be carefully modeled with a \model[H]{2}-\noise[H]{2}. A detailed modeling of all (BLAS and HPL)
         kernels is possible but a minimal calibration of the \dgemm kernel over a representative set of nodes is thus
         sufficient to consistently predict the performance of HPL on this machine within a few percent of reality.
@@ -2020,7 +2020,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         the DMA locking mechanism in the Infiniband network layer~\cite{denis:inria-00586015}. A similar performance drop
         also happens for intra-node communications that poorly manage the caches above a given size. Furthermore, the
         communication patterns generated by HPL during the ring broadcast are significantly impacted by the busy waiting
-        of HPL that intensively calls \texttt{MPI\_Probe} and \dgemm on small sub-matrices. Our initial
+        of HPL that intensively calls \iprobe and \dgemm on small sub-matrices. Our initial
         procedure for calibrating the network did not capture this phenomenon since we did not inject any additional CPU
         load. This problem is further discussed in Section~\ref{sec:beware_of_experimental_conditions}.
 
@@ -2056,7 +2056,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \centering
             \includegraphics[width=\linewidth]{img/prediction/validation/factorial/validation_factorial.pdf}
             \caption{Influence of HPL configuration on the performance (factorial experiment). Parameters have been
-                reorganized based on their influence on performance to improve readibility. The boxed configuration
+                reorganized based on their influence on performance to improve readability. The boxed configuration
                 corresponds to the one boxed in Figure~\ref{fig:validation_performance}.
             }
             \label{fig:validation_factorial}
@@ -2167,7 +2167,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         TOP5000 qualification runs, the matrix is made as large as possible and the overhead would thus appear to grow
         roughly linearly with \(\gamma\). On a new cluster, a simple statistical evaluation of the nodes' performance
         using the model of Section~\ref{sub:dgemm_model:generative_models} would thus be a good first diagnosis of
-        whether trying to decreasing temporal variability is a promising tuning target or not.
+        whether trying to decrease temporal variability is a promising tuning target or not.
 
     \section{Influence of \dgemm spatial variability}%
     \label{sec:influence_of_spatial_variability}
@@ -2186,10 +2186,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \centering
             \includegraphics[width=\linewidth]{img/prediction/sensibility/spatial/whatif_removing_nodes.pdf}
             \caption{Influence of the number of nodes on the performance of HPL\@. The geometry of the virtual topology
-                is particularly influent and it appears that $\mathtt{P}\times\mathtt{Q}$ configurations with a small
-                $\mathtt{P}$ perform significantly better then those with a larger $\mathtt{P}$. Each configuration is
-                summarized through the average overhead over the 10 clusters and errorbars represent a 95\% confidence
-            interval.}
+                is particularly influential, and it appears that $\mathtt{P}\times\mathtt{Q}$ configurations with a small
+                $\mathtt{P}$ perform significantly better than those with a larger $\mathtt{P}$. Each configuration is
+                summarized through the average overhead over the 10 clusters and error bars represent a \NSI{95}{\percent}
+                confidence interval.
+            }
             \label{fig:whatif_removing_nodes}
         \end{figure}
 
@@ -2198,7 +2199,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         Figure~\ref{fig:whatif_calibration}) and we study the performance obtained when removing 1 to 16 of the slowest
         nodes. When removing nodes, the geometry should be adjusted depending on how the number of remaining nodes
         decomposes in prime factors. As observed in Figure~\ref{fig:validation_geometry}, having \texttt{P} \(\approx\)
-        \texttt{Q} is generally a good idea to reduce the total amount of communication. However it may be
+        \texttt{Q} is generally a good idea to reduce the total amount of communication. However, it may be
         counter-productive for a given broadcast or swap algorithm that serializes communications.
         Figure~\ref{fig:whatif_removing_nodes} shows the average (over the 10 clusters) overhead for a matrix of rank
         \Num{250000} compared to the best performance obtained using the whole cluster. We group the different
@@ -2238,7 +2239,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \includegraphics[width=\linewidth]{img/prediction/sensibility/spatial/whatif_removing_nodes_2_heterogeneous.pdf}
             \caption{Influence of node removal on performance in a stronger heterogeneity scenario (extrapolation of our
             test cluster when it had a cooling problem on 4 of its nodes). Removing 6 to 12 nodes our of 256 nodes may
-            bring substential improvement and such optimization would therefore be worth investigating.}
+            bring substantial improvement and such optimization would therefore be worth investigating.}
             \label{fig:whatif_removing_nodes_heterogeneous}
         \end{figure}
 
@@ -2258,7 +2259,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \centering
             \includegraphics[width=\linewidth]{img/prediction/sensibility/topology/whatif_removing_switches.pdf}
 
-            \caption{Influence of the physicical topology on the overall performance. It is possible to remove up to 2
+            \caption{Influence of the physical topology on the overall performance. It is possible to remove up to 2
             of the top-level switches without significantly hurting performances for large matrices. Beyond this point,
             communications become the main performance bottleneck.}
             \label{fig:whatif_removing_switches}
@@ -2316,7 +2317,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     of mitigation strategies (e.g., the eviction of the slower nodes). Likewise, the simulation allows to easily assess
     the influence of the physical network on the overall performance. Most of these \emph{what-if} studies would be
     particularly difficult to conduct through real experiments because of the difficulty to finely control the platform.
-    This is to the best of our knowledge one of the first sensitivity analyses of a real HPC code accounting for
+    This is to the best of our knowledge one of the first sensitivity analyzes of a real HPC code accounting for
     platform uncertainty.
 
     As future work, building on the effort of SimGrid developers on supporting the emulation of a wide variety of
