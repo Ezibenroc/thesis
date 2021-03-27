@@ -16,7 +16,7 @@
             focus on parallel and distributed computing including Cloud, HPC and Big Data and AI.} It provides dozens of
             clusters, each one having between 2 and 124 homogeneous compute nodes. There is a high diversity of hardware,
             including several generations of Intel processors available, AMD and ARM processors, GPU, persistent memory
-            (PMEM) as well as high-performance networks such as Infiniband or Omni-path. Another important feature is the
+            (PMEM) as well as high-performance networks such as Infiniband or Omni-Path. Another important feature is the
             ability for the experimenter to get full control on the nodes, as it is possible to deploy a new operating
             system and therefore to gain superuser access.
 
@@ -174,7 +174,7 @@
 
             A recent experiment engine, called \texttt{EnOSlib}~\cite{enoslib}, appears to be promising. It is a Python
             library that allows an easy deployment and execution of experiments. The experiment scripts written with
-            \texttt{EnOSlib} are concise and readable, thanks to well designed abstractions. Compared to \texttt{Peanut}
+            \texttt{EnOSlib} are concise and readable, thanks to well-designed abstractions. Compared to \texttt{Peanut}
             which has been solely implemented and used for Grid'5000 platform, \texttt{EnOSlib} offers multiple
             backends.  One issue is that it currently does not support the archive building of \texttt{Peanut} with the
             automatic collection of experiment data and meta-data.
@@ -345,12 +345,12 @@
             generating experiment files for the \dgemm experiments, with two minor modifications:
             \begin{itemize}
                 \item Instead of sampling the product uniformly with \(MNK\sim\unif{1}{S}\), we made the choice to use a
-                    use a quasi-random approach. We first compute $\gamma$ different values that are uniformly
+                    quasi-random approach. We first compute $\gamma$ different values that are uniformly
                     but deterministically spread in the given interval, \ie we compute the set
                     \(\left\{S, S-\frac{S}{\gamma},S-2\frac{S}{\gamma}, \dots\right\}\)
                     (typically, \(\gamma=30\)). Then we add a random noise independently to each of these sizes. The
                     goal is to ensure a similar (yet still random) distribution of the products \(MNK\) each time we
-                    generate a new experiment file. This approach is similar to latin hypercube sampling (LHS).
+                    generate a new experiment file. This approach is similar to Latin hypercube sampling (LHS).
                 \item In addition of the size tuples randomly generated, we systematically add a few tuples to the list,
                     like \((1,1,1)\) or \((2048,2048,2048)\). The goal is to ensure that we have a few identical calls to
                     \dgemm in every experiment, in case we want a fine comparison.
@@ -359,7 +359,7 @@
     \section{Randomizing the order}%
     \label{sec:randomizing_order}
         The network model in SMPI needs to be instantiated with a careful calibration of the MPI communication
-        performance, as presented by Degomme~\etal~\cite{smpi}. This was done with a MPI program created by the Simgrid
+        performance, as presented by Degomme~\etal~\cite{smpi}. This was done with an MPI program created by the Simgrid
         team that performed a sequence of measures with two hosts. Several kinds of measures were implemented: the
         \emph{recv} (a call to \recv with waiting to avoid late senders), the \emph{isend} (a call to
         \texttt{MPI\_Isend}), the \emph{pingpong} (a call to \send followed by a call to \recv to get the round-trip
@@ -443,7 +443,7 @@
         non-shuffled case, we can identify a temporal pattern. During the first 20 seconds of the experiment, the
         calls with sizes \NSI{705}{\byte}, \NSI{741}{\byte} and \NSI{782}{\byte} (in green) have durations above
         \NSI{2}{\micro\second} for a large fraction of them, only a small part have durations below
-        \NSI{1.5}{\micro\second}. After the 20 second timestamp, this suddenly changes, there are at least two time
+        \NSI{1.5}{\micro\second}. After the 20-second timestamp, this suddenly changes, there are at least two time
         windows where all these calls have a low duration. Even outside these time windows, a much larger fraction of
         these calls have low durations. This temporal pattern is not visible in the other cases.
 
@@ -551,7 +551,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_distribution.pdf}
                 \caption{Distribution of two of the regression parameters for CPU 1 of dahu-5, each point represents one
-                experiment. The experiment file has a clear effect on the generated model}%
+                experiment. The experiment file has a clear effect on the generated model.}%
                 \label{fig:randomizing_sizes:expfile:average_distribution}
             \end{figure}
 
@@ -667,8 +667,8 @@
             The monitoring data collected during the experiments also reveal interesting differences. The average CPU
             frequency is reported in Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:frequency}. It appears that the
             frequency is the highest with \(K=128\) and with the random experiment. It is significantly lower with \(K\)
-            chosen randomly among the three sizes, and even lower with \(K=256\) and \(K=512\). It is interesting to
-            note that there is a positive correlation between the frequency and \dgemm performance, but the random
+            chosen randomly among the three sizes, and even lower with \(K=256\) and \(K=512\). Interestingly,
+            there is a positive correlation between the frequency and \dgemm performance, but the random
             experiment is a clear exception as it leads to a relatively low performance and high frequency.
 
             \begin{figure}[htpb]
@@ -755,7 +755,7 @@
             \end{enumerate}
 
         Figure~\ref{fig:exp:bit-flips:method-perf} shows the evolution of the \dgemm durations during the experiment.
-        A clear temporal patterns can be distinguished, the performance is oscillating.  Furthermore, several layers can
+        A clear temporal pattern can be distinguished, the performance is oscillating.  Furthermore, several layers can
         be seen, the durations of \dgemm are the highest when the matrices are initialized randomly and the
         lowest when they are initialized with a constant value. The sequential initialization is in between.
 
@@ -774,7 +774,7 @@
         Figure~\ref{fig:exp:bit-flips:method-freq} which shows the evolution and the distribution of the core
         frequencies during the experiment. There is a clear correlation between the frequencies and \dgemm
         performance: the random initialization produces lower frequencies whereas the constant initialization gives
-        higher frequencies. A similar temporal patterns can also be distinguished with clear oscillations.
+        higher frequencies. A similar temporal pattern can also be distinguished with clear oscillations.
 
         \begin{figure}[htbp]
             \centering
@@ -835,7 +835,7 @@
             the thermal design power (TDP), with the random initialization the frequency would be throttled more
             aggressively and thus the performance would be lower.
             As for the sequential initialization, we can imagine that we have a locality effect: nearby elements of the
-            matrices will have more bits in common, this would causes less bit flips than the random initialization but
+            matrices will have more bits in common, this would cause less bit flips than the random initialization but
             more bit flips than the constant initialization and thus an intermediate performance.
 
         \subsection{Testing the bit-flip hypothesis}
@@ -903,7 +903,7 @@
             compiler, another BLAS library and/or another computation kernel. We also need to understand why some
             processors are subject to this phenomenon and some others are not.
 
-            We warmly thank our colleagues that helped us to find hypotheses for this performance anomaly. In
+            We warmly thank our colleagues who helped us find hypotheses for this performance anomaly. In
             particular, Guillaume Huard suggested that the performance anomaly may be caused by the bit flips in the
             processor.
 
@@ -977,7 +977,7 @@
         find that the parameters space used in the calibration was very different from the parameter space used during
         the execution. One way to limit the risk of missing such extrapolations would be to define explicitly in the
         model files the parameter ranges that were used for calibrating them. Then, during a simulation, we could raise
-        a warning whenever a model is used too often outside of its parameter space.
+        a warning whenever a model is used too often outside its parameter space.
 
 
     \section{Beware of experimental conditions}%
@@ -1004,15 +1004,15 @@
                 cores of distinct nodes in the remote case). All the other cores are kept idle.
             \item Scenario \dgemm. This one is identical to the scenario \texttt{idle}, except that all the cores not
                 involved in the communication are performing \dgemm calls.
-            \item Scenario \texttt{MPI\_Iprobe}. The communication pattern is more elaborated in this scenario. It uses
+            \item Scenario \iprobe. The communication pattern is more elaborated in this scenario. It uses
                 two nodes, for a total of 64 cores. It repeats several times a sequence of 64 steps, where at step \(i\)
                 the MPI rank \(i\) performs a ping-pong with the MPI rank \((i+1)\mod64\). This is similar to a ring
                 broadcast, except that the ranks perform a two-way exchange instead of one-way. All the ranks waiting
                 for an incoming communication are performing a busy waiting, looping on the result of the function
-                \texttt{MPI\_Iprobe}.
-            \item Scenario \texttt{MPI\_Iprobe} \& \dgemm. This scenario is identical to the \texttt{MPI\_Iprobe}
+                \iprobe.
+            \item Scenario \iprobe \& \dgemm. This scenario is identical to the \iprobe
                 scenario, except that every rank performs a call to function \dgemm between any call to function
-                \texttt{MPI\_Iprobe}.
+                \iprobe.
         \end{itemize}
 
         The two last scenarios can appear oddly twisted. The goal was, again, to implement a micro-benchmark that is as
@@ -1029,7 +1029,7 @@
         The background noise we introduced had a large effect on the performance of the ping-pong. The durations of
         individual calls to \recv are presented in Figure~\ref{fig:experiment:experimental_conditions}. Making simple
         calls to \dgemm in the background increases the remote duration by nearly a factor \(3\), without affecting the
-        local durations. The ring communication pattern with \texttt{MPI\_Iprobe} busy waiting increases both the local
+        local durations. The ring communication pattern with \iprobe busy waiting increases both the local
         and remote durations, although the effect remains small for the local communication. Finally, adding \dgemm
         calls to the busy waiting increases a lot the durations of all communications, by adding an overhead of about
         \NSI{0.1}{\second}.
@@ -1122,7 +1122,7 @@
 
             SimdJSON~\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
             can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
-            JSON parsers. It is widely used, with more than twelve thousand stars on Github. Yet, in April 2020, one of
+            JSON parsers. It is widely used, with more than twelve thousand stars on GitHub. Yet, in April 2020, one of
             the main contributors submitted an issue\footnote{\url{https://github.com/simdjson/simdjson/issues/812}} to
             report a previously unnoticed \NSI{50}{\percent} performance drop when the library was compiled with Visual
             Studio 2019 instead of G++ 7.5.0. This shows that even high performance libraries do not always have the
@@ -1139,7 +1139,7 @@
                 seemingly no longer maintained and with a smaller user base.
 
                 Google Benchmark~\cite{google-benchmark} is a C++ library to benchmark code snippets. It is
-                well-established with several dozens of contributors and about \Num{5000} stars on Github. It greatly
+                well-established with several dozens of contributors and about \Num{5000} stars on GitHub. It greatly
                 facilitates the creation of parametric micro-benchmarks by adding only a few lines to an existing code.
                 The result can be pretty-printed in the terminal or written in a file in a CSV or JSON format. It is
                 even possible to automatically compute the asymptotic complexity. Finally, they provide a
@@ -1155,7 +1155,7 @@
                         the average duration. The user has no control on this number of iterations which is not even
                         deterministic, as the code snippet is executed in a loop for a fixed period of time.
                     \item We do not have any information on the distribution of these durations, only the average is
-                        reported, the standard deviation is not displayed and we do not have any confidence interval for
+                        reported, the standard deviation is not displayed, and we do not have any confidence interval for
                         the estimations of the mean. Note that this is understandable, these libraries typically start a
                         timer, then perform the iterations, they never measure the duration of an individual iteration.
                         It makes sense when measuring an extremely short code snippet that can take a few nanoseconds,
@@ -1256,7 +1256,7 @@
 
             In this section, we describe how to compute a prediction region for multivariate normal variables. This will
             then be used to implement a statistical test.  This section is mostly based on the paper from
-            Chew~\cite[Section~4.4]{chew}.\footnote{This publication, dating from 1966, is the oldest paper used in this
+            Chew~\cite[Section~4.4]{chew}.\footnote{This publication, dating from 1966, is one of the oldest papers used in this
             thesis. It has been written by an employee of RCA Service Co., a contractor of the US Air Force. The
             author of the paper describes the typical use case: computing the coordinates of a prediction ellipse
             for the splash point of a future missile shot. I believe this is a poor usage of statistics.}
@@ -1411,7 +1411,7 @@
 
                 The choice to use a git repository for storing the experiment data can seem peculiar, git is a very good
                 version control system for small text files but is not the best choice to store gigabytes of data
-                (although we mitigated this by using git LFS). It would have been undoubtedly more efficient to setup a
+                (although we mitigated this by using git LFS). It would have been undoubtedly more efficient to set up a
                 proper database server for this task, but probably longer to implement.
 
                 The \dgemm CSV file contains one row for each individual \dgemm call. The columns are the hostname of
@@ -1426,11 +1426,11 @@
             \subsubsection{Archive extraction and aggregation}%
 
                 Once the experiments of the day have terminated, we submit an \emph{extraction} job on Grid'5000. In the
-                first versions of this work, this step used to be implemented with Gitlab's continuous-integration, but
-                this quickly revealed to be too demanding for the runner of our Gitlab instance.
+                first versions of this work, this step used to be implemented with GitLab's continuous-integration, but
+                this quickly revealed to be too demanding for the runner of our GitLab instance.
 
                 The extraction job is a small script that uses
-                Cashew\footnote{\url{https://github.com/Ezibenroc/cashew}}, a Python library implemented specifically
+                Cashew~\cite{cashew}, a Python library implemented specifically
                 for this task. It performs the following steps:
                 \begin{enumerate}
                     \item Clone the git repository.
@@ -1454,7 +1454,7 @@
                 second best, the other alternatives were largely inferior in terms of I/O speed and disk footprint. Two
                 important features of HDF5 made it preferable to Apache Arrow for our use case:
                 (1) The possibility to append data to a file. With Apache Arrow, for each new experiment we would have
-                to read the whole file in memory to add the new data.  (2) The ability to load only a subset of the data
+                to read the whole file in memory to add the new data. (2) The ability to load only a subset of the data
                 based on a logical predicate. For instance, it is possible to load the measures made on a given node
                 between two given dates without having to read the whole file.
 
@@ -1463,7 +1463,7 @@
                 columns: cluster name, node ID, CPU ID, job ID, experiment start time and experiment file hash. Their
                 measure columns are listed below:
                 \begin{itemize}
-                    \item In the \dgemm file, each row has the observed \texttt{dgemm} performance, computed as the
+                    \item In the \dgemm file, each row has the observed \dgemm performance, computed as the
                         total number of flops (equal to \(2\sum_i M_iN_iK_i\)) divided by the total duration. Each row
                         also has the coefficients of the linear regression using the full polynomial model, as discussed
                         in Part~\ref{part:prediction}.
@@ -1480,10 +1480,10 @@
                 test does not need the full repository, it automatically downloads the required files.
 
                 The implementation directly follows the formula described in Section~\ref{sub:statistical_test}. It
-                relies heavily on Numpy and Pandas for a better efficiency.
+                relies heavily on NumPy and Pandas for a better efficiency.
 
                 Several factors are available. They are all tested independently, as a one-dimensional variable (\ie
-                \(p=1\)). For each of them, two tests are realised, one with a window of one job (\ie \(r=1\)) and one
+                \(p=1\)). For each of them, two tests are realized, one with a window of one job (\ie \(r=1\)) and one
                 with a window of five jobs (\ie \(r=5\)). The different factors are:
                 \begin{description}
                     \item[Performance] Average \dgemm performance, including all calls. We recall that it is computed as
@@ -1558,7 +1558,7 @@
                 confidence (\NSI{99.99}{\percent} in this figure). The \emph{reference set} of observations used to
                 compute this interval consists of past observations that were made after the last change. In other
                 words, (1) we do not consider the observations that were made in the future and (2) each time we
-                recognize a change and add a vertical line, the fluctuation interval gets reseted.
+                recognize a change and add a vertical line, the fluctuation interval gets reset.
 
                 The fluctuation interval for a new value \(\bm{m}^{(r)}\) (which is the sample mean of \(r\) new
                 observations \(x_{n+1},\dots,x_{n+r}\), note that \(r=1\) in
@@ -1727,7 +1727,7 @@
                 An extract of a single-factor notebook is presented in
                 Figure~\ref{fig:experiment:non_regression:zoom_out}. The different parts of the notebooks are:
                 \begin{enumerate}[label=\alph*]
-                    \item This part is intended to import the required libraries and setup a few options, but most
+                    \item This part is intended to import the required libraries and set up a few options, but most
                         importantly to define three variables: the desired cluster, factor(s) and confidence.
                     \item This is a histogram of the values obtained in the last run among the different processors of
                         the cluster for the desired factor. The average value as well as the spatial variability
@@ -1864,7 +1864,7 @@
                 A few months later, the same issue happened again on the same four nodes, their performance and
                 frequency had a very large drop and their temperature rose dramatically. We do not have an accurate date
                 for this event, it could have happened between 2019/08/20 and 2019/09/16. The problem was solved on
-                2019/11/27 as a side effect of some work done in the server room. A cluster was installed, so some some
+                2019/11/27 as a side effect of some work done in the server room. A cluster was installed, so some
                 computer racks were moved and some cable management was done.
 
             \subsubsection{Faulty memory}%
@@ -1910,7 +1910,7 @@
                 experiments. For this reason, we did not add a new platform change for these events, instead we marked
                 them as outliers in the plots.
 
-                After some investigations with Grid'5000 staff, we realised that most of these power drops started to
+                After some investigations with Grid'5000 staff, we realized that most of these power drops started to
                 happen when a new cluster, called drac, was installed in the same machine room. It also appears that the
                 jobs where we observed a power drop had been scheduled when most of the drac nodes were used, on the
                 other hand we did not observe any drop when no job was scheduled on the drac nodes. Submitting an idle
@@ -1946,7 +1946,7 @@
                 The same observations could be made on nearly all clusters. We also observed significant drops of CPU
                 power consumption on some nodes of a few clusters (\eg on troll or gros clusters).
 
-                The performance increase is understandable, \dgemm is a compute intensive kernel for dense linear
+                The performance increase is understandable, \dgemm is a compute-intensive kernel for dense linear
                 algebra, it was expected that wider vector instructions would be more efficient. It is also expected
                 that the maximal turbo frequency of processors depends on the workload, for instance Intel Xeon Gold
                 6130 CPU (the processor of the dahu nodes) has a maximal frequency of \NSI{2.8}{\giga\hertz} when all
@@ -2019,3 +2019,4 @@
         memory. For a broader coverage, it would be interesting to implement new tests that stress other parts of the
         platform, \eg with workloads that perform many memory operations, disk operations, or even network
         communications. To this end, the stress-ng~\cite{stress-ng} benchmark would be a great source of inspiration.
+
