@@ -3,12 +3,12 @@
 
     Throughout the several years of this thesis, we used meticulously a laboratory journal, inspired by the lectures
     from Legrand~\etal~\cite{RR_mooc,SMPE_course}. Since we firmly believe that this was a great help for improving the
-    reproducibility of this work, this chapter describes succintly our methodology.
+    reproducibility of this work, this chapter describes succinctly our methodology.
 
     The journal is written with Org-mode~\cite{orgmode}. This is a mode from the Emacs text editor for editing,
-    formatting and organizing text documents, using a lightweight markup language. It offers multiple functionnalities
+    formatting and organizing text documents, using a lightweight markup language. It offers multiple functionalities
     such as hierarchy within a file, TODO lists, tags, hyperlinks, file attachments and even code execution. We use git
-    for versionning and collaborating.
+    for versioning and collaborating.
 
     The journal follows a chronological order and hierarchy, as illustrated by
     Figure~\ref{fig:appendix:journal_extract}. There is one main part for each year, then subparts for months and days.
@@ -18,7 +18,7 @@
     presentation.
 
     Each journal entry can have one or several tags, displayed on the right in upper-case and delimited by colons. These
-    key words are used for organizing the different entries by semantic. For instance, we can easily list all the
+    keywords are used for organizing the different entries by semantic. For instance, we can easily list all the
     entries related to experiments made on the dahu cluster by making a search for the tag \texttt{DAHU}.
 
     We used three kinds of journal entries:
@@ -55,13 +55,13 @@
     Such a rigorous method can appear as a waste of time, even overwhelming. We argue that despite the steep learning
     curve of org-mode, this time investment was worth it. We were able to come back to some early experiments several
     years later, understand precisely what these experiments were doing, and know with certitude the software versions
-    that were used. We could also read the thought process we had at the time, the hypotheses we made that were later
-    confirmed or rebuted. This is obviously of great help for reproducing these experiments or writing this thesis.
+    that were used. Furthermore, we could also read the thought process we had at the time, the hypotheses we made that were later
+    confirmed or rebutted. This is obviously of great help for reproducing these experiments or writing this thesis.
 
 \chapter{List of software and data}
 \label{chapter:zenodo}
 
-    As this thesis was above all experimental, we implemented several softwares to assist us in our work, the many
+    As this thesis was above all experimental, we implemented several programs to assist us in our work, the many
     experiments we performed also generated a lot of data. For the sake of reproducibility, both software and data are
     permanently archived on Zenodo. The full list is described in Table~\ref{tab:software_and_data}.
 
@@ -104,14 +104,14 @@
 \chapter{Carbon footprint of this thesis}
 \label{chapter:carbon}
 
-    This thesis has been written between November 2020 and March 2021, in the midst of the COVID-19 pandemy. At the time
+    This thesis has been written between November 2020 and March 2021, in the midst of the COVID-19 pandemic. At the time
     of the writing, more than two millions persons already died and several millions will probably have long-term
     medical issues. Yet, this world disaster is arguably much less damaging than global warming. It is now established
     that the average temperature on Earth is increasing, mainly caused by anthropogenic emissions of greenhouse gases.
     It is difficult to estimate the damage that will be caused by global warming. The World Health Organization (WHO)
     writes that it is already causing \Num{150000} excess deaths per year~\cite{who_globalwarming_current} and that this
     figure is likely to rise to \Num{250000} per year between 2030 and 2050~\cite{who_globalwarming_future}, mainly
-    caused by heat exposure, diarrhoea, malaria and childhood undernutrition.  For the year 2018, according to the
+    caused by heat exposure, diarrhea, malaria and childhood undernutrition.  For the year 2018, according to the
     French government, the average carbon footprint of a French person is estimated to \NSI{11}{\tonne} of CO2eq.  This
     is more than five times larger than the yearly \NSI{2}{\tonne} target to limit the warming to
     \NSI{2}{\celsius}~\cite{co2_gouv}.
@@ -134,8 +134,8 @@
                 (\NSI{435}{\kilo\meter}) as the train lines are very Paris-centered in France. This trip emitted about
                 \NSI{0.2}{\tonne} of CO2eq.
             \item From October to December 2017, I visited Argonne National Laboratory in Chicago, USA. The outward
-                flights went from Lyon to Francfort (\NSI{562}{\kilo\meter}) then to Chicago (\NSI{6967}{\kilo\meter}).
-                The return flight went directly from Chicago to Paris (\NSI{6653}{\kilo\meter}).  In total, tis trip has
+                flights went from Lyon to Frankfurt (\NSI{562}{\kilo\meter}) then to Chicago (\NSI{6967}{\kilo\meter}).
+                The return flight went directly from Chicago to Paris (\NSI{6653}{\kilo\meter}).  In total, this trip has
                 emitted approximately \NSI{2.8}{\tonne} of CO2eq.
             \item In November 2017, I attended the Supercomputing conference in Denver, USA. I went there with a direct
                 flight from Chicago (\NSI{1475}{\kilo\meter}), emitting about \NSI{0.7}{\tonne} of CO2eq.
@@ -151,7 +151,7 @@
     \subsection*{Computing time}%
 
         This thesis had a very important experimental component, it is therefore natural to expect a large amount of
-        computing time usage. Figure~\ref{fig:appendix:node_hours} summarizes the cummulated computing time spent on
+        computing time usage. Figure~\ref{fig:appendix:node_hours} summarizes the cumulated computing time spent on
         Grid'5000 clusters during these years, grouped by usage type, for a total of \Num{2112014} core hours. The
         performance tests described in Chapter~\ref{chapter:experiment:tests} represents slightly more than half of this
         total time, which is very large. However, this should be contrasted by the consumption of the official Grid'5000
@@ -162,7 +162,7 @@
         Berthoud~\etal estimate the greenhouse gas emissions caused by GRICAD another French computing
         center~\cite{corehour_co2}. They tried to account for several parameters, including the electrical consumption
         of the hardware (computing nodes, storage nodes, network, cooling system), the manufacturing of this hardware,
-        but also the emissions caused by the employees responsible of operating this computing center in their daily
+        but also the emissions caused by the employees in charge of operating this computing center in their daily
         commute to work. They estimate that one hour of computation on one core is responsible for the emission of
         \NSI{5}{\gram} of CO2eq. The distribution of these emissions is depicted in
         Figure~\ref{fig:appendix:co2_per_hour}, slightly more than half of these \NSI{5}{\gram} is caused by the

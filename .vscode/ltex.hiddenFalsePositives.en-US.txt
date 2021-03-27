@@ -1,0 +1,2 @@
+{"rule":"CD_NN","sentence":"^\\QThis is more than five times larger than the yearly 2 target to limit the warming to 2 \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"MASS_AGREEMENT","sentence":"^\\QBerthoud  estimate the greenhouse gas emissions caused by GRICAD another French computing center \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
