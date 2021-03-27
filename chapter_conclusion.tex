@@ -12,7 +12,7 @@
 
     \section{Contribution}%
 
-        This thesis has contributed to the improvement of experimental reproductibility in high performance computing.
+        This thesis has contributed to the improvement of experimental reproducibility in high performance computing.
 
         In Part~\ref{part:prediction}, we described a method for predicting the performance of MPI applications through
         simulation. Using Simgrid/SMPI simulator, we managed to emulate the High Performance Linpack benchmark at scale
@@ -25,7 +25,7 @@
         The lessons learned during this work are then presented in Part~\ref{part:experiment}. We start by describing the
         experiment engine we developed and that was used throughout this thesis. Then, we present an in-depth report of
         the many experimental biases we faced, including very unsettling phenomenons we did not anticipate. While some
-        of these biases can be desirable if they are also occuring in the simulated application, most of them had to be
+        of these biases can be desirable if they are also occurring in the simulated application, most of them had to be
         suppressed through randomization. Finally, we showcase the performance non-regression test we implemented. While
         not a statistical novelty, they allowed us to detect many changes on Grid'5000 platform that affected
         significantly the performance and could harm experiments if gone unnoticed. We believe the HPC community could
@@ -38,7 +38,7 @@
         automatization, we could use the data produced by the non-regression tests to generate new model instances for
         Simgrid. It would then be possible to make new simulations with a platform model that reflects the latest
         changes of the real platform. Then, by implementing the same statistical test on the performance predicted by
-        the simulation, we should be be able to detect whether a platform change has affected the application
+        the simulation, we should be able to detect whether a platform change has affected the application
         performance and quantify this effect. A minor performance drop of the computation kernels could be amplified by
         the synchronization phases of the application and become very concerning at a larger scale. Conversely, it could
         also be attenuated by the global noise and go completely unnoticed.
