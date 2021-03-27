@@ -73,7 +73,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \end{figure}
 
         Another approach for estimating the performance of MPI applications is statistical modeling of the application
-        as a whole~\cite{hpl_prediction}.  By running the application several times with small and medium problem (of a
+        as a whole~\cite{hpl_prediction}.  By running the application several times with small and medium problem (or a
         few iterations of large problem sizes) and using simple linear regressions, it is possible to predict its
         makespan for larger sizes with an error of only a few percents and a relatively low cost.  Unfortunately, the
         predictions are limited to the same application configuration and studying the influence of the number of rows
@@ -679,7 +679,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \subfigure[Gain in terms of simulation time.\label{fig:kernel_sampling}]{
                     \begin{minipage}[b]{\linewidth}
                         \includegraphics[width=\linewidth,page=2]{img/prediction/emulating/kernel_modeling.pdf}
-                    \end{minipage}}%\vspace{-1em}
+                    \end{minipage}}
                 \caption{Replacing the calls to computationally expensive functions by a model allows to emulate HPL at
                 a larger scale.}
             \end{figure}
@@ -712,13 +712,13 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             performance and can therefore be safely skipped.  Note that HPL implements an LU factorization with partial
             pivoting, which requires a special treatment of the \texttt{idamax} function that returns the index of the first
             element equaling the maximum absolute value. Although the cost of this function was ignored as well, its return
-            value was has been set to a random (but controlled) value to make the simulation unbiased (but fully
+            value has been set to a random (but controlled) value to make the simulation unbiased (but fully
             deterministic).
 
     \section{Scaling Down Memory Consumption}
         The largest two allocated data structures in HPL are the input matrix \texttt{A} (with a size of typically
         several \si{\giga\byte} per process) and the \texttt{panel} which contains information about the sub-matrix
-        currently being factorized. This sub-matrix typically occupies a few hundred \si{\mega\byte} per process.
+        currently being factorized.
         Unfortunately, when emulating an application with SMPI, all MPI processes are run within the same simulation
         process on a single node and the memory consumption of the simulation can therefore quickly reach several
         \si{\tera\byte} of RAM.  Yet, as we no longer operate on real data, storing the whole input matrix \(A\) is
@@ -750,7 +750,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \tikzstyle{base}=[ellipse, minimum width=2cm, minimum height = 0.5cm, node distance = 0.5cm]
         \tikzstyle{bigswitch}=[base, draw]
         \begin{figure}[htbp]
-            \vspace{-1em}\centering
+            \centering
             \begin{tikzpicture}[yscale=0.5, scale=0.7]
                 \pgfmathtruncatemacro{\size}{4}
                 \pgfmathtruncatemacro{\width}{2}
@@ -809,7 +809,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \draw[decorate,line width=1pt,decoration={brace,raise=0.2cm}] (3.2, 3) -- (5.8, 3) node
                         [pos=0.5, yshift=+0.5cm] {must not be shared};
                     \end{tikzpicture}
-                \end{minipage}}\vspace{-1em}
+                \end{minipage}}
             \subfigure[Reusing panel allocation from an iteration to another.\label{fig:panel_reuse}]{\small
                 \begin{minipage}[b]{\linewidth}\centering
                     \begin{tikzpicture}[yscale=.6,scale=1]
@@ -831,7 +831,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \end{tikzpicture}
                 \end{minipage}%
             }%
-            \end{minipage}}%\vspace{-1em}
+            \end{minipage}}
             \caption{Panel structure and allocation strategy.\label{fig:panel}}
         \end{figure}
 
