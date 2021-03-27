@@ -1,3 +1,5 @@
 {"rule":"CD_NN","sentence":"^\\QThis is more than five times larger than the yearly 2 target to limit the warming to 2 \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
 {"rule":"MASS_AGREEMENT","sentence":"^\\QBerthoud  estimate the greenhouse gas emissions caused by GRICAD another French computing center \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
 {"rule":"MANY_NN","sentence":"^\\QSeveral sensibility analyzes are then performed to quantify the effect of platform variability and showcase an important use case of simulation.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QIn 1791, he was named director of the Bureau du Cadastre.\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QAlthough this was a great reliability improvement to the mechanical parts used before, the vacuum tubes had a very large electricity consumption which started to become problematic (the ENIAC consumed 150 , the EDVAC 56 ).\\E$"}

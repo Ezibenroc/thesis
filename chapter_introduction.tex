@@ -19,7 +19,7 @@
         taking into account the attraction force between the two planets. They carried this computation by splitting the
         orbits in tiny steps, computing the new planet locations for each step. They used these sequences of coordinates
         to compute the orbit of Halley's comet around the Sun, by taking into account the effect of the two giant
-        planets on the comet and neglecting the effect of the comet itself on the three bodies. They were succesful in
+        planets on the comet and neglecting the effect of the comet itself on the three bodies. In the end, they were successful in
         predicting the next appearance of the comet in the beginning of 1759, making an error of only one month. Their
         work constitutes one of the first recorded division of labor applied to computations, Lalande and Lepaute
         computed the orbits of the two giant planets while Clairaut computed the orbit of the comet.
@@ -32,22 +32,22 @@
         tasked to prepare trigonometric tables for this decimal grade system. He organized his staff in a hierarchy of
         three levels:
         \begin{itemize}
-            \item The first class of workers, a handful of renowed scientists like Carnot or Legendre, oversaw the
+            \item The first class of workers, a handful of renowned scientists like Carnot or Legendre, oversaw the
                 operations. They had to research the appropriate formulas for computing approximations of trigonometric
                 functions with basic arithmetical operations.
-            \item The second class, subsequently named \emph{planning commitee}, was a team of eight experienced
+            \item The second class, subsequently named \emph{planning committee}, was a team of eight experienced
                 computers. Their task consisted in translating the trigonometric equations produced by the first class
-                into a sequence of additions and substractions. They prepared worksheets where all the basic operations
+                into a sequence of additions and subtractions. They prepared worksheets where all the basic operations
                 were written with a blank space for the result.
-            \item The third class consisted in nearly ninety computers. Many of them were former servants or wig makers
+            \item The third class consisted in nearly ninety computers. Many of them were former servants or wigmakers
                 that lost their jobs with the Revolution, they did not know any mathematics besides the addition and
-                substraction. Their job was to compute the results to fill the blank spaces left by the second class of
+                subtraction. Their job was to compute the results to fill the blank spaces left by the second class of
                 workers.
         \end{itemize}
 
         The idea of constructing a machine capable of doing computations is not recent. Already in 1642, Blaise Pascal,
         a French mathematician, invented and built a mechanical calculator that could perform the four arithmetical
-        operations. The calculator was not commercialy viable at the time, so only twenty machines were built. Much
+        operations. The calculator was not commercially viable at the time, so only twenty machines were built. Much
         later, in the first half of the nineteenth century, Charles Babbage~\cite[Chapters~2-3]{human_computers}, an
         English mathematician, invented two very innovative machines. The difference engine, for computing tables of
         polynomial functions, and the analytical engine, a general purpose computer that would subsequently be qualified
@@ -55,7 +55,7 @@
         In the same period, a French inventor named Thomas de Colmar designed and manufactured a digital
         mechanical calculator, called arithmometer. Capable of doing the four arithmetical operations, it was the first
         machine of its kind to be reliable enough for a practical use.  Similarly, Herman Hollerith, an American
-        inventor, created the tabulating machine. Initialy built to process the 1890 US Census data, it worked by
+        inventor, created the tabulating machine. Initially built to process the 1890 US Census data, it worked by
         reading and summarizing information stored in punched cards. It decreased considerably the duration and cost of
         the whole census organization. These two last inventions~\cite[Chapter~6]{human_computers} were commercial
         successes and started an era of mechanical computations that lasted until the second half of the twentieth
@@ -63,7 +63,7 @@
 
         Gradually, computing became more and more important and recognized as a discipline. The apparition of modern
         statistics, mainly due to the work of Francis Galton and Karl Pearson in the early twentieth century, led to a
-        growing need for computation power. The First World War itself was an important catalyzer, as the American,
+        growing need for computation power. The First World War itself was an important catalyst, as the American,
         French and English governments hired entire computing laboratories to create ballistic
         tables~\cite[Chapter~10]{human_computers}. By the time, electromechanical computers were used everywhere, for
         their efficiency and reliability largely superior to human computers. There was still an important need for
@@ -81,16 +81,16 @@
 
         An important breakthrough came with the notion of stored-program computer, \ie the idea of storing the program
         instructions in memory. Although the original ideas can be traced to Turing himself and his 1936 article, the
-        real implementation in electronical computers came several years later. The first stored-program computer was
+        real implementation in electronic computers came several years later. The first stored-program computer was
         the \emph{Manchester Baby}, built at the University of Manchester in 1948~\cite{sep-computing-history}.
         Similarly, the successor of the ENIAC, called \emph{EDVAC} was also a stored-program computer. Yet, at the time,
         computers were still using vacuum tubes. Although this was a great reliability improvement to the mechanical
         parts used before, the vacuum tubes had a very large electricity consumption which started to become problematic
-        (the ENIAC consummed \NSI{150}{\kilo\watt}, the EDVAC \NSI{56}{\kilo\watt}). They also required a large number of
+        (the ENIAC consumed \NSI{150}{\kilo\watt}, the EDVAC \NSI{56}{\kilo\watt}). They also required many
         human operators for their daily usage.
 
         The invention of the transistor in 1947 by three Bell Labs physicists had a huge impact on the whole electronic
-        world. It achieves the same functionnality than a vacuum tube (amplifying and switching an electrical signal),
+        world. It achieves the same functionality as a vacuum tube (amplifying and switching an electrical signal),
         but with a much lower power consumption, much smaller size and easier to mass produce. Hence, this is no
         surprise if the industry quickly started to use this new technology. The first transistor computer was made in
         1953 in the University of Manchester. Later, in 1955, IBM announced the first commercial transistor computer,
@@ -129,10 +129,10 @@
 
         One of the main contributions for this exponential growth of the number of transistors is the exponential
         decrease of their size, as plotted in Figure~\ref{fig:context:49_years}. While the IBM 608 calculator
-        commercialized in the 50's had transistors ``no bigger than a paper clip''~\cite{ibm608}, the latest processors
+        commercialized in the 50s had transistors ``no bigger than a paper clip''~\cite{ibm608}, the latest processors
         commercialized in 2020 have \NSI{5}{\nano\meter} transistors.
 
-        In 1974, Dennard~\etal listed a set of rules for scaling silmutaneously the transistor density, clock frequency
+        In 1974, Dennard~\etal listed a set of rules for scaling simultaneously the transistor density, clock frequency
         and power dissipation of processors~\cite{dennard}, which would eventually be named \emph{Dennard scaling}. The
         effect of this scaling on the device is summarized in Table~\ref{tab:dennard}. A scaling of \(\kappa\) will
         result in a clock frequency multiplied by a factor \(\kappa\) and a number of transistors multiplied by
@@ -227,13 +227,13 @@
             can arguably be seen as a stochastic object. Hence, it is very common for the operators or the users of these
             machines to stumble on performance anomalies, \ie the \emph{observed} performance is different from the
             \emph{expected} performance. For instance, Petrini~\etal~\cite{Petrini_2003} found a severe but previously
-            undetected performance problem on the supercomputer they were using, responsible of a \NSI{100}{\percent}
+            undetected performance problem on the supercomputer they were using, responsible for a \NSI{100}{\percent}
             performance variation and caused by operating system perturbations. Likewise,
             Tuncer~\etal~\cite[Section~1]{Tuncer_2017} list several examples of performance problems observed in operation:
             \begin{itemize}
                 \item The amount of variation in application running time can reach \NSI{100}{\percent} on real-life
                     systems~\cite{Bhatele_2013,Skinner}.
-                \item Orphan processes left over from previous jobs consumming system resources~\cite{Brandt_2010}.
+                \item Orphan processes left over from previous jobs consuming system resources~\cite{Brandt_2010}.
                 \item Firmware bugs, affecting the CPU usage on the server and making the user programs
                     fail~\cite{cisco_bug}.
                 \item Memory leaks in applications, eventually leading to job failure~\cite{Agelastos_2015}.
@@ -253,20 +253,20 @@
             researchers estimate that a large part of claimed research findings are
             false~\cite{Ioannidis_2005,freedman}. In this field, the main sources of non-reproducibility are a wrong
             usage of statistics, poor experimental methods or even frauds~\cite{science_misconduct}. In other
-            disciplines such as computationnal biology or computationnal physics, reproducibility issues mainly come
+            disciplines such as computational biology or computational physics, reproducibility issues mainly come
             from numerical instability and the growing complexity of software environments~\cite{dong2021}.
 
             Computer science is not immune to these concerns of statistical misusage, numerical errors or frauds.  A
-            recurrent problem is also the unavailability of the softwares, methods and data on which are based the
+            recurrent problem is also the unavailability of the software programs, methods and data on which are based the
             research articles. For instance, Collberg~\etal examined 601 papers from ACM conferences and journals, they
             were able to personally build the software of only 194 of them while they simply could not access the code
             of 176 of these papers~\cite{collberg2015repeatability}. Likewise, Papadopoulos~\etal propose eight
             methodological principles for better reproducibility and show that most of the published articles
             they surveyed followed all these principles~\cite{Papadopoulos_2019}.
 
-            What may be more surprising is that computer science suffers from the same experiment reproductibility
+            What may be more surprising is that computer science suffers from the same experiment reproducibility
             problems than the other sciences, experimental biases exist and may even be larger. For instance,
-            Mytkowicz~\etal show that simply changing the envifonment variable size can account for a performance
+            Mytkowicz~\etal show that simply changing the environment variable size can account for a performance
             variability of more than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting
             and avoiding such measurement bias, based on experiment randomization. Similarly, Curtsinger and Berger have
             implemented a software for repeatedly re-randomizing the layouts of code, stack and heap at runtime, to
@@ -307,21 +307,21 @@
                 \begin{itemize}
                     \item Automation is a great way to improve both reliability and productivity. It helped tremendously
                         throughout the last century for scientific computations, as shown in
-                        Section~\ref{sec:first_computers}, machines make much less mistakes than humans (if any) and
-                        are much faster. For these reasons, we implemented several softwares during this thesis. We
+                        Section~\ref{sec:first_computers}, machines make much fewer mistakes than humans (if any) and
+                        are much faster. For these reasons, we implemented several programs during this thesis. We
                         automatized the execution of experiments with an experiment engine, presented in
                         Chapter~\ref{chapter:experiment:testbed}. We also implemented several tools, listed in
                         Chapter~\ref{chapter:zenodo}, for automating some parts of the analyses as well as cumbersome
                         daily tasks.
                     \item Several times during this thesis, our performance models were not in agreement with the
-                        reality we observed. In some instances, our models were too simple and we needed to add
+                        reality we observed. In some instances, our models were too simple, and we needed to add
                         complexity to capture some real phenomena, as described in
                         Chapters~\ref{chapter:prediction:modeling} and~\ref{chapter:prediction:validation}. But, most of
                         the time, we suffered from an experimental bias (or the lack thereof). These difficulties are
                         described in depth in Chapter~\ref{chapter:experiment:difficulties}.
-                    \item In an experimental work that span several years, like this thesis, it is very likely that the
+                    \item With an experimental work that span several years, like this thesis, it is very likely that the
                         experiment subject will evolve. In the case of high performance computing, the test machines can
-                        have hardware or software upgrades, or even deffects, that can all affect significantly the
+                        have hardware or software upgrades, or even defects, that can all affect significantly the
                         measured performance. In Chapter~\ref{chapter:experiment:tests}, we present the performance
                         non-regression tests we implemented and used in the second half of this thesis. They helped us
                         to detected numerous platform changes that could have lead to wrong conclusions if unnoticed.
