@@ -100,23 +100,24 @@
 \newcommand{\cashew}{\texttt{cashew}\@\xspace}
 \newcommand{\execo}{\texttt{execo}\@\xspace}
 \newcommand{\enoslib}{\texttt{EnOSlib}\@\xspace}
-\newcommand{\cluster}[2][]{\textcolor{red}{\texttt{#2\ifthenelse{\equal{#1}{}}{}{-#1}}}\@\xspace}
+\newcommand{\cluster}[2][]{\textcolor{myblue}{\texttt{#2\ifthenelse{\equal{#1}{}}{}{-#1}}}\@\xspace}
 \newcommand{\dahu}[1][]{\cluster[#1]{dahu}}
+\newcommand{\dada}[1]{\cluster[#1]{dahu}}  % for some reason, optionnal arguments do not work in subfigure, so I need this crap...
 \newcommand{\drac}{\cluster{drac}}
-\newcommand{\yeti}{\cluster{yeti}}
-\newcommand{\troll}{\cluster{troll}}
+\newcommand{\yeti}[1][]{\cluster[#1]{yeti}}
+\newcommand{\troll}[1][]{\cluster[#1]{troll}}
 \newcommand{\gros}{\cluster{gros}}
-\newcommand{\grisou}{\cluster{grisou}}
+\newcommand{\grisou}[1][]{\cluster[#1]{grisou}}
 \newcommand{\grvingt}{\cluster{grvingt}}
 \newcommand{\paravance}{\cluster{paravance}}
-\newcommand{\parasilo}{\cluster{parasilo}}
+\newcommand{\parasilo}[1][]{\cluster[#1]{parasilo}}
 \newcommand{\paranoia}{\cluster{paranoia}}
 \newcommand{\chiclet}{\cluster{chiclet}}
 \newcommand{\chetemi}{\cluster{chetemi}}
 \newcommand{\pyxis}{\cluster{pyxis}}
 \newcommand{\nova}{\cluster{nova}}
 \newcommand{\taurus}{\cluster{taurus}}
-\newcommand{\ecotype}{\cluster{ecotype}}
+\newcommand{\ecotype}[1][]{\cluster[#1]{ecotype}}
 
 % Referencing several times a footnote
 % See https://tex.stackexchange.com/a/54240

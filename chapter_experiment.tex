@@ -1114,9 +1114,9 @@
 
             To the best of our knowledge, even HPC libraries like OpenBLAS~\cite{openblas} and OpenMPI~\cite{openmpi} do
             not use automated performance tests. OpenBLAS has several benchmarks
-            implemented\footnote{https://github.com/xianyi/OpenBLAS/tree/f917c26e/benchmark}, but they rely on human
+            implemented\footnote{\url{https://github.com/xianyi/OpenBLAS/tree/f917c26e/benchmark}}, but they rely on human
             intervention to run the tests and interpret the performance results. OpenMPI has a software, named
-            MTT\footnote{https://open-mpi.github.io/mtt/}, to automatically deploy a middleware on an infrastructure and
+            MTT\footnote{\url{https://open-mpi.github.io/mtt/}}, to automatically deploy a middleware on an infrastructure and
             run correction tests as well as benchmarks. Yet again, the result of these benchmarks has to be interpreted
             by a human.
 
@@ -1143,7 +1143,7 @@
                 facilitates the creation of parametric micro-benchmarks by adding only a few lines to an existing code.
                 The result can be pretty-printed in the terminal or written in a file in a CSV or JSON format. It is
                 even possible to automatically compute the asymptotic complexity. Finally, they provide a
-                script\footnote{https://github.com/google/benchmark/blob/8f5e6ae0/tools/compare.py} to compare the
+                script\footnote{\url{https://github.com/google/benchmark/blob/8f5e6ae0/tools/compare.py}} to compare the
                 results of two executions of the same benchmark, it will print the difference with a raw value as well
                 as a percentage.  If there is a large enough number of repetitions of these benchmarks, the script can
                 also perform a Mann–Whitney U test to test if the performance for these two series of runs is
@@ -1362,24 +1362,23 @@
             \end{figure}
 
             The workflow, illustrated in Figure~\ref{fig:experiment:g5k_test:workflow}, consists in three main steps.
-            The first one is implemented with \peanut while the two others are implemented with \texttt{cashew}.
+            The first one is implemented with \peanut while the two others are implemented with \cashew.
             \begin{description}
                 \item[Experiment execution] The \dgemm calibration program is executed on the desired nodes. We obtain
                     a \texttt{zip} archive containing the experiment data and metadata.
                 \item[Archive extraction and aggregation] The data is extracted from the archive and appended to two
-                    \texttt{hdf5} files (one for the \dgemm duration, one for the monitoring data). Then, some
+                    HDF5 files (one for the \dgemm duration, one for the monitoring data). Then, some
                     statistics are computed with this new data on a per-CPU and per-experiment basis (\eg average \dgemm
-                    performance and average CPU temperature), these aggregated values are added to two \texttt{csv}
+                    performance and average CPU temperature), these aggregated values are added to two CSV
                     files.
                 \item[Statistical test computation] Several statistical tests are done on the sequence of aggregated
-                    data. The result is presented as several \texttt{jupyter} notebooks containing plots.
+                    data. The result is presented as several Jupyter notebooks containing plots.
             \end{description}
 
 
             \subsubsection{Experiment execution}%
 
-                The experiment script is written in Python and uses the Peanut experiment
-                engine\footnote{\url{https://github.com/Ezibenroc/peanut}} (see
+                The experiment script is written in Python and uses the \peanut experiment engine~\cite{peanut} (see
                 Section~\ref{sec:peanut}). This is also the script used to perform the \dgemm calibrations for HPL
                 simulation (see Part~\ref{part:prediction}).
 
@@ -1430,14 +1429,14 @@
                 this quickly revealed to be too demanding for the runner of our GitLab instance.
 
                 The extraction job is a small script that uses
-                Cashew~\cite{cashew}, a Python library implemented specifically
+                \cashew~\cite{cashew}, a Python library implemented specifically
                 for this task. It performs the following steps:
                 \begin{enumerate}
                     \item Clone the git repository.
                     \item Iterate on all the new archives to extract the performance and monitoring data. Append it to
-                        the two \texttt{hdf5} data files.
+                        the two HDF5 data files.
                     \item Process the new additions in the data files to produce aggregated values, append these
-                        aggregated values to the \texttt{csv} files.
+                        aggregated values to the CSV files.
                     \item Push the changes to the git repository.
                 \end{enumerate}
 
@@ -1505,7 +1504,7 @@
                 An overview of the graphical presentation of these test results is presented in section
                 \ref{sub:presentation_of_the_test_results}.
 
-                As for the previous step, the test is implemented in Cashew and uses a Jupyter notebook. This notebook
+                As for the previous step, the test is implemented with \cashew and uses a Jupyter notebook. This notebook
                 is instantiated and executed several times, once per cluster and per factor. All these copies are then
                 converted to HTML and deployed to a website.
 
@@ -1583,13 +1582,14 @@
 
                 \begin{figure}[htpb]
                     \centering
-                    \subfigure[Performance evolution of node \dahu-14\label{fig:experiment:non_regression:evolution_dahu14}]{
+                    \subfigure[Performance evolution of node \dada{14}.\label{fig:experiment:non_regression:evolution_dahu14}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14.pdf}
                     }
-                    \subfigure[Performance evolution of node \dahu-26\label{fig:experiment:non_regression:evolution_dahu26}]{
+                    \subfigure[Performance evolution of node \dada{26}.\label{fig:experiment:non_regression:evolution_dahu26}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
                     }
-                    \caption{Evolution of the mean performance of the two processors of two nodes from cluster \dahu
+                    \caption{
+                        Evolution of the mean performance of the two processors of two nodes from cluster \dahu
                     (the fluctuation interval has a confidence of \NSI{99.99}{\percent}).}%
                     \label{fig:experiment:non_regression:evolution_dahu}
                 \end{figure}
@@ -1638,11 +1638,11 @@
                 \begin{figure}[htpb]
                     \centering
                     \subfigure[Performance evolution of node
-                        \dahu-14\label{fig:experiment:non_regression:evolution_dahu14_windowed}]{
+                        \dada{14}.\label{fig:experiment:non_regression:evolution_dahu14_windowed}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14_windowed.pdf}
                     }
                     \subfigure[Performance evolution of node
-                    \dahu-26\label{fig:experiment:non_regression:evolution_dahu26_windowed}]{
+                        \dada{26}.\label{fig:experiment:non_regression:evolution_dahu26_windowed}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26_windowed.pdf}
                     }
                     \caption{Evolution of the mean performance of the two processors of two nodes from cluster
@@ -1684,9 +1684,9 @@
                         nodes with the multi-factor test. On the other hand, the single-factor test only marked a subset
                         of the nodes.
                     \item Two events have gone completely unnoticed by the multi-factor test whereas they were reported
-                        by the single-factor test: the positive anomaly on \dahu-26 from 2020/05/18, and the series of
+                        by the single-factor test: the positive anomaly on \dahu[26] from 2020/05/18, and the series of
                         negative anomalies (that we later decided to be outliers) between 2020/11 and 2020/12 on nodes
-                        \dahu-29, \dahu-30, \dahu-31 and \dahu-32. The reason they went
+                        \dahu[29], \dahu[30], \dahu[31] and \dahu[32]. The reason they went
                         unnoticed is that a change was registered shortly before, so the reference set had a very low
                         number of points. The radius of our fluctuation region is proportional to \(Q_F(\gamma, p,
                         n-p)\), it is obviously not defined when \(n \leq p\). When \(n\) is larger than \(p\), the value
@@ -1697,7 +1697,7 @@
 
                         One way to limit this issue is to limit the number of factors used in the test. It appears that
                         only three of the regression parameters are really significant: \(MNK, MK\) and \(NK\). By doing
-                        so, the multi-factor test is able to detect the anomaly from 2020/05/18 on \dahu-26, but
+                        so, the multi-factor test is able to detect the anomaly from 2020/05/18 on \dahu[26], but
                         it still misses the outliers from 2020/11-2020-12.
                 \end{itemize}
                 \begin{figure}[htpb]
@@ -1780,7 +1780,7 @@
                         \draw[-latex] (\labelx, \y) to (\leftcolx, \y) ;
                         \node[label, fill=white] at (\labelx, \y) {\textbf{(c)} Cluster overview (raw value)};
                     \end{tikzpicture}}
-                    \caption{Overview of a notebook (cluster \emph{gros}, average performance).}%
+                    \caption{Overview of a notebook (cluster \gros, average performance).}%
                     \label{fig:experiment:non_regression:zoom_out}
                 \end{figure}
 
@@ -1788,7 +1788,7 @@
         \label{sub:detected_events}
 
             Our non-regression tests have been used on a regular basis on twelve Grid'5000 clusters during a period of
-            several months (from July 2019 to February 2021 for \dahu, the first cluster we started to monitor).
+            several months (from July 2019 to March 2021 for \dahu, the first cluster we started to monitor).
             In total, we have tested 454 nodes (792 processors).
 
             The list and basic characteristics of these clusters is described in table
@@ -1828,15 +1828,15 @@
                         degrees. In a more subtle way, but still significant, the frequency and the \dgemm performance
                         have decreased on a large fraction of the nodes (T-test with a \NSI{95}{\percent} confidence).
                     \item On 2020/04/01, cluster \dahu. The upgrade caused a performance drop of \NSI{5}{\percent}
-                        on node \dahu-26, as well as a decrease of its frequency and temperature. There was also a
+                        on node \dahu[26], as well as a decrease of its frequency and temperature. There was also a
                         statistically significant (albeit very small) change on the other nodes of the cluster (T-test
-                        with a \NSI{95}{\percent} confidence). This issue on \dahu-26 has later been resolved by
+                        with a \NSI{95}{\percent} confidence). This issue on \dahu[26] has later been resolved by
                         an administrator doing a power drain of the node. Note that this return to normal was also
                         detected by our tests.
                     \item On 2020/06/10, cluster \gros. All the nodes of the cluster had a performance drop of
                         about \NSI{1}{\percent}. The frequency has also dropped noticeably.
-                    \item On 2020/09/29, cluster \troll. A very large temperature drop of temperature followed the
-                        upgrade. The largest effect was on CPU n°1 of node \troll-2, where the temperature
+                    \item On 2020/09/29, cluster \troll. A very large temperature drop followed the
+                        upgrade. The largest effect was on CPU n°1 of node \troll[2], where the temperature
                         decreased from \NSI{86}{\celsius} to \NSI{60}{\celsius}. Not all the processors of
                         the cluster encountered this temperature anomaly. In a more subtle but still significant way,
                         the \dgemm performance of several processors has increased. The frequency was not affected.
@@ -1849,8 +1849,8 @@
 
             \subsubsection{Cooling issue}%
 
-                Four nodes from cluster \dahu encountered some issues in two occasions, namely \dahu-13,
-                \dahu-14, \dahu-15 and \dahu-16. Their performance and frequency was lower by
+                Four nodes from cluster \dahu encountered some issues in two occasions, namely \dahu[13],
+                \dahu[14], \dahu[15] and \dahu[16]. Their performance and frequency was lower by
                 \NSI{10}{\percent} whereas their temperature was much higher, especially on their CPU n°0 where it went
                 above \NSI{90}{\celsius} instead of the usual \NSI{20}{\celsius}. Our hypothesis is that for some
                 unknown reason the cooling system of the nodes started to malfunction. It is interesting to note that
@@ -1879,11 +1879,11 @@
 
                 This issue was noticed on the following instances:
                 \begin{itemize}
-                    \item Node \yeti-3 on 2019/07/05.
-                    \item Nodes \dahu-20 and \dahu-24 on 2019/08/14.
-                    \item Nodes \dahu-20 and \dahu-22 on 2019/11/03.
-                    \item Node \dahu-7 on 2020/09/17 and on 2020/09/28.
-                    \item Node \dahu-14 on 2020/09/28.
+                    \item Node \yeti[3] on 2019/07/05.
+                    \item Nodes \dahu[20] and \dahu[24] on 2019/08/14.
+                    \item Nodes \dahu[20] and \dahu[22] on 2019/11/03.
+                    \item Node \dahu[7] on 2020/09/17 and on 2020/09/28.
+                    \item Node \dahu[14] on 2020/09/28.
                 \end{itemize}
 
                 The Grid'5000 team was able to solve this problem, sometimes by inverting two memory sticks, sometimes
@@ -1897,9 +1897,9 @@
                 power consumption on both its processors. We identified at least 68 events of one node having the
                 consumption of one of its processors below \NSI{124}{\watt}, which is already very significant given the
                 extreme stability that we usually observe. On half of these events, the power consumption was below
-                \NSI{119.4}{\watt}. The largest power drop happened on node \dahu-26 on 2020/12/04, where its CPU
+                \NSI{119.4}{\watt}. The largest power drop happened on node \dahu[26] on 2020/12/04, where its CPU
                 n°0 consumed only \NSI{97.5}{\watt}. For reasons we ignore, such power drops happened particularly
-                frequently on the four nodes \dahu-29, \dahu-30, \dahu-31 and \dahu-32 between
+                frequently on the four nodes \dahu[29], \dahu[30], \dahu[31] and \dahu[32] between
                 November 2020 and February 2021. Since the four nodes are part of the same chassis and therefore share
                 their power supply, our first hypothesis was that there could be an issue with the power supply itself.
 
@@ -1911,9 +1911,9 @@
                 them as outliers in the plots.
 
                 After some investigations with Grid'5000 staff, we realized that most of these power drops started to
-                happen when a new cluster, called drac, was installed in the same machine room. It also appears that the
-                jobs where we observed a power drop had been scheduled when most of the drac nodes were used, on the
-                other hand we did not observe any drop when no job was scheduled on the drac nodes. Submitting an idle
+                happen when a new cluster, called \drac, was installed in the same machine room. It also appears that the
+                jobs where we observed a power drop had been scheduled when most of the \drac nodes were used, on the
+                other hand we did not observe any drop when no job was scheduled on the \drac nodes. Submitting an idle
                 job on the whole drac cluster (\ie all the nodes were booted, but idle) was enough to cause a power drop
                 on some \dahu nodes.
 
@@ -1969,21 +1969,21 @@
                     \begin{tabular}{l|lll}
                         Node & Date & Back to normal & Temperature drop\\
                         \hline
-                        \ecotype-24 & 2020/05/21 & 2020/07/02 & \NSI{15}{\celsius} \\
-                        \ecotype-47 & 2020/07/13 & NA & \NSI{15}{\celsius} \\
-                        \grisou-12 & 2020/08/06 & 2021/01/23 & \NSI{15}{\celsius} \\
-                        \parasilo-1 & 2020/09/13 & NA & \NSI{10}{\celsius}\\
-                        \parasilo-11 & 2020/09/19 & NA & \NSI{15}{\celsius}\\
-                        \dahu-29 & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
-                        \dahu-30 & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
+                        \ecotype[24] & 2020/05/21 & 2020/07/02 & \NSI{15}{\celsius} \\
+                        \ecotype[47] & 2020/07/13 & NA & \NSI{15}{\celsius} \\
+                        \grisou[12] & 2020/08/06 & 2021/01/23 & \NSI{15}{\celsius} \\
+                        \parasilo[1] & 2020/09/13 & NA & \NSI{10}{\celsius}\\
+                        \parasilo[11] & 2020/09/19 & NA & \NSI{15}{\celsius}\\
+                        \dahu[29] & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
+                        \dahu[30] & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
                     \end{tabular}
                 \end{table}
 
-                The two nodes \parasilo-1 and \parasilo-11 also had a temperature increase of
+                The two nodes \parasilo[1] and \parasilo[11] also had a temperature increase of
                 \NSI{5}{\celsius} a few weeks later, on 2020/10/06. This new change was not enough to revert the effect
                 of the first change.
 
-                The two nodes \dahu-29 and \dahu-30 had a temperature increase a few weeks later and went
+                The two nodes \dahu[29] and \dahu[30] had a temperature increase a few weeks later and went
                 back to normal, this change coincided with the BIOS upgrade that happened on the whole cluster.
 
     \section{Conclusion and future work}%
@@ -1999,7 +1999,7 @@
 
         We have implemented statistical tests for detecting performance regressions on computers. The novelty of our
         work does not reside on the statistics, our approach is entirely based on a 55-year-old paper. However, to the
-        best of our knowledge, we are the first to apply these statistics for testing performance.
+        best of our knowledge, we are the first to apply these statistics for testing computer performance.
 
         We have monitored 454 nodes from Grid'5000 testbed for more than one year, running new tests several times a
         week. This allowed us to detect multiple events that had a significant effect on the nodes, from subtle
