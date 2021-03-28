@@ -23,7 +23,7 @@
 
     We used three kinds of journal entries:
     \begin{description}
-        \item[Experiment analysis] All the experiments carried during this thesis have been executed by the Peanut
+        \item[Experiment analysis] All the experiments carried during this thesis have been executed by the \peanut
             experiment engine (see Part~\ref{part:experiment}), resulting in an archive containing data and meta-data
             for the experiment. Then, we collected, analyzed and made plots for these archives using literate
             programming, with Jupyter notebooks~\cite{jupyter}. Although this could be done directly within Org-mode,
@@ -105,7 +105,7 @@
 
     This thesis has been written between November 2020 and March 2021, in the midst of the COVID-19 pandemic. At the time
     of the writing, more than two millions persons already died and several millions will probably have long-term
-    medical issues. Yet, this world disaster is arguably much less damaging than global warming. It is now established
+    medical issues. Yet, this world disaster is arguably much less threatening than global warming. It is now established
     that the average temperature on Earth is increasing, mainly caused by anthropogenic emissions of greenhouse gases.
     It is difficult to estimate the damage that will be caused by global warming. The World Health Organization (WHO)
     writes that it is already causing \Num{150000} excess deaths per year~\cite{who_globalwarming_current} and that this
@@ -152,7 +152,7 @@
         This thesis had a very important experimental component, it is therefore natural to expect a large amount of
         computing time usage. Figure~\ref{fig:appendix:node_hours} summarizes the cumulated computing time spent on
         Grid'5000 clusters during these years, grouped by usage type, for a total of \Num{2112014} core hours. The
-        performance tests described in Chapter~\ref{chapter:experiment:tests} represents slightly more than half of this
+        performance tests described in Chapter~\ref{chapter:experiment:tests} represent slightly more than half of this
         total time, which is very large. However, this should be contrasted by the consumption of the official Grid'5000
         tests: the \texttt{ajenkins} user, a bot responsible for periodically verifying the integrity of the platform,
         spent \Num{3272044} cores hours in the year 2020
@@ -168,7 +168,7 @@
         electrical consumption of the machine. It should be noted that French electricity is particularly low-carbon,
         this figure might be significantly larger in other countries that rely more on fuel and coal.
 
-        \begin{figure}[htpb]
+        \begin{figure}[tpb]
             \centering
             \includegraphics[width=\linewidth]{img/appendix/carbon/node_hours.pdf}
             \caption{Core hours used throughout this thesis for each experiment kind. In total, more than
@@ -176,7 +176,7 @@
             \label{fig:appendix:node_hours}
         \end{figure}
 
-        \begin{figure}[htpb]
+        \begin{figure}[tpb]
             \centering
             \includegraphics[width=\linewidth]{img/appendix/carbon/co2_per_hour.pdf}
             \caption{Source of greenhouse gases emission in a French scientific computing center, one core hour emits
