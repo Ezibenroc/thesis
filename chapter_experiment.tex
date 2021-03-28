@@ -224,20 +224,18 @@
     \section{Experimental setup}%
     \label{sec:experimental_setup}
 
-        All the experiments presented in this chapter share a common setup. They have been repeated on several nodes and
-        follow the same steps:
+        All the experiments presented in this chapter share a common setup. They have been repeated on several nodes
+        with \peanut and follow the same steps:
         \begin{enumerate}
             \item Deploy and install a fresh OS on the node.
             \item Run the \texttt{stress} command for 10 minutes to warm the node.
             \item Start a background process~\cite{ratatouille} to monitor the core frequencies and temperature every
                 second.
-            \item On each core, run a custom
-                code\footnote{\url{https://github.com/Ezibenroc/platform-calibration/src/calibration}}
-                to measure the durations of a given operation (either \dgemm or several MPI functions, depending
-                on the experiment).
+            \item On each core, run a custom code~\cite{platform_calibration} to measure the durations of a given
+                operation (either \dgemm or several MPI functions, depending on the experiment).
         \end{enumerate}
 
-        Unless specified otherwise, we used nodes from the Dahu cluster from
+        Unless specified otherwise, we used nodes from the \dahu cluster from
         Grid'5000\footnote{\url{https://www.grid5000.fr/w/Grenoble:Hardware}}. Each of these nodes has two Intel Xeon
         Gold 6130 CPU, which are 16 core CPU from the Skylake generation. They have a base frequency of
         \NSI{2.1}{\giga\hertz} and a turbo frequency of up to \NSI{3.7}{\giga\hertz}, but their turbo frequency is
@@ -269,14 +267,14 @@
 
             Given this requirement, the natural sampling method would be a uniform sampling, taking
             \(S\sim\unif{1}{10^9}\). However, in our experiments, we found out that the breakpoints are not uniformly
-            spread, but rather exponentially. For instance, the \send on the dahu cluster has four
+            spread, but rather exponentially. For instance, the \send on the \dahu cluster has four
             breakpoints: \NSI{8.14}{\kilo\byte}, \NSI{34.0}{\kilo\byte}, \NSI{63.8}{\kilo\byte} and
             \NSI{285}{\mega\byte}. If the sizes of the experiment were uniformly sampled, we would very probably miss
             the smaller breakpoints: by sampling uniformly and independently 1000 numbers in the interval \([1, 10^9]\),
             the probability to have at least one number smaller or equal to \(10^5\) is a bit less than
             \NSI{10}{\percent}. The reason for these exponentially spread breakpoints likely comes from the hardware.
             Typically, each layer of the memory hierarchy is one order of magnitude larger than the previous layer. For
-            instance, each core of a dahu node has \NSI{32}{\kibi\byte} L1 instruction and data caches and one
+            instance, each core of a \dahu node has \NSI{32}{\kibi\byte} L1 instruction and data caches and one
             \NSI{1}{\mebi\byte} L2 cache. Then, the 16 cores of a same CPU share a \NSI{22}{\mebi\byte} L3 cache and
             a \NSI{93}{\gibi\byte} memory.
 
@@ -411,7 +409,7 @@
         The aggregated data is presented in Figure~\ref{fig:randomizing_order:avg_data}. With the shuffled experiment
         (right plot), the average durations have a single-mode, as expected. However, in the non-shuffled case (left
         plot), at least two modes are clearly present. This contradicts the conclusion of the central limit theorem,
-        thereby threatening the analysis experiment. This is confirmed by
+        thereby threatening the analysis of the experiment. This is confirmed by
         Figure~\ref{fig:randomizing_order:distribution}, where we zoomed on a few distinct message sizes between
         \NSI{700}{\byte} and \NSI{800}{\byte}. Each point is the duration of an individual call to \recv,
         the crosses represent the average durations. In the shuffled experiment, on the right, the duration
@@ -441,7 +439,7 @@
         In Figure~\ref{fig:randomizing_order:evolution}, we present the temporal evolution of the durations for the
         calls to \recv made with the sizes presented in Figure~\ref{fig:randomizing_order:distribution}. In the
         non-shuffled case, we can identify a temporal pattern. During the first 20 seconds of the experiment, the
-        calls with sizes \NSI{705}{\byte}, \NSI{741}{\byte} and \NSI{782}{\byte} (in green) have durations above
+        calls with sizes \NSI{705}{\byte}, \NSI{741}{\byte} and \NSI{782}{\byte} (in orange) have durations above
         \NSI{2}{\micro\second} for a large fraction of them, only a small part have durations below
         \NSI{1.5}{\micro\second}. After the 20-second timestamp, this suddenly changes, there are at least two time
         windows where all these calls have a low duration. Even outside these time windows, a much larger fraction of
@@ -520,7 +518,7 @@
             demonstrate this, we have generated three different experiment files using exactly the same generation
             method described previously. These three experiments, named \texttt{A}, \texttt{B} and \texttt{C}, were
             repeated several dozen of times during a week-end in a random order. They have been carried on 8 different
-            nodes of the dahu cluster, for a total of 16 different processors, the results are extremely similar for all
+            nodes of the \dahu cluster, for a total of 16 different processors, the results are extremely similar for all
             of them.
 
             The average \dgemm performance observed in each experiment is reported in
@@ -534,7 +532,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_performance.pdf}
-                \caption{Average performance observed on CPU 1 of dahu-5, each point represents one experiment. A
+                \caption{Average performance observed on CPU 1 of \dahu[5], each point represents one experiment. A
                 significant part of the variability is due to the choice of the experiment file.}%
                 \label{fig:randomizing_sizes:expfile:average_perf}
             \end{figure}
@@ -550,7 +548,7 @@
             \begin{figure}[tpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_distribution.pdf}
-                \caption{Distribution of two of the regression parameters for CPU 1 of dahu-5, each point represents one
+                \caption{Distribution of two of the regression parameters for CPU 1 of \dahu[5], each point represents one
                 experiment. The experiment file has a clear effect on the generated model.}%
                 \label{fig:randomizing_sizes:expfile:average_distribution}
             \end{figure}
@@ -569,7 +567,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/raw_data.png}
-                \caption{Durations of individual \dgemm calls for CPU 1 of dahu-5.
+                \caption{Durations of individual \dgemm calls for CPU 1 of \dahu[5].
                 Several calls have significantly longer durations than others. Identical black line on the three plots,
                 with slope \Num{6.7e-11}.}%
                 \label{fig:randomizing_sizes:expfile:raw_data}
@@ -585,7 +583,7 @@
             \begin{figure}[tpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/expfile/average_power.pdf}
-                \caption{Average DRAM power consumption observed on CPU 1 of dahu-5, each point represents one
+                \caption{Average DRAM power consumption observed on CPU 1 of \dahu[5], each point represents one
                 experiment.}%
                 \label{fig:randomizing_sizes:expfile:average_power}
             \end{figure}
@@ -618,7 +616,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/randomizing_sizes/method/average.pdf}
-                \caption{Average \dgemm performance and power consumption observed on CPU 1 of dahu-5, each point
+                \caption{Average \dgemm performance and power consumption observed on CPU 1 of \dahu[5], each point
                 represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:method}
             \end{figure}
@@ -631,7 +629,7 @@
             Section~\ref{sub:effect_experiment_file_generation_method}, the three \dgemm parameters \(M\), \(N\) and
             \(K\) can take arbitrary values, to avoid any bias. One of the main reasons we make such measures is to
             generate a statistical model of \dgemm durations for simulating HPL. For this model to be faithful, the
-            experimental conditions of our measures must be as realistic as possible to what happens during HPL
+            experimental conditions of our measures must be as realistic as possible compared to what happens during HPL
             execution. However, nearly all the \dgemm calls performed in HPL use the same value for the parameter \(K\),
             equal to HPL block size (\ie the parameter \texttt{NB}). For this reason, biasing the calibrations by using
             a fixed value for \(K\) could help to improve the simulation accuracy. This section investigates the
@@ -647,7 +645,7 @@
             \end{description}
             For each of the five experiment kinds, we have generated several dozen of experiment files. Then, we
             performed one experiment with each of these files in a random order during a week-end on two nodes of the
-            dahu cluster for a total of four different processors. Again the results are similar for all of them, so we
+            \dahu cluster for a total of four different processors. Again the results are similar for all of them, so we
             will focus on a single processor.
 
             Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:performance} presents the observed \dgemm performance
@@ -660,7 +658,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_performance.pdf}
-                \caption{Average \dgemm performance observed on CPU 1 of dahu-5, each point represents one experiment.}%
+                \caption{Average \dgemm performance observed on CPU 1 of \dahu[5], each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:performance}
             \end{figure}
 
@@ -674,7 +672,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_frequency.pdf}
-                \caption{Average CPU frequency, observed on CPU 1 of dahu-5, each point represents one experiment.}%
+                \caption{Average CPU frequency, observed on CPU 1 of \dahu[5], each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:frequency}
             \end{figure}
 
@@ -689,7 +687,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_power_CPU.pdf}
-                \caption{Average CPU power consumption, observed on CPU 1 of dahu-5, each point represents one experiment.}%
+                \caption{Average CPU power consumption, observed on CPU 1 of \dahu[5], each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:power_CPU}
             \end{figure}
 
@@ -702,7 +700,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/average_power_DRAM.pdf}
-                \caption{Average DRAM power consumption, observed on CPU 1 of dahu-5, each point represents one experiment.}%
+                \caption{Average DRAM power consumption, observed on CPU 1 of \dahu[5], each point represents one experiment.}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:power_DRAM}
             \end{figure}
 
@@ -718,7 +716,7 @@
             \begin{figure}[htpb]
                 \centering
                 \includegraphics[width=1\linewidth]{img/experiment/randomizing_sizes/fixing_K/raw_data.png}
-                \caption{Durations of individual \dgemm calls for CPU 1 of dahu-5.}%
+                \caption{Durations of individual \dgemm calls for CPU 1 of \dahu[5].}%
                 \label{fig:randomizing_sizes:expfile:fixing_K:raw_data}
             \end{figure}
 
@@ -800,17 +798,17 @@
                 \toprule
                 Cluster & CPU & Generation & Release date & Anomaly\\
                 \midrule
-                nova & Intel Xeon E5-2620 v4 & Broadwell & Q1'12 & no\\
-                taurus & Intel Xeon E5-2630 & Sandy Bridge & Q1'12 & no\\
-                ecotype & Intel Xeon E5-2630L v4 & Broadwell & Q1'12 &yes\\
-                paranoia & Intel Xeon E5-2660 v2 & Ivy Bridge & Q3'13 & no\\
-                parasilo & Intel Xeon E5-2630 v3 & Haswell & Q3'14 & yes\\
-                chiclet & AMD EPYC 7301 & - & Q2'17 & no\\
-                dahu & Intel Xeon Gold 6130 & Skylake & Q3'17 & yes\\
-                yeti & Intel Xeon Gold 6130 & Skylake & Q3'17 &yes\\
-                pyxis & ARM ThunderX2 99xx & - & Q2'18 & no\\
-                gros & Intel Xeon Gold 5220 & Cascade Lake & Q2'19 & yes\\
-                troll & Intel Xeon Gold 5218 & Cascade Lake & Q2'19 & yes\\
+                \nova & Intel Xeon E5-2620 v4 & Broadwell & Q1'12 & no\\
+                \taurus & Intel Xeon E5-2630 & Sandy Bridge & Q1'12 & no\\
+                \ecotype & Intel Xeon E5-2630L v4 & Broadwell & Q1'12 &yes\\
+                \paranoia & Intel Xeon E5-2660 v2 & Ivy Bridge & Q3'13 & no\\
+                \parasilo & Intel Xeon E5-2630 v3 & Haswell & Q3'14 & yes\\
+                \chiclet & AMD EPYC 7301 & - & Q2'17 & no\\
+                \dahu & Intel Xeon Gold 6130 & Skylake & Q3'17 & yes\\
+                \yeti & Intel Xeon Gold 6130 & Skylake & Q3'17 &yes\\
+                \pyxis & ARM ThunderX2 99xx & - & Q2'18 & no\\
+                \gros & Intel Xeon Gold 5220 & Cascade Lake & Q2'19 & yes\\
+                \troll & Intel Xeon Gold 5218 & Cascade Lake & Q2'19 & yes\\
                 \bottomrule
             \end{tabular}
         \end{table}
@@ -1583,13 +1581,13 @@
 
                 \begin{figure}[htpb]
                     \centering
-                    \subfigure[Performance evolution of node \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14}]{
+                    \subfigure[Performance evolution of node \dahu-14\label{fig:experiment:non_regression:evolution_dahu14}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14.pdf}
                     }
-                    \subfigure[Performance evolution of node \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26}]{
+                    \subfigure[Performance evolution of node \dahu-26\label{fig:experiment:non_regression:evolution_dahu26}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
                     }
-                    \caption{Evolution of the mean performance of the two processors of two nodes from cluster \emph{dahu}
+                    \caption{Evolution of the mean performance of the two processors of two nodes from cluster \dahu
                     (the fluctuation interval has a confidence of \NSI{99.99}{\percent}).}%
                     \label{fig:experiment:non_regression:evolution_dahu}
                 \end{figure}
@@ -1618,7 +1616,7 @@
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview.pdf}
-                    \caption{Overview of the test result for the mean performance on cluster \emph{dahu}.}%
+                    \caption{Overview of the test result for the mean performance on cluster \dahu.}%
                     \label{fig:experiment:non_regression:overview}
                 \end{figure}
 
@@ -1630,7 +1628,7 @@
                 compare five new observations to the reference set, still with a single factor (\(p=1\) and \(r=5\)).
 
                 Figure~\ref{fig:experiment:non_regression:evolution_dahu_windowed} shows the performance evolution of
-                two nodes of the cluster \emph{dahu} with the five experiment window. Taking the average of several runs
+                two nodes of the cluster \dahu with the five experiment window. Taking the average of several runs
                 reduces the noise. This allows reducing considerably the width of the fluctuation interval, thereby
                 permitting to detect much more subtle changes. The downside is that it introduces a lag, the change
                 might not be detected immediately.
@@ -1638,15 +1636,15 @@
                 \begin{figure}[htpb]
                     \centering
                     \subfigure[Performance evolution of node
-                        \emph{dahu-14}\label{fig:experiment:non_regression:evolution_dahu14_windowed}]{
+                        \dahu-14\label{fig:experiment:non_regression:evolution_dahu14_windowed}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14_windowed.pdf}
                     }
                     \subfigure[Performance evolution of node
-                    \emph{dahu-26}\label{fig:experiment:non_regression:evolution_dahu26_windowed}]{
+                    \dahu-26\label{fig:experiment:non_regression:evolution_dahu26_windowed}]{
                         \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26_windowed.pdf}
                     }
                     \caption{Evolution of the mean performance of the two processors of two nodes from cluster
-                    \emph{dahu} using a window of five experiments (the fluctuation interval has a confidence of
+                    \dahu using a window of five experiments (the fluctuation interval has a confidence of
                     \NSI{99.99}{\percent}).}%
                     \label{fig:experiment:non_regression:evolution_dahu_windowed}
                 \end{figure}
@@ -1663,7 +1661,7 @@
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_windowed.pdf}
-                    \caption{Overview of the test result for the mean performance on cluster \emph{dahu} using a window
+                    \caption{Overview of the test result for the mean performance on cluster \dahu using a window
                     of five experiments.}%
                     \label{fig:experiment:non_regression:overview_windowed}
                 \end{figure}
@@ -1684,9 +1682,9 @@
                         nodes with the multi-factor test. On the other hand, the single-factor test only marked a subset
                         of the nodes.
                     \item Two events have gone completely unnoticed by the multi-factor test whereas they were reported
-                        by the single-factor test: the positive anomaly on \emph{dahu-26} from 2020/05/18, and the series of
+                        by the single-factor test: the positive anomaly on \dahu-26 from 2020/05/18, and the series of
                         negative anomalies (that we later decided to be outliers) between 2020/11 and 2020/12 on nodes
-                        \emph{dahu-29}, \emph{dahu-30}, \emph{dahu-31} and \emph{dahu-32}. The reason they went
+                        \dahu-29, \dahu-30, \dahu-31 and \dahu-32. The reason they went
                         unnoticed is that a change was registered shortly before, so the reference set had a very low
                         number of points. The radius of our fluctuation region is proportional to \(Q_F(\gamma, p,
                         n-p)\), it is obviously not defined when \(n \leq p\). When \(n\) is larger than \(p\), the value
@@ -1697,13 +1695,13 @@
 
                         One way to limit this issue is to limit the number of factors used in the test. It appears that
                         only three of the regression parameters are really significant: \(MNK, MK\) and \(NK\). By doing
-                        so, the multi-factor test is able to detect the anomaly from 2020/05/18 on \emph{dahu-26}, but
+                        so, the multi-factor test is able to detect the anomaly from 2020/05/18 on \dahu-26, but
                         it still misses the outliers from 2020/11-2020-12.
                 \end{itemize}
                 \begin{figure}[htpb]
                     \centering
                     \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_multifactor.pdf}
-                    \caption{Overview of the test result for the eight regression parameters on cluster \emph{dahu}.}
+                    \caption{Overview of the test result for the eight regression parameters on cluster \dahu.}
                     \label{fig:experiment:non_regression:overview_multifactor}
                 \end{figure}
 
@@ -1788,7 +1786,7 @@
         \label{sub:detected_events}
 
             Our non-regression tests have been used on a regular basis on twelve Grid'5000 clusters during a period of
-            several months (from July 2019 to February 2021 for \emph{dahu}, the first cluster we started to monitor).
+            several months (from July 2019 to February 2021 for \dahu, the first cluster we started to monitor).
             In total, we have tested 454 nodes (792 processors).
 
             The list and basic characteristics of these clusters is described in table
@@ -1801,18 +1799,18 @@
                 \begin{tabular}{l|llll}
                     Cluster & Nodes & CPU & Cores & Memory\\
                     \hline
-                    chetemi   & 15  & \(2\times\) Intel Xeon E5-2630 v4  & \(2\times10\) & \NSI{256}{\gibi\byte}\\
-                    chiclet   & 8   & \(2\times\) AMD EPYC 7301          & \(2\times16\) & \NSI{128}{\gibi\byte}\\
-                    dahu      & 32  & \(2\times\) Intel Xeon Gold 6130   & \(2\times16\) & \NSI{192}{\gibi\byte}\\
-                    ecotype   & 48  & \(2\times\) Intel Xeon E5-2630L v4 & \(2\times10\) & \NSI{128}{\gibi\byte}\\
-                    grisou    & 51  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
-                    gros      & 124 & \(1\times\) Xeon Gold 5220         & \(1\times18\) & \NSI{96}{\gibi\byte}\\
-                    grvingt   & 64  & \(2\times\) Intel Xeon Gold 6130   & \(2\times16\) & \NSI{192}{\gibi\byte}\\
-                    parasilo  & 28  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
-                    paravance & 72  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
-                    pyxis     & 4   & \(2\times\) ThunderX2 99xx         & \(2\times32\) & \NSI{256}{\gibi\byte}\\
-                    troll     & 4   & \(2\times\) Intel Xeon Gold 5218   & \(2\times16\) & \NSI{384}{\gibi\byte}\\
-                    yeti      & 4   & \(4\times\) Intel Xeon Gold 6130   & \(4\times16\) & \NSI{768}{\gibi\byte}\\
+                    \chetemi   & 15  & \(2\times\) Intel Xeon E5-2630 v4  & \(2\times10\) & \NSI{256}{\gibi\byte}\\
+                    \chiclet   & 8   & \(2\times\) AMD EPYC 7301          & \(2\times16\) & \NSI{128}{\gibi\byte}\\
+                    \dahu      & 32  & \(2\times\) Intel Xeon Gold 6130   & \(2\times16\) & \NSI{192}{\gibi\byte}\\
+                    \ecotype   & 48  & \(2\times\) Intel Xeon E5-2630L v4 & \(2\times10\) & \NSI{128}{\gibi\byte}\\
+                    \grisou    & 51  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
+                    \gros      & 124 & \(1\times\) Xeon Gold 5220         & \(1\times18\) & \NSI{96}{\gibi\byte}\\
+                    \grvingt   & 64  & \(2\times\) Intel Xeon Gold 6130   & \(2\times16\) & \NSI{192}{\gibi\byte}\\
+                    \parasilo  & 28  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
+                    \paravance & 72  & \(2\times\) Intel Xeon E5-2630 v3  & \(2\times8\)  & \NSI{128}{\gibi\byte}\\
+                    \pyxis     & 4   & \(2\times\) ThunderX2 99xx         & \(2\times32\) & \NSI{256}{\gibi\byte}\\
+                    \troll     & 4   & \(2\times\) Intel Xeon Gold 5218   & \(2\times16\) & \NSI{384}{\gibi\byte}\\
+                    \yeti      & 4   & \(4\times\) Intel Xeon Gold 6130   & \(4\times16\) & \NSI{768}{\gibi\byte}\\
                 \end{tabular}
             \end{table}
 
@@ -1824,33 +1822,33 @@
                 cluster. Most of the time, it does not affect the nodes noticeably, but we did measure a
                 significant change on several occasions.
                 \begin{itemize}
-                    \item On 2020/02/06, cluster \emph{gros}. The temperature of all the nodes increased by several
+                    \item On 2020/02/06, cluster \gros. The temperature of all the nodes increased by several
                         degrees. In a more subtle way, but still significant, the frequency and the \dgemm performance
                         have decreased on a large fraction of the nodes (T-test with a \NSI{95}{\percent} confidence).
-                    \item On 2020/04/01, cluster \emph{dahu}. The upgrade caused a performance drop of \NSI{5}{\percent}
-                        on node \emph{dahu-26}, as well as a decrease of its frequency and temperature. There was also a
+                    \item On 2020/04/01, cluster \dahu. The upgrade caused a performance drop of \NSI{5}{\percent}
+                        on node \dahu-26, as well as a decrease of its frequency and temperature. There was also a
                         statistically significant (albeit very small) change on the other nodes of the cluster (T-test
-                        with a \NSI{95}{\percent} confidence). This issue on \emph{dahu-26} has later been resolved by
+                        with a \NSI{95}{\percent} confidence). This issue on \dahu-26 has later been resolved by
                         an administrator doing a power drain of the node. Note that this return to normal was also
                         detected by our tests.
-                    \item On 2020/06/10, cluster \emph{gros}. All the nodes of the cluster had a performance drop of
+                    \item On 2020/06/10, cluster \gros. All the nodes of the cluster had a performance drop of
                         about \NSI{1}{\percent}. The frequency has also dropped noticeably.
-                    \item On 2020/09/29, cluster \emph{troll}. A very large temperature drop of temperature followed the
-                        upgrade. The largest effect was on CPU n°1 of node \emph{troll-2}, where the temperature
+                    \item On 2020/09/29, cluster \troll. A very large temperature drop of temperature followed the
+                        upgrade. The largest effect was on CPU n°1 of node \troll-2, where the temperature
                         decreased from \NSI{86}{\celsius} to \NSI{60}{\celsius}. Not all the processors of
                         the cluster encountered this temperature anomaly. In a more subtle but still significant way,
                         the \dgemm performance of several processors has increased. The frequency was not affected.
-                    \item On 2020/10/01, cluster \emph{gros}. The average \dgemm performance of nearly all nodes had a
+                    \item On 2020/10/01, cluster \gros. The average \dgemm performance of nearly all nodes had a
                         small but significant increase. The frequency has also slightly increased, whereas the
                         temperature was not affected.
-                    \item On 2020/12/15, cluster \emph{dahu}. A large fraction of the nodes had a performance increase
+                    \item On 2020/12/15, cluster \dahu. A large fraction of the nodes had a performance increase
                         of \NSI{1}{\percent}. The frequency also slightly increased and the temperature decreased.
                 \end{itemize}
 
             \subsubsection{Cooling issue}%
 
-                Four nodes from cluster \emph{dahu} encountered some issues in two occasions, namely \emph{dahu-13},
-                \emph{dahu-14}, \emph{dahu-15} and \emph{dahu-16}. Their performance and frequency was lower by
+                Four nodes from cluster \dahu encountered some issues in two occasions, namely \dahu-13,
+                \dahu-14, \dahu-15 and \dahu-16. Their performance and frequency was lower by
                 \NSI{10}{\percent} whereas their temperature was much higher, especially on their CPU n°0 where it went
                 above \NSI{90}{\celsius} instead of the usual \NSI{20}{\celsius}. Our hypothesis is that for some
                 unknown reason the cooling system of the nodes started to malfunction. It is interesting to note that
@@ -1879,11 +1877,11 @@
 
                 This issue was noticed on the following instances:
                 \begin{itemize}
-                    \item Node \emph{yeti-3} on 2019/07/05.
-                    \item Nodes \emph{dahu-20} and \emph{dahu-24} on 2019/08/14.
-                    \item Nodes \emph{dahu-20} and \emph{dahu-22} on 2019/11/03.
-                    \item Node \emph{dahu-7} on 2020/09/17 and on 2020/09/28.
-                    \item Node \emph{dahu-14} on 2020/09/28.
+                    \item Node \yeti-3 on 2019/07/05.
+                    \item Nodes \dahu-20 and \dahu-24 on 2019/08/14.
+                    \item Nodes \dahu-20 and \dahu-22 on 2019/11/03.
+                    \item Node \dahu-7 on 2020/09/17 and on 2020/09/28.
+                    \item Node \dahu-14 on 2020/09/28.
                 \end{itemize}
 
                 The Grid'5000 team was able to solve this problem, sometimes by inverting two memory sticks, sometimes
@@ -1891,15 +1889,15 @@
 
             \subsubsection{Power instability}%
 
-                The CPU power consumption on nodes from cluster \emph{dahu} is very stable when the \dgemm calls are
+                The CPU power consumption on nodes from cluster \dahu is very stable when the \dgemm calls are
                 performed. On a normal experiment, each individual processor has an average consumption between
                 \NSI{124.63}{\watt} and \NSI{124.65}{\watt}. Yet, sometimes one node has a large drop of the CPU
                 power consumption on both its processors. We identified at least 68 events of one node having the
                 consumption of one of its processors below \NSI{124}{\watt}, which is already very significant given the
                 extreme stability that we usually observe. On half of these events, the power consumption was below
-                \NSI{119.4}{\watt}. The largest power drop happened on node \emph{dahu-26} on 2020/12/04, where its CPU
+                \NSI{119.4}{\watt}. The largest power drop happened on node \dahu-26 on 2020/12/04, where its CPU
                 n°0 consumed only \NSI{97.5}{\watt}. For reasons we ignore, such power drops happened particularly
-                frequently on the four nodes \emph{dahu-29}, \emph{dahu-30}, \emph{dahu-31} and \emph{dahu-32} between
+                frequently on the four nodes \dahu-29, \dahu-30, \dahu-31 and \dahu-32 between
                 November 2020 and February 2021. Since the four nodes are part of the same chassis and therefore share
                 their power supply, our first hypothesis was that there could be an issue with the power supply itself.
 
@@ -1915,16 +1913,16 @@
                 jobs where we observed a power drop had been scheduled when most of the drac nodes were used, on the
                 other hand we did not observe any drop when no job was scheduled on the drac nodes. Submitting an idle
                 job on the whole drac cluster (\ie all the nodes were booted, but idle) was enough to cause a power drop
-                on some dahu nodes.
+                on some \dahu nodes.
 
-                This drac cluster is made of 12 nodes, each node has two Power8 CPUs and four Nvidia Tesla P100 GPU.
+                This \drac cluster is made of 12 nodes, each node has two Power8 CPUs and four Nvidia Tesla P100 GPU.
                 When booted but idle, a single node has a power consumption between \NSI{600}{\watt} and
                 \NSI{800}{\watt}, this consumption can rise to more than \NSI{2000}{\watt} when the nodes are under
-                heavy load. This is a large consumption compared to other Grid'5000 nodes (the dahu nodes consume about
+                heavy load. This is a large consumption compared to other Grid'5000 nodes (the \dahu nodes consume about
                 \NSI{350}{\watt} at most).
 
                 These later findings tend to confirm our initial hypothesis: the power supply cannot sustain enough
-                power, which results in a power drop, a frequency drop and a performance drop on some nodes of dahu
+                power, which results in a power drop, a frequency drop and a performance drop on some nodes of \dahu
                 cluster.
 
             \subsubsection{System upgrade}%
@@ -1935,7 +1933,7 @@
                 from version 0.3.1 to version 0.3.13.  OpenBLAS had several changes between these two versions,
                 including the AVX512 support for \dgemm (until now, they only used AVX2).
 
-                This resulted in huge changes on a lot of clusters. For instance, on cluster dahu:
+                This resulted in huge changes on a lot of clusters. For instance, on cluster \dahu:
                 \begin{itemize}
                     \item The average performance increased from \NSI{27}{\giga\flop/\second} per core to
                         \NSI{45}{\giga\flop/\second}.
@@ -1944,12 +1942,12 @@
                     \item The mean power consumption of the CPU and the temperature were not affected significantly.
                 \end{itemize}
                 The same observations could be made on nearly all clusters. We also observed significant drops of CPU
-                power consumption on some nodes of a few clusters (\eg on troll or gros clusters).
+                power consumption on some nodes of a few clusters (\eg on \troll or \gros clusters).
 
                 The performance increase is understandable, \dgemm is a compute-intensive kernel for dense linear
                 algebra, it was expected that wider vector instructions would be more efficient. It is also expected
                 that the maximal turbo frequency of processors depends on the workload, for instance Intel Xeon Gold
-                6130 CPU (the processor of the dahu nodes) has a maximal frequency of \NSI{2.8}{\giga\hertz} when all
+                6130 CPU (the processor of the \dahu nodes) has a maximal frequency of \NSI{2.8}{\giga\hertz} when all
                 cores are active with normal instructions, \NSI{2.4}{\giga\hertz} when all cores are active with AVX2
                 instructions and \NSI{1.9}{\giga\hertz} when all cores are active with AVX512
                 instructions\footnote{\url{https://en.wikichip.org/wiki/intel/xeon\_gold/6130}}.
@@ -1969,21 +1967,21 @@
                     \begin{tabular}{l|lll}
                         Node & Date & Back to normal & Temperature drop\\
                         \hline
-                        \emph{ecotype-24} & 2020/05/21 & 2020/07/02 & \NSI{15}{\celsius} \\
-                        \emph{ecotype-47} & 2020/07/13 & NA & \NSI{15}{\celsius} \\
-                        \emph{grisou-12} & 2020/08/06 & 2021/01/23 & \NSI{15}{\celsius} \\
-                        \emph{parasilo-1} & 2020/09/13 & NA & \NSI{10}{\celsius}\\
-                        \emph{parasilo-11} & 2020/09/19 & NA & \NSI{15}{\celsius}\\
-                        \emph{dahu-29} & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
-                        \emph{dahu-30} & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
+                        \ecotype-24 & 2020/05/21 & 2020/07/02 & \NSI{15}{\celsius} \\
+                        \ecotype-47 & 2020/07/13 & NA & \NSI{15}{\celsius} \\
+                        \grisou-12 & 2020/08/06 & 2021/01/23 & \NSI{15}{\celsius} \\
+                        \parasilo-1 & 2020/09/13 & NA & \NSI{10}{\celsius}\\
+                        \parasilo-11 & 2020/09/19 & NA & \NSI{15}{\celsius}\\
+                        \dahu-29 & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
+                        \dahu-30 & 2020/10/15 & 2020/12/15 & \NSI{5}{\celsius}\\
                     \end{tabular}
                 \end{table}
 
-                The two nodes \emph{parasilo-1} and \emph{parasilo-11} also had a temperature increase of
+                The two nodes \parasilo-1 and \parasilo-11 also had a temperature increase of
                 \NSI{5}{\celsius} a few weeks later, on 2020/10/06. This new change was not enough to revert the effect
                 of the first change.
 
-                The two nodes \emph{dahu-29} and \emph{dahu-30} had a temperature increase a few weeks later and went
+                The two nodes \dahu-29 and \dahu-30 had a temperature increase a few weeks later and went
                 back to normal, this change coincided with the BIOS upgrade that happened on the whole cluster.
 
     \section{Conclusion and future work}%

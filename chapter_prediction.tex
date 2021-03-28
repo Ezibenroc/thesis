@@ -596,7 +596,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         2017, the Theta supercomputer at ANL was ranked 18th with a performance of \NSI{5884.6}{\tera\flops}
         but required a 28-hour run on the
         whole machine. Finally, we ran HPL ourselves on a Grid'5000 cluster
-        named Dahu whose software stack could be fully controlled.
+        named \dahu whose software stack could be fully controlled.
 
         \begin{table}[hb]
             \caption{Typical runs of HPL.}
@@ -1145,7 +1145,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             Chapter~\ref{chapter:prediction:validation}, but the relevance of models~\eqref{eq:dgemm.temporal}
             and~\eqref{eq:dgemm.spatial} requires some attention.
             Figure~\ref{fig:whatif_calibration} represent the empirical distribution of \(\mu_{p,d} =
-            (\alpha_{p,d},\beta_{p,d},\gamma_{p,d})\) (the result of the linear regression) for the 32 nodes of the Dahu
+            (\alpha_{p,d},\beta_{p,d},\gamma_{p,d})\) (the result of the linear regression) for the 32 nodes of the \dahu
             cluster on 40 different days from November 2019 to February 2020. The distribution for each node appears
             approximately normal and passed a Shapiro-Wilk normality test. Although the distribution of the
             \(\beta_{p,d}\) appears slightly skewed toward larger values and one of the nodes (the one with the larger
@@ -1408,7 +1408,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             does not make such guarantees. Here we suppose that the thresholds used in both functions are the same.
 
             In our tests, we found that the three protocols did not always exist, the threshold will depend on the
-            hardware. For instance, on dahu cluster, the semantic breakpoints found by the two binary search are equal.
+            hardware. For instance, on \dahu cluster, the semantic breakpoints found by the two binary search are equal.
             This means that the \emph{detached} mode does not exist on this cluster (for a given size \texttt{N}, either
             we have both a deadlock with program~\ref{algo:semantic:deadlock} and a corruption with
             program~\ref{algo:semantic:corruption}, or we have none, there is no alternative combination).
@@ -1709,7 +1709,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
                 The quality of the fit computed by pycewise with the logarithmic objective function is demonstrated in
                 Figure~\ref{fig:prediction:pycewise_demo}. We executed our MPI calibration program on four clusters of
-                Grid'5000: dahu, gros, paravance and pyxis. For each of them, we measured the duration of individual
+                Grid'5000: \dahu, \gros, \paravance and \pyxis. For each of them, we measured the duration of individual
                 \recv, \send and a whole ping-pong for various message sizes. Once again, we aggregated the data by
                 taking the average duration for each message size. In this figure, one piecewise regression is computed
                 for each cluster/operation pair. We also plotted with a small dotted line the regression we would get
@@ -1782,7 +1782,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     \section{Experimental setup}%
     \label{sec:experimental_setup}
         To evaluate the soundness of our approach, we compare several real executions of HPL with simulations using the
-        previous models.  We used the Dahu cluster from the Grid'5000 testbed. It has 32 nodes connected through a
+        previous models.  We used the \dahu cluster from the Grid'5000 testbed. It has 32 nodes connected through a
         single switch by \SI{100}{\giga\bit\per\second} Omni-Path links. Each node has two Intel Xeon Gold 6130 CPU with
         16 cores per CPU and we disabled hyperthreading.  We used HPL version 2.2 compiled with GCC version 6.3.0. We
         also used the libraries OpenMPI version 2.0.2 and OpenBLAS version 0.3.1. We used one single-threaded
@@ -1935,7 +1935,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \texttt{DEPTH}     & 1             \\
                 \end{tabular}}
             \end{minipage}
-            \caption{HPL performance: predictions vs. reality (effect of the cooling issue on the nodes dahu-\{13,14,15,16\}).}
+            \caption{HPL performance: predictions vs. reality (effect of the cooling issue on the nodes \dahu-\{13,14,15,16\}).}
             \label{fig:validation_temperature}
         \end{figure}
 
