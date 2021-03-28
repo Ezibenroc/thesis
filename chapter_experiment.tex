@@ -32,20 +32,20 @@
 
             For these reasons, it is a common practice to use an experiment engine. Buchert~\etal describe the features
             of eight different engines~\cite{buchert:hal-01087519}. To the best of our knowledge, only three offer a
-            native support for Grid'5000, namely Expo, XPFlow and Execo. Unfortunately, Expo and XPFlow are now longer
-            maintained, the last commit in their respective repositories was done on November 2014 and September 2015
-            For these reasons, the experiment engine Execo~\cite{Imbert_2013} is often recommended to Grid'5000
-            newcomers.
+            native support for Grid'5000, namely \texttt{expo}, \texttt{XPFlow} and \execo. Unfortunately, \texttt{expo}
+            and \texttt{XPFlow} are now longer maintained, the last commit in their respective repositories was done on
+            November 2014 and September 2015 For these reasons, the experiment engine \execo~\cite{Imbert_2013} is often
+            recommended to Grid'5000 newcomers.
 
-            Experiments with Execo are described as a Python script. We believe this is one of its best qualities, as it
+            Experiments with \execo are described as a Python script. We believe this is one of its best qualities, as it
             offers a lot of freedom and flexibility to the experimenter, comparatively to other experiment engines that
             use custom domain specific languages (DSL). Yet, we made the choice to not use it. The main reason is that a
-            typical Execo experiment uses many low-level constructs that are really unpleasant and unintuitive to write
-            and read. Section~\ref{sub:comparison_with_execo} will present some comparisons. Furthermore, Execo lacks
+            typical \execo experiment uses many low-level constructs that are really unpleasant and unintuitive to write
+            and read. Section~\ref{sub:comparison_with_execo} will present some comparisons. Furthermore, \execo lacks
             many important features, like node instrumentation and metadata collection, \ie we would still have needed
-            to implement many functionalities on top of Execo.
+            to implement many functionalities on top of \execo.
 
-    \section{Yet another experiment engine: \texttt{peanut}}%
+    \section{Yet another experiment engine: \peanut}%
     \label{sec:peanut}
         %% TODO
         %% Différents moyens mis en oeuvre pour faciliter la reproductibilité (au sens
@@ -67,8 +67,8 @@
         %%   section.
         \subsection{Key features}%
         \label{sub:key_features}
-            We implemented our own experiment engine, named \texttt{peanut}. It comes as a Python library that
-            experimenters can use to write their own experiments, also as a Python script.
+            We implemented our own experiment engine, named \peanut~\cite{peanut}. It comes as a Python library
+            that experimenters can use to write their own experiments, also as a Python script.
 
             A new experiment can be defined by inheriting from the class \texttt{Job}. Three methods can be overridden,
             \texttt{setup}, \texttt{run\_exp} and \texttt{teardown}.
@@ -94,7 +94,7 @@
                         \item Machine-parsable log of the commands (in JSON format) with their timestamps and output
                             (both \texttt{stdout} and \texttt{stderr}).
                         \item Machine-parsable file (in Yaml format) containing relevant information like
-                            the exact versions used for \texttt{peanut}, \texttt{gcc}, \texttt{MPI} and the Linux
+                            the exact versions used for \peanut, \texttt{gcc}, \texttt{MPI} and the Linux
                             kernel, the command line that was used to launch this experiment, the cluster and the list
                             of nodes, start and end timestamps for each of the three main methods, the list of the git
                             repositories cloned during this experiment with their remote URL and the git hash of the
@@ -105,7 +105,7 @@
                     \end{itemize}
             \end{itemize}
             In addition, the experiment can be executed interactively in a Python terminal. All the implicit
-            : functionalities described previously can also be explicitly called (\eg there are methods
+            functionalities described previously can also be explicitly called (\eg there are methods
             \texttt{disable\_hyperthreading}, \texttt{start\_monitoring} and \texttt{perform\_stress}).
 
             An experiment can be parameterized by two means:
@@ -119,10 +119,10 @@
                     \texttt{K} used by \dgemm).
             \end{itemize}
 
-        \subsection{Comparison with Execo}%
+        \subsection{Comparison with \execo}%
         \label{sub:comparison_with_execo}
 
-            In this section, we use a small example to illustrate some differences between \texttt{peanut} and
+            In this section, we use a small example to illustrate some differences between \peanut and
             \texttt{execo}. The goal is to write an experiment that will take several nodes on a given Grid'5000
             cluster, compile the \texttt{CRoaring} library\footnote{\url{https://github.com/RoaringBitmap/CRoaring}} and
             run one of its benchmarks.
@@ -138,10 +138,10 @@
             }
             \lstset{basicstyle=\scriptsize, style=custom_lst_style}
 
-            First, Listing~\ref{lst:engine:execo} shows such an experiment using Execo. Run with: \verb#python script.py#\\
+            First, Listing~\ref{lst:engine:execo} shows such an experiment using \execo. Run with: \verb#python script.py#\\
 
             \lstinputlisting[language={Python},label={lst:engine:execo},
-                caption={Small experiment example using Execo.}]{
+                caption={Small experiment example using \execo.}]{
                 img/experiment/engine/mweExeco.py
             }
 
@@ -154,34 +154,34 @@
 
             \verb#OarSubmission(cluster="dahu", nodes=2, walltime="00:20:00")#
 
-            Now, Listing~\ref{lst:engine:peanut_class} demonstrates how the same experiment can be rewritten using Peanut
-            in a much more concise and readable way.
+            Now, Listing~\ref{lst:engine:peanut_class} demonstrates how the same experiment can be rewritten using
+            \peanut in a much more concise and readable way.
 
             Run with: \verb#peanut script.py run tocornebize --deploy debian9-x64-base \#\\
             \verb#    --cluster dahu --nbnodes 2 --walltime 00:20:00#
 
             \lstinputlisting[language=Python,label={lst:engine:peanut_class},
-                caption={Small experiment example using Peanut.}]{
+                caption={Small experiment example using \peanut.}]{
                 img/experiment/engine/mwePeanut.py
             }
 
-            The script is not only twice shorter, it is also much more elegant. Furthermore, it accomplishes much more
-            than Listing~\ref{lst:engine:execo}, as it produces a peanut archive with all the metadata related to the
-            experiment.
+            The script is not only twice shorter, it is also arguably much more pleasant to read. Furthermore, it
+            accomplishes a lot more than Listing~\ref{lst:engine:execo}, as it produces a peanut archive with all the
+            metadata related to the experiment.
 
-        \subsection{EnOSlib, a promising alternative}%
+        \subsection{\enoslib, a promising alternative}%
         \label{sub:enoslib}
 
-            A recent experiment engine, called \texttt{EnOSlib}~\cite{enoslib}, appears to be promising. It is a Python
-            library that allows an easy deployment and execution of experiments. The experiment scripts written with
-            \texttt{EnOSlib} are concise and readable, thanks to well-designed abstractions. Compared to \texttt{Peanut}
-            which has been solely implemented and used for Grid'5000 platform, \texttt{EnOSlib} offers multiple
-            backends.  One issue is that it currently does not support the archive building of \texttt{Peanut} with the
-            automatic collection of experiment data and meta-data.
+            A recent experiment engine, called \enoslib~\cite{enoslib}, appears to be promising. It is a Python library
+            that allows an easy deployment and execution of experiments. The experiment scripts written with \enoslib
+            are concise and readable, thanks to well-designed abstractions. Compared to \peanut which has been solely
+            implemented and used for Grid'5000 platform, \enoslib offers multiple backends.  One issue is that it
+            currently does not support the archive building of \peanut with the automatic collection of experiment data
+            and meta-data.
 
-            At the time we started working on \texttt{Peanut}, we did not know about \texttt{EnOSlib}, which was at its
-            early stage of development and not yet advertised. Today, we believe it would be better to join forces and
-            port the main features of \texttt{Peanut} in \texttt{EnOSlib}.
+            At the time we started working on \peanut, we did not know about \enoslib, which was at its early stage of
+            development and not yet advertised. Today, we believe it would be better to join forces and port the main
+            features of \peanut in \enoslib.
 
 \chapter{On the difficulties of experimentation}%
 \label{chapter:experiment:difficulties}
@@ -1362,7 +1362,7 @@
             \end{figure}
 
             The workflow, illustrated in Figure~\ref{fig:experiment:g5k_test:workflow}, consists in three main steps.
-            The first one is implemented with \texttt{peanut} while the two others are implemented with \texttt{cashew}.
+            The first one is implemented with \peanut while the two others are implemented with \texttt{cashew}.
             \begin{description}
                 \item[Experiment execution] The \dgemm calibration program is executed on the desired nodes. We obtain
                     a \texttt{zip} archive containing the experiment data and metadata.
