@@ -517,7 +517,7 @@
             used for the experiment had a significant effect on the statistical model obtained with these measures. To
             demonstrate this, we have generated three different experiment files using exactly the same generation
             method described previously. These three experiments, named \texttt{A}, \texttt{B} and \texttt{C}, were
-            repeated several dozen of times during a week-end in a random order. They have been carried on 8 different
+            repeated several dozens of times during a week-end in a random order. They have been carried on 8 different
             nodes of the \dahu cluster, for a total of 16 different processors, the results are extremely similar for all
             of them.
 
@@ -643,7 +643,7 @@
                     chosen randomly in \{128,256,512\}. This is equivalent to concatenating three files generated with
                     the \emph{fixed K} method and then shuffling the resulting file.
             \end{description}
-            For each of the five experiment kinds, we have generated several dozen of experiment files. Then, we
+            For each of the five experiment kinds, we have generated several dozens of experiment files. Then, we
             performed one experiment with each of these files in a random order during a week-end on two nodes of the
             \dahu cluster for a total of four different processors. Again the results are similar for all of them, so we
             will focus on a single processor.
@@ -662,7 +662,7 @@
                 \label{fig:randomizing_sizes:expfile:fixing_K:performance}
             \end{figure}
 
-            The monitoring data collected during the experiments also reveal interesting differences. The average CPU
+            The monitoring data collected during the experiments also reveals interesting differences. The average CPU
             frequency is reported in Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:frequency}. It appears that the
             frequency is the highest with \(K=128\) and with the random experiment. It is significantly lower with \(K\)
             chosen randomly among the three sizes, and even lower with \(K=256\) and \(K=512\). Interestingly,
@@ -738,7 +738,9 @@
         This experiment comes, yet again, from an unfortunate phenomenon we stumbled upon when calibrating the platform
         for our simulations. Our predictions were wrong, so we investigated a bit and we noticed a significant mismatch
         between the durations measured with our calibration code and the durations observed in HPL. We found out that,
-        the performance of the \dgemm function depends on the content of the matrix, which was unexpected.
+        the performance of the \dgemm function depends on the content of the matrix, which was unexpected. All the
+        experiments described in this section have been done with matrices of fixed size \(2048\times2048\), but the
+        phenomenon we observed is reproducible with any matrix size.
 
         \subsection{Randomization of the matrix initialization}
         \label{sub:randomization_matrix_initialization}
@@ -761,7 +763,7 @@
             \centering
             \includegraphics[width=\linewidth]{img/experiment/bit-flips/generation_method_perf.png}
             \caption{\label{fig:exp:bit-flips:method-perf}
-            \dgemm durations are lower with constant values in the matrices.}
+            Durations of individual \dgemm calls are lower with constant values in the matrices.}
         \end{figure}
 
         Such an observation was unforeseen. The function \dgemm implements the usual matrix product with cubic
@@ -872,7 +874,7 @@
                 \centering
                 \includegraphics[width=\linewidth]{img/experiment/bit-flips/mask_size_perf.png}
                 \caption{\label{fig:exp:bit-flips:mask-perf}
-                \dgemm durations are lower with larger bit masks.}
+                Durations of individual \dgemm calls are lower with larger bit masks.}
             \end{figure}
 
             This correlation with the mask size can also be seen with the frequencies in
@@ -885,7 +887,7 @@
                 Core frequencies are higher with larger bit masks.}
             \end{figure}
 
-            This experiment has been repeated on two other Grid'5000 clusters, ecotype and gros. For both of them, the
+            This experiment has been repeated on two other Grid'5000 clusters, \ecotype and \gros. For both of them, the
             same observations could be made, a clear correlation between the mask size, the frequencies and the
             performance.
 
@@ -1045,7 +1047,7 @@
         %%   justement ces biais.
         %% - De manière plus générale, les conditions expérimentales ont un rôle très important.
         A common theme to several sections of this chapter was the importance of the randomization. It is of great help
-        to avoid or at least limit any experimental bias. We have presented several counter-intuitive phenomenons that
+        to avoid or at least limit any experimental bias. We have presented several counter-intuitive phenomena that
         were only revealed through the randomization (or the lack thereof). However, in some cases, we needed our
         experiments to be biased, to have more realistic experimental conditions. When we execute a micro-benchmark that
         supposedly mimic a real application, the main objective is for this micro-benchmark to be the best possible
@@ -1053,7 +1055,7 @@
 
         During our work, we have been confronted multiple times to external factors that unknowingly affected our
         experiments (\eg cooling issues, BIOS upgrades). With this kind of artifacts, it can become more difficult to
-        trust any experimental results, especially in the presence of unexpected phenomenons like the ones presented
+        trust any experimental results, especially in the presence of unexpected phenomena like the ones presented
         here. This demonstrates the great importance of gaining back this trust by (1) having an experiment engine to
         automatize everything (thereby limiting greatly the human errors) and collect relevant information and (2)
         making regular tests on the platform to detect eventual changes.
