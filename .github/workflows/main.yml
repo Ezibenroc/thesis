@@ -47,7 +47,3 @@ jobs:
           git add build
           git commit -am "New compilation"
           git push
-    - name: Upload the resulting PDF
-      uses: actions/upload-artifact@v2
-      with:
-        path: thesis.pdf
