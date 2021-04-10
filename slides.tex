@@ -1,0 +1,148 @@
+\documentclass[10pt]{beamer}
+
+\usepackage[ruled,vlined,english]{algorithm2e}
+\DontPrintSemicolon
+
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\usepackage{color,soul}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes}
+\usetheme[numbering=fraction,titleformat=smallcaps,progressbar=frametitle]{metropolis}
+\usepackage[normalem]{ulem}
+
+\usepackage{minted}
+\usepackage{svg}
+
+\usepackage[binary-units,group-digits,group-separator={,}]{siunitx}
+\DeclareSIUnit\flop{Flop}
+\DeclareSIUnit\flops{\flop\per\second}
+\newcommand{\Num}[1]{\num[group-separator={,}]{#1}\xspace}
+\newcommand{\NSI}[2]{\SI[group-separator={,}]{#1}{#2}\xspace}
+
+
+% From https://github.com/matze/mtheme/issues/237#issuecomment-258718692
+\makeatletter
+\setlength{\metropolis@titleseparator@linewidth}{1.5pt}
+\setlength{\metropolis@progressonsectionpage@linewidth}{1.5pt}
+\setlength{\metropolis@progressinheadfoot@linewidth}{1pt}
+\makeatother
+
+\usepackage{fontawesome}
+
+\newcommand{\backupbegin}{
+   \newcounter{framenumberappendix}
+   \setcounter{framenumberappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \addtocounter{framenumberappendix}{-\value{framenumber}}
+   \addtocounter{framenumber}{\value{framenumberappendix}}
+}
+
+% Command to make the last slide, which shows copies of the other slides
+\newcommand{\addframe}[1] {\includegraphics[page=#1, width=0.3\textwidth]{demo_old.pdf}}
+
+\definecolor{darkgray}{HTML}{333333}
+\definecolor{gray}{HTML}{4D4D4D}
+\definecolor{lightgray}{HTML}{999999}
+\definecolor{green}{HTML}{C2E15F}
+\definecolor{orange}{HTML}{FDA333}
+\definecolor{purple}{HTML}{D3A4F9}
+\definecolor{red}{HTML}{FB4485}
+\definecolor{blue}{HTML}{6CE0F1}
+\definecolor{pblue}{HTML}{0395DE}
+\definecolor{materialpurple}{HTML}{9C27B0}
+\definecolor{materialindigo}{HTML}{3F51B5}
+\definecolor{materialblue}{HTML}{2196F3}
+\definecolor{materialcyan}{HTML}{00BCD4}
+\definecolor{materialteal}{HTML}{009688}
+\definecolor{materialgreen}{HTML}{4CAF50}
+\definecolor{materiallime}{HTML}{CDDC39}
+\definecolor{materialamber}{HTML}{FFC107}
+\definecolor{materialbrown}{HTML}{795548}
+\definecolor{materialred}{HTML}{FF4436}
+\definecolor{materialorange}{HTML}{FF5722}
+\setbeamercolor{normal text}{bg=white}
+\colorlet{mycolor}{materialblue}
+\setbeamercolor{alerted text}{fg=mycolor}
+
+% Yes, we really need this kind of crap to remove the space before the itemize, WTF Latex ?!
+% Relevant links:
+%  - https://tex.stackexchange.com/questions/86054/how-to-remove-the-whitespace-before-itemize-enumerate
+%  - https://tex.stackexchange.com/questions/24371/does-enumitem-conflict-with-beamer-for-lists
+\usepackage{enumitem}
+\setitemize{label=\usebeamerfont*{itemize item}%
+  \usebeamercolor[fg]{itemize item}
+  \usebeamertemplate{itemize item}}
+%\setlist[itemize]{noitemsep, topsep=0pt}
+
+\renewcommand{\emph}[1]{\SoulColor{lightorange}\hl{#1}}
+\makeatletter
+\let\HL\hl
+\renewcommand\hl{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color
+  \HL}
+\colorlet{mycolorlight}{mycolor!30}
+\sethlcolor{mycolorlight}
+\makeatother
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+\renewcommand<>{\emph}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+
+\setlength{\interspacetitleruled}{0pt}%
+\setlength{\algotitleheightrule}{0pt}%
+
+% Using a small font for verbatim blocks
+\def\changefont#1{%
+  \setbeamertemplate{itemize/enumerate body begin}{#1}
+  \setbeamertemplate{itemize/enumerate subbody begin}{#1}
+  #1}
+\makeatletter
+\newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
+\makeatother
+\verbatimfont{\scriptsize}%small
+\let\endmintedbak=\endminted
+\def\endminted{\endmintedbak\vspace{-1cm}}
+
+
+\date{}
+\author{Tom Cornebize}
+\date{2 June 2021, PhD defense}
+\title{High Performance Computing: Towards Better Performance Predictions and Experiments}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Context}
+\end{frame}
+
+% See:
+%   https://academia.stackexchange.com/a/88068/37904
+%   https://unix.stackexchange.com/a/277987/106103
+%   https://stackoverflow.com/a/5349842/4110059
+%\begin{frame}[plain]
+%    \centering
+%    \setlength{\tabcolsep}{0pt}
+%    \renewcommand{\arraystretch}{0}
+%    \begin{tabular}{|c|c|c|}
+%        \hline
+%        \addframe{1}  & \addframe{6}  & \addframe{9}  \\
+%        \hline
+%        \addframe{11}  & \addframe{16}  & \addframe{24}  \\
+%        \hline
+%        \addframe{27}  & \addframe{32}  & \addframe{34}  \\
+%        \hline
+%        % Some ugly stuff, it would be great to find something better...
+%        \vspace{10pt}\\
+%        \multicolumn{3}{l}{\alert{\faicon{envelope}} \href{mailto:tom.cornebize@univ-grenoble-alpes.fr}{tom.cornebize@univ-grenoble-alpes.fr}}\\
+%    \end{tabular}
+%\end{frame}
+
+\end{document}

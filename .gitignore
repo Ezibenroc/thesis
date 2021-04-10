@@ -8,6 +8,8 @@
 *.lof
 *.lot
 *.xml
+*.nav
+*.snm
 svg-inkscape
 macros.include.tex
 chapter_introduction.pdf
@@ -15,6 +17,8 @@ chapter_experiment.pdf
 chapter_prediction.pdf
 chapter_conclusion.pdf
 thesis.pdf
+slides.pdf
+slides_old.pdf
 *~
 data/prediction/modeling/kernels/dgemm_calibration.csv
 data/prediction/modeling/kernels/trace_functions.csv

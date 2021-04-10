@@ -2,6 +2,7 @@
 THESIS_ALL_TEX= $(wildcard *.tex)
 DEFAULT_TARGET= whole_thesis
 DEFAULT_PDF= thesis.pdf
+COMPILE_SLIDES := xelatex -shell-escape -interaction="batchmode"
 
 default: $(DEFAULT_TARGET)
 all: whole_thesis \
@@ -84,17 +85,37 @@ view:
 update-view:
 	@killall -SIGHUP llpp &> /dev/null || true # update pdf viewer
 
+
+############
+# Slides   #
+############
+
+# Create a PDF with a white pages
+# Used to generate the summary slide
+/tmp/empty.pdf:
+	@convert xc:none -page Letter /tmp/empty.pdf
+
+slides_old.pdf: slides.tex /tmp/empty.pdf
+	@cp /tmp/empty.pdf slides_old.pdf
+	@$(COMPILE_SLIDES) $<
+	@mv slides.pdf slides_old.pdf
+
+slides.pdf: slides.tex slides_old.pdf
+	@$(COMPILE_SLIDES) $<
+	@echo $@ has been updated
+
 ############
 # cleaning #
 ############
 clean:
-	rm -f *.aux *.bbl *.bcf *.blg *.lof *.log *.lot *.out *.run.xml *.toc *.upa *-blx.bib
+	rm -f *.aux *.bbl *.bcf *.blg *.lof *.log *.lot *.out *.run.xml *.toc *.upa *-blx.bib *.snm *.nav
 	rm -f macros.include.tex
 	rm -rf svg-inkscape
 
 distclean: clean
 	rm -f thesis.pdf
 	rm -f chapter*.pdf
+	rm -f slides.pdf slides_old.pdf
 
 mrproper: clean
 
