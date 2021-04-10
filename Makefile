@@ -2,7 +2,7 @@
 THESIS_ALL_TEX= $(wildcard *.tex)
 DEFAULT_TARGET= whole_thesis
 DEFAULT_PDF= thesis.pdf
-COMPILE_SLIDES := xelatex -shell-escape -interaction="batchmode"
+COMPILE_SLIDES := xelatex -shell-escape
 
 default: $(DEFAULT_TARGET)
 all: whole_thesis \
