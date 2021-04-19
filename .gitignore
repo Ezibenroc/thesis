@@ -10,6 +10,7 @@
 *.xml
 *.nav
 *.snm
+*.vrb
 svg-inkscape
 macros.include.tex
 chapter_introduction.pdf
