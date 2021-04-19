@@ -46,6 +46,8 @@
 % Command to make the last slide, which shows copies of the other slides
 \newcommand{\addframe}[1] {\includegraphics[page=#1, width=0.3\textwidth]{demo_old.pdf}}
 
+\input{macros.local.tex}
+
 \definecolor{darkgray}{HTML}{333333}
 \definecolor{gray}{HTML}{4D4D4D}
 \definecolor{lightgray}{HTML}{999999}
@@ -206,16 +208,14 @@
                 \includegraphics[width=2cm]{img/simgrid_logo.pdf}
             }}
         \end{picture}
-        \vskip-.5em
         \begin{block}{Full reimplementation of MPI on top of}% \alert{SimGrid}}
             \begin{itemize}
                 \item C/C++/F77/F90 codes run \alert{unmodified out of the box}
                 \item Simply replace mpicc/mpirun by smpicc/smpirun
             \end{itemize}
-            \vskip-.6em
-            \end{block}
-            \pause
-            \begin{block}{Emulation: how?}
+        \end{block}
+        \pause
+        \begin{block}{Emulation: how?}
             \begin{itemize}
                 \item Computations run for real on a laptop
                 \item Communications are faked, good fluid network models
@@ -224,6 +224,21 @@
         \end{block}
     \end{column}
 \end{columns}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{LARGE}
+        Goal: \alert{\textbf{predict}} the performance of a parallel application \\
+    \end{LARGE}
+    \vfill
+    \pause
+    \begin{block}{Thesis contribution}
+        \begin{itemize}
+            \item Case study: High Performance Linpack (HPL)
+            \item Skip the expensive computations (mostly \dgemm) and replace them by a performance model
+            \item Extensive (in)validation, comparing simulations with reality
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 % See:
