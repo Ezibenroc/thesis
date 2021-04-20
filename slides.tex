@@ -50,7 +50,7 @@
 
 \definecolor{darkgray}{HTML}{333333}
 \definecolor{gray}{HTML}{4D4D4D}
-\definecolor{lightgray}{HTML}{999999}
+\definecolor{lightgray}{HTML}{BBBBBB}
 \definecolor{green}{HTML}{C2E15F}
 \definecolor{orange}{HTML}{FDA333}
 \definecolor{purple}{HTML}{D3A4F9}
@@ -269,16 +269,25 @@
 \end{frame}
 
 \begin{frame}[plain]
+    \onslide<+->
     \begin{LARGE}
-        Goal: \alert{\textbf{predict}} the performance of a parallel application \\
+        Initial goal: \alert{\textbf{predict}} the performance of a parallel application
     \end{LARGE}
     \vfill
-    \pause
-    \begin{block}{Thesis contribution}
+    \onslide<+->
+    \begin{block}{Thesis contributions (towards this goal)}
         \begin{itemize}
             \item Case study: High Performance Linpack (HPL)
             \item Skip the expensive computations (mostly \dgemm) and replace them by a performance model
             \item Extensive (in)validation, comparing simulations with reality
+        \end{itemize}
+    \end{block}
+    \onslide<+->
+    \begin{block}{Thesis contributions (made on the way)}
+        \begin{itemize}
+            \item \textcolor<+->{lightgray}{Automation (of experiments, statistical analyzes, etc.)}
+            \item \textcolor<.>{lightgray}{Experiment methodology, to bias or not to bias}
+            \item Performance tests, to detect eventual platform changes
         \end{itemize}
     \end{block}
 \end{frame}
