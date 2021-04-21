@@ -213,61 +213,6 @@
     Capture the \textbf{whole application}  and \textbf{platform complexity}
 \end{frame}
 
-\begin{frame}[fragile]{Sim(Em)ulation: The SMPI Approach}
-\begin{columns}
-    \begin{column}[c]{.2\columnwidth}
-        \scalebox{.8}{\begin{tikzpicture}[xscale=1,yscale=1]
-            \node (nodehost) [name=nodehost]
-            { \includegraphics[height=23mm]{img/laptop.png}};
-
-            %\node (nodelisting) [above right= -25mm of nodehost]%, overlay]
-            % { \includegraphics[height=12mm]{fig/mpi-codelisting.png}};
-
-            \node (nodeimagine) [
-                shape             = cloud callout,
-                cloud puffs       = 11,
-                aspect            = 1.5,
-                opacity           =.75,
-                draw              = black!90!white, % colour of the border
-                top color         = white,                % | filling of the node
-                bottom color      = black!30!white, % |
-                text              = black!90!white, % colour of the fonts
-                thick,                              % thickness of the border
-                above             = 5mm of nodehost,
-                minimum height    = 25mm,
-                minimum width     = 30mm,
-                callout pointer shorten=7mm,
-                callout absolute pointer={(285:5mm)},%(nodelisting.northwest)},%(285:5.5mm)},
-            ]{};
-
-            \node at (nodeimagine) {\includegraphics[width=15mm]{img/cluster.png}};
-        \end{tikzpicture}}
-    \end{column}
-
-    \begin{column}[c]{.85\columnwidth}
-        \begin{picture}(0, 0)
-            \put(167,-26){\hbox{
-                \includegraphics[width=2cm]{img/simgrid_logo.pdf}
-            }}
-        \end{picture}
-        \begin{block}{Full reimplementation of MPI on top of}% \alert{SimGrid}}
-            \begin{itemize}
-                \item C/C++/F77/F90 codes run \alert{unmodified out of the box}
-                \item Simply replace mpicc/mpirun by smpicc/smpirun
-            \end{itemize}
-        \end{block}
-        \pause
-        \begin{block}{Emulation: how?}
-            \begin{itemize}
-                \item Computations run for real on a laptop
-                \item Communications are faked, good fluid network models
-                \item \alert{Performance model} for the target platform
-            \end{itemize}
-        \end{block}
-    \end{column}
-\end{columns}
-\end{frame}
-
 \begin{frame}[plain]
     \onslide<+->
     \begin{LARGE}
@@ -278,8 +223,8 @@
     \begin{block}{Thesis contributions (towards this goal)}
         \begin{itemize}
             \item Case study: High Performance Linpack (HPL)
-            \item Skip the expensive computations (mostly \dgemm) and replace them by a performance model
             \item Extensive (in)validation, comparing simulations with reality
+            \item Modeling correctly the platform variability is key
         \end{itemize}
     \end{block}
     \onslide<+->
@@ -291,6 +236,64 @@
         \end{itemize}
     \end{block}
 \end{frame}
+
+\begin{frame}[fragile]{Sim(Em)ulation: The SMPI Approach}
+    \begin{columns}
+        \begin{column}[c]{.2\columnwidth}
+            \scalebox{.8}{\begin{tikzpicture}[xscale=1,yscale=1]
+                \node (nodehost) [name=nodehost]
+                { \includegraphics[height=23mm]{img/laptop.png}};
+
+                %\node (nodelisting) [above right= -25mm of nodehost]%, overlay]
+                % { \includegraphics[height=12mm]{fig/mpi-codelisting.png}};
+
+                \node (nodeimagine) [
+                    shape             = cloud callout,
+                    cloud puffs       = 11,
+                    aspect            = 1.5,
+                    opacity           =.75,
+                    draw              = black!90!white, % colour of the border
+                    top color         = white,                % | filling of the node
+                    bottom color      = black!30!white, % |
+                    text              = black!90!white, % colour of the fonts
+                    thick,                              % thickness of the border
+                    above             = 5mm of nodehost,
+                    minimum height    = 25mm,
+                    minimum width     = 30mm,
+                    callout pointer shorten=7mm,
+                    callout absolute pointer={(285:5mm)},%(nodelisting.northwest)},%(285:5.5mm)},
+                ]{};
+
+                \node at (nodeimagine) {\includegraphics[width=15mm]{img/cluster.png}};
+            \end{tikzpicture}}
+        \end{column}
+
+        \begin{column}[c]{.85\columnwidth}
+            \begin{picture}(0, 0)
+                \put(167,-26){\hbox{
+                    \includegraphics[width=2cm]{img/simgrid_logo.pdf}
+                }}
+            \end{picture}
+            \begin{block}{Full reimplementation of MPI on top of}% \alert{SimGrid}}
+                \begin{itemize}
+                    \item C/C++/F77/F90 codes run \alert{unmodified out of the box}
+                    \item Simply replace mpicc/mpirun by smpicc/smpirun
+                \end{itemize}
+            \end{block}
+            \pause
+            \begin{block}{Emulation: how?}
+                \begin{itemize}
+                    \item Computations run for real on a laptop
+                    \item Communications are faked, good fluid network models
+                    \item \alert{Performance model} for the target platform
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \pause
+    \textbf{Contribution}: Skip the expensive computations (mostly \dgemm) and replace them by performance models
+\end{frame}
+
 
 % See:
 %   https://academia.stackexchange.com/a/88068/37904
