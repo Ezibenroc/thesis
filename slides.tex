@@ -123,8 +123,8 @@
         \put(310,-200){\makebox(0,0)[rt]{
             \begin{minipage}{\textwidth}
                 \includesvg[height=1cm]{img/logo_uga.svg}\hfill%
-                \includegraphics[height=1cm]{img/logo_cnrs.png}\hfill%
-                \includegraphics[height=1cm]{img/logo_inria.png}
+                \includegraphics[height=1cm]{img/slides/logo_cnrs.png}\hfill%
+                \includegraphics[height=1cm]{img/slides/logo_inria.png}
             \end{minipage}
         }}
     \end{picture}
@@ -135,15 +135,15 @@
 \begin{frame}{No science without computing}
     \begin{columns}
         \begin{column}[c]{.33\columnwidth}
-            \includegraphics[width=\linewidth]{img/arithmometer.png}
+            \includegraphics[width=\linewidth]{img/slides/arithmometer.png}
             Arithmometer (1851)
         \end{column}
         \begin{column}[c]{.33\columnwidth}
-            \includegraphics[width=\linewidth]{img/eniac.jpg}
+            \includegraphics[width=\linewidth]{img/slides/eniac.jpg}
             ENIAC (1945)
         \end{column}
         \begin{column}[c]{.33\columnwidth}
-            \includegraphics[width=\linewidth]{img/fugaku.jpg}
+            \includegraphics[width=\linewidth]{img/slides/fugaku.jpg}
             Fugaku (2021)
         \end{column}
     \end{columns}
@@ -162,7 +162,7 @@
 \begin{frame}{Experimental study of computer performance}
     \begin{columns}
         \begin{column}[c]{.5\columnwidth}
-            \includegraphics[width=\linewidth]{img/cells.jpg}
+            \includegraphics[width=\linewidth]{img/slides/cells.jpg}
         \end{column}
         \begin{column}[c]{.5\columnwidth}
             Similar to natural sciences
@@ -182,7 +182,7 @@
     \textbf{Typical Performance Evaluation Questions} (Given my application and a supercomputer)
 
     \begin{minipage}[m]{0.35\linewidth}
-        \includegraphics[width=\textwidth]{img/computer_guy_meme.pdf}
+        \includegraphics[width=\textwidth]{img/slides/computer_guy_meme.pdf}
     \end{minipage} %
     \begin{minipage}[m]{0.64\linewidth}
     \begin{itemize}
@@ -242,7 +242,7 @@
         \begin{column}[c]{.2\columnwidth}
             \scalebox{.8}{\begin{tikzpicture}[xscale=1,yscale=1]
                 \node (nodehost) [name=nodehost]
-                { \includegraphics[height=23mm]{img/laptop.png}};
+                { \includegraphics[height=23mm]{img/slides/laptop.png}};
 
                 %\node (nodelisting) [above right= -25mm of nodehost]%, overlay]
                 % { \includegraphics[height=12mm]{fig/mpi-codelisting.png}};
@@ -264,14 +264,14 @@
                     callout absolute pointer={(285:5mm)},%(nodelisting.northwest)},%(285:5.5mm)},
                 ]{};
 
-                \node at (nodeimagine) {\includegraphics[width=15mm]{img/cluster.png}};
+                \node at (nodeimagine) {\includegraphics[width=15mm]{img/slides/cluster.png}};
             \end{tikzpicture}}
         \end{column}
 
         \begin{column}[c]{.85\columnwidth}
             \begin{picture}(0, 0)
                 \put(167,-26){\hbox{
-                    \includegraphics[width=2cm]{img/simgrid_logo.pdf}
+                    \includegraphics[width=2cm]{img/slides/simgrid_logo.pdf}
                 }}
             \end{picture}
             \begin{block}{Full reimplementation of MPI on top of}% \alert{SimGrid}}
