@@ -322,6 +322,23 @@
     \end{minipage}
 \end{frame}
 
+\begin{frame}{Modeling Communications}
+    \textbf{Hand-crafted non-blocking collective operations} intertwinned with computations
+
+    \begin{minipage}[t][.7\textheight][t]{\textwidth}
+        \begin{center}
+            \includegraphics<2>[width=.9\linewidth]{img/prediction/modeling/network/mpi_calibration.png}
+        \end{center}
+        \only<3>{
+            \textbf{Take-Away Message}:
+            \begin{itemize}
+            \item For small messages, the \textbf{variability can be huge}
+            \item \textbf{Piece-wise} \textbf{mixture} of \textbf{linear} regressions
+            \end{itemize}
+        }
+    \end{minipage}
+\end{frame}
+
 % See:
 %   https://academia.stackexchange.com/a/88068/37904
 %   https://unix.stackexchange.com/a/277987/106103
