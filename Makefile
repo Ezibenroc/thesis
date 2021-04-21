@@ -109,7 +109,7 @@ slides.pdf: slides.tex slides_old.pdf
 # cleaning #
 ############
 clean:
-	rm -f *.aux *.bbl *.bcf *.blg *.lof *.log *.lot *.out *.run.xml *.toc *.upa *-blx.bib *.snm *.nav
+	rm -f *.aux *.bbl *.bcf *.blg *.lof *.log *.lot *.out *.run.xml *.toc *.upa *-blx.bib *.snm *.nav *.vrb
 	rm -f macros.include.tex
 	rm -rf svg-inkscape
 

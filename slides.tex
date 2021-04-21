@@ -296,30 +296,35 @@
 
 \begin{frame}{Modeling Commputations}
     \begin{equation*}
-        \texttt{dgemm}_{\only<2->{i}}(M,N,K) =
-        \only<1>{\alpha.M.N.K}\only<2->{\underbrace{\alpha_i.M.N.K}_{\text{per host}}}
-        \uncover<3->{+ \underbrace{\beta_i.M.N +  \gamma_i.N.K + \dots }_{\text{polynomial model}}}
-        \uncover<4->{+ \underbrace{\norm(0,\alpha'_i.M.N.K + \dots)}_{\text{polynomial noise}}}
+        \texttt{dgemm}_{\uncover<3->{i}}(M,N,K) =
+        \only<2>{\alpha.M.N.K}\uncover<3->{\underbrace{\alpha_i.M.N.K}_{\text{per host}}}
+        \uncover<5->{+ \underbrace{\beta_i.M.N +  \gamma_i.N.K + \dots }_{\text{polynomial model}}}
+        \uncover<6->{+ \underbrace{\norm(0,\alpha'_i.M.N.K + \dots)}_{\text{polynomial noise}}}
     \end{equation*}
-    \vfill
 
-    \begin{minipage}[t][.7\textheight][t]{\textwidth}
-        \begin{center}
-            \only<2-4>{Different color $\Rightarrow$ different host}
-            \only<5>{For a particular host}
+    \begin{center}
+        \begin{tabular}{p{0.45\textwidth}p{0.45\textwidth}}
+            \uncover<3->{Different color $\Rightarrow$ different host} &
+            \uncover<4->{For a particular host} \\
 
-            \includegraphics<2-4>[width=.7\linewidth]{img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png}
-            \includegraphics<5>[width=.7\linewidth]{img/prediction/modeling/kernels/dgemm_model_calib.png}
-        \end{center}
-        \only<6>{
-        \textbf{Take-Away Message}:
-        \begin{itemize}
-        \item Both \alert{spatial} and \alert{temporal} variability
-        \item ``Sophisticated'' linear models are \textbf{excellent predictors} (for every function -- \texttt{dtrsm},
-            \texttt{daxpy}, \ldots{})
-        \end{itemize}
-        }
-    \end{minipage}
+            \includegraphics<1>[width=\linewidth]{img/slides/dgemm_heterogeneity_calib_1.png} %
+            \includegraphics<2>[width=\linewidth]{img/slides/dgemm_heterogeneity_calib_2.png} %
+            \includegraphics<3->[width=\linewidth]{img/slides/dgemm_heterogeneity_calib_3.png} &
+
+            \includegraphics<4>[width=\linewidth]{img/slides/dgemm_model_calib_1.png} %
+            \includegraphics<5>[width=\linewidth]{img/slides/dgemm_model_calib_2.png} %
+            \includegraphics<6->[width=\linewidth]{img/slides/dgemm_model_calib_3.png} \\
+
+        \end{tabular}
+    \end{center}
+%        \only<6>{
+%        \textbf{Take-Away Message}:
+%        \begin{itemize}
+%        \item Both \alert{spatial} and \alert{temporal} variability
+%        \item ``Sophisticated'' linear models are \textbf{excellent predictors} (for every function -- \texttt{dtrsm},
+%            \texttt{daxpy}, \ldots{})
+%        \end{itemize}
+%        }
 \end{frame}
 
 \begin{frame}{Modeling Communications}
