@@ -294,6 +294,33 @@
     \textbf{Contribution}: Skip the expensive computations (mostly \dgemm) and replace them by performance models
 \end{frame}
 
+\begin{frame}{Modeling Commputations}
+    \begin{equation*}
+        \texttt{dgemm}_{\only<2->{i}}(M,N,K) =
+        \only<1>{\alpha.M.N.K}\only<2->{\underbrace{\alpha_i.M.N.K}_{\text{per host}}}
+        \uncover<3->{+ \underbrace{\beta_i.M.N +  \gamma_i.N.K + \dots }_{\text{polynomial model}}}
+        \uncover<4->{+ \underbrace{\norm(0,\alpha'_i.M.N.K + \dots)}_{\text{polynomial noise}}}
+    \end{equation*}
+    \vfill
+
+    \begin{minipage}[t][.7\textheight][t]{\textwidth}
+        \begin{center}
+            \only<2-4>{Different color $\Rightarrow$ different host}
+            \only<5>{For a particular host}
+
+            \includegraphics<2-4>[width=.7\linewidth]{img/prediction/modeling/kernels/dgemm_heterogeneity_calib.png}
+            \includegraphics<5>[width=.7\linewidth]{img/prediction/modeling/kernels/dgemm_model_calib.png}
+        \end{center}
+        \only<6>{
+        \textbf{Take-Away Message}:
+        \begin{itemize}
+        \item Both \alert{spatial} and \alert{temporal} variability
+        \item ``Sophisticated'' linear models are \textbf{excellent predictors} (for every function -- \texttt{dtrsm},
+            \texttt{daxpy}, \ldots{})
+        \end{itemize}
+        }
+    \end{minipage}
+\end{frame}
 
 % See:
 %   https://academia.stackexchange.com/a/88068/37904
