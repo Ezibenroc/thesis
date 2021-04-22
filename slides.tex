@@ -72,16 +72,6 @@
 \colorlet{mycolor}{materialblue}
 \setbeamercolor{alerted text}{fg=mycolor}
 
-% Yes, we really need this kind of crap to remove the space before the itemize, WTF Latex ?!
-% Relevant links:
-%  - https://tex.stackexchange.com/questions/86054/how-to-remove-the-whitespace-before-itemize-enumerate
-%  - https://tex.stackexchange.com/questions/24371/does-enumitem-conflict-with-beamer-for-lists
-\usepackage{enumitem}
-\setitemize{label=\usebeamerfont*{itemize item}%
-  \usebeamercolor[fg]{itemize item}
-  \usebeamertemplate{itemize item}}
-%\setlist[itemize]{noitemsep, topsep=0pt}
-
 \renewcommand{\emph}[1]{\SoulColor{lightorange}\hl{#1}}
 \makeatletter
 \let\HL\hl
@@ -327,6 +317,22 @@
             \includegraphics<2>[width=.9\linewidth]{img/prediction/modeling/network/mpi_calibration.png}
         \end{center}
     \end{minipage}
+\end{frame}
+
+\begin{frame}{Parenthesis: on the difficulties of experimentation}
+    \alert{Experimental biases} when measuring \dgemm or MPI durations
+
+    Effect on durations, but also other metrics (\eg CPU frequency)
+    \onslide<+->
+    \begin{itemize}[<+->]
+        \item Sampling method for generating the sequence of calls
+        \item Sample itself (for a given sampling method)
+        \item Interferences between computations and communications
+        \item Content of the matrices used by \dgemm
+    \end{itemize}
+
+    \onslide<+->
+    Bias may be desirable in some situations
 \end{frame}
 
 % See:
