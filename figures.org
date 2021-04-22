@@ -2,14 +2,14 @@
 # -*- org-confirm-babel-evaluate: nil -*-
 # -*- mode: org -*-
 #+STARTUP: overview indent inlineimages logdrawer hidestars
-* TODO  [0/3]
-- [ ] Make Zenodo repositories for everything relevant and add the links in the
+* DONE [3/3]
+- [X] Make Zenodo repositories for everything relevant and add the links in the
   thesis. We should have at least: pytree, peanut, cashew, ratatouille,
   org\_attach (?), calibration\_analysis, journal\_extract, g5k\_test (*2), hpl,
   platform-calibration.
-- [ ] Remove all the vspace and hspace. Most of them come from the puslished
+- [X] Remove all the vspace and hspace. Most of them come from the puslished
   articles, they are not needed here.
-- [ ] Complete grammar and spelling check.
+- [X] Complete grammar and spelling check.
 * Context
 ** Top500
 *** Downloading the data
@@ -2423,6 +2423,297 @@ entering extended mode
 null device 
           1
 #+end_example
+**** Drawing the plot (slides)
+Here, we use tikzDevice to generate Tikz code with ggplot. More information on
+this [[https://matthew-parker.rbind.io/post/easy-latex-titles-and-labels-for-ggplot/][tutorial]] (broken link, see the [[https://matthew-parker.rbind.io/post/2018-08-21-easy-latex-titles/][new one]]).
+-> Stopped generating Tikz code, it was not needed anymore as in the journal
+version we do not have any math notations in this plot.
+
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+options(warn=-1)
+dfreal = read.csv('data/prediction/validation/matrix_size/hpl_reality.csv')
+dfreal = dfreal %>% filter(date == '2019-03')
+dfsim = bind_rows(
+    read.csv('data/prediction/validation/matrix_size/hpl_simulation_heterogeneous.csv'),
+    read.csv('data/prediction/validation/matrix_size/hpl_simulation_homogeneous.csv')
+)
+dfsim$model = gsub("_het", "het", dfsim$model)  # tikzdevice fails if there are underscores in the node names...
+head(dfreal)
+head(dfsim)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+  matrix_size gflops    time    mode    date
+1      175000  22610  158.00 reality 2019-03
+2      500000  22330 3732.41 reality 2019-03
+3       50000  12780    6.52 reality 2019-03
+4      300000  21140  851.46 reality 2019-03
+5      400000  21660 1969.91 reality 2019-03
+6      150000  19910  113.02 reality 2019-03
+
+  matrix_size gflops    time       mode stochastic_cpu stochastic_network
+1      100000  18870   35.33 simulation           True              False
+2      200000  21390  249.29 simulation           True              False
+3      400000  22690 1880.62 simulation           True              False
+4       75000  15930   17.65 simulation           True               True
+5      175000  19690  181.49 simulation           True               True
+6      350000  21470 1331.50 simulation           True               True
+  polynomial_dgemm heterogeneous_dgemm model simulation_time memory_consumption
+1            False                True B1het         3227.07         2270136000
+2            False                True B1het         6316.27         4134760000
+3            False                True B1het        14848.10         7813704000
+4             True                True D2het         1522.91         1703044000
+5             True                True D2het         4094.11         3641888000
+6             True                True D2het        10207.20         7549632000
+#+end_example
+
+#+begin_src R :results output :session *R* :exports both
+dfsim %>%
+    bind_rows(dfreal) %>%
+    filter(matrix_size == 250000)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+   matrix_size gflops   time       mode stochastic_cpu stochastic_network
+1       250000  22260 467.88 simulation          False               True
+2       250000  22060 472.26 simulation           True              False
+3       250000  22090 471.56 simulation           True               True
+4       250000  22580 461.41 simulation          False               True
+5       250000  22280 467.55 simulation          False              False
+6       250000  22590 461.12 simulation          False              False
+7       250000  20890 498.63 simulation           True              False
+8       250000  20790 501.01 simulation           True               True
+9       250000  21020 495.50                      True              False
+10      250000  26070 399.49 simulation          False              False
+11      250000  24970 417.16 simulation           True               True
+12      250000  26080 399.40 simulation          False               True
+13      250000  26790 388.85 simulation          False              False
+14      250000  25020 416.34 simulation           True              False
+15      250000  24390 427.09 simulation           True               True
+16      250000  24420 426.61 simulation           True              False
+17      250000  26810 388.54 simulation          False               True
+18      250000  20570 506.48    reality           <NA>               <NA>
+19      250000  21250 490.11    reality           <NA>               <NA>
+20      250000  20770 501.63    reality           <NA>               <NA>
+21      250000  21080 494.10    reality           <NA>               <NA>
+22      250000  20920 498.03    reality           <NA>               <NA>
+23      250000  21200 491.36    reality           <NA>               <NA>
+24      250000  20470 508.98    reality           <NA>               <NA>
+25      250000  21450 485.56    reality           <NA>               <NA>
+   polynomial_dgemm heterogeneous_dgemm  model simulation_time
+1              True                True  C2het         6544.97
+2             False                True  B1het         7954.09
+3             False                True  B2het         8117.41
+4             False                True  A2het         7857.19
+5              True                True  C1het         6492.65
+6             False                True  A1het         7831.24
+7              True                True  D1het         6367.12
+8              True                True  D2het         6322.22
+9              True                True simple         6260.74
+10             True               False     C1         6478.43
+11            False               False     B2         8483.43
+12             True               False     C2         6775.44
+13            False               False     A1         8325.31
+14            False               False     B1         8248.40
+15             True               False     D2         7013.37
+16             True               False     D1         6807.21
+17            False               False     A2         8803.00
+18             <NA>                <NA>   <NA>              NA
+19             <NA>                <NA>   <NA>              NA
+20             <NA>                <NA>   <NA>              NA
+21             <NA>                <NA>   <NA>              NA
+22             <NA>                <NA>   <NA>              NA
+23             <NA>                <NA>   <NA>              NA
+24             <NA>                <NA>   <NA>              NA
+25             <NA>                <NA>   <NA>              NA
+   memory_consumption    date
+1          6570468000    <NA>
+2          4727612000    <NA>
+3          5099340000    <NA>
+4          6014132000    <NA>
+5          6074652000    <NA>
+6          5991816000    <NA>
+7          4949596000    <NA>
+8          5226968000    <NA>
+9          5032344000    <NA>
+10                 NA    <NA>
+11                 NA    <NA>
+12                 NA    <NA>
+13                 NA    <NA>
+14                 NA    <NA>
+15                 NA    <NA>
+16                 NA    <NA>
+17                 NA    <NA>
+18                 NA 2019-03
+19                 NA 2019-03
+20                 NA 2019-03
+21                 NA 2019-03
+22                 NA 2019-03
+23                 NA 2019-03
+24                 NA 2019-03
+25                 NA 2019-03
+#+end_example
+
+Keeping only a subset of the models, to have a readable plot.
+#+begin_src R :results output :session *R* :exports both
+dfsim = dfsim %>% filter(model %in% c('A1', 'A1het', 'D2het'))
+#+end_src
+
+#+RESULTS:
+
+Removing the two outliers in the real executions. These two points are
+"abnormaly fast", each of them was the first to be made in the sequence of runs
+(the machines were not overheating yet).
+#+begin_src R :results output :session *R* :exports both
+print(length(dfreal$gflops))
+dfreal = dfreal %>% filter(matrix_size != 175000 | gflops < 22000)
+print(length(dfreal$gflops))
+#+end_src
+
+#+RESULTS:
+: [1] 112
+: 
+: [1] 110
+
+Let's compute the error done by each model for each matrix size. This is a
+relative error (a percentage), computed with (perf_simu-perf_real)/perf_real.
+
+#+begin_src R :results output :session *R* :exports both
+library(stringr)
+tmp = dfreal %>% group_by(matrix_size) %>% summarize(gflops=mean(gflops))
+tmp = inner_join(dfsim, tmp, by='matrix_size', suffix=c('_simulation', '_reality'))
+tmp$error = (tmp$gflops_simulation - tmp$gflops_reality)/tmp$gflops_reality
+
+pretty_percent = function(value) {
+    value = round(value*100)
+    if(value > 0) {
+        sign='+'
+    }
+    else {
+        sign='-'
+        value = -value
+    }
+    return(paste(sign, value, '%', sep=''))
+}
+
+tmp$pretty_error = sapply(tmp$error, pretty_percent)
+head(tmp)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+`summarise()` ungrouping output (override with `.groups` argument)
+
+  matrix_size gflops_simulation    time       mode stochastic_cpu
+1       75000             15930   17.65 simulation           True
+2      175000             19690  181.49 simulation           True
+3      350000             21470 1331.50 simulation           True
+4       50000             13900    5.99 simulation          False
+5      150000             20510  109.73 simulation          False
+6      300000             23150  777.47 simulation          False
+  stochastic_network polynomial_dgemm heterogeneous_dgemm model simulation_time
+1               True             True                True D2het         1522.91
+2               True             True                True D2het         4094.11
+3               True             True                True D2het        10207.20
+4              False            False                True A1het         1512.69
+5              False            False                True A1het         4960.00
+6              False            False                True A1het        10003.40
+  memory_consumption gflops_reality        error pretty_error
+1         1703044000       16588.75 -0.039710647          -4%
+2         3641888000       19803.33 -0.005722942          -1%
+3         7549632000       21765.00 -0.013553871          -1%
+4         1159164000       12797.50  0.086149639          +9%
+5         3436460000       19403.75  0.057012175          +6%
+6         7782212000       21491.25  0.077182574          +8%
+#+end_example
+
+
+Then, we can generate the plot.
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+text_size = 4
+# Labels definitions
+lab = dfsim %>% filter(
+    (model == 'A1'     & matrix_size == 300000) |
+    (model == 'A1het' & matrix_size == 150000) |
+    (model == 'D2het' & matrix_size == 500000)
+)
+lab = lab %>% select(gflops, matrix_size, model) %>% distinct()
+lab = lab %>% mutate(label = case_when(model == 'A1'     ~ "(a) Homogeneous & deterministic",
+                                       model == 'A1het' ~  "(b) Heterogeneous & deterministic",
+                                       model == 'D2het' ~  "(c) Heterogeneous & stochastic",
+                                       T             ~ as.character(model)))
+lab$x = lab$matrix_size
+lab$y = lab$gflops
+lab$xl = lab$x*1.0
+lab$yl = lab$y*1.0
+delta_x = max(dfsim$matrix_size) / 12
+delta_y = max(dfsim$gflops) / 12
+max_x = max(dfsim$matrix_size)
+max_y = max(dfsim$gflops)
+lab = lab %>% mutate(xl = case_when(model == 'A1'     ~ 0.3*max_x,
+                                    model == 'A1het' ~ 0.4*max_x,
+                                    model == 'D2het' ~ 0.8*max_x,
+                                       T             ~ xl))
+lab = lab %>% mutate(yl = case_when(model == 'A1'     ~ 0.95*max_y,
+                                    model == 'A1het' ~ 0.4*max_y,
+                                    model == 'D2het' ~ 0.3*max_y,
+                                       T             ~ yl))
+
+error_txt = tmp %>% filter(matrix_size == 500000)
+error_txt = error_txt %>% filter(model %in% c('A1', 'A1het', 'D2het'))
+
+# Change the 'model_selection' for making some animations
+draw_plot = function(model_selection) {
+    dfsim_tmp = dfsim %>% filter(model %in% model_selection)
+    lab = lab %>% filter(model %in% model_selection)
+    error_txt = error_txt %>% filter(model %in% model_selection)
+    base_df = dfreal[1,]
+    # Plot drawing
+    ggplot() +
+        aes(x=matrix_size, y=gflops) +
+        geom_point(data=dfreal, shape=1, size=1) +
+        geom_point(data=dfsim_tmp, aes(color=model), size=1) + ####
+        stat_summary(data=dfsim_tmp, aes(color=model), fun.y='mean', geom='line', linetype='dashed') + ####
+        expand_limits(y=dfsim %>% pull(gflops) %>% max() * 1.02) +
+        stat_summary(fun.y='mean', geom='line', data=dfreal) +
+        scale_color_brewer(type='qual', palette='Dark2', guide=F) +
+        theme_light() +
+        theme(text=element_text(size=12)) +
+        ylab('Gflop/s') + xlab('Matrix rank') +
+        geom_segment(data=lab, aes(x=xl, xend=x, y=yl, yend=y, color=model), linetype="solid") + ####
+        # the two following lines are a dirty hack, apparently we cannot modify the lightness of an existing color palette
+        # so I have to use a small alpha, but I did not want to see the background, thus I put white squares behind
+        geom_label(data=lab, aes(x=xl, y=yl, label=label, group=model), size=text_size, color='white') +
+        geom_label(data=lab, aes(x=xl, y=yl, label=label, group=model, fill=model), alpha=0.3, size=text_size) +
+        scale_fill_brewer(type='qual', palette='Dark2', guide=F) +
+        geom_segment(data=base_df, x=max_x*0.75, xend=4.5e5, y=max_y*0.6, yend=mean((dfreal %>% filter(matrix_size == 450000))$gflops), linetype="solid") +
+        geom_label(data=base_df, aes(x=max_x*0.75, y=max_y*0.6), label='Reality', size=text_size, fontface="bold") +
+        geom_text(data=error_txt, aes(label=pretty_error, y=gflops_simulation+200), x=5.2e5) +
+        expand_limits(y=0) +
+        expand_limits(x=5.15e5) +
+        geom_rect(data=base_df, xmin=240000, xmax=260000, ymin=19700, ymax=22000, linetype="dashed", alpha=0.0, fill="black", color="black")
+}
+plot = draw_plot(c())
+ggsave(filename='img/slides/validation_performance_1.pdf', plot=plot)
+plot = draw_plot(c('A1'))
+ggsave(filename='img/slides/validation_performance_2.pdf', plot=plot)
+plot = draw_plot(c('A1', 'A1het'))
+ggsave(filename='img/slides/validation_performance_3.pdf', plot=plot)
+plot = draw_plot(c('A1', 'A1het', 'D2het'))
+ggsave(filename='img/slides/validation_performance_4.pdf', plot=plot)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-5XiAOP/figureQdq8Sm.png]]
 *** Problematic cooling
 Again, the CSV is stored locally. It has been dumped by [[https://github.com/Ezibenroc/calibration_analysis/blob/4e4e6780ca9036dd2aac4fa8bea066848f23ba7c/dahu/smpi_hpl/hpl_simulation_simple.ipynb][this notebook]] (cell 2).
 

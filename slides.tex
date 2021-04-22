@@ -337,7 +337,7 @@
 
 
 \section{Does all this matter?}
-\begin{frame}[fragile]{HPL Structure: Prediction vs. Reality}
+\begin{frame}[fragile]{Internal behavior of the application}
     256 MPI ranks, interrupted after the $5^{\text{th}}$ iteration\medskip
 
     \newcommand{\ganttcaption}[2]{\rotatebox{90}{\hspace{.6cm}$\text{#1}\atop \text{#2}$\hspace{-1cm}}}%
@@ -349,6 +349,32 @@
             \only<+>{\ganttcaption{Complex kernel}{Complex network}  & \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_simulation_stochastic-CPU_polynomial-DGEMM_stochastic-network.png} \\}%
         \end{tabular}
     \end{overlayarea}
+\end{frame}
+
+
+\begin{frame}[fragile]{Influence of the problem size}
+    Now the complete run, with 1024 MPI ranks
+
+    \tikzstyle{model_label}=[anchor=south west, font=\scriptsize]
+    \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] at (0,0){
+            \begin{minipage}{\linewidth}
+                \includegraphics<1>[width=0.9\linewidth]{img/slides/validation_performance_1.pdf}
+                \includegraphics<2>[width=0.9\linewidth]{img/slides/validation_performance_2.pdf}
+                \includegraphics<3>[width=0.9\linewidth]{img/slides/validation_performance_3.pdf}
+                \includegraphics<4->[width=0.9\linewidth]{img/slides/validation_performance_4.pdf}
+            \end{minipage}
+        };
+        \onslide<3->{\draw[-latex] (9.7, 4.5) to[bend left] node [midway, right, model_label, anchor=west]
+            {\emph{\textbf{Heterogeneity}}} (9.7, 3.9) ;}
+        \onslide<4->{\draw[-latex] (9.7, 3.9) to[bend left] node [midway, right, model_label,
+            anchor=west]{\emph{\textbf{Variability}}} (9.7, 3.5) ;}
+    \end{tikzpicture}
+    \onslide<5->{
+        \textbf{Take-Away Message}: \emph{accurate prediction}
+
+        Modeling both \textbf{spatial} and \textbf{temporal} computation variability is essential
+    }
 \end{frame}
 
 % See:
