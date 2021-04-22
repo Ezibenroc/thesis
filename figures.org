@@ -2911,7 +2911,7 @@ tmp_plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-5XiAOP/figureUmJFkI.png]]
+[[file:/tmp/babel-5XiAOP/figurec8Ox4i.png]]
 
 *** MPI calibration
 **** Downloading and extracting the CSV
