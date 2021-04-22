@@ -2814,6 +2814,105 @@ plot
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figurezMfxrY.png]]
 
+**** Drawing the plot (slides)
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(gghighlight)
+options(warn=-1)
+df = read.csv('data/prediction/validation/temperature/hpl_matrix_size.csv')
+head(df)
+#+end_src
+
+#+RESULTS:
+: 
+:   matrix_size gflops    time       mode cooling       date   jobid
+: 1      175000  22940  155.72 Simulation    good 2020-09-07 1946997
+: 2      500000  25490 3269.59 Simulation    good 2020-09-07 1946995
+: 3       75000  17630   15.96 Simulation    good 2020-09-07 1946996
+: 4      300000  24570  732.56 Simulation    good 2020-09-07 1946994
+: 5       50000  13960    5.97 Simulation    good 2020-09-07 1946992
+: 6      450000  25270 2404.44 Simulation    good 2020-09-07 1947004
+
+
+Removing the two outliers in the real executions. These two points are
+"abnormaly fast", each of them was the first to be made in the sequence of runs
+(the machines were not overheating yet).
+#+begin_src R :results output :session *R* :exports both
+print(length(df$gflops))
+df = df %>% filter(matrix_size != 175000 | gflops < 22000 | mode == "Simulation" | cooling == "good")
+print(length(df$gflops))
+#+end_src
+
+#+RESULTS:
+: [1] 468
+: 
+: [1] 466
+
+
+We also remove the results from the real run of 2018, the platform appears to
+have significantly changed since then.
+#+begin_src R :results output :session *R* :exports both
+print(length(df$gflops))
+df = df %>% filter(date != "2018-10-10")
+print(length(df$gflops))
+#+end_src
+
+#+RESULTS:
+: [1] 466
+: 
+: [1] 453
+
+Then, we can generate the plot.
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+df %>%
+    mutate(cooling_txt = ifelse(cooling=="good", "Normal cooling", "Problematic cooling")) %>% {(
+    ggplot(.) +
+        aes(x=matrix_size, y=gflops, color=mode, fill=mode, group=interaction(mode, cooling), shape=mode) +
+        expand_limits(y=0) +
+        ylim(0, 30000) +
+        ylab('Gflop/s') +
+        xlab('Matrix rank') +
+        labs(color="Mode", fill="Mode", shape="Mode") +
+        scale_fill_brewer(palette="Dark2", guide = guide_legend()) +
+        scale_color_brewer(palette="Dark2", guide = guide_legend()) +
+        scale_shape_manual(values=c(23, 21, 21)) +
+        theme_bw() +
+        theme(text=element_text(size=16)) +
+        theme(legend.position=c(1, 0), legend.justification=c(1, 0), legend.direction="horizontal", legend.box="horizontal") +
+        theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0, 'cm'))+
+        theme(legend.background = element_rect(color="black", size=0.1)) +
+        theme(legend.title = element_blank()) +
+        theme(strip.background = element_rect(fill="NA")) +
+        guides(color = guide_legend(override.aes=list(linetype=0))) +
+        guides(fill = guide_legend(label.position = "bottom"))
+    )} -> plot
+
+tmp_plot = plot +
+        geom_point(data=filter(df, mode=="Reality", cooling=="good"), size=2, color="black", alpha=.5) +
+        geom_point(data=filter(df, mode!="Reality", cooling=="good"), size=2) +
+        stat_summary(data=filter(df, cooling=="good"), fun.y='mean', geom='line') +
+        guides(fill = guide_legend(override.aes = list(alpha=1)))
+ggsave(filename='img/slides/validation_temperature_1.pdf', plot=tmp_plot)
+tmp_plot = plot +
+        geom_point(data=filter(df, mode=="Reality", cooling=="good"), size=2, shape=5, color="grey", alpha=.3, show.legend=F) +
+        geom_point(data=filter(df, mode!="Reality", cooling=="good"), size=2, shape=0, color="grey", alpha=.3, show.legend=F) +
+        stat_summary(data=filter(df, cooling=="good"), fun.y='mean', geom='line', color="grey", alpha=.3) +
+        geom_point(data=filter(df, mode=="Reality", cooling=="bad"), size=2, color="black", alpha=.5) +
+        geom_point(data=filter(df, mode!="Reality", cooling=="bad"), alpha=0) +  # to fix the legend...
+        stat_summary(data=filter(df, mode=="Reality", cooling=="bad"), fun.y='mean', geom='line') +
+        guides(fill = guide_legend(override.aes = list(alpha=1)))
+ggsave(filename='img/slides/validation_temperature_2.pdf', plot=tmp_plot)
+tmp_plot = tmp_plot +
+        geom_point(data=filter(df, mode!="Reality", cooling=="bad"), size=2) +
+        stat_summary(data=filter(df, mode!="Reality", cooling=="bad"), fun.y='mean', geom='line')
+ggsave(filename='img/slides/validation_temperature_3.pdf', plot=tmp_plot)
+tmp_plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-5XiAOP/figureUmJFkI.png]]
+
 *** MPI calibration
 **** Downloading and extracting the CSV
 See the following entries in Tom's journal for the analysis of those

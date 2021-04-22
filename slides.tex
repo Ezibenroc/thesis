@@ -227,6 +227,8 @@
     \end{block}
 \end{frame}
 
+\section{Performance prediction through simulation}%
+
 \begin{frame}[fragile]{Sim(Em)ulation: The SMPI Approach}
     \begin{columns}
         \begin{column}[c]{.2\columnwidth}
@@ -336,7 +338,8 @@
 \end{frame}
 
 
-\section{Does all this matter?}
+\section{Validating the predictions}
+
 \begin{frame}[fragile]{Internal behavior of the application}
     256 MPI ranks, interrupted after the $5^{\text{th}}$ iteration\medskip
 
@@ -376,6 +379,31 @@
         Modeling both \textbf{spatial} and \textbf{temporal} computation variability is essential
     }
 \end{frame}
+
+\begin{frame}[fragile]{Influence of a platform change}
+
+    \tikzstyle{model_label}=[anchor=south west, font=\scriptsize]
+    \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] at (0,0){
+            \begin{minipage}{\linewidth}
+                \includegraphics<1>[width=0.9\linewidth]{img/slides/validation_temperature_1.pdf}
+                \includegraphics<2>[width=0.9\linewidth]{img/slides/validation_temperature_2.pdf}
+                \includegraphics<3->[width=0.9\linewidth]{img/slides/validation_temperature_3.pdf}
+            \end{minipage}
+        };
+        \onslide<2->{\draw[-latex] (9.7, 4) to[bend left] node [midway, right, model_label, anchor=west]
+            {\emph{\textbf{Overheating}}} (9.7, 3.5) ;}
+    \end{tikzpicture}
+    \onslide<2->{On four nodes, the cooling system malfunctionned for several weeks}
+    \vfill
+    \onslide<4->{
+        \textbf{Take-Away Message}: Re-measuring \dgemm durations to generate a new model was enough to account for the
+        platform change
+    }
+\end{frame}
+
+\section{Performance tests}%
+
 
 % See:
 %   https://academia.stackexchange.com/a/88068/37904
