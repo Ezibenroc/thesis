@@ -335,6 +335,22 @@
     Bias may be desirable in some situations
 \end{frame}
 
+
+\section{Does all this matter?}
+\begin{frame}[fragile]{HPL Structure: Prediction vs. Reality}
+    256 MPI ranks, interrupted after the $5^{\text{th}}$ iteration\medskip
+
+    \newcommand{\ganttcaption}[2]{\rotatebox{90}{\hspace{.6cm}$\text{#1}\atop \text{#2}$\hspace{-1cm}}}%
+    \begin{overlayarea}{\linewidth}{7cm}
+        \begin{tabular}{c@{}c}
+            \only<+->{\ganttcaption{\hspace{.3cm}Reality}{}          & \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_reality.png} \\}%
+            \only<+>{\ganttcaption{Simple kernel}{Simple network}    & \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_simulation_deterministic-CPU_linear-DGEMM_deterministic-network.png}\\}%
+            \only<+>{\ganttcaption{Simple kernel}{Complex network}   & \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_simulation_deterministic-CPU_linear-DGEMM_stochastic-network.png}\\}%
+            \only<+>{\ganttcaption{Complex kernel}{Complex network}  & \includegraphics[width=.93\linewidth]{img/prediction/validation/traces/gantt_simulation_stochastic-CPU_polynomial-DGEMM_stochastic-network.png} \\}%
+        \end{tabular}
+    \end{overlayarea}
+\end{frame}
+
 % See:
 %   https://academia.stackexchange.com/a/88068/37904
 %   https://unix.stackexchange.com/a/277987/106103
