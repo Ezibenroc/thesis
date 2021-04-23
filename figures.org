@@ -4757,7 +4757,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figureLoLR0V.png]]
+[[file:/tmp/babel-Y1PGmR/figure7Jbu7D.png]]
 **** Multiple points
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 set.seed(41)
@@ -4793,6 +4793,39 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-LlZHec/figureHwoaVK.png]]
+**** Normal density (slides)
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+center=0
+std=1
+l=4
+radius = qnorm(1-(1-0.95)/2)
+base_col = "#2196F3"
+base_alpha = 0.3
+
+max_y=0.47
+side_lines = c(center-radius*std, center+radius*std)
+
+plot = ggplot() +
+    expand_limits(x=c(center-l*std, center+l*std)) +
+    coord_cartesian(ylim = c(0, max_y)) +
+    geom_segment(aes(x=side_lines, xend=side_lines, y=0, yend=max_y), color=base_col, linetype="dashed") +
+    stat_function(fun = dnorm, n = 1000, args = list(mean=center, sd=std)) +
+    stat_function(fun = normal_shade, n = 1000, args = list(mean=center, sd=std, radius=radius*std), geom="area", fill=base_col, alpha=base_alpha) +
+    geom_hline(yintercept=0) +
+    geom_segment(aes(x=center, xend=center, y=0, yend=max_y), linetype="dashed") +
+    annotate("label", x=center, y=0.45, label="μ", size=12, label.padding=unit(0.8, "lines")) +
+    annotate("label", x=center-2*std, y=0.45, label="μ-2σ", size=8, color=base_col, label.padding=unit(0.8, "lines")) +
+    annotate("label", x=center+2*std, y=0.45, label="μ+2σ", size=8, color=base_col, label.padding=unit(0.8, "lines")) +
+    annotate("label", x=center, y=0.1, label="P≈95%", size=12, label.padding=unit(0.8, "lines")) +
+    theme_void()
+ggsave(filename='img/slides/normal.pdf', plot=plot, device=cairo_pdf, width=10, height=6)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Y1PGmR/figurepZpNR8.png]]
+
 * Appendix
 ** Total amount of core hours
 *** Collecting the data
