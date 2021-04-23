@@ -402,8 +402,33 @@
     }
 \end{frame}
 
+
 \section{Performance tests}%
 
+\begin{frame}{Regular measures}
+    On a near-daily basis, run the \dgemm calibration code on
+    \begin{picture}(0, 0)
+        \put(-3, -11){\hbox{
+            \includegraphics[width=2cm]{img/slides/grid5000-logo.pdf}
+        }}
+    \end{picture}
+
+    454 nodes (792 CPU) from 12 clusters
+    \pause
+
+    For each CPU, collect:
+    \begin{itemize}
+        \item average \dgemm performance
+        \item \dgemm coefficients of regression (\ie the model for simulation)
+        \pause
+        \item average CPU frequency
+        \item average CPU power consumption
+        \item average DRAM power consumption
+        \item average temperature
+    \end{itemize}
+    \pause
+    Each parameter is \alert{normally distributed} (thanks to CLT)
+\end{frame}
 
 % See:
 %   https://academia.stackexchange.com/a/88068/37904
