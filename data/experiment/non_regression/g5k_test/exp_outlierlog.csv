@@ -1,4 +1,7 @@
 date,cluster,node,jobid,description
+2020-01-22,grisou,5,2239360,temperature anomaly
+2020-02-21,grisou,33,2288950,temperature anomaly
+2020-03-06,grisou,33,2306466,temperature anomaly
 2020-09-25,dahu,7,1949205,CPU power drop
 2020-09-28,dahu,17/18/19,1949268,CPU power drop
 2020-10-05,dahu,17/18/19,1949999,CPU power drop
@@ -25,3 +28,15 @@ date,cluster,node,jobid,description
 2020-12-09,dahu,29/30/31/32,1966749,CPU power drop
 2021-01-05,dahu,29/30/31/32,1972975,CPU power drop
 2021-01-15,dahu,32,1974675,overheating
+2021-01-27,dahu,24,1976696,overheating
+2021-02-01,dahu,25/26/27/28,1977464,CPU power drop
+2021-02-05,dahu,29/30/31/32,1978457,CPU power drop
+2021-02-08,grisou,33,2886979,temperature anomaly
+2021-02-10,dahu,25/26/27/28/29/30/31/32,1979036,CPU power drop
+2021-02-12,dahu,29/30/31/32,1980041,CPU power drop
+2021-02-15,dahu,29/30/31/32,1980287,CPU power drop
+2021-02-17,dahu,29/30/31/32,1980648,CPU power drop
+2021-02-18,troll,2,1980920,overheating
+2021-02-22,dahu,29/30/31/32,1981468,CPU power drop
+2021-02-23,dahu,29/30/31/32,1981672,CPU power drop
+2021-02-25,dahu,29/30/31/32,1982002,CPU power drop
