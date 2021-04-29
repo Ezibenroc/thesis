@@ -3179,6 +3179,69 @@ p
 
 #+RESULTS:
 [[file:/tmp/babel-1gNT9F/figureL8vch7.png]]
+**** Drawing the plot (slides)
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(ggrepel)
+df = read.csv("data/prediction/validation/geometry/hpl_geometry.csv") %>%
+    mutate(geometry = paste(proc_p, proc_q, sep="×")) %>%
+    mutate(mode = ifelse(mode == "reality", "Reality", "Simulation"))
+str(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+'data.frame':	224 obs. of  8 variables:
+ $ filename   : Factor w/ 35 levels "../hpl/geometry/4/grenoble_2020-06-26_1937786.zip",..: 18 10 17 33 26 15 14 31 25 35 ...
+ $ matrix_size: int  250000 250000 250000 250000 250000 250000 250000 250000 250000 250000 ...
+ $ proc_p     : int  48 80 30 96 2 160 60 20 8 480 ...
+ $ proc_q     : int  20 12 32 10 480 6 16 48 120 2 ...
+ $ mode       : chr  "Simulation" "Simulation" "Simulation" "Simulation" ...
+ $ time       : num  511 626 482 679 896 ...
+ $ gflops     : num  20380 16640 21630 15340 11630 ...
+ $ geometry   : chr  "48×20" "80×12" "30×32" "96×10" ...
+#+end_example
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+set.seed(42) # deterministic geom_text_repel
+tmp = df %>%
+    filter(mode == "Reality") %>%
+    group_by(mode, proc_p, proc_q, geometry) %>%
+    summarise(gflops = 1/mean(1/gflops)) # harmonic mean since this is a rate
+
+# Uncomment the following
+#df = df %>% filter(network_model == "bad" | mode == "Reality")
+p = ggplot() +
+    aes(x=proc_p, y=gflops, shape=mode, fill=mode) +
+    stat_summary(data=df, aes(color=mode), fun.y = mean, geom="line") +
+    geom_point(data=df %>% filter(mode=="Reality"), size=2, alpha=.5, color="black") +
+    geom_point(data=df %>% filter(mode!="Reality"), size=2, color="NA") +
+    geom_text_repel(data=tmp, size=3.5, direction="y", segment.alpha=0.2, nudge_y=-1500, aes(label=geometry, y=gflops)) +
+    theme_bw() +
+    ylab("Gflop/s") +
+    xlab("P") +
+    labs(color="Mode", fill="Mode", shape="Mode") +
+    scale_fill_brewer(palette="Dark2", guide = guide_legend()) +
+    scale_color_brewer(palette="Dark2", guide = guide_legend()) +
+    scale_shape_manual(values=c(23, 21, 21)) +
+    scale_x_log10() +
+    expand_limits(y=0) +
+    theme(legend.position=c(0.4, 0.1), legend.direction="horizontal", legend.box="horizontal") +
+    theme(legend.spacing.x = unit(0.5, 'cm'), legend.spacing.y = unit(0, 'cm'))+
+    theme(legend.background = element_rect(color="black", size=0.1)) +
+    theme(legend.title = element_blank()) +
+    guides(color = guide_legend(override.aes=list(linetype=0))) +
+    guides(fill = guide_legend(label.position = "bottom"))
+
+ggsave("img/slides/validation_geometry.pdf", plot=p, device=cairo_pdf)
+p
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-Y1PGmR/figure09wqYy.png]]
 *** Factorial experiment
 Again, the CSV files are small, so they are stored directly in the
 repository. They have been dumped by [[https://github.com/Ezibenroc/calibration_analysis/blob/eb857051cb94e2f4390cedb002ed491a43d3c914/dahu/smpi_hpl/hpl_factors.ipynb][this notebook]] (cell 2).
