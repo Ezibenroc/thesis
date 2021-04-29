@@ -4819,7 +4819,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Y1PGmR/figure7Jbu7D.png]]
+[[file:/tmp/babel-Y1PGmR/figure0zwo4q.png]]
 **** Multiple points
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 set.seed(41)
@@ -4876,9 +4876,9 @@ plot = ggplot() +
     stat_function(fun = normal_shade, n = 1000, args = list(mean=center, sd=std, radius=radius*std), geom="area", fill=base_col, alpha=base_alpha) +
     geom_hline(yintercept=0) +
     geom_segment(aes(x=center, xend=center, y=0, yend=max_y), linetype="dashed") +
-    annotate("label", x=center, y=0.45, label="μ", size=12, label.padding=unit(0.8, "lines")) +
-    annotate("label", x=center-2*std, y=0.45, label="μ-2σ", size=8, color=base_col, label.padding=unit(0.8, "lines")) +
-    annotate("label", x=center+2*std, y=0.45, label="μ+2σ", size=8, color=base_col, label.padding=unit(0.8, "lines")) +
+    annotate("label", x=center, y=0.45, label="bar(x)", size=12, label.padding=unit(0.8, "lines"), parse=T) +
+    annotate("label", x=center-2*std, y=0.45, label="bar(x)-2*s", size=8, color=base_col, label.padding=unit(0.8, "lines"), parse=T) +
+    annotate("label", x=center+2*std, y=0.45, label="bar(x)+2*s", size=8, color=base_col, label.padding=unit(0.8, "lines"), parse=T) +
     annotate("label", x=center, y=0.1, label="P≈95%", size=12, label.padding=unit(0.8, "lines")) +
     theme_void()
 ggsave(filename='img/slides/normal.pdf', plot=plot, device=cairo_pdf, width=10, height=6)
@@ -4886,7 +4886,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Y1PGmR/figurepZpNR8.png]]
+[[file:/tmp/babel-Y1PGmR/figureuKRYEI.png]]
 
 * Appendix
 ** Total amount of core hours
