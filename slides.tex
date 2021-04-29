@@ -72,18 +72,18 @@
 \colorlet{mycolor}{materialblue}
 \setbeamercolor{alerted text}{fg=mycolor}
 
-\renewcommand{\emph}[1]{\SoulColor{lightorange}\hl{#1}}
-\makeatletter
-\let\HL\hl
-\renewcommand\hl{%
-  \let\set@color\beamerorig@set@color
-  \let\reset@color\beamerorig@reset@color
-  \HL}
-\colorlet{mycolorlight}{mycolor!30}
-\sethlcolor{mycolorlight}
-\makeatother
-\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
-\renewcommand<>{\emph}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+%\renewcommand{\emph}[1]{\SoulColor{lightorange}\hl{#1}}
+%\makeatletter
+%\let\HL\hl
+%\renewcommand\hl{%
+%  \let\set@color\beamerorig@set@color
+%  \let\reset@color\beamerorig@reset@color
+%  \HL}
+%\colorlet{mycolorlight}{mycolor!30}
+%\sethlcolor{mycolorlight}
+%\makeatother
+%\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+%\renewcommand<>{\emph}[1]{\only#2{\beameroriginal{\hl}}{#1}}
 
 
 \setlength{\interspacetitleruled}{0pt}%
@@ -287,6 +287,62 @@
     \textbf{Contribution}: Skip the expensive computations (mostly \dgemm) and replace them by performance models
 \end{frame}
 
+\begin{frame}[fragile]{Quick word on HPL}
+    Validations of SMPI before this thesis: simple applications without any high performance tricks
+    \pause
+
+    Contribution: predict accurately the performance of HPL
+
+    \begin{minipage}[b][0.3\textheight][c]{.2\linewidth}
+        \includegraphics[width=\linewidth]{img/slides/top_500.pdf}
+    \end{minipage} \hfill %
+    \begin{minipage}[b][0.3\textheight][t]{0.78\linewidth}
+        \begin{itemize}
+            \item Computations and communication overlap
+            \item Several parameters, hundred of possible combinations
+            \item Representative of some HPC workloads
+            \item Well established, used for the Top500
+        \end{itemize}
+    \end{minipage}
+    \vfill
+    \pause
+
+    \begin{center}
+        \begin{minipage}[b][0.3\textheight][t]{0.3\linewidth}
+            \begin{tikzpicture}[scale=0.2]
+                \draw (0, 0) -- (0, 12) -- (12, 12) -- (12, 0) -- cycle;
+                \foreach \i in {2}{
+                    \draw [fill=lightgray] (\i, 0) -- (\i, 12-\i) -- (12, 12-\i) -- (12, 0) -- cycle;
+                    \draw [fill=gray] (\i, 12-\i) -- (\i, 12-\i-1) -- (\i+1, 12-\i-1) -- (\i+1, 12-\i) -- cycle;
+                    \draw[very thick, -latex] (\i,12-\i) -- (\i+2,12-\i-2);
+                    \draw[<->] (\i, 12-\i+0.5) -- (\i+1, 12-\i+0.5) node [pos=0.5, yshift=+0.15cm] {\scalebox{.8}{\texttt{NB}}};
+                }
+                \foreach \i in {3}{
+                    \draw [fill=white] (\i, 0) -- (\i, 12-\i) -- (12, 12-\i) -- (12, 0) -- cycle;
+                    \draw (\i,12-\i) -- (\i,0);
+                    \draw[very thick, -latex] (\i,12-\i) -- (\i+2,12-\i-2);
+                }
+                \draw[dashed] (0, 12) -- (12, 0);
+                \node(L) at (2, 2) {\ensuremath{\boldsymbol{L}}};
+                \node(U) at (10, 10) {\ensuremath{\boldsymbol{U}}};
+                \node(A) at (8, 4) {\ensuremath{\boldsymbol{A}}};
+                \draw[<->] (0, -0.5) -- (12, -0.5) node [pos=0.5, yshift=-0.3cm] {$N$};
+            \end{tikzpicture}
+        \end{minipage} %
+        \begin{minipage}[b][0.3\textheight][t]{0.4\linewidth}\footnotesize
+            \begin{algorithm}[H]
+                Allocate and initialize $A$\;
+                \For{$k=N$ \textbf{to} $0$ \textbf{step} \texttt{NB}}{
+                    Allocate the panel\;
+                    Factor the panel\;
+                    Broadcast the panel\;
+                    Update the sub-matrix;
+                }
+            \end{algorithm}
+        \end{minipage}
+    \end{center}
+\end{frame}
+
 \begin{frame}{Modeling Commputations}
     \begin{equation*}
         \texttt{dgemm}_{\uncover<3->{i}}(M,N,K) =
@@ -370,14 +426,14 @@
             \end{minipage}
         };
         \onslide<3->{\draw[-latex] (9.7, 4.5) to[bend left] node [midway, right, model_label, anchor=west]
-            {\emph{\textbf{Heterogeneity}}} (9.7, 3.9) ;}
+            {\textbf{Heterogeneity}} (9.7, 3.9) ;}
         \onslide<4->{\draw[-latex] (9.7, 3.9) to[bend left] node [midway, right, model_label,
-            anchor=west]{\emph{\textbf{Variability}}} (9.7, 3.5) ;}
+            anchor=west]{\textbf{Variability}} (9.7, 3.5) ;}
     \end{tikzpicture}
     \onslide<5->{
-        \textbf{Take-Away Message}: \emph{accurate prediction}
+        \textbf{Take-Away Message}: accurate prediction
 
-        Modeling both \textbf{spatial} and \textbf{temporal} computation variability is essential
+        Modeling both \alert{spatial} and \alert{temporal} computation variability is essential
     }
 \end{frame}
 
@@ -393,7 +449,7 @@
             \end{minipage}
         };
         \onslide<2->{\draw[-latex] (9.7, 4) to[bend left] node [midway, right, model_label, anchor=west]
-            {\emph{\textbf{Overheating}}} (9.7, 3.5) ;}
+            {\textbf{Overheating}} (9.7, 3.5) ;}
     \end{tikzpicture}
     \onslide<2->{On four nodes, the cooling system malfunctionned for several weeks}
     \vfill
