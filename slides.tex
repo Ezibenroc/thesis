@@ -290,7 +290,7 @@
 \begin{frame}{Modeling Commputations}
     \begin{equation*}
         \texttt{dgemm}_{\uncover<3->{i}}(M,N,K) =
-        \only<2>{\alpha.M.N.K}\uncover<3->{\underbrace{\alpha_i.M.N.K}_{\text{per host}}}
+        \only<1-2>{\alpha.M.N.K}\uncover<3->{\underbrace{\alpha_i.M.N.K}_{\text{per host}}}
         \uncover<5->{+ \underbrace{\beta_i.M.N +  \gamma_i.N.K + \dots }_{\text{polynomial model}}}
         \uncover<6->{+ \underbrace{\norm(0,\alpha'_i.M.N.K + \dots)}_{\text{polynomial noise}}}
     \end{equation*}

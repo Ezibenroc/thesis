@@ -951,17 +951,16 @@ F-statistic: 6.928e+04 on 64 and 99770 DF,  p-value: < 2.2e-16
 Regression lines, to show the heterogeneity.
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 400 :height 400 :session *R*
 library(dplyr)
-plot = dgemm %>% {(#filter(cpu>20, cpu<30) %>%
-    ggplot(., aes(x=m*n*k, y=duration)) +
-    geom_point(data=filter(., m*n*k<=9.9e9), alpha=.1,size=.5) +
+plot = dgemm %>%
+    ggplot(aes(x=m*n*k, y=duration)) +
+    geom_smooth(color="#2196F3", method='lm', se=F, fullrange=T, linetype=4) +
     scale_color_brewer(palette="Set1", guide=F)
-)}
 plot = plot + theme_bw() + ylab('Duration (s)') +
     scale_x_continuous(name = 'M.N.K', breaks = (0:4)*3E9, limits=c(0,1.2e10)) +
     scale_y_continuous(limits=c(0,1)) +
     labs(color='CPU')
 ggsave(filename='img/slides/dgemm_heterogeneity_calib_1.png', plot=plot, width=5,height=5, dpi=200)
-plot = plot + geom_smooth(color="#2196F3", method='lm', se=F, fullrange=T, linetype=4)
+plot = plot + geom_point(data=filter(dgemm, m*n*k<=9.9e9), alpha=.1,size=.5)
 ggsave(filename='img/slides/dgemm_heterogeneity_calib_2.png', plot=plot, width=5,height=5, dpi=200)
 plot = plot +
     aes(color=factor(cpu%%9)) +
@@ -972,7 +971,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-XPvhqG/figureqoBjxf.png]]
+[[file:/tmp/babel-Y1PGmR/figureG4hQNt.png]]
 
 
 #+begin_src R :results output :session *R* :exports both
