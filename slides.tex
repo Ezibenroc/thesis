@@ -388,22 +388,6 @@
     \end{minipage}
 \end{frame}
 
-\begin{frame}{Parenthesis: on the difficulties of experimentation}
-    \alert{Experimental biases} when measuring \dgemm or MPI durations
-
-    Effect on durations, but also other metrics (\eg CPU frequency)
-    \onslide<+->
-    \begin{itemize}[<+->]
-        \item Sampling method for generating the sequence of calls
-        \item Sample itself (for a given sampling method)
-        \item Interferences between computations and communications
-        \item Content of the matrices used by \dgemm
-    \end{itemize}
-
-    \onslide<+->
-    Bias may be desirable in some situations
-\end{frame}
-
 
 \section{Validating the predictions}
 
@@ -510,6 +494,22 @@
         \item Realistic experimental conditions
         \item Platform changes (\eg, the cooling issue)
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Parenthesis: on the difficulties of experimentation}
+    \alert{Experimental biases} when measuring \dgemm or MPI durations
+
+    Effect on durations, but also other metrics (\eg CPU frequency)
+    \onslide<+->
+    \begin{itemize}[<+->]
+        \item Sampling method for generating the sequence of calls
+        \item Sample itself (for a given sampling method)
+        \item Interferences between computations and communications
+        \item Content of the matrices used by \dgemm
+    \end{itemize}
+
+    \onslide<+->
+    Bias may be desirable in some situations
 \end{frame}
 
 
