@@ -262,11 +262,12 @@
 
         \begin{column}[c]{.85\columnwidth}
             \begin{picture}(0, 0)
-                \put(167,-26){\hbox{
+                \put(170,-32){\hbox{
                     \includegraphics[width=2cm]{img/slides/simgrid_logo.pdf}
                 }}
             \end{picture}
             \begin{block}{Full reimplementation of MPI on top of}% \alert{SimGrid}}
+                \medbreak
                 \begin{itemize}
                     \item C/C++/F77/F90 codes run \alert{unmodified out of the box}
                     \item Simply replace mpicc/mpirun by smpicc/smpirun
@@ -275,7 +276,7 @@
             \pause
             \begin{block}{Emulation: how?}
                 \begin{itemize}
-                    \item Computations run for real on a laptop
+                    \item Application runs for real on a laptop
                     \item Communications are faked, good fluid network models
                     \item \alert{Performance model} for the target platform
                 \end{itemize}
