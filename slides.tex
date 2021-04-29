@@ -1,6 +1,6 @@
 \documentclass[10pt]{beamer}
 
-\usepackage[ruled,vlined,english]{algorithm2e}
+\usepackage[vlined,english]{algorithm2e}
 \DontPrintSemicolon
 
 \usepackage{graphicx}
@@ -293,14 +293,13 @@
 
     Contribution: predict accurately the performance of HPL
 
-    \begin{minipage}[b][0.3\textheight][c]{.2\linewidth}
+    \begin{minipage}[b][0.2\textheight][c]{.2\linewidth}
         \includegraphics[width=\linewidth]{img/slides/top_500.pdf}
     \end{minipage} \hfill %
-    \begin{minipage}[b][0.3\textheight][t]{0.78\linewidth}
+    \begin{minipage}[b][0.2\textheight][t]{0.78\linewidth}
         \begin{itemize}
             \item Computations and communication overlap
-            \item Several parameters, hundred of possible combinations
-            \item Representative of some HPC workloads
+            \item More representative of some HPC workloads
             \item Well established, used for the Top500
         \end{itemize}
     \end{minipage}
@@ -308,7 +307,7 @@
     \pause
 
     \begin{center}
-        \begin{minipage}[b][0.3\textheight][t]{0.3\linewidth}
+        \begin{minipage}[b][0.4\textheight][t]{0.25\linewidth}
             \begin{tikzpicture}[scale=0.2]
                 \draw (0, 0) -- (0, 12) -- (12, 12) -- (12, 0) -- cycle;
                 \foreach \i in {2}{
@@ -328,17 +327,28 @@
                 \node(A) at (8, 4) {\ensuremath{\boldsymbol{A}}};
                 \draw[<->] (0, -0.5) -- (12, -0.5) node [pos=0.5, yshift=-0.3cm] {$N$};
             \end{tikzpicture}
-        \end{minipage} %
-        \begin{minipage}[b][0.3\textheight][t]{0.4\linewidth}\footnotesize
+        \end{minipage}
+        \begin{minipage}[b][0.4\textheight][t]{0.36\linewidth}\footnotesize
             \begin{algorithm}[H]
                 Allocate and initialize $A$\;
                 \For{$k=N$ \textbf{to} $0$ \textbf{step} \texttt{NB}}{
                     Allocate the panel\;
                     Factor the panel\;
                     Broadcast the panel\;
-                    Update the sub-matrix;
+                    Update the sub-matrix\;
                 }
             \end{algorithm}
+        \end{minipage} \hfill \pause%
+        \begin{minipage}[b][0.4\textheight][t]{0.35\linewidth}\footnotesize
+            \begin{block}{Tuning parameters}
+                \begin{itemize}
+                    \item Broadcast algorithm
+                    \item Block size
+                    \item Process grid
+                    \item etc.
+                \end{itemize}
+                Hundreds of combinations
+            \end{block}
         \end{minipage}
     \end{center}
 \end{frame}
