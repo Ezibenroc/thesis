@@ -5049,3 +5049,63 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-bQXrhC/figuredAFOVg.png]]
+** CO2 emissions repartition (slides)
+#+NAME: co2_thesis
+| source       | idx |  co2 | comment              |
+|--------------+-----+------+----------------------|
+| Flights      |   1 |  7.6 | 2 trips to the USA   |
+| Computations |   2 | 10.6 | 2 million core hours |
+
+#+begin_src R :results output :session *R* :exports both
+#borrowed from https://stackoverflow.com/questions/23138388/using-xkcd-package-with-ggplot2-how-do-i-color-a-bar-graph-but-keep-the-man-sol
+library(extrafont)
+download.file("http://simonsoftware.se/other/xkcd.ttf", dest = "/tmp/xkcd.ttf")
+system("mkdir -p ~/.fonts")
+system("cp -f /tmp/xkcd.tff -t ~/.fonts")
+font_import()
+loadfonts()
+#+end_src
+
+
+#+begin_src R :var df=co2_thesis :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
+# #+begin_src R :var df=co2_thesis :results output :session *R* :exports both
+library(xkcd)
+library(extrafont)
+library(dplyr)
+library(ggplot2)
+set.seed(16)
+
+target = data.frame(co2=c(2), comment=c("2t yearly target"))
+
+width=0.3
+plot = df %>%
+    ggplot() +
+    xkcdrect(aes(xmin=idx-width, xmax=idx+width, ymin=0, ymax=co2, fill=source), data=df) +
+    ylab("Number of tonnes of CO2") +
+   # xkcdline(aes(y=co2, x=0, yend=co2, xend=2), target, xjitteramount = 0.12) +
+    scale_fill_manual(values=c("#2196f3", "#f37e21")) +
+    xkcdaxis(c(0.5,2.5), c(0,10)) +
+    coord_flip() +
+    geom_text(aes(x=idx+width/2, y=1, label=source), hjust=0, size=12, family="xkcd") +
+    geom_text(aes(x=idx-width/2, y=1, label=comment), hjust=0, size=6, family="xkcd") +
+    theme(legend.position="none") +
+  #  theme(text=element_text(size=16,  family="xkcd")) +
+    theme(axis.title.y=element_blank(), axis.ticks.y=element_blank(), axis.text.y=element_blank())
+
+plot = plot +
+    geom_hline(aes(yintercept=co2), target, linetype="dashed") +
+    geom_label(aes(x=2.5, y=co2, label=comment), target, size=6, hjust=0.01, family="xkcd")
+
+ggsave(filename='img/slides/co2.pdf', plot=plot, width=5, height=5)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-PPrGrA/figurewDsGl7.png]]
+
+#+begin_src R :results output :session *R* :exports both
+which(df$source=="Flights")-0.5
+#+end_src
+
+#+RESULTS:
+: [1] 0.5
