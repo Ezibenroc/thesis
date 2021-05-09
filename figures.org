@@ -5090,6 +5090,7 @@ plot = df %>%
     geom_text(aes(x=idx-width/2, y=1, label=comment), hjust=0, size=6, family="xkcd") +
     theme(legend.position="none") +
   #  theme(text=element_text(size=16,  family="xkcd")) +
+    theme(axis.title.x=element_text(size=16), axis.text.x=element_text(size=16)) +
     theme(axis.title.y=element_blank(), axis.ticks.y=element_blank(), axis.text.y=element_blank())
 
 plot = plot +
@@ -5101,7 +5102,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-PPrGrA/figurewDsGl7.png]]
+[[file:/tmp/babel-PPrGrA/figuree0DiHz.png]]
 
 #+begin_src R :results output :session *R* :exports both
 which(df$source=="Flights")-0.5
