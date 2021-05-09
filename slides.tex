@@ -44,7 +44,7 @@
 }
 
 % Command to make the last slide, which shows copies of the other slides
-\newcommand{\addframe}[1] {\includegraphics[page=#1, width=0.3\textwidth]{demo_old.pdf}}
+\newcommand{\addframe}[1] {\includegraphics[page=#1, width=0.3\textwidth]{slides_old.pdf}}
 
 \input{macros.local.tex}
 
@@ -663,29 +663,28 @@
             \item Researchers? Isn't it redundant?
         \end{itemize}
     \end{block}
-
 \end{frame}
 
 % See:
 %   https://academia.stackexchange.com/a/88068/37904
 %   https://unix.stackexchange.com/a/277987/106103
 %   https://stackoverflow.com/a/5349842/4110059
-%\begin{frame}[plain]
-%    \centering
-%    \setlength{\tabcolsep}{0pt}
-%    \renewcommand{\arraystretch}{0}
-%    \begin{tabular}{|c|c|c|}
-%        \hline
-%        \addframe{1}  & \addframe{6}  & \addframe{9}  \\
-%        \hline
-%        \addframe{11}  & \addframe{16}  & \addframe{24}  \\
-%        \hline
-%        \addframe{27}  & \addframe{32}  & \addframe{34}  \\
-%        \hline
-%        % Some ugly stuff, it would be great to find something better...
-%        \vspace{10pt}\\
-%        \multicolumn{3}{l}{\alert{\faicon{envelope}} \href{mailto:tom.cornebize@univ-grenoble-alpes.fr}{tom.cornebize@univ-grenoble-alpes.fr}}\\
-%    \end{tabular}
-%\end{frame}
+\begin{frame}[plain]
+    \centering
+    \setlength{\tabcolsep}{0pt}
+    \renewcommand{\arraystretch}{0}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \addframe{27}  & \addframe{29}  & \addframe{34}  \\
+        \hline
+        \addframe{39}  & \addframe{41}  & \addframe{47}  \\
+        \hline
+        \addframe{63}  & \addframe{66}  & \addframe{69}  \\
+        \hline
+        % Some ugly stuff, it would be great to find something better...
+        \vspace{10pt}\\
+        \multicolumn{3}{c}{Thank you all!}\\
+    \end{tabular}
+\end{frame}
 
 \end{document}
