@@ -1,0 +1,29 @@
+* 0
+Good afternoon, thank you all for attending my thesis defense. Today I am going
+to talk about performance predictions and about experiments.
+* 1
+For a long time, science has relied more and more on computations. Two centuries
+ago, there were already human computers employeed for calculating by hand tons
+of arithmetical operations. They eventually got replaced by machines, which
+became gradually more advanced.
+
+In the last decades, we have seen an exponential growth of performance, which
+led to huge breakthrough in science. For example, sequencing an entire human
+genome used to coste 100M$ only 20 years ago, now it is 1k$. These improvements
+however come at the cost of an increased complexity. Now processors have
+multiple cores, with several caches, vector units, instruction pipelines with
+speculative execution, dynamic frequency scaling, etc. Supercomputers have
+thousands of processors connected through extremely fast networks. High
+performance software often employs many tricks to speed things up, like
+overlapping communications with computations.
+* 2
+Due to this complexity, it can be very difficult to reason about computers and
+their speed. This is a similar problem than natural sciences like biology or
+physics, reality is complex with variability and opacity. Like these cells, you
+cannot have a perfect understanding of what is happening in a computer, there is
+no perfect model of reality. For this reason, even in computer science we need
+experiments.
+
+These empirical studies can be carried in reality, simply by taking a real
+computer, running a program and measuring its performance. But, as we will see,
+these studies can also be done in a simulator.
