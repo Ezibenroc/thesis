@@ -101,8 +101,11 @@ slides_old.pdf: slides.tex /tmp/empty.pdf
 	@$(COMPILE_SLIDES) $<
 	@mv slides.pdf slides_old.pdf
 
+# in the following, we embed the fonts in the PDF, this is needed because Fira font is non-standard
+# based on https://stackoverflow.com/a/14435749/4110059
 slides.pdf: slides.tex slides_old.pdf
 	@$(COMPILE_SLIDES) $<
+	@gs -q -dNOPAUSE -dBATCH -dPDFSETTINGS=/prepress -sDEVICE=pdfwrite -sOutputFile=output.pdf slides.pdf && mv output.pdf slides.pdf
 	@echo $@ has been updated
 
 ############
