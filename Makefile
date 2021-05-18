@@ -103,9 +103,13 @@ slides_old.pdf: slides.tex /tmp/empty.pdf
 
 # in the following, we embed the fonts in the PDF, this is needed because Fira font is non-standard
 # based on https://stackoverflow.com/a/14435749/4110059
+# we also create a rasterized version of the slides, because even with the embeded fonts it does not display properly on BBB
+# based on https://superuser.com/a/1588781/909273
 slides.pdf: slides.tex slides_old.pdf
 	@$(COMPILE_SLIDES) $<
 	@gs -q -dNOPAUSE -dBATCH -dPDFSETTINGS=/prepress -sDEVICE=pdfwrite -sOutputFile=output.pdf slides.pdf && mv output.pdf slides.pdf
+	@convert -density 600 +antialias slides.pdf output.pdf
+	@gs -q -dNOPAUSE -dBATCH -dPDFSETTINGS=/prepress -sDEVICE=pdfwrite -sOutputFile=slides_rasterized.pdf output.pdf && rm output.pdf
 	@echo $@ has been updated
 
 ############

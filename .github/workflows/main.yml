@@ -43,7 +43,7 @@ jobs:
           script: draw_evolution_plots.R
     - name: Deployment to gh-pages
       run: |
-          cp -f thesis.pdf slides.pdf build
+          cp -f thesis.pdf slides.pdf slides_rasterized.pdf build
           git add build
           git commit -am "New compilation"
           git push
