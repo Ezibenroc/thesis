@@ -4819,7 +4819,7 @@ plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-Y1PGmR/figure0zwo4q.png]]
+[[file:/tmp/babel-sQb4pJ/figureukCpIh.png]]
 **** Multiple points
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
 set.seed(41)
@@ -4848,13 +4848,15 @@ nb_points = nrow(new_obs) / 2
 # In reality, we should multiply it by N/(N+1) * (N+nb_points)/(N*nb_points) = (N+nb_points)/((N+1)*nb_points)
 radius_multiple = sqrt(2 * stats::qf(confidence, 2, Inf)) / nb_points
 
+plot = draw_plot(mu, sigma, radius, new_obs, new_point_size=3)
+ggsave(filename='img/slides/several_points.pdf', plot=plot, width=7, height=5)
 plot = draw_plot(mu, sigma, radius_multiple, new_obs, old_radius=radius, new_point_size=3, draw_new_point_mean=T)
 ggsave(filename='img/experiment/non_regression/statistics/several_points.pdf', plot=plot, width=7, height=5)
 plot
 #+end_src
 
 #+RESULTS:
-[[file:/tmp/babel-LlZHec/figureHwoaVK.png]]
+[[file:/tmp/babel-sQb4pJ/figureF3Hr9H.png]]
 **** Normal density (slides)
 
 #+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 400 :session *R*
