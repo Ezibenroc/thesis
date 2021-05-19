@@ -296,10 +296,10 @@
     \begin{minipage}[b][0.2\textheight][c]{.2\linewidth}
         \includegraphics[width=\linewidth]{img/slides/top_500.pdf}
     \end{minipage} \hfill %
-    \begin{minipage}[b][0.2\textheight][t]{0.78\linewidth}
+    \begin{minipage}[b][0.25\textheight][t]{0.78\linewidth}
         \begin{itemize}
-            \item Computations and communication overlap
-            \item More representative of some HPC workloads
+            \item Computations and communication overlap (custom collectives)
+            \item More representative of some HPC applications
             \item Well established, used for the Top500
         \end{itemize}
     \end{minipage}
@@ -342,9 +342,9 @@
         \begin{minipage}[b][0.4\textheight][t]{0.35\linewidth}\footnotesize
             \begin{block}{Tuning parameters}
                 \begin{itemize}
-                    \item Broadcast algorithm
-                    \item Block size
                     \item Process grid
+                    \item Block size
+                    \item Broadcast algorithm
                     \item etc.
                 \end{itemize}
                 Hundreds of combinations
@@ -537,7 +537,7 @@
         \item average temperature
     \end{itemize}
     \pause
-    Each parameter is \alert{normally distributed} (thanks to CLT)
+    If the platform did not change, then each parameter is \alert{normally~distributed} (thanks to CLT)
 \end{frame}
 
 \begin{frame}{Fluctuation interval}
@@ -563,7 +563,7 @@
 \end{frame}
 
 \begin{frame}{Fluctuation interval for several variables}
-    With several variables, using their \alert{covariance~matrix}
+    With several variables, use their \alert{covariance~matrix}
 
     Example in dimension 2, with \(\mathbb{P}(x_{n+1} \in \text{interval}) \approx 99.5\%\)
 
@@ -573,8 +573,10 @@
 \end{frame}
 
 \begin{frame}{Fluctuation interval for several measures}
-    With several measures, using their \alert{average} and shrinking the interval
+    How to detect more subtle changes? Take several consecutive measures \(x_{n+1},\dots,x_{n+k}\), use their
+    \alert{average} and shrink the interval accordingly
 
+    \pause
     Example with 5 measures (averages represented by crosses)
 
     \begin{center}
