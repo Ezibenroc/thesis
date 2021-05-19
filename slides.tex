@@ -572,6 +572,19 @@
     \end{center}
 \end{frame}
 
+\begin{frame}{Result: performance fluctuation}
+    \begin{center}
+        \begin{minipage}[t][.4\textheight][t]{\textwidth}
+            Performance fluctuation of the node dahu-14\\
+            \includegraphics[width=0.9\linewidth]{img/slides/evolution_dahu-14.pdf}
+        \end{minipage}
+        \begin{minipage}[t][.4\textheight][t]{\textwidth}
+            \uncover<2->{Performance fluctuation of the node dahu-32}\\
+            \includegraphics<2>[width=0.9\linewidth]{img/slides/evolution_dahu-32.pdf}
+        \end{minipage}
+    \end{center}
+\end{frame}
+
 \begin{frame}{Fluctuation interval for several measures}
     How to detect more subtle changes? Take several consecutive measures \(x_{n+1},\dots,x_{n+k}\), use their
     \alert{average} and shrink the interval accordingly
@@ -587,14 +600,12 @@
 \begin{frame}{Result: performance fluctuation}
     \begin{center}
         \begin{minipage}[t][.4\textheight][t]{\textwidth}
-            Performance fluctuation of the node dahu-14 \uncover<3>{(5-day window)}\\
-            \includegraphics<1-2>[width=0.9\linewidth]{img/slides/evolution_dahu-14.pdf}
-            \includegraphics<3>[width=0.9\linewidth]{img/slides/evolution_dahu-14_windowed.pdf}
+            Performance fluctuation of the node dahu-14 (5-day window)\\
+            \includegraphics[width=0.9\linewidth]{img/slides/evolution_dahu-14_windowed.pdf}
         \end{minipage}
         \begin{minipage}[t][.4\textheight][t]{\textwidth}
-            \uncover<2->{Performance fluctuation of the node dahu-32} \uncover<3>{(5-day window)}\\
-            \includegraphics<2>[width=0.9\linewidth]{img/slides/evolution_dahu-32.pdf}
-            \includegraphics<3>[width=0.9\linewidth]{img/slides/evolution_dahu-32_windowed.pdf}
+            Performance fluctuation of the node dahu-32 (5-day window)\\
+            \includegraphics[width=0.9\linewidth]{img/slides/evolution_dahu-32_windowed.pdf}
         \end{minipage}
     \end{center}
 \end{frame}
