@@ -502,10 +502,12 @@
     Effect on durations, but also other metrics (\eg CPU frequency)
     \onslide<+->
     \begin{itemize}[<+->]
-        \item Sampling method for generating the sequence of calls
-        \item Sample itself (for a given sampling method)
-        \item Interferences between computations and communications
-        \item Content of the matrices used by \dgemm
+        \item Sampling method for generating the sequence of calls\\
+             \alert{\(\sim 10\%\)} systematic performance change
+        \item Interferences between computations and communications\\
+             \alert{\(\sim 50\%\)} performance change in extreme configurations
+        \item Content of the matrices used by \dgemm\\
+             \alert{\(\sim 5\%\)} systematic performance change
     \end{itemize}
 
     \onslide<+->
