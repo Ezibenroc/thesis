@@ -9,7 +9,7 @@ became gradually more advanced.
 
 In the last decades, we have seen an exponential growth of performance, which
 led to huge breakthrough in science. For example, sequencing an entire human
-genome used to coste 100M$ only 20 years ago, now it is 1k$. These improvements
+genome used to cost 100M$ only 20 years ago, now it is 1k$. These improvements
 however come at the cost of an increased complexity. Now processors have
 multiple cores, with several caches, vector units, instruction pipelines with
 speculative execution, dynamic frequency scaling, etc. Supercomputers have
