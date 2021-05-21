@@ -1,6 +1,8 @@
 * 0
-Good afternoon, thank you all for attending my thesis defense. Today I am going
-to talk about performance predictions and about experiments.
+Good afternoon ! First of all thank you everyone for attending my thesis
+defense, and in particular thanks a lot to all the members of the jury for
+accepting to be here today. During this talk, I am going to present you my work
+on performance predictions and experiments.
 * 1
 For a long time, science has relied more and more on computations. Two centuries
 ago, there were already human computers employeed for calculating by hand tons
