@@ -281,13 +281,14 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \caption{Overview of High Performance Linpack.}
             \label{fig:hpl_overview}
         \end{figure}
-
-        In this work, we use the freely-available reference-implementation of HPL~\cite{hpl}, which relies on MPI.  HPL
-        implements a matrix factorization based on a right-looking variant of the LU factorization with row partial pivoting
-        and allows multiple look-ahead depths. The principle of the factorization is depicted in
-        Figure~\ref{fig:hpl_overview}. It consists of a series of panel factorizations followed by an update of the trailing
-        sub-matrix.  HPL uses a two-dimensional block-cyclic data distribution of $A$ and implements several custom MPI
-        collective communication algorithms to efficiently overlap communications with computations.
+        In this work, we use the freely-available reference-implementation of HPL~\cite{hpl} as our main target
+        application. HPL is a parallel application implemented with MPI (Message Passing Interface), an established
+        standard in the industry~\cite{mpi_standard}. HPL implements a matrix factorization based on a right-looking
+        variant of the LU factorization with row partial pivoting and allows multiple look-ahead depths. The principle
+        of the factorization is depicted in Figure~\ref{fig:hpl_overview}. It consists of a series of panel
+        factorizations followed by an update of the trailing sub-matrix.  HPL uses a two-dimensional block-cyclic data
+        distribution of $A$ and implements several custom MPI collective communication algorithms to efficiently overlap
+        communications with computations.
         The main parameters of HPL are:
         \begin{itemize}
             \item \texttt{N} is the order of the square matrix $A$.
@@ -554,7 +555,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 stuck when there are too many ongoing messages.
         \end{itemize}
 
-        The \emph{panel} mentioned in Figure~\ref{fig:hpl_overview} is an intricate data structure used throughout
+        The \emph{panel} shown in Figure~\ref{fig:hpl_overview} is an intricate data structure used by
         multiple functions of the application.  It contains both \texttt{int}s (accounting for matrix indices, error
         codes, MPI tags, and pivoting information) and \texttt{double}s (corresponding to a copy of a sub-matrix of
         \texttt{A}). To optimize data transfers, HPL flattens this structure into a single allocation of
@@ -579,8 +580,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         We would like to stress through these examples that although HPL is only a benchmark (as opposed to a real
         application used in physics simulations for instance), it is already a complex program with elaborated
         programming techniques to reach the highest available performance.  It is possible to get a very rough
-        estimation of HPL duration with an analytical model, but more accurate predictions require the simulation of the
-        application. The sequential time complexity of HPL factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 +
+        estimation of HPL's execution time with an analytical model, but more accurate predictions require the simulation of the
+        application. The sequential time complexity of HPL's factorization is \[\mathrm{flop}(N) = \frac{2}{3}N^3 + 2N^2 +
         \landauO(N)\] where $N$ is the order of the matrix to factorize.  The parallel time complexity can be
         approximated by \[T(N) \approx \frac{\left(\frac{2}{3}N^3 + 2N^2\right)}{P\cdot{}Q\cdot{}w} +
         \Theta((P+Q)\cdot{}N^2)\] where $w$ is the flop rate of a single node and the second term corresponds to the
@@ -590,14 +591,14 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     \section{Typical runs on a supercomputer}%
     \label{sec:hpl:typical_runs}
 
-        Although the TOP500 reports precise information about the core count,
+        Although the Top500 reports precise information about the core count,
         the peak performance and the effective performance, it provides almost
         no information on how (software versions, HPL parameters, etc.) this
         performance was achieved. Some colleagues agreed to provide us with
         the HPL configuration they used and the output they submitted for
         ranking (see Table\ref{fig:typical_run}).
         In June 2013, the Stampede supercomputer at TACC was ranked
-        6th in the TOP500 by achieving \NSI{5168.1}{\tera\flops}. In November
+        6th in the Top500 by achieving \NSI{5168.1}{\tera\flops}. In November
         2017, the Theta supercomputer at ANL was ranked 18th with a performance of \NSI{5884.6}{\tera\flops}
         but required a 28-hour run on the
         whole machine. Finally, we ran HPL ourselves on a Grid'5000 cluster
@@ -638,15 +639,16 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         complex optimizations such as partially non-blocking collective communication algorithms intertwined with
         computations, a very faithful modeling of both the application and the platform is required.
 
-        One goal of this thesis was to simulate systems at the scale of Stampede. Given the scale of this scenario
+        One goal of this thesis is to simulate systems at the scale of Stampede. Given the scale of this scenario
         (\Num{3785}~steps on \Num{6006}~nodes in two hours), detailed simulations quickly become intractable without
-        significant effort. The emulation of HPL therefore comes with at least two challenges:
+        significant effort. The simulation of HPL therefore comes with at least two challenges:
         \begin{itemize}
             \item The time-complexity of the algorithm is \(\Theta(N^3)\) and \(\Theta(N^2)\) communications are
                 performed, with \(N\) being very large. The execution on the Stampede cluster took roughly two hours on
                 \Num{6006}~compute nodes. Using only a single node, a naive emulation of HPL at the scale of the
                 Stampede run would take about 500 days if perfect scaling was reached.
-            \item The tremendous memory consumption and amount of memory accesses need to be drastically reduced.
+            \item The execution of HPL at scale leads to enormous memory consumption. It is therefore not possible to
+                conduct executions at scale on a single or even a few compute nodes.
         \end{itemize}
 
 \chapter{Emulating HPL at large scale}%
@@ -2167,7 +2169,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         Each bubble in Figure~\ref{fig:whatif_variability} represents one such overhead. For any \(\gamma\), this
         overhead appears to be negligible for small matrices and to increase and flatten when \(N\) grows large. In most
-        TOP5000 qualification runs, the matrix is made as large as possible and the overhead would thus appear to grow
+        Top5000 qualification runs, the matrix is made as large as possible and the overhead would thus appear to grow
         roughly linearly with \(\gamma\). On a new cluster, a simple statistical evaluation of the nodes' performance
         using the model of Section~\ref{sub:dgemm_model:generative_models} would thus be a good first diagnosis of
         whether trying to decrease temporal variability is a promising tuning target or not.
