@@ -7,7 +7,7 @@
 
         % TODO talk about the human computers, followed by the first (machine) computer created by Cray and IBM, also
         % Von Neuman, analog computers, etc.
-        Science has always been tightly associated to computations, hence this is no surprise that the first computers
+        Science has always been tightly associated to computations, hence it is no surprise that the first computers
         were not machines, but humans. Already in the second century AD, Ptolemy, a scientist living in Alexandria,
         wrote the Almagest. This book aggregated the state of the art in mathematics and astronomy and remained a
         reference for centuries. It contained several tables that were computed by the scientist, including a
@@ -17,7 +17,7 @@
         appearances of Halley's comet~\cite[Chapter~1]{human_computers}. Using the recent theories of Newton, they had
         to numerically solve the three-body problem: they computed the orbits of Saturn and Jupiter around the Sun,
         taking into account the attraction force between the two planets. They carried this computation by splitting the
-        orbits in tiny steps, computing the new planet locations for each step. They used these sequences of coordinates
+        orbits into tiny steps, computing the new planet locations for each step. They used these sequences of coordinates
         to compute the orbit of Halley's comet around the Sun, by taking into account the effect of the two giant
         planets on the comet and neglecting the effect of the comet itself on the three bodies. In the end, they were successful in
         predicting the next appearance of the comet in the beginning of 1759, making an error of only one month. Their
@@ -29,7 +29,7 @@
         At the time, the French revolutionary government was preparing reforms for their outdated system of weights and
         measures, which will eventually result in the creation of the metric system. The reforms proposed to measure
         angles in grades instead of degrees, dividing a right angle into 100 grades instead of 90 degrees. Prony was
-        tasked to prepare trigonometric tables for this decimal grade system. He organized his staff in a hierarchy of
+        tasked to prepare trigonometric tables for this decimal grade system. He organized his staff in a hierarchy with
         three levels:
         \begin{itemize}
             \item The first class of workers, a handful of renowned scientists like Carnot or Legendre, oversaw the
@@ -40,7 +40,7 @@
                 into a sequence of additions and subtractions. They prepared worksheets where all the basic operations
                 were written with a blank space for the result.
             \item The third class consisted in nearly ninety computers. Many of them were former servants or wigmakers
-                that lost their jobs with the Revolution, they did not know any mathematics besides the addition and
+                that lost their jobs with the Revolution and did not know any mathematics besides the addition and
                 subtraction. Their job was to compute the results to fill the blank spaces left by the second class of
                 workers.
         \end{itemize}
@@ -67,7 +67,7 @@
         French and English governments hired entire computing laboratories to create ballistic
         tables~\cite[Chapter~10]{human_computers}. By the time, electromechanical computers were used everywhere, for
         their efficiency and reliability largely superior to human computers. There was still an important need for
-        human labor, not only for operating these machines, but some complex operations were still carried by hand.
+        human labor, not only for operating these machines, but because some complex operations were still carried by hand.
 
         The first working general purpose programmable computer, named \emph{Z3}, was designed and built more than two
         decades later in Germany by Konrad Zuse~\cite{sep-computing-history}. Completed in 1941, it was an
@@ -91,10 +91,10 @@
 
         The invention of the transistor in 1947 by three Bell Labs physicists had a huge impact on the whole electronic
         world. It achieves the same functionality as a vacuum tube (amplifying and switching an electrical signal),
-        but with a much lower power consumption, much smaller size and easier to mass produce. Hence, this is no
+        but with a much lower power consumption, much smaller size and easier to mass produce. Hence, it is no
         surprise if the industry quickly started to use this new technology. The first transistor computer was made in
         1953 in the University of Manchester. Later, in 1955, IBM announced the first commercial transistor computer,
-        the IBM 608~\cite{ibm608}, made of \Num{3000} transistors. Compared to its predecessor, switching to transistor
+        the IBM 608~\cite{ibm608}, made of \Num{3000} transistors. Compared to its predecessor, switching to transistors
         allowed IBM to reduce the computer physical size by \NSI{50}{\percent} and its power consumption by
         \NSI{90}{\percent} while multiplying its computing speed by \Num{2.5}, reaching a performance of \Num{4500}
         additions per second.
@@ -127,7 +127,7 @@
             generated with data from Wikipedia~\cite{wiki2021chronology,wiki2021transistor}.}
         \end{figure}
 
-        One of the main contributions for this exponential growth of the number of transistors is the exponential
+        One of the main contributiors to this exponential growth of the number of transistors is the exponential
         decrease of their size, as plotted in Figure~\ref{fig:context:49_years}. While the IBM 608 calculator
         commercialized in the 50s had transistors ``no bigger than a paper clip''~\cite{ibm608}, the latest processors
         commercialized in 2020 have \NSI{5}{\nano\meter} transistors.
@@ -173,7 +173,7 @@
 
         Consequently, it has become impossible to increase further the CPU frequency, which has reached a limit of about
         \NSI{5}{\giga\hertz} since 2006 after an exponential growth of several decades, as shown by
-        Figure~\ref{fig:context:49_years}. One of the response to keep the race for performance was to design multicore
+        Figure~\ref{fig:context:49_years}. One of the responses to keep the race for performance was to design multicore
         processors. Nowadays, nearly all laptops and smartphones have several cores, while high-end servers can have two
         or four sockets with up to 64 cores per socket.
 
@@ -182,7 +182,7 @@
         Hence, to stay within a safe thermal design power (TDP), it is no longer possible to power at the nominal
         voltage all the components of the processors (notion named \emph{dark silicon}). Esmaeilzadeh~\etal predict
         that with the \NSI{8}{\nano\metre} processor generation, more than \NSI{50}{\percent} of their transistors might
-        be unpowered at each given time~\cite{Esmaeilzadeh_2011}. With these constraints, Hennessy and
+        be unpowered at any given time~\cite{Esmaeilzadeh_2011}. With these constraints, Hennessy and
         Patterson~\cite{Hennessy_2019,Hennessy_youtube} estimate that the single-processor performance is now only
         growing by a mere \NSI{3}{\percent} per year, which is a much slower pace than the \NSI{50}{\percent} yearly
         growth rate that the industry got used to for decades.
@@ -203,11 +203,11 @@
             instance, the price for sequencing an entire human genome has dropped from \SI{100000000}[\$]{} in 2001 to
             \SI{1000}[\$]{} in 2020~\cite{genome_sequencing}.
 
-            To reach the highest performance, a single processor is not enough, the benefit of doing computations in
-            parallel was already obvious at the time of human computers, as discussed in Section~\ref{sec:first_computers}.
+            To reach the highest performance, a single processor is not enough, and the benefit of doing computations in
+            parallel was already well known at the time of human computers, as discussed in Section~\ref{sec:first_computers}.
             For this reason, the largest computations are now performed on supercomputers, large machines made of many
-            processors connected through a fast network. The 500 fastest non-confidential supercomputers of the world are
-            ranked biannually in the Top500~\cite{top500}. As shown by Figure~\ref{fig:context:top500}, they suffered from
+            processors connected through a fast network. The 500 fastest non-classified supercomputers of the world are
+            ranked biannually in the Top500 list~\cite{top500}. As shown by Figure~\ref{fig:context:top500}, they suffered from
             the same frequency staling as the rest of the industry in 2006, yet their performance kept an exponential
             increase, in part explained by the exponential increase of their total number of cores.
 
@@ -240,8 +240,8 @@
                 \item CPU throttling of the nodes for thermal control~\cite{Brandt2015EnablingAO}.
                 \item Resource contention~\cite{Bhatele_2013,dorier:hal-00916091}.
             \end{itemize}
-            If unnoticed, this kind of performance anomalies can affect very significantly the conclusions of an
-            experimenter making performance measures on the machine.
+            If unnoticed, these kinds of performance anomalies can severly impact the conclusions than an experimenter
+            would draw based on performance measures obtained on the machine.
 
         \subsection{A reproducibility crisis}%
         \label{sub:reproducibility_crisis}
@@ -265,9 +265,9 @@
             they surveyed did not follow all these principles~\cite{Papadopoulos_2019}.
 
             What may be more surprising is that computer science suffers from the same experiment reproducibility
-            problems than the other sciences, experimental biases exist and may even be larger. For instance,
+            problems than the other sciences: experimental biases exist and may even be larger. For instance,
             Mytkowicz~\etal show that simply changing the environment variable size can account for a performance
-            variability of more than \NSI{30}{\percent}~\cite{Mytkowicz_2009}, they propose two methods for detecting
+            variability of more than \NSI{30}{\percent}~\cite{Mytkowicz_2009}. They propose two methods for detecting
             and avoiding such measurement bias, based on experiment randomization. Similarly, Curtsinger and Berger have
             implemented a software for repeatedly re-randomizing the layouts of code, stack and heap at runtime, to
             avoid the bias introduced by a particular binary layout~\cite{stabilizer}. Again, the growing problem of
@@ -307,24 +307,26 @@
                 \begin{itemize}
                     \item Automation is a great way to improve both reliability and productivity. It helped tremendously
                         throughout the last century for scientific computations, as shown in
-                        Section~\ref{sec:first_computers}, machines make much fewer mistakes than humans (if any) and
+                        Section~\ref{sec:first_computers}. Machines make much fewer mistakes than humans (if any) and
                         are much faster. For these reasons, we implemented several programs during this thesis. We
                         automatized the execution of experiments with an experiment engine, presented in
                         Chapter~\ref{chapter:experiment:testbed}. We also implemented several tools, listed in
                         Appendix~\ref{chapter:zenodo}, for automating some parts of the analyses as well as cumbersome
                         daily tasks.
-                    \item Several times during this thesis, our performance models were not in agreement with the
+                    \item Several times while conducting the research in this thesis, our performance models were not in
+                        agreement with the
                         reality we observed. In some instances, our models were too simple, and we needed to add
-                        complexity to capture some real phenomena, as described in
+                        complexity to capture additional real-world phenomena, as described in
                         Chapters~\ref{chapter:prediction:modeling} and~\ref{chapter:prediction:validation}. But, most of
                         the time, we suffered from an experimental bias (or the lack thereof). These difficulties are
                         described in depth in Chapter~\ref{chapter:experiment:difficulties}.
-                    \item With an experimental work that span several years, like this thesis, it is very likely that the
-                        experiment subject will evolve. In the case of high performance computing, the test machines can
+                    \item With an experimental work that spans several years, like this thesis, it is very likely that the
+                        object of the experimental study will evolve. In the case of high performance computing, the
+                        machine can
                         have hardware or software upgrades, or even defects, that can all affect significantly the
                         measured performance. In Chapter~\ref{chapter:experiment:tests}, we present the performance
                         non-regression tests we implemented and used in the second half of this thesis. They helped us
-                        to detect numerous platform changes that could have lead to wrong conclusions if unnoticed.
+                        to detect numerous platform changes that could have led to wrong conclusions if unnoticed.
                 \end{itemize}
         \end{itemize}
 
