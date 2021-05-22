@@ -651,7 +651,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 conduct executions at scale on a single or even a few compute nodes.
         \end{itemize}
 
-\chapter{Emulating HPL at large scale}%
+\chapter{Simulating HPL at large scale}%
 \label{chapter:prediction:emulation}
 
     In this chapter, we present the changes to SimGrid and HPL that were required for a scalable simulation.  The
@@ -671,7 +671,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         \subsection{Compute Kernel Modeling}
             HPL heavily relies on BLAS kernels such as \dgemm (for matrix-matrix multiplication) or \texttt{dtrsm} (for
-            solving an  \(A\cdot x=b\) equation). The analysis of an HPL simulation with \(64\) processes and a very
+            solving an  \(A\cdot x=b\) equation). The analysis of an HPL execution with \(64\) processes and a very
             small matrix of order \Num{30000} showed that about \(\NSI{96}{\percent}\) of the time is spent in these two
             kernels. Since the output of these kernels does not influence the control flow, simulation time can be
             reduced by substituting \dgemm and \texttt{dtrsm} function calls with a performance model of the respective
@@ -691,30 +691,30 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 a larger scale.}
             \end{figure}
 
-            Skipping kernels renders the content of some variables invalid but in simulation, only the behavior of the
+            Skipping kernels renders the content of some variables invalid but in simulation, only the performance behavior of the
             application and not the correctness of computation results are of concern.  Figure~\ref{fig:macro_simple} shows
             an example of this macro-based mechanism that allows to keep HPL code modifications to an absolute minimum. The
-            \texttt{(1.029e-11)} value represents the inverse of the flop rate for this compute kernel and was obtained
-            through calibration. The estimated time of the kernel is calculated based on the given parameters and passed on
-            to \texttt{smpi\_execute\_benched} that advances the clock of the executing rank by this estimate.  The effect
+            \texttt{1.029e-11} value represents the inverse of the flop rate for this compute kernel and was obtained
+            through benchmarking. The estimated time of the kernel is calculated based on the given parameters and passed on
+            to \texttt{smpi\_execute\_benched} which advances the clock of the executing process by this estimate.  The effect
             on the simulation time for a small scenario is depicted in Figure~\ref{fig:kernel_sampling}. This modification
-            speeds up the simulation by orders of magnitude. The precision of the simulation will be investigated in more
+            speeds up the simulation by orders of magnitude. The impact on the accuracy of the simulation will be investigated in more
             details in the next chapter, but it can already be observed that this simple kernel model leads to a sound,
-            albeit slightly more optimistic, estimation of the performance.
+            albeit slightly more optimistic, estimation of the execution time.
 
-            In addition to the main compute kernels, a profiling of the code allowed identifying seven other BLAS functions
+            In addition to the main compute kernels, a profiling of the code made it possible to identify seven other BLAS functions
             as computationally expensive enough to justify a specific handling: \texttt{dgemv}, \texttt{dswap},
             \texttt{daxpy}, \texttt{dscal}, \texttt{dtrsv}, \texttt{dger} and \texttt{idamax}. Similarly, a significant
             amount of time was spent in fifteen functions implemented in HPL: \texttt{HPL\_dlaswp*N},
             \texttt{HPL\_dlaswp*T}, \texttt{HPL\_dlacpy} and \texttt{HPL\_dlatcpy}.  All these functions are called during
-            the LU factorization and hence impact the performance measured by HPL; however, because of the removal of the
-            \dgemm and \texttt{dtrsm} computations, they all operate on bogus data and hence also produce bogus
+            the LU factorization and hence impact the performance of the HPL execution; however, because of the removal of the
+            \dgemm and \texttt{dtrsm} computations, they all operate on invalid data and hence also produce invalid
             data. They have been handled similarly to \dgemm and \texttt{dtrsm}, through performance models and
             macro substitution, which speeds up the simulation by an additional factor of \(3\) to \(4\) on small
-            (\(N=\Num{30000}\)) and even more on large scenarios.
+            (\(N=\Num{30000}\)) and even more on larger scenarios.
 
         \subsection{Specific Adjustments}
-            HPL uses pseudo-randomly generated matrices that are set up every time HPL is executed. This initialization, just
+            HPL uses pseudo-randomly generated matrices that are set up for every execution. This initialization, just
             like the factorization correctness verification at the end of the run, is not considered in the reported
             performance and can therefore be safely skipped.  Note that HPL implements an LU factorization with partial
             pivoting, which requires a special treatment of the \texttt{idamax} function that returns the index of the first
@@ -726,7 +726,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         The largest two allocated data structures in HPL are the input matrix \texttt{A} (with a size of typically
         several \si{\giga\byte} per process) and the \texttt{panel} which contains information about the sub-matrix
         currently being factorized.
-        Unfortunately, when emulating an application with SMPI, all MPI processes are run within the same simulation
+        Unfortunately, when simulating an application with SMPI, all MPI processes are run within the same simulation
         process on a single node and the memory consumption of the simulation can therefore quickly reach several
         \si{\tera\byte} of RAM.  Yet, as we no longer operate on real data, storing the whole input matrix \(A\) is
         needless. However, since only a minimal portion of the code was modified, some functions may still read or write
@@ -899,11 +899,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         The main goal of the previous optimizations is to reduce the complexity from \(\Theta(N^3) +
         \Theta(N^2\cdot{}P\cdot{}Q)\) to something more reasonable.  The \(\Theta(N^3)\) was removed by skipping most
         computations.  Ideally, since there are \(N/NB\) iterations (steps), the complexity of simulating one step
-        should be decreased to something independent of \(N\). SimGrid's fluid models, used to simulate communications,
+        should be decreased to something independent of \(N\). SimGrid's fluid network models, used to simulate communications,
         do not depend on \(N\). Therefore, the time to simulate a step of HPL should mostly depend on \(P\) and \(Q\).
         Yet, some memory operations on the panel that are related to pivoting are intertwined in HPL with collective
         communications, meaning that it is impossible to get rid of the \(\landauO(N)\) complexity without modifying HPL more
-        profoundly.
+        extensively.
 
         \begin{figure}[htpb]
             \centering
@@ -913,8 +913,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \label{fig:hpl_scalability}
         \end{figure}
 
-        To evaluate the efficiency of our proposal, we conduct a first evaluation on a non-existing but Stampede
-        resembling platform comprising 4,096 nodes interconnected through a fat-tree topology.
+        To evaluate the efficiency of our proposal, we conduct a first evaluation on a non-existing but Stampede-like
+        platform comprising 4,096 nodes interconnected through a fat-tree topology.
         We run simulations with \Num{512}, \Num{1024}, \Num{2048} or \Num{4096} MPI ranks and with matrices of orders
         \Num{5e5}, \Num{1e6}, \Num{2e6} or \Num{4e6}. All other HPL parameters are similar to the ones of the original
         Stampede scenario.  The impact of the matrix order on total execution time and memory is illustrated in
