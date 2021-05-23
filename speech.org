@@ -4,27 +4,30 @@ defense, and in particular thanks a lot to all the members of the jury for
 accepting to be here today. During this talk, I am going to present you my work
 on performance predictions and experiments.
 * 1
-For a long time, science has relied more and more on computations. Two centuries
+For a long time, science has relied a lot on computations. Two centuries
 ago, there were already human computers employeed for calculating by hand tons
 of arithmetical operations. They eventually got replaced by machines, which
 became gradually more advanced.
 
-In the last decades, we have seen an exponential growth of performance, which
-led to huge breakthrough in science. For example, sequencing an entire human
-genome used to cost 100M$ only 20 years ago, now it is 1k$. These improvements
-however come at the cost of an increased complexity. Now processors have
-multiple cores, with several caches, vector units, instruction pipelines with
-speculative execution, dynamic frequency scaling, etc. Supercomputers have
-thousands of processors connected through extremely fast networks. High
-performance software often employs many tricks to speed things up, like
-overlapping communications with computations.
+In the last decades, we have seen an exponential growth of computational
+capability, which led to huge breakthrough in science. For example, sequencing
+an entire human genome used to cost 100M$ only 20 years ago, now it is 1k$.
+These improvements however come at the cost of an increased complexity. Now
+processors have multiple cores, with several caches, vector units, instruction
+pipelines with speculative execution, dynamic frequency scaling, etc.
+Supercomputers have thousands of processors connected through extremely fast
+networks.
+
+The problem with this complexity, if we want to study computer performance it
+gets very difficult.
 * 2
-Due to this complexity, it can be very difficult to reason about computers and
-their speed. This is a similar problem than natural sciences like biology or
-physics, reality is complex with variability and opacity. Like these cells, you
-cannot have a perfect understanding of what is happening in a computer, there is
-no perfect model of reality. For this reason, even in computer science we need
-experiments.
+We have a similar problem than natural sciences like physics or biology,
+whenever there is a complex object, there is variability and opacity and it
+becomes difficult to study. We do not have a perfect model, we do not have a
+perfect understanding of what is going on. This is for this reason that we need
+experiments. Even though computer systems are built by human and do not obey
+unknown natural laws, their complexity leaves us with no choice but to study
+them empirically.
 
 These empirical studies can be carried in reality, simply by taking a real
 computer, running a program and measuring its performance. But, as we will see,
