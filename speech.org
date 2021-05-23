@@ -5,18 +5,18 @@ accepting to be here today. During this talk, I am going to present you my work
 on performance predictions and experiments.
 * 1
 For a long time, science has relied a lot on computations. Two centuries
-ago, there were already human computers employeed for calculating by hand tons
-of arithmetical operations. They eventually got replaced by machines, which
+ago, there were already human computers employeed for calculating by hand a lot
+of of arithmetical operations. They eventually got replaced by machines, which
 became gradually more advanced.
 
 In the last decades, we have seen an exponential growth of computational
 capability, which led to huge breakthrough in science. For example, sequencing
 an entire human genome used to cost 100M$ only 20 years ago, now it is 1k$.
-These improvements however come at the cost of an increased complexity. Now
-processors have multiple cores, with several caches, vector units, instruction
-pipelines with speculative execution, dynamic frequency scaling, etc.
-Supercomputers have thousands of processors connected through extremely fast
-networks.
+However, the problem you need to understand is that these performance
+improvements come at the cost of an increased complexity. Now processors have
+multiple cores, with several caches, vector units, instruction pipelines with
+speculative branching, dynamic frequency scaling, etc.  Supercomputers have
+thousands of processors connected through extremely fast networks.
 
 The problem with this complexity, if we want to study computer performance it
 gets very difficult.
