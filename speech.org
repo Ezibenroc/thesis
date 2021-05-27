@@ -25,9 +25,9 @@ We have a similar problem than natural sciences like physics or biology,
 whenever there is a complex object, there is variability and opacity and it
 becomes difficult to study. We do not have a perfect model, we do not have a
 perfect understanding of what is going on. This is for this reason that we need
-experiments. Even though computer systems are built by human and do not obey
-unknown natural laws, their complexity leaves us with no choice but to study
-them empirically.
+experiments. This is still true for computers, even though they are created by
+humans and they do not obey any unknown natural laws, we still have no choice but
+to study them empirically, because of their complexity.
 
 These empirical studies can be carried in reality, simply by taking a real
 computer, running a program and measuring its performance. But, as we will see,
