@@ -395,7 +395,7 @@
 \section{Validating the predictions}
 
 \begin{frame}[fragile]{Internal behavior of the application}
-    256 MPI ranks, interrupted after the $5^{\text{th}}$ iteration\medskip
+    256 MPI processes, interrupted after the $5^{\text{th}}$ iteration\medskip
 
     \newcommand{\ganttcaption}[2]{\rotatebox{90}{\hspace{.6cm}$\text{#1}\atop \text{#2}$\hspace{-1cm}}}%
     \begin{overlayarea}{\linewidth}{7cm}
@@ -410,7 +410,7 @@
 
 
 \begin{frame}[fragile]{Influence of the problem size}
-    Now the complete run, with 1024 MPI ranks
+    Now the complete run, with 1024 MPI processes
 
     \tikzstyle{model_label}=[anchor=south west, font=\scriptsize]
     \begin{tikzpicture}
