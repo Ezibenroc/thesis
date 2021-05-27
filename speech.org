@@ -1,5 +1,5 @@
 * 0
-Good afternoon ! First of all thank you everyone for attending my thesis
+Hello ! First of all thank you everyone for attending my thesis
 defense, and in particular thanks a lot to all the members of the jury for
 accepting to be here today. During this talk, I am going to present you my work
 on performance predictions and experiments.
