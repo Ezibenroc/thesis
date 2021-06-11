@@ -930,8 +930,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     a very simple model can generally easily be identified (\eg proportional to the product of the parameters) but
     refinements including the individual contribution of each parameter as well as the spatial and temporal variability
     of the operation are also possible. Likewise, communications between two nodes are mostly linear in message size, but
-    the actual performance can wildly vary depending on the range of the message size as MPI switches from one
-    protocol to another whenever needed. In this chapter we first introduce some notations to describe the complexity of
+    the actual performance can vary wildly depending on the range of the message size as MPI switches from one
+    protocol to another based on message size thresholds. In this chapter we first introduce some notations to describe the complexity of
     the models we have investigated, then we define these models and explain how we can instantiate them.
 
     \section{Modeling notations}%
@@ -940,7 +940,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \dgemm operation, these parameters describe the geometry of the input matrices). We first consider the
         three following modeling options:
         \begin{itemize}
-            \item Modeling option \model{0}: For simple and stable compute kernels, the duration can be modeled as a
+            \item Modeling option \model{0}: For simple compute kernels, the duration can be modeled as a
                 constant duration independent of the input parameters, \ie \(T \sim \alpha\), where \(\alpha\) is
                 estimated through the sample average of the duration of the operation (or simply 0 if the kernel is
                 negligible).
@@ -981,8 +981,8 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 given \(M,N,K\)) is modeled by a polynomial function of the input parameters.
         \end{itemize}
         Finally, even the sophisticated normal distribution from \noise{2} may be too simple to describe the noise
-        observed on real platforms where it may be common for a same parameter set to have a few operations being one
-        order of magnitude slower than all the other ones. In this case, a reasonable option consists of modeling noise
+        observed on real platforms. It may be common to have a few operations being one order of magnitude slower than
+        all the other ones even though they had the same parameter set. In this case, a reasonable option consists in modeling noise
         with a mixture of normal distributions whose parameters \(\pi_1 , \dots, \pi_k\) should be estimated. We denote
         this kind of model as \noisep{}. Likewise, the per-host estimations are denoted by \noise[H]{}.
 
@@ -1017,14 +1017,16 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             families were not investigated as nothing in our observations called for such complexity on classical
             multi-core machines.  Figure~\ref{fig:blas_var} illustrates various models and their respective quality for
             the \dgemm function. In these figures, the performance of \dgemm is evaluated by calling
-            \dgemm with randomized sizes over all the cores of each node (to reproduce experimental conditions
+            \dgemm with randomized input sizes over all the cores of each node (to reproduce experimental conditions
             similar to the one of HPL). The first observation (Figure~\ref{fig:dgemm_het}) is that a few nodes exhibit
             quite a different behavior (each color and each regression line under model \model[H]{1} corresponds to a
             different CPU, whereas the black dotted line corresponds to model \model{1} over all the nodes). These nodes
             will systematically be slightly slower than other nodes and accounting for this spatial heterogeneity is
-            likely to be rather important for HPL.  Second, we took care of covering a wide variety of combinations for
-            \(M\), \(N\), and \(K\), and it can be observed that \(M.N.K\) is not sufficient to describe correctly the
-            performance of \dgemm. Indeed, for \(M.N.K \approx \num{4.5E9}\) some duration are systematically
+            likely to be rather important for simulating the execution of HPL.
+            Second, we took care of covering a wide variety of combinations for
+            \(M\), \(N\), and \(K\). It can be observed that \(M.N.K\) is not sufficient to describe correctly the
+            performance of \dgemm, even though the number of operations performed by this function is expected to be
+            proportional to \(M.N.K\). Indeed, for \(M.N.K \approx \num{4.5E9}\) some duration are systematically
             higher regardless of the node. This happens for some particular (e.g., tall and skinny) matrix geometries,
             which strongly suggests using the full polynomial model. Figure~\ref{fig:dgemm_poly} depicts the performance
             (red dots) of a given node as well as the prediction using a simple linear model (\model[H]{1}, black line),
@@ -1081,20 +1083,23 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \end{cases},
                 \end{split}
             \end{equation}
-            where \(\mathcal{H}(\mu, \sigma)\) denotes a random variable following a half-normal distribution with
+            where \(\mathcal{H}(\mu, \sigma)\) denotes a random variable that follows a half-normal distribution with
             parameters \(\mu,\sigma\) accounting for the expectation and the standard deviation. The dependency on \(p\)
             allows accounting for platform heterogeneity (since \(\alpha_p,\beta_p, \dots,\rho_p\) can be specific to
             each node), \ie the aforementioned spatial variability. The \(\sigma_p\) parameter allows accounting for
             (short-term) temporal variability, \ie to model the fact that the duration of two successive calls to \dgemm
             with the same parameters \(M, N, K\) are never identical.
+            Finally, we initially decided to use a half-normal distribution instead of a normal distribution to account
+            for the asymetry of the observed durations (\eg there are no negative durations), but with hindsight we do
+            not believe this choice to be very important.
 
             As we will show, the performance of nodes exhibits several kinds of variability: i) a spatial variability
             (between nodes) ii) a ``short-term'' temporal variability (the one experienced within an HPL run) but also
-            iii) a ``long term'' temporal variability (from a day to another). As illustrated in
+            iii) a ``long term'' temporal variability (from one day to another). As illustrated in
             Chapter~\ref{chapter:prediction:validation}, accounting for the first two kinds of variability is essential
-            but during our investigation of the simulation validity, which spanned over several months, we also had to
-            deal with the fact that the node performance from a day to another could significantly vary, thereby making
-            our comparisons between a real experiment and the simulation driven by model obtained with past measurements
+            but during our investigation of the simulation validity, which spanned several months, we also had to
+            deal with the fact that the node performance from one day to another could significantly vary, thereby making
+            our comparisons between a real experiment and the simulation driven by models derived from past measurements
             sometimes irrelevant.
 
             This section explains how all sources of variability can be accounted for in a single unified model. This
@@ -1120,9 +1125,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \end{equation}
             In this model, \(\mu_{p}\) accounts for the average performance of the machine \(p\), while \(\Sigma_T\)
             accounts for its day-to-day variability. From our observation we had no particular reason to assume that
-            this variability was different from a machine to another, hence, \(\Sigma_T\) is not indexed by \(p\) but
+            this variability was different from one machine to another, hence, \(\Sigma_T\) is not indexed by \(p\) but
             global to all machines. However, the parameters \(\alpha_{p,d},\beta_{p,d},\gamma_{p,d}\) are generally
-            correlated to each others, hence \(\Sigma_T\) is full covariance matrix to account for interactions.  The
+            correlated to each others, hence \(\Sigma_T\) is the full covariance matrix to account for interactions.  The
             choice of a Normal distribution is natural since it is the simpler distribution that accounts for a specific
             mean and variance, but we will discuss its relevance later in this section.
 
@@ -1158,7 +1163,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \(\beta_{p,d}\) appears slightly skewed toward larger values and one of the nodes (the one with the larger
             \(\alpha_{p,d}\)) stands out, there is no good reason for using a more complex distribution than a Gaussian
             one. Although the correlation between \(\alpha\), \(\beta\), and \(\gamma\) is very weak, it appeared to be
-            statistically significant (most ellipses are slightly tilted toward North-East), hence a full variance
+            statistically significant (most ellipses are slightly tilted toward the North-East), hence a full variance
             matrix is needed (at least for \(\Sigma_T\)).
 
             \begin{figure}[htpb]
@@ -1201,7 +1206,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \label{fig:whatif_slow}
             \end{figure}
 
-            It is thus easy to estimate \(\mu_{p}\) and \(\Sigma_T\) by averaging over the \(\mu_{p,d}\) of each node,
+            Given the above, it is easy to estimate \(\mu_{p}\) and \(\Sigma_T\) by averaging over the \(\mu_{p,d}\) of each node,
             and then to estimate \(\mu\) and \(\Sigma_S\) by averaging over all the nodes. This moment-matching method
             is simple and provides very good estimates for \(\mu\), \(\Sigma_T\), and \(\Sigma_S\) because we have
             enough measurements at our disposal and because it is particularly suited to the Gaussian modeling
@@ -1215,7 +1220,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             Such a process is depicted in Figure~\ref{fig:whatif_model} where hypothetical regression parameters for 16
             nodes have been generated. Comparing such synthetic data with the original samples from
             Figures~\ref{fig:whatif_calibration} allows us to evaluate the model's potential weaknesses. Although the
-            orders of magnitude of all parameters and the ellipses are excellent, a few subtle differences are visible.
+            orders of magnitude of all parameters and the ellipses are excellent, a few differences are visible.
             First, the variability of \(\alpha_{p}\) seems a bit overestimated (the spread along the x-axis is larger).
             This can be explained by the fact that one of the nodes seemed to be significantly slower (with much larger
             \(\alpha_{p}\)), which artificially increased the spatial variability. Second, as expected from a Gaussian
@@ -1233,7 +1238,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             the model in Figure~\ref{fig:model:generative} should then be replaced by a mixture of normal distributions
             (whose weights would then be sampled from a Dirichlet distribution). Again, hypothetical regression
             parameters for 16 CPUs have been generated with such a process on Figure~\ref{fig:whatif_slow_model} and are
-            very similar, although different, to the original measurements.
+            very similar to the original measurements.
 
             Overall this model is therefore of excellent quality and can be used to generate large configurations very
             easily and evaluate the influence of different kinds of variability on the performance of HPL.
@@ -1301,12 +1306,12 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
             The ideal model for such observed data would be \modelp{1}\noisep{1}, several intervals of message sizes
             with abrupt breakpoints, and a noise distributed as a Gaussian mixture for each range.  Such temporal
-            variability could explain some (overall bad) performance since they generally get amplified by broadcast and
+            variability could explain some (overall poor) performance since they generally get amplified by broadcast and
             pipelined communication patterns.
 
-            Automatically computing the best fit for a complex model like the aforementioned one is way more difficult
+            Automatically computing the best fit for a complex model like the aforementioned one is much more difficult
             than for the \dgemm model proposed in Section~\ref{sec:network_model}. It should be possible to compute it
-            in one go with a Bayesian framework like STAN, but it would probably be computationally prohibitive. A more
+            in one go with a Bayesian framework like STAN, but it would likely be computationally prohibitive. A more
             realistic solution is to perform two steps: (1) average the durations per message size and find the
             breakpoints using this aggregated data (\ie fit a \modelp{1}\noise{1} model), and (2) on each segment,
             compute the linear regression with a noise mixture (\ie fit a \model{1}\noisep{1} model).
@@ -1319,31 +1324,32 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     decided to implement our own solution, named \texttt{pycewise}, which is detailed in
                     Section~\ref{sub:pycewise} and compared to both \texttt{datadog-piecewise} and \texttt{cubist}.
                 \item We tested an existing R package named \texttt{flexmix} for computing a linear regression with a
-                    Gaussian mixture noise~\cite{flexmix}. It revealed to be fragile, the result being
+                    Gaussian mixture noise~\cite{flexmix}. It proved to be fragile, the result being
                     non-deterministic: the number of modes found by the algorithm was not constant. We ended up
-                    clustering the data manually with a visual inspection and then computing a simple linear regression
+                    clustering the data manually via visual inspection and then computing a simple linear regression
                     for each mode.
             \end{enumerate}
 
         \subsection{Finding semantic breakpoints}%
         \label{sub:finding_semantic_breakpoints}
 
-            In network calibration experiments such as Figure~\ref{fig:nw_var}, we can observe sudden performance
-            changes, \aka breakpoints. As discussed previously, these breakpoints happen because of a protocol change in
-            MPI implementation. Some of these changes also affect the semantic of the \send operation: we described in
+            In network calibration experiments, \ie the experiments carried to measure the network performance and
+            instantiate a model, we can observe sudden performance changes, \aka breakpoints (see
+            Figure~\ref{fig:nw_var}).  As discussed previously, these breakpoints happen because of a protocol change in
+            MPI implementations. Some of these changes also affect the semantic of the \send operation: we described in
             Section~\ref{sec:simgrid_smpi} three communication modes, \emph{asynchronous}, \emph{detached} and
             \emph{asynchronous}. This section presents how to detect automatically such semantic breakpoints.  In this
-            section as well as Section~\ref{sub:pycewise}, MPI is seen as a black box, we use retro-engineering
+            section as well as Section~\ref{sub:pycewise}, MPI is seen as a black box and we use reverse-engineering
             techniques to find a suitable model.
 
             This work was done in collaboration with several Simgrid collaborators, we wish to thank them for the ideas
             and the code prototype.
 
-            We define two MPI codes, program~\ref{algo:semantic:deadlock} and program~\ref{algo:semantic:corruption}.
-            They both take in input a message size \texttt{N}. We expect program~\ref{algo:semantic:deadlock} to produce
+            We define two MPI codes, Algorithm~\ref{algo:semantic:deadlock} and Algorithm~\ref{algo:semantic:corruption}.
+            They both take in input a message size \texttt{N}. We expect Algorithm~\ref{algo:semantic:deadlock} to produce
             a deadlock and not print any message when \texttt{N} is large enough (the communication was
             \emph{synchronous}) while it should print the message ``OK'' for smaller values of \texttt{N}. Likewise, we
-            expect program~\ref{algo:semantic:corruption} to have corrupted data and print the message ``CORRUPTED''
+            expect Algorithm~\ref{algo:semantic:corruption} to have corrupted data and print the message ``CORRUPTED''
             when \texttt{N} is large enough (the communication was not \emph{asynchronous}) while it should print the
             message ``OK'' for smaller values of \texttt{N}.
             \begin{algorithm}
@@ -1397,9 +1403,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \label{algo:semantic:corruption}
             \end{algorithm}
 
-            Then, we repeatedly call the programs~\ref{algo:semantic:deadlock} and~\ref{algo:semantic:corruption},
+            We repeatedly call the Algorithms~\ref{algo:semantic:deadlock} and~\ref{algo:semantic:corruption},
             performing a binary search on the argument \texttt{N} (we set a timeout of \NSI{3}{\second} to kill
-            program~\ref{algo:semantic:deadlock} in case of deadlock). This allows to find the two semantic breakpoints
+            Algorithms~\ref{algo:semantic:deadlock} in case of deadlock). This allows to find the two semantic breakpoints
             easily:
             \begin{itemize}
                 \item In \emph{asynchronous} mode, we have no deadlock and no corruption.
@@ -1407,21 +1413,21 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \item In \emph{synchronous} mode, we have corruption and a deadlock.
             \end{itemize}
 
-            Note that in program~\ref{algo:semantic:corruption}, the function \isend is used instead of \send. Indeed,
+            Note that in Algorithms~\ref{algo:semantic:corruption}, the function \isend is used instead of \send. Indeed,
             the MPI standard specifies that the buffer of function \send can be immediately reused once the function
             returns, this means that even if the function returns before the communication is actually performed, the
             data is copied in an auxiliary buffer to prevent any corruption. Since we rely on this data corruption to
             detect whether we are in \emph{asynchronous} or \emph{detached} mode, we need to use function \isend which
             does not make such guarantees. Here we suppose that the thresholds used in both functions are the same.
 
-            In our tests, we found that the three protocols did not always exist, the threshold will depend on the
-            hardware. For instance, on \dahu cluster, the semantic breakpoints found by the two binary search are equal.
-            This means that the \emph{detached} mode does not exist on this cluster (for a given size \texttt{N}, either
-            we have both a deadlock with program~\ref{algo:semantic:deadlock} and a corruption with
-            program~\ref{algo:semantic:corruption}, or we have none, there is no alternative combination).
-            On clusters \paravance and \grisou, the search with program~\ref{algo:semantic:corruption} does not find any
-            breakpoint, the message is always corrupted. This means that the \emph{asynchronous} mode does not exist
-            here.
+            In our tests, we found that the three protocols did not always exist, and that the threshold will depend on the
+            hardware. For instance, on the \dahu cluster, the semantic breakpoints found by the two binary searches are equal.
+            This means that the \emph{detached} mode does not exist in the MPI implementation installed on this cluster
+            (for a given size \texttt{N}, either we have both a deadlock with Algorithms~\ref{algo:semantic:deadlock}
+            and a corruption with
+            Algorithms~\ref{algo:semantic:corruption}, or we have none, there is no alternative combination).
+            On clusters \paravance and \grisou, the search with Algorithms~\ref{algo:semantic:corruption} does not find any
+            breakpoint, the message is always corrupted. This means that the \emph{asynchronous} mode does not exist.
 
         \subsection{Learning breakpoints}%
         \label{sub:pycewise}
@@ -1449,10 +1455,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \subsubsection{Model and notations}%
 
                 We define here the base assumptions and notations for our optimization problem. The predictor variables
-                (\eg the message size) will be noted \(X\), the response variables (\eg the communication duration) will
-                be noted \(Y\). We will note \(\ell\) the list of tuples \((X,Y)\). We suppose there are \(N\) different
+                (\eg the message size) will be denoted \(X\), the response variables (\eg the communication duration) will
+                be denoted \(Y\). We will denote \(\ell\) the list of tuples \((X,Y)\). We assume that there are \(N\) different
                 unknown breakpoints \(B_1 < \dots < B_N\), where \(N\) itself is also unknown. For convenience, we will
-                note \(B_0=-\infty\) and \(B_{N+1} = +\infty\).  Then, there are \(N+1\) tuples \((\alpha_i, \beta_i,
+                denote \(B_0=-\infty\) and \(B_{N+1} = +\infty\).  Then, there are \(N+1\) tuples \((\alpha_i, \beta_i,
                 \gamma_i, \delta_i)\) such that:
                 \begin{align}\label{eqn:prediction:pycewise_model}
                     Y \sim \alpha_i X + \beta_i + \mathcal{N}\left(0, \gamma_i X + \delta_i\right)
@@ -1461,10 +1467,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
                 Here, \(\gamma_i\) may be null (homoscedastic data) or non-null (heteroscedastic data). This hypothesis
                 will be discussed later. Likewise, the distribution of the \(B_i\) will be discussed when comparing
-                different solutions, no assumption is made yet.
+                different solutions (no assumption is made yet).
 
                 A \emph{solution} \(\theta\) to the optimization problem consists in the list of breakpoints \((B_i)\)
-                and tuples \((\alpha_i,\beta_i)\). The values \((\gamma_i, \delta_i)\) are not computed here, they could
+                and tuples \((\alpha_i,\beta_i)\). The values \((\gamma_i, \delta_i)\) are not computed here, but they could
                 be estimated in a second phase. We will write \(f_\theta\) the (deterministic) prediction function
                 associated with the solution:
                 \begin{align}
@@ -1472,7 +1478,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         && \text{ if } B_i \leq X < B_{i+1}
                 \end{align}
 
-                Two objective functions are considered:
+                Two functions are considered:
                 \begin{itemize}
                     \item \(\text{RSS}(\ell, \theta) = \sum_{(X,Y)\in\ell} (Y-f_\theta(X))^2\) is the usual residual sum
                         of squares.
@@ -1488,13 +1494,13 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 simple linear regression without breakpoint (\ie \(N=0\)). We will write
                 \(\text{BIC}(\ell_1\oplus\ell_2)\) the BIC for the observations \(\ell_1 \cup \ell_2\) with a single
                 breakpoint between the two lists and a simple linear regression for each list (\ie \(N=1\)).
-                The concatenation of lists will be noted \(\ell_1 \bullet \ell_2\), hence
+                The concatenation of lists will be denoted \(\ell_1 \bullet \ell_2\), hence
                 \(\text{BIC}(\ell_1\bullet\ell_2)\) will denote the BIC of a linear regression without breakpoint
                 (\(N=0\)).
 
             \subsubsection{Main algorithm}%
 
-                The algorithm is made of two steps, it starts by a top-down step where new breakpoints are
+                The algorithm proceeds in two steps: it starts by a top-down step where new breakpoints are
                 greedily added, it finishes by a bottom-up step where some breakpoints are greedily removed to simplify
                 the solution. The first step is inspired by the work of Malerba~\etal~\cite{Malerba_2004}.
 
@@ -1502,7 +1508,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 nodes represent breakpoints and the leaves represent simple linear regressions. The function
                 \texttt{topdown} takes as input a list \(\ell\) of tuples \((X,Y)\) sorted by increasing \(X\) and
                 returns a list of sublists, each sublist representing an interval for the piecewise regression. On a
-                given call, we iterate on the list to test all the \(X\) as a possible breakpoint, we search for the
+                given call, we iterate on the list to test all the \(X\) values as a possible breakpoint: we search for the
                 \(X\) that minimizes the objective function.  If the objective with the new breakpoint is smaller than
                 the objective without breakpoint, then we recursively call the function on the two sub-lists.
                 \begin{algorithm}
@@ -1541,13 +1547,13 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 regressions and the new BIC are computed with online algorithms (\ie adding or removing one tuple
                 \((X,Y)\) from the sublists \(\ell_1\) and \(\ell_2\) does not require recomputing from scratch the new
                 regression coefficients nor the BIC, it is possible to update the values from the previous iterations).
-                In the next sections, we changed the objective function and had to drop this quality of doing an
-                iteration in constant time, the effect on the computation duration will be discussed.
+                In the next sections, we change the objective function and have to drop this ability of doing an
+                iteration in constant time. The effect on the computation duration will be discussed.
 
                 In the bottom-up step (Algorithm~\ref{algo:pycewise:bottomup}), adjacent intervals are greedily merged
                 (thereby removing breakpoints), starting by fusions that decrease the least the RSS. All the different
                 iterations of the loop are kept in memory, the merging operation is carried until there is no breakpoint
-                left. In the end, we keep the iteration that minimized the BIC.
+                left. In the end, we keep the iteration that minimizes the BIC.
                 \begin{algorithm}
                     \DontPrintSemicolon
                     \SetKwFunction{Fbottomup}{bottomup}
@@ -1585,7 +1591,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 The algorithm is a heuristic to minimize the BIC, but the parameters of the linear regressions are
                 also the optimal estimators for this objective function.
 
-                In the case of heteroscedastic data, the noise is by definition not constant, it grows linearly with the
+                In the case of heteroscedastic data, the noise is by definition not constant: it grows linearly with the
                 predictor variable. In this case, the RSS is not the best choice, as it does not penalize errors
                 relatively to the predictor variable. It will give much more weight to the larger noise observed for
                 larger predictor variables, hence a bias towards those large values.
@@ -1651,7 +1657,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \subsubsection{Comparison of the solutions}%
 
                 We compared different approaches for computing a piecewise linear regression. We used a typical dataset
-                for our context that has similar characteristics than the network calibration data (see
+                for our context that has characteristics similar to that of the network calibration data (see
                 Figure~\ref{fig:nw_var}): the predictor variable is sampled exponentially and the noise is
                 heteroscedastic.
 
@@ -1671,7 +1677,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
                 Four variations of the dataset are used, one variation per column:
                 \begin{itemize}
-                    \item The real data comes from a real experiment we performed on a node, these are durations of
+                    \item The real data comes from a real experiment we performed on a node. These are durations of
                         calls to \texttt{memcpy} function for various buffer sizes. Each point is the average of several
                         measures with a same size, so we can reasonably expect the noise to be normally distributed.
                     \item The three other variations are generated data. We performed a piecewise linear regression on
@@ -1688,7 +1694,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 The goal of using generated data was to understand better the limitations of each approach. From
                 Figure~\ref{fig:prediction:pycewise}, it is clear that both Datadog-piecewise and Cubist are unfit for
                 our needs (first and second rows), as they could not even find the three breakpoints with the generated
-                data without noise. The likely reason is the exponential sampling of the predictor variable, the points
+                data without noise. The likely reason is the exponential sampling of the predictor variable: the points
                 on the left part of the plots would get compressed into a single point if the data was plotted in linear
                 scale.
 
@@ -1710,12 +1716,14 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 The three other methods all have an issue for at least one dataset where the intercept of one regression
                 is negative, resulting in negative predictions when the predictor variable is too low. This can be seen
                 when the prediction lines falls very sharply on the left. Note that this positivity constraint is only
-                due to the gradient descent implementation and not to the objective function, we could very well
+                due to the gradient descent implementation and not to the objective function. We could very well
                 add a similar constraint for the other objective functions if they were also implemented with a gradient
                 descent instead of a simple formula.
 
                 The quality of the fit computed by pycewise with the logarithmic objective function is demonstrated in
-                Figure~\ref{fig:prediction:pycewise_demo}. We executed our MPI calibration program on four clusters of
+                Figure~\ref{fig:prediction:pycewise_demo}. We do not show results for the alternative regression methods here
+                because, like for the memcpy experiment, they do not work properly.
+                We executed our MPI calibration program on four clusters of
                 Grid'5000: \dahu, \gros, \paravance and \pyxis. For each of them, we measured the duration of individual
                 \recv, \send and a whole ping-pong for various message sizes. Once again, we aggregated the data by
                 taking the average duration for each message size. In this figure, one piecewise regression is computed
@@ -1733,7 +1741,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \end{figure}
 
                 Since this is real experimental data, there is no ``ground truth'' that could serve as reference for
-                evaluating the quality of the fit. Computing the optimal solution which minimizes the objective function
+                evaluating the quality of the fit. Computing the optimal solution that minimizes the objective function
                 would be computationally intractable. Therefore, we can only rely on a visual evaluation of the
                 regression lines to decide if the fits are satisfying. In Figure~\ref{fig:prediction:pycewise_demo}, all
                 the obvious breaks have been found and the lines match the points very closely.
@@ -1770,9 +1778,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         difficulty resides in instantiating the models, \ie computing the best fit for some observations, in the most
         automated way possible. Bayesian formalism is an interesting candidate for such a task. With Bayesian sampling
         tools like STAN, we should be able to fit arbitrarily complex models and even have an estimation of the
-        uncertainty of the resulting parameters. However, the benefit of these tools is not clear for our context, their
-        computation time was particularly slow, and we had great difficulties in writing down our models in their
-        formalism. In the end, a simpler approach like the method of moments revealed to be enough for our needs.
+        uncertainty of the resulting parameters. However, the benefit of these tools is not clear for our context as
+        their computation time is particularly long. Furthermore, we had great difficulties in writing down our models
+        in their formalism. In the end, a simpler approach like the method of moments revealed to be enough for our
+        needs.
 
         The model instance, \ie the fit we compute, will obviously depend on the input data. The experimental protocol
         for collecting the said data will therefore be as important as the statistical tools. This will be further
