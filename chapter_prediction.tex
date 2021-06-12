@@ -2297,9 +2297,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     accurately forecast the overall application performance, and many HPC application developers and users are often
     left with no other option but to study and tune their applications at scale, which can be very time- and
     resource-consuming. We believe that being capable of precisely predicting an application's performance on a given
-    platform is useful for application developers and users and will become invaluable in the future as it can, for
+    platform is useful for application developers and users. It will become invaluable in the future as it can, for
     example, help computing centers with deciding which one of the envisioned technologies for a new machine would work
-    best for a given application or if an upgrade of the current machine should be considered.
+    best for a given application, or if an upgrade of the current machine should be considered.
 
     Simulation is an effective approach in this context and SimGrid/SMPI has previously been successfully validated in
     several small-scale studies with simple HPC benchmarks~\cite{smpi,heinrich:hal-01523608}. In this work, we have
@@ -2318,7 +2318,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     wildly differs between small and large messages and between intra-node and extra-node communications). We show that
     disregarding any of these aspects may lead to wildly inaccurate predictions even on an application as regular as
     HPL. By building on a few well-identified micro-benchmarks of the BLAS and MPI, we show that these aspects can be
-    well modeled, which allows us to systematically predict the overall performance of HPL within a few percent. Our
+    modeled accurately, which allows us to systematically predict the overall performance of HPL within a few percent. Our
     experimental results span over two years and we report situations (in Sections~\ref{sec:platform_change}
     and~\ref{sec:different_geometries}) where the simulation helped us to identify performance regression or anomalies
     incurred by the platform when the prediction did not match the real experiments.
@@ -2329,11 +2329,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     produce synthetic platforms similar to the ones at hand. We demonstrate in
     Chapter~\ref{chapter:prediction:sensibility} how this model, which allows us to easily control temporal and spatial
     variability, can feed our simulations to assess the impact of variability on the performance of the application or
-    of mitigation strategies (e.g., the eviction of the slower nodes). Likewise, the simulation allows to easily assess
-    the influence of the physical network on the overall performance. Most of these \emph{what-if} studies would be
-    particularly difficult to conduct through real experiments because of the difficulty to finely control the platform.
-    This is to the best of our knowledge one of the first sensitivity analyzes of a real HPC code accounting for
-    platform uncertainty.
+    of mitigation strategies (e.g., the eviction of the slower nodes). Likewise, the simulation makes it possible to
+    assess precisely the influence of the physical network on the overall performance. Most of these \emph{what-if}
+    studies would be particularly difficult to conduct through real experiments because of the difficulty to finely
+    control the platform.  This is to the best of our knowledge one of the first sensitivity analyzes of a real HPC code
+    accounting for platform uncertainty.
 
     As future work, building on the effort of SimGrid developers on supporting the emulation of a wide variety of
     applications with SMPI~\cite{smpi_proxy_apps}, we also intend to conduct similar studies with other HPC benchmarks
