@@ -10,7 +10,7 @@
         \subsection{Grid'5000}%
         \label{sub:grid_5000}
 
-            Nearly all the experiments presented in this document have been carried on the Grid'5000~\cite{grid5000}
+            Nearly all the experiments presented in this document have been carried out on the Grid'5000~\cite{grid5000}
             testbed.  Quoting its official website\footnote{\url{https://www.grid5000.fr/}}: \blockquote{Grid'5000 is a
             large-scale and flexible testbed for experiment-driven research in all areas of computer science, with a
             focus on parallel and distributed computing including Cloud, HPC and Big Data and AI.} It provides dozens of
@@ -25,7 +25,7 @@
 
             While it is possible to run a complete experiment on a testbed like Grid'5000 by manually issuing commands
             in an interactive shell, it is not advisable as it quickly becomes extremely tedious and error-prone.
-            Automating the experiment is a necessary condition to have reproducible results. A first step toward this
+            Automating the experiment is a necessary condition for reproducible results. A first step toward this
             goal is to write some ad~hoc script. However, two independent experiments might still share many steps that
             could be refactored in a common layer, \eg OS deployment, package installation, or even more advanced
             features like node instrumentation or environment logging.
@@ -40,8 +40,9 @@
             Experiments with \execo are described as a Python script. We believe this is one of its best qualities, as it
             offers a lot of freedom and flexibility to the experimenter, comparatively to other experiment engines that
             use custom domain specific languages (DSL). Yet, we made the choice to not use it. The main reason is that a
-            typical \execo experiment uses many low-level constructs that are really unpleasant and unintuitive to write
-            and read. Section~\ref{sub:comparison_with_execo} will present some comparisons. Furthermore, \execo lacks
+            typical \execo experiment uses many low-level constructs that are really cumbersome and unintuitive to write
+            and read. Section~\ref{sub:comparison_with_execo} presents a comparison between the approach we implemented
+            and \execo. Furthermore, \execo lacks
             many important features, like node instrumentation and metadata collection, \ie we would still have needed
             to implement many functionalities on top of \execo.
 
@@ -70,11 +71,11 @@
             We implemented our own experiment engine, named \peanut~\cite{peanut}. It comes as a Python library
             that experimenters can use to write their own experiments, also as a Python script.
 
-            A new experiment can be defined by inheriting from the class \texttt{Job}. Three methods can be overridden,
+            A new experiment can be defined by inheriting from the class \texttt{Job}. Three methods can be overridden:
             \texttt{setup}, \texttt{run\_exp} and \texttt{teardown}.
 
             Once the experiment is written, it can be launched in a single command line. The following steps will
-            happen.
+            happen:
             \begin{itemize}
                 \item Implicitly, submit a job with the given characteristics (\eg cluster, number of nodes, wall time,
                     etc), then deploy the given OS image.
@@ -122,8 +123,8 @@
         \subsection{Comparison with \execo}%
         \label{sub:comparison_with_execo}
 
-            In this section, we use a small example to illustrate some differences between \peanut and
-            \texttt{execo}. The goal is to write an experiment that will take several nodes on a given Grid'5000
+            In this section, we use a small example to illustrate key differences between \peanut and
+            \execo. The goal is to write an experiment that will take several nodes on a given Grid'5000
             cluster, compile the \texttt{CRoaring} library\footnote{\url{https://github.com/RoaringBitmap/CRoaring}} and
             run one of its benchmarks.
 
@@ -138,14 +139,14 @@
             }
             \lstset{basicstyle=\scriptsize, style=custom_lst_style}
 
-            First, Listing~\ref{lst:engine:execo} shows such an experiment using \execo. Run with: \verb#python script.py#\\
+            First, Listing~\ref{lst:engine:execo} shows such an experiment using \execo. It should be executed as: \verb#python script.py#\\
 
             \lstinputlisting[language={Python},label={lst:engine:execo},
                 caption={Small experiment example using \execo.}]{
                 img/experiment/engine/mweExeco.py
             }
 
-            This script, albeit fairly small, is already difficult to read in some places. For instance, lines 11-12,
+            This script, albeit fairly small, is already difficult to read in some places. For instance, in lines 11-12,
             one has to write a complex query as a string as follows:
 
             \verb#OarSubmission("{cluster in ('dahu')}/nodes=2,walltime=00:20:00")#
@@ -157,17 +158,18 @@
             Now, Listing~\ref{lst:engine:peanut_class} demonstrates how the same experiment can be rewritten using
             \peanut in a much more concise and readable way.
 
-            Run with: \verb#peanut script.py run tocornebize --deploy debian9-x64-base \#\\
-            \verb#    --cluster dahu --nbnodes 2 --walltime 00:20:00#
+            It should be executed as: \verb#peanut script.py run tocornebize \# \\
+            \verb#    --deploy debian9-x64-base --cluster dahu --nbnodes 2 \# \\
+            \verb#    --walltime 00:20:00 #
 
             \lstinputlisting[language=Python,label={lst:engine:peanut_class},
                 caption={Small experiment example using \peanut.}]{
                 img/experiment/engine/mwePeanut.py
             }
 
-            The script is not only twice shorter, it is also arguably much more pleasant to read. Furthermore, it
-            accomplishes a lot more than Listing~\ref{lst:engine:execo}, as it produces a peanut archive with all the
-            metadata related to the experiment.
+            The script is not only half as long, it is also arguably much easier to read. Furthermore, it
+            accomplishes a lot more than Listing~\ref{lst:engine:execo}, as it produces a peanut archive that contains
+            all the metadata related to the experiment.
 
         \subsection{\enoslib, a promising alternative}%
         \label{sub:enoslib}
@@ -175,7 +177,7 @@
             A recent experiment engine, called \enoslib~\cite{enoslib}, appears to be promising. It is a Python library
             that allows an easy deployment and execution of experiments. The experiment scripts written with \enoslib
             are concise and readable, thanks to well-designed abstractions. Compared to \peanut which has been solely
-            implemented and used for Grid'5000 platform, \enoslib offers multiple backends.  One issue is that it
+            implemented and used for the Grid'5000 platform, \enoslib offers multiple backends.  One issue is that it
             currently does not support the archive building of \peanut with the automatic collection of experiment data
             and meta-data.
 
