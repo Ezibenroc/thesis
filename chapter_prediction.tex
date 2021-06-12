@@ -1837,11 +1837,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         on HPL simulation.  However, having a more complex model for the kernels leads to much more realistic traces.
         The variability in the computation durations leads to an increase of the time spent in communications and an
         overall slightly longer execution. In HPL, computation variability directly translates to late senders/receivers
-        that destroy the efficiency of collective operations.
+        that harm the efficiency of collective operations.
 
-        This demonstrates one of the interests of simulation over other prediction methods. By generating a trace, we
-        can have a very thorough inspection of the simulated execution, which gives a fine understanding of what
-        happens.
+        This demonstrates one of the advantages of simulation over other prediction methods. By generating a trace, we
+        can have a very thorough visual inspection of the simulated execution, which makes it possible to identify the
+        culprits of accuracy losses.
 
         \newcommand{\ganttcaption}[2]{\rotatebox{90}{\hspace{.6cm}$\text{#1}\atop \text{#2}$\hspace{-1cm}}}
         \begin{figure}[htpb]
@@ -1849,11 +1849,11 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \begin{tabular}{c@{}c}
             \ganttcaption{\hspace{.3cm}Reality}{}                        &
             \includegraphics[width=\linewidth]{img/prediction/validation/traces/gantt_reality.png} \\
-            \ganttcaption{Simple kernel}{Simple network}    &
+            \ganttcaption{Simple kernel (\model{1}\noise{0})}{Simple network (\modelp{1}\noise{0})}    &
             \includegraphics[width=\linewidth]{img/prediction/validation/traces/gantt_simulation_deterministic-CPU_linear-DGEMM_deterministic-network.png}\\
-            \ganttcaption{Complex kernel}{Simple network}   &
+            \ganttcaption{Complex kernel (\model[H]{2}\noise[H]{2})}{Simple network (\modelp{1}\noise{0})}   &
             \includegraphics[width=\linewidth]{img/prediction/validation/traces/gantt_simulation_stochastic-CPU_polynomial-DGEMM_deterministic-network.png}\\
-            \ganttcaption{Complex kernel}{Complex network}  &
+            \ganttcaption{Complex kernel (\model[H]{2}\noise[H]{2})}{Complex network (\modelp{1}\noisep{1})}  &
             \includegraphics[width=\linewidth]{img/prediction/validation/traces/gantt_simulation_stochastic-CPU_polynomial-DGEMM_stochastic-network.png}\\
             \end{tabular}
             \caption{Gantt charts of HPL first iterations in simulation.}
@@ -1872,7 +1872,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         model was too optimistic, however, switching to a stochastic multi-modal network model (\noisep{1}, the line
         (b)), does not significantly improve the prediction precision.
 
-        Figure \ref{fig:blas_var} shows that there is an important heterogeneity in the cluster. For this reason, we
+        Figure \ref{fig:blas_var} shows that there is a significant heterogeneity in the cluster. For this reason, we
         started using a \model[H]{1}/\noise{0} model for \dgemm while keeping the models for the other kernels and the
         network as before. This increases very significantly the realism of the simulation as the performance is now
         overestimated by only \SI{9}{\percent} (the line (c)).  Using a polynomial model for \dgemm instead of a linear
@@ -1884,7 +1884,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         performance by less than \SI{5}{\percent} and even as little as \SI{1}{\percent} for the larger matrices. Adding
         back temporal variability to the network model (\noisep{1}, line (f)) still has no significant effect but this
         can be explained by the fact that HPL mostly communicates very large amounts of data in bulk. Network temporal
-        variability is however very important aspect to model for applications that are more \emph{latency-bound}.
+        variability is however a very important aspect to model applications that are more \emph{latency-bound}.
 
         \tikzstyle{model_label}=[anchor=south west, font=\scriptsize]
         \begin{figure}[htpb]
@@ -1929,7 +1929,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         This validation study has been carried out over several years (from 2018 to 2020). Despite our efforts to keep
         the experimental setup stable for the sake of reproducibility, the platform has evolved. The Linux kernel had a
         minor update, from version 4.9.0-6 to version 4.9.0-13, and the BIOS and firmware of the nodes have been
-        upgraded. During this time frame, the cluster has also suffered from hardware issues, like a cooling malfunction
+        upgraded. During this time frame, the cluster has also suffered from hardware issues, such as a cooling malfunction
         on four of its nodes. This malfunction had an enormous impact on the performance of HPL, which significantly
         complicated our validation study but also makes it more meaningful as it has been conducted on a particularly
         challenging setup.
@@ -1957,7 +1957,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         \end{figure}
 
         Our simulation approach makes it possible to predict the performance of HPL for a new platform state by merely
-        making a new calibration whenever a significant change is detected.  This ability to reflect in simulation a
+        conducting a new calibration whenever a significant change is detected.  This ability to reflect in simulation a
         platform change is illustrated in Figure~\ref{fig:validation_temperature} which, similarly to
         Figure~\ref{fig:validation_performance} (acquired in March 2019), showcases the influence of matrix size on the
         performance but at different periods.  The left plot represents the \emph{normal} state of the cluster (in
@@ -2012,7 +2012,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                     \end{tabular}}
                 \end{minipage}
             }
-            \caption{The first (optimistic) network calibration gave poor
+            \caption{The first (optimistic) network calibration gives poor
               predictions for very elongated geometries while the improved
               calibration provides perfect predictions.}
             \label{fig:validation_geometry_global}
@@ -2023,7 +2023,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         Eq~\eqref{eq:dgemm.complex} (stochastic, heterogeneous, and polynomial) and the simplest linear models for the
         other kernels.  In our first simulation attempt that relied on a relatively simple network model (deterministic
         yet piecewise-linear to account for protocol switch) depicted on the leftmost plot of
-        Figure~\ref{fig:mpi_calibration}, we obtained the unsatisfying orange line on top of
+        Figure~\ref{fig:mpi_calibration}, we obtained the unsatisfactory orange line on top of
         Figure~\ref{fig:validation_geometry} for the prediction.  The simulations with the smallest value of \texttt{P}
         had relatively large prediction errors, with a systematic over-estimation that reaches up to +50\% for the
         \(1\times960\) and \(2\times480\) geometries.  A qualitative comparison of the execution traces obtained in
@@ -2038,7 +2038,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         procedure for calibrating the network did not capture this phenomenon since we did not inject any additional CPU
         load. This problem is further discussed in Section~\ref{sec:beware_of_experimental_conditions}.
 
-        We addressed this problem by improving our network calibration procedure: (1) we use a distinct model for local
+        We address the above problem by improving our network calibration procedure: (1) we use a distinct model for local
         and remote calibrations, (2) we sample the message sizes in a larger interval, and (3) we add calls to \dgemm
         and \iprobe between each call to \send and \recv. The goal was to make the calibration environment
         more similar to what happens in HPL\@.  The resulting network model is illustrated in the rightmost plots of
@@ -2050,18 +2050,18 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         which are as square as possible lead to better performance as they minimize the overall amount of data
         movements, it is interesting to observe the asymmetric role of \texttt{P} and \texttt{Q} in the overall
         performance (smaller values for \texttt{P} lead to better performance) and which can be explained by the
-        structure of the collective operations but requires a close look at the code.
+        structure of the collective operations but requires a close inspection of the code.
 
     \section{Evaluating the influence of the other parameters}%
     \label{sec:factorial_experiment}
         %% TODO On arrive à prédire pour toutes les configurations de paramètres.
         %% Plusieurs difficultés (cf. section expérimentation).
 
-        Although geometry is among the most important parameter to tune, six other parameters control the behavior of
+        Although geometry is among the most important parameters to tune, six other parameters control the behavior of
         HPL. In Figure~\ref{fig:validation_factorial}, we compare the performance reported by HPL when fixing the matrix
         rank to \Num{250000} and varying the following parameters: block size (128 or 256), depth (0 or 1), broadcast
         (the six available algorithms), swap (the three available algorithms). The geometry was fixed to
-        \(\text{P}\times\text{Q}=32\times32=1024\) as it is optimal (the simpler calibration procedure and the network
+        \(\text{P}\times\text{Q}=32\times32=1024\) as it is best experimentally (the simpler calibration procedure and the network
         model depicted on the leftmost plot of Figure~\ref{fig:mpi_calibration} were thus used). The parameters
         \texttt{pfact} and \texttt{rfact} (panel factorization) were respectively fixed to \texttt{Crout} and
         \texttt{Right}, as they had nearly no influence on HPL performance in our early experiments.
