@@ -1073,30 +1073,31 @@
     %% pourcents). Dans cette partie, on essaye de détecter ces problèmes
     %% automatiquement.
     When working on the simulations described in Part~\ref{part:prediction}, we occasionally encountered inconsistent
-    performance. The reasons are multiple, ranging from the hardware to the software. This motivated the implementation
-    of performance non-regression tests, to help us detect any noteworthy change on the platform. In this chapter, we
-    start by giving an overview of the existing state of the art and explaining the statistics we based our work on in
-    Section~\ref{sec:test:state_of_art}. Then, in Section~\ref{sec:test:implementation} we describe how we implemented the
-    tests, from the experiment execution to the final test result. We show and explain the graphical representation of
-    our test results, and we describe the various events we were able to detect on Grid'5000 platform. Finally, in
+    performance across different time periods. The reasons are multiple, ranging from the hardware to the software. This
+    motivated the implementation of performance non-regression tests, to help us detect any noteworthy change on the
+    platform. In this chapter, we start by giving an overview of the existing state of the art in
+    Section~\ref{sec:test:state_of_art}. We then describe our contribution in Section~\ref{sec:test:contribution}. We
+    start by detailing the statistics on which relies our tests. Then, we describe how we implemented these tests, from
+    the experiment execution to the final test result. We show and explain the graphical representation of our test
+    results, and we describe the various events we were able to detect on the Grid'5000 platform. Finally, in
     Section~\ref{sec:test:conclusion} we propose several ways to improve this work.
 
     \section{State of the art}%
     \label{sec:test:state_of_art}
 
-        Testing is a core activity of software development. It is usually taught as soon as the first programming courses,
+        Testing is a core activity of software development. It is usually taught as early as the first programming courses,
         students need to verify that their programs work as expected. More experienced software developers generally
         use a wide variety of techniques and methodologies to limit the presence of bugs.
 
         Performance testing is less common, the main reason being that it is arguably much more difficult than testing
-        for correction.
+        for correctness:
         \begin{itemize}
             \item For a performance value to be meaningful, a lot of care needs to be taken when running the test for
                 controlling the experimental environment.
             \item The result of a benchmark is a raw performance value (\eg a duration, an amount of memory or an amount
                 of energy). Ultimately, the test should return a boolean, stating whether the test was successful or
-                failed. It is difficult to define properly such a \emph{truth}. One could define an interval for the
-                expected value, but this will most of the time be an arbitrary choice. A complementary solution, to
+                failed. It is difficult to define properly such a \emph{ground truth}. One could define an interval for
+                the expected value, but this will most of the time be an arbitrary choice. A complementary solution, to
                 ensure that the performance values remain stable throughout the life cycle of the software, would be to
                 use statistical tests.
         \end{itemize}
@@ -1123,7 +1124,7 @@
             run correction tests as well as benchmarks. Yet again, the result of these benchmarks has to be interpreted
             by a human.
 
-            SimdJSON~\cite{simdjson} is a state of the art C++ library to parse JSON documents extremely efficiently. It
+            SimdJSON~\cite{simdjson} is a state-of-the-art C++ library to parse JSON documents extremely efficiently. It
             can process documents at about \NSI{2.5}{\giga\byte/\second}, more than twice faster than the concurrent
             JSON parsers. It is widely used, with more than twelve thousand stars on GitHub. Yet, in April 2020, one of
             the main contributors submitted an issue\footnote{\url{https://github.com/simdjson/simdjson/issues/812}} to
@@ -1162,9 +1163,9 @@
                         the estimations of the mean. Note that this is understandable, these libraries typically start a
                         timer, then perform the iterations, they never measure the duration of an individual iteration.
                         It makes sense when measuring an extremely short code snippet that can take a few nanoseconds,
-                        but this is more unfortunate in our use case where we measure longer function calls that take at
+                        but this is more problematic in our use case where we measure longer function calls that take at
                         least several milliseconds.
-                    \item There is no support for randomization, the code snippets are executed in a deterministic
+                    \item There is no support for randomization as the code snippets are executed in a deterministic
                         order.  The calls to a given snippet with different parameters are also executed in a
                         deterministic order.
                     \item The statistical tests implemented (if any) are quite basic.  There is also no graphical
@@ -1194,16 +1195,16 @@
                 resources (heterogeneous scheduling and data transfers). It is also possible to accurately simulate a
                 StarPU application, using the Simgrid simulation framework~\cite{stanisic:hal-01147997}. As part of
                 their development methodology, the StarPU team performs nightly runs of a few selected StarPU
-                applications and measure their performance, both in reality and in simulation. The goal is to detect any
-                performance regression eventually introduced by a change in the software.
+                applications and measures their performance, both in reality and in simulation. The goal is to detect any
+                performance regression possibly introduced by a change in the software.
                 Figure~\ref{fig:non_regression:state_of_art:starpu} presents the temporal evolution of the StarPU
                 implementation of \texttt{spotrf}, which computes a Cholesky factorization of a given matrix. The green
                 line is the observed performance in reality, the orange line is the estimation made in simulation. The
-                large jump on 15/12/2017 is due to a hardware upgrade. The real runs exhibit an extremely large
+                large jump on 15/12/2017 is due to a hardware upgrade. The real runs exhibit a large
                 variability, which are mainly experiment artifacts: some experiments were performed on a badly
                 configured node which does not report the correct number of cores, so StarPU cannot use appropriately
                 the machine.  Since the StarPU team is interested in detecting regressions in StarPU itself and not the
-                platform, these simulations are extremely valuable to them, they allow ruling out the false conclusions
+                platform, these simulations are extremely valuable to them, allowing them to rule out the false conclusions
                 that would be made by looking only at the real runs.
                 \begin{figure}[htpb]
                     \centering
@@ -1215,15 +1216,15 @@
 
                 The approach of the StarPU team is particularly interesting, because they executed their application on
                 a controlled environment on a near-daily basis for several years. An important issue however is that they
-                did not perform any statistics, they only relied on a visual inspection of the plot to decide whether
+                did not perform any statistics. They only relied on a visual inspection of the plot to decide whether
                 the last modifications of their codebases had any significant effect on performance. While this can be
-                satisfying to some extent, this raises two concerns:
+                satisfying to some extent, it raises two concerns:
                 \begin{itemize}
                     \item They could miss a subtle change in the performance or detect it much later, as it can be
                         extremely difficult and error-prone. \footnote{Emery Berger uses the term ``eyeball
                         statistics'': \url{https://youtu.be/r-TLSBdHe1A}}
                     \item This does not scale well, adding more applications or running the test on more machines would
-                        make this inspection very tedious.
+                        make this visual inspection very tedious.
                 \end{itemize}
 
             \subsubsection{Benchmarking systems}%
@@ -1231,7 +1232,7 @@
                 Other tools exist for measuring the performance of a platform under some workload. Here, we are not
                 interested in the execution of a given software, but rather the whole platform, \ie the combination of
                 the hardware, the operating system and eventual programs running concurrently on the system.
-                High Performance Linpack~\cite{hpl} is such a tool, it performs a dense linear algebra operation using
+                High Performance Linpack~\cite{hpl} is such a tool. It performs a dense linear algebra operation using
                 one or several computers and reports the observed flop rate.
 
                 Another system benchmarking tool is stress-ng~\cite{stress-ng}. It runs a selected workload for a given
@@ -1248,17 +1249,20 @@
                 The Grid'5000 platform already has tests in place. First, a script called \texttt{g5k-checks} verifies
                 each time a node boots that its characteristics match the reference information (\eg the amount of
                 memory, the BIOS version). Additionally, more extensive tests are executed on a regular basis on all the
-                nodes~\cite{nussbaum:hal-01538682}. These are mostly \emph{correction} tests, they perform several
+                nodes~\cite{nussbaum:hal-01538682}. These are mostly \emph{correctness} tests. They perform several
                 operations (\eg node deployment, network reconfiguration) that can either succeed or fail. Two
                 \emph{performance} tests are implemented, one for the network bandwidth, the other for the disk
                 bandwidth.  However, they use threshold values to define what is an acceptable performance, hence they
                 will detect a severe regression but will miss more subtle changes.
 
-        \subsection{Statistical test}%
+    \section{Performance non-regression statistical testing}%
+    \label{sec:test:contribution}
+
+        \subsection{Statistical test basis}%
         \label{sub:statistical_test}
 
             In this section, we describe how to compute a prediction region for multivariate normal variables. This will
-            then be used to implement a statistical test.  This section is mostly based on the paper from
+            then be used to implement a statistical test.  This section is mostly based on the work by
             Chew~\cite[Section~4.4]{chew}.\footnote{This publication, dating from 1966, is one of the oldest papers used in this
             thesis. It has been written by an employee of RCA Service Co., a contractor of the US Air Force. The
             author of the paper describes the typical use case: computing the coordinates of a prediction ellipse
@@ -1307,7 +1311,7 @@
             If each dimension was considered independently, we would conclude that the probabilities to observe the
             orange point or the green point are equal. Indeed, these two points have equivalent positions in the
             one-dimension density plots and they both fall within the \NSI{99.5}{\percent} interval. Now, when we look
-            at both dimensions simultaneously, the green point becomes much more likely to be observed, it is within the
+            at both dimensions simultaneously, the green point becomes much more likely to be observed as it is within the
             blue ellipse while the orange point is outside.
 
             \begin{figure}[htpb]
@@ -1322,7 +1326,7 @@
             as colored dots. Individually, they were all likely to be observed, they are within the dashed ellipse
             representing the \NSI{99.5}{\percent} prediction region for a single point (\ie \(r=1\)). However, if we
             consider them together, the prediction region for their averages shrinks drastically. Now it becomes clear that
-            the set of green points was more likely to be observed than the set of orange points, the green average (marked
+            the set of green points was more likely to be observed than the set of orange points: the green average (marked
             by a cross) is within the filled ellipse representing the \NSI{99.5}{\percent} region for a five-point average
             (\ie \(r=5\)) whereas the orange average is outside.
 
@@ -1339,8 +1343,6 @@
             % TODO discuss the choice of the distribution. Normal vs F distribution. Should we even use this at all? Why
             % not simply the Z-score? See the entries from 2020-05-{07,11,13} in my journal.
 
-    \section{Implementation of the test}%
-    \label{sec:test:implementation}
         %% TODO
         %% Description du workflow mis en place, avec un joli dessin.
         %% - Génération du fichier d'expérience.
@@ -1350,10 +1352,11 @@
         %% - Soumission d'un job CI pour extraire et agréger les informations des archives.
         %% - Réalisation des tests et courbes sur les données.
         %% - Aussi montrer la distribution des données des clusters (e.g. perf vs frequence) avec les ellipses.
-        \subsection{Workflow}%
+        \subsection{Implementation workflow}%
         \label{sub:workflow}
 
-            This section describes the different steps and tools involved to perform this performance test, from the
+            This section describes the different steps and tools involved to perform the performance test described in
+            Section~\ref{sub:statistical_test}, from the
             execution of the experiment on the target machines to the generation of the final plots. It discusses
             several technical choices that have been made and gives some insights to their advantages and limitations.
 
@@ -1364,8 +1367,9 @@
                 \label{fig:experiment:g5k_test:workflow}
             \end{figure}
 
-            The workflow, illustrated in Figure~\ref{fig:experiment:g5k_test:workflow}, consists in three main steps.
-            The first one is implemented with \peanut while the two others are implemented with \cashew.
+            The workflow, illustrated in Figure~\ref{fig:experiment:g5k_test:workflow}, consists of three main steps.
+            The first one is implemented with \peanut while the two others are implemented with \cashew~\cite{cashew}, a
+            Python library implemented specifically for this task.
             \begin{description}
                 \item[Experiment execution] The \dgemm calibration program is executed on the desired nodes. We obtain
                     a \texttt{zip} archive containing the experiment data and metadata.
@@ -1398,7 +1402,7 @@
                 which might disturb other users that need to work interactively on some nodes. Again, this kind of
                 decisions is the reason why this step is not trivial to automatize.
 
-                When scheduled, the experiment script will perform the following steps:
+                When scheduled, the experiment script performs the following steps:
                 \begin{enumerate}
                     \item Deploy a fresh Debian image on all the nodes of the job and install the required dependencies.
                     \item Apply the desired setup to the nodes (\eg enable turboboost, disable hyperthreading, use the
@@ -1411,7 +1415,7 @@
                     \item Push the archive to the git repository.
                 \end{enumerate}
 
-                The choice to use a git repository for storing the experiment data can seem peculiar, git is a very good
+                The choice to use a git repository for storing the experiment data can seem peculiar. Git is a very good
                 version control system for small text files but is not the best choice to store gigabytes of data
                 (although we mitigated this by using git LFS). It would have been undoubtedly more efficient to set up a
                 proper database server for this task, but probably longer to implement.
@@ -1431,9 +1435,7 @@
                 first versions of this work, this step used to be implemented with GitLab's continuous-integration, but
                 this quickly revealed to be too demanding for the runner of our GitLab instance.
 
-                The extraction job is a small script that uses
-                \cashew~\cite{cashew}, a Python library implemented specifically
-                for this task. It performs the following steps:
+                The extraction job is a small script that uses \cashew. It performs the following steps:
                 \begin{enumerate}
                     \item Clone the git repository.
                     \item Iterate on all the new archives to extract the performance and monitoring data. Append it to
@@ -1478,8 +1480,8 @@
             \subsubsection{Statistical test computation}%
 
                 When the extraction and aggregation of the new data is terminated, we compute the statistical test. This
-                is usually done in the same Grid'5000 job as the previous step, but it can be done independently, the
-                test does not need the full repository, it automatically downloads the required files.
+                is usually done in the same Grid'5000 job as the previous step, but it can be done independently. The
+                test does not need the full repository, instead it automatically downloads the required files.
 
                 The implementation directly follows the formula described in Section~\ref{sub:statistical_test}. It
                 relies heavily on NumPy and Pandas for a better efficiency.
@@ -1599,7 +1601,7 @@
 
             \subsubsection{Overview plot}%
 
-                We are running regular tests for several factors on hundreds of nodes, it would be very long and tedious
+                We are running regular tests for several factors on hundreds of nodes, therefore it would be very long and tedious
                 to review each individual plot. For this reason, we implemented overview plots, as presented in
                 Figure~\ref{fig:experiment:non_regression:overview}. In this presentation, each processor of each node
                 occupies one row. Individual experiments are still presented as points and the vertical gray or orange
@@ -1635,8 +1637,8 @@
                 Figure~\ref{fig:experiment:non_regression:evolution_dahu_windowed} shows the performance evolution of
                 two nodes of the cluster \dahu with the five experiment window. Taking the average of several runs
                 reduces the noise. This allows reducing considerably the width of the fluctuation interval, thereby
-                permitting to detect much more subtle changes. The downside is that it introduces a lag, the change
-                might not be detected immediately.
+                permitting to detect much more subtle changes. The downside is that it introduces a lag, meaning that
+                the change might not be detected immediately.
 
                 \begin{figure}[htpb]
                     \centering
@@ -1738,7 +1740,7 @@
                     \item This is an overview plot of the cluster, similar to the overview plots previously presented.
                         The main difference is that the colors do not encode a test result, but the raw value. Like the
                         histogram, it helps to visualize the heterogeneity of the cluster. It also demonstrates once
-                        again the utility of statistical tests: only the most brutal changes are visible in this plot,
+                        again the utility of statistical tests: only the most abrupt changes are visible in this plot,
                         the more subtle ones get completely unnoticed to the naked eye.
                     \item This is the non-windowed overview plot, as presented previously.
                     \item These are the non-windowed evolution plots, as presented previously.
@@ -1864,7 +1866,7 @@
                 measures on the platform at the moment, so we do not have a more precise timeframe. The issue was solved
                 on 2019/05/15 by changing the node chassis.
 
-                A few months later, the same issue happened again on the same four nodes, their performance and
+                A few months later, the same issue arose again on the same four nodes, their performance and
                 frequency had a very large drop and their temperature rose dramatically. We do not have an accurate date
                 for this event, it could have happened between 2019/08/20 and 2019/09/16. The problem was solved on
                 2019/11/27 as a side effect of some work done in the server room. A cluster was installed, so some
@@ -1889,8 +1891,8 @@
                     \item Node \dahu[14] on 2020/09/28.
                 \end{itemize}
 
-                The Grid'5000 team was able to solve this problem, sometimes by inverting two memory sticks, sometimes
-                by changing one memory stick for a new one, sometimes by simply performing a power drain of the nodes.
+                The Grid'5000 team was able to solve this problem, sometimes by swapping two memory sticks, sometimes
+                by replacing one memory stick, sometimes by simply performing a power drain of the nodes.
 
             \subsubsection{Power instability}%
 
@@ -2012,7 +2014,7 @@
         experiments and lead to wrong scientific conclusions. We therefore believe that our approach could greatly
         benefit to the HPC community.
 
-        Their remains some engineering work before targeting a broader adoption. Some parts of our workflow should be
+        There remains some engineering work before targeting a broader adoption. Some parts of our workflow should be
         re-implemented with other more suitable technologies, for instance the data should be stored with a proper
         database management system. There also remains some automation to implement, in particular the scheduling of
         new experiments, with the constraint that it should not bother other users too much.
@@ -2022,4 +2024,3 @@
         memory. For a broader coverage, it would be interesting to implement new tests that stress other parts of the
         platform, \eg with workloads that perform many memory operations, disk operations, or even network
         communications. To this end, the stress-ng~\cite{stress-ng} benchmark would be a great source of inspiration.
-
