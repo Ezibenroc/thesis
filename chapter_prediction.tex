@@ -2143,12 +2143,13 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
     \section{Influence of \dgemm temporal variability}%
     \label{sec:influence_of_temporal_variability}
-        In Section~\ref{sec:different_problem_sizes}, we could highlight the importance of accounting for temporal
+        In Section~\ref{sec:different_problem_sizes}, we were able highlight the importance of accounting for temporal
         variability of the \dgemm kernel to obtain faithful HPL predictions. To the best of our knowledge, HPL
         developers and experts are often aware of this influence (or at least suspect it). However, they have never
-        fully quantified it since designing and performing real experiments to evaluate this would be quite difficult.
-        Although increasing this variability wouldn't be too hard, reducing it would be particularly complicated. This
-        can however easily be done through simulation using the hierarchical model of the previous section. In our
+        fully quantified it since designing and performing real experiments to evaluate it would be quite difficult.
+        Although increasing this variability would be feasible, reducing it would be particularly complicated. This
+        can however easily be done through simulation using the hierarchical model of
+        Section~\ref{sub:dgemm_model:generative_models}. In our
         experiments, the order of magnitude of the temporal variability with respect to actual performance (i.e., the
         ratio between \(\gamma_{p,d}\) and \(\alpha_{p,d}\) in Equation~\eqref{eq:dgemm.basic}) was around
         \NSI{3}{\percent}. This may be a ``normal'' value or could be considered too high and possibly improved by
@@ -2186,7 +2187,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     \section{Influence of \dgemm spatial variability}%
     \label{sec:influence_of_spatial_variability}
         Although we showed in Section~\ref{sec:different_problem_sizes} that temporal variability could account for
-        about \NSI{9}{\percent} of performance, spatial variability was even more important as it was responsible for
+        about \NSI{9}{\percent} of performance degradation, spatial variability was even more important as it was responsible for
         \NSI{22}{\percent} of overhead compared to a fully homogeneous cluster. In practice, the replacement of a few
         nodes may be possible but such spatial variability is expected and common~\cite{rountree_15} and a workaround
         would have to be found. A common approach consists in dropping out a few of the slowest nodes. Indeed, since the
@@ -2235,7 +2236,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         Figure~\ref{fig:whatif_removing_nodes_2} investigates how this overhead for the best geometry and node selection
         also depends on the matrix rank. It appears that in this scenario, except for very small matrices, removing
-        nodes cannot help improving performance. Note that the overhead for \(5\times\texttt{Q}\) configurations with a
+        nodes cannot help improve performance. Note that the overhead for \(5\times\texttt{Q}\) configurations with a
         matrix rank 200,000 appears to behave differently from what happens for other matrix sizes. This surprising
         effect probably arises from a subtle combination of matrix size and virtual topology. We could indeed observe on
         our cluster that such configurations had a weakly but significantly worse performance than the other
