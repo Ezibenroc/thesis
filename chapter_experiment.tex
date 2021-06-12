@@ -200,7 +200,7 @@
     Suppose some researcher wants to evaluate the memory bandwidth of their laptop. A first way to answer this question
     could be to write a small program that allocates a buffer, then write some data on this buffer with the
     \texttt{memset} function while measuring the duration of this operation. The problem is that the time taken to make
-    this memory write may not be representative, the following writes would very probably have different durations due
+    this memory write may not be representative. The following writes would very probably have different durations due
     to cache effects.  Therefore, it would be better to make several measures that should then be carefully analyzed
     (maybe simply taking the average, or perhaps there are some \emph{outliers} that should be removed). However, by
     doing so we only measure the performance of a write for a given size. The effective bandwidth could be very
@@ -213,7 +213,7 @@
         \item The parameter space (in this example, the set of sizes that are evaluated). The goal is to avoid bias, for
             instance sizes that are a power of two may lead to a different performance. Note that in some occasions, as
             this chapter will illustrate, it is desirable to bias the experiment towards some particular values.
-        \item The experiment order (in this example, the order of the sizes). The rational here is to avoid temporal
+        \item The experiment order (in this example, the order of the sizes). The rationale here is to avoid temporal
             perturbations. In particular, there are often at least two phases, a load build up which converges toward a
             steady state. There can also be changes that happen once the steady state is reached, \eg caused by some
             external source. By randomizing the order of the experiments, it becomes much easier to recognize an
@@ -491,8 +491,8 @@
 
         The experiments described in this section were performed in 2018. Two years later, we were unable to replicate
         this phenomenon, despite using the same MPI implementation and an identical cluster: the averaged data has a
-        single mode, even in the non-shuffled case. We cannot state with certainty the reason this behavior disappeared,
-        it could be due to a change in our calibration program, or on the platform itself. This motivates the
+        single mode, even in the non-shuffled case. We cannot state with certainty the reason this behavior disappeared.
+        It could be due to a change in our calibration program, or on the platform itself. This motivates the
         implementation of performance non-regression tests, as discussed in Chapter~\ref{chapter:experiment:tests}.
 
     \section{Randomizing the sizes}%
@@ -517,9 +517,9 @@
 
             Through the numerous \dgemm calibrations that were performed, we eventually realized that the set of sizes
             used for the experiment had a significant effect on the statistical model obtained with these measures. To
-            demonstrate this, we have generated three different experiment files using exactly the same generation
+            demonstrate this effect, we have generated three different experiment files using exactly the same generation
             method described previously. These three experiments, named \texttt{A}, \texttt{B} and \texttt{C}, were
-            repeated several dozens of times during a week-end in a random order. They have been carried on 8 different
+            repeated several dozens of times during a weekend in a random order. They have been carried on 8 different
             nodes of the \dahu cluster, for a total of 16 different processors, the results are extremely similar for all
             of them.
 
@@ -563,7 +563,7 @@
             point represents one individual call to \dgemm. It appears that most of the calls in the three experiments
             have extremely similar durations for a given product \(MNK\). However, a small fraction of the \dgemm calls
             were significantly slower than the others with experiments \texttt{A} and \texttt{B}. All these calls have
-            been made with a tall and skinny matrix, with \(K\geq3000\), which corroborates the hypothesis of a bad
+            are for a tall and skinny matrix, with \(K\geq3000\), which corroborates the hypothesis of a bad
             cache utilization.
 
             \begin{figure}[htpb]
@@ -595,7 +595,7 @@
             \dgemm models. We would like to stress that this discrepancy of the resulting models is due to a difference
             in the experimental conditions and not (only) to a statistical artifact. We proposed the hypothesis of a
             poor cache utilization, but other possibilities should not be dismissed, since this study was only
-            observational, our hypothesis would need to be confirmed or refuted with a properly designed experimental
+            observational. Our hypothesis would need to be confirmed or refuted with a properly designed experimental
             study.
 
         \subsection{Effect of the experiment file generation method}%
@@ -646,15 +646,15 @@
                     the \emph{fixed K} method and then shuffling the resulting file.
             \end{description}
             For each of the five experiment kinds, we have generated several dozens of experiment files. Then, we
-            performed one experiment with each of these files in a random order during a week-end on two nodes of the
+            performed one experiment with each of these files in a random order during a weekend on two nodes of the
             \dahu cluster for a total of four different processors. Again the results are similar for all of them, so we
             will focus on a single processor.
 
             Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:performance} presents the observed \dgemm performance
-            with the five experiments. We can observe that again, the generation method for the size sequence has a huge
-            effect on the experiment. First, using a fixed value for \(K\) reduces very significantly the inter-run
-            performance variability. The average performance is also greatly affected, it is the highest with \(K\)
-            fixed to 128, the lowest with \(K\) fixed to 256 or 512 or with the random generation, and it is
+            with the five experiments. We can observe that again, the generation method for the size sequence has an
+            enormous effect on the experiment. First, using a fixed value for \(K\) reduces very significantly the
+            inter-run performance variability. The average performance is also greatly affected, it is the highest with
+            \(K\) fixed to 128, the lowest with \(K\) fixed to 256 or 512 or with the random generation, and it is
             intermediate with \(K\) randomly sampled in \(\{128,256,512\}\).
 
             \begin{figure}[htpb]
@@ -679,7 +679,7 @@
             \end{figure}
 
             The average CPU power consumption, presented in
-            Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:power_CPU}, is particularly peculiar. The random
+            Figure~\ref{fig:randomizing_sizes:expfile:fixing_K:power_CPU}, is particularly notable, and peculiar. The random
             experiment has a power consumption significantly lower and more variable than the four other experiments
             that are all extremely stable, with nearly no inter-run variability. This observation is very
             counter-intuitive, since the CPU power consumption is in general proportional to the CPU
@@ -723,7 +723,7 @@
             \end{figure}
 
             In this section, we demonstrated once again that the sampling method has an important effect on the measured
-            performance. This will affect any statistical model we could build using the measured data, not because of a
+            performance. This will affect any statistical model that relies on the measured data, not because of a
             statistical bias, but because of an experimental bias. Such a bias might be desirable, for instance it
             should help improve the prediction accuracy of our HPL simulations. It comes at a price though, since we
             need to perform a new \dgemm calibration if we want to simulate HPL with another block size.
@@ -738,10 +738,10 @@
         content of this section is therefore a near-verbatim copy of this report.
 
         This experiment comes, yet again, from an unfortunate phenomenon we stumbled upon when calibrating the platform
-        for our simulations. Our predictions were wrong, so we investigated a bit and we noticed a significant mismatch
-        between the durations measured with our calibration code and the durations observed in HPL. We found out that,
+        for our simulations. Our predictions were wrong, so we investigated further and we noticed a significant mismatch
+        between the durations measured with our calibration code and the durations observed in HPL. We found out that
         the performance of the \dgemm function depends on the content of the matrix, which was unexpected. All the
-        experiments described in this section have been done with matrices of fixed size \(2048\times2048\), but the
+        experiments described in this section were done with matrices of fixed size \(2048\times2048\), but the
         phenomenon we observed is reproducible with any matrix size.
 
         \subsection{Randomization of the matrix initialization}
@@ -751,7 +751,7 @@
             \begin{enumerate}
                 \item All the elements of the matrices are equal to some constant. We have tested with three different
                     values: 0, 0.987 and 1.
-                \item The elements of the matrices are made of an increasing sequence in the interval \([0, 1]\). More
+                \item The elements of the matrices are an increasing sequence in the interval \([0, 1]\). More
                     precisely, \texttt{mat[i] = i/(N\textasciicircum{}2-1)} for i in \([0, N^2-1]\).
                 \item Each element of the matrix is randomly and uniformly sampled in the interval \([0, 1]\).
             \end{enumerate}
@@ -837,7 +837,7 @@
             the thermal design power (TDP), with the random initialization the frequency would be throttled more
             aggressively and thus the performance would be lower.
             As for the sequential initialization, we can imagine that we have a locality effect: nearby elements of the
-            matrices will have more bits in common, this would cause less bit flips than the random initialization but
+            matrices will have more bits in common, this would cause fewer bit flips than the random initialization but
             more bit flips than the constant initialization and thus an intermediate performance.
 
         \subsection{Testing the bit-flip hypothesis}
@@ -896,8 +896,8 @@
         \subsection{Conclusion}
             We have shown that the performance of the \dgemm function is data-dependent. The best explanation we
             have for this counter-intuitive fact is an energy cost overhead caused by bit flips inside the processor.
-            To respect its energy budget, the CPU has to throttle more aggressively its frequency when the matrices
-            content is more diverse and thus more energy consuming.
+            To respect its energy budget, the CPU has to throttle more aggressively its frequency when matrix elements
+            are more diverse and thus more energy consuming.
             This theory has been corroborated by a controlled experiment where the elements of the matrices are
             initialized semi-randomly: they all share an identical bit suffix.
 
@@ -910,15 +910,16 @@
             processor.
 
         \subsection{Related work}%
-            M. La{\ss}, C. Plessl and R. Schade (Paderborn Center for Parallel Computing) made independently similar
+            M. La{\ss}, C. Plessl and R. Schade (Paderborn Center for Parallel Computing) independently made similar
             observations (personal communications on 2020/09/24 and 2020/11/11). Their findings are summarized here:
             \begin{itemize}
                 \item They observed that \dgemm performance depended on the content of the matrix. They also
                     made the hypothesis that it was caused by bit-flips. To test this hypothesis, they used the same
                     approach, they filled the matrices with random values with a mask applied to the lower-order bits.
                     They observed a correlation between the mask size and \dgemm performance, which is an
-                    argument in favor of this hypothesis. This experiment was done using another \dgemm
-                    implementation than us (Intel MKL) on an Intel Xeon Gold 6148 (Skylake-SP family) from a noctua
+                    argument in favor of this hypothesis. Their experiment was done using another \dgemm
+                    implementation than the one used in this work (Intel MKL) on an Intel Xeon Gold 6148 (Skylake-SP
+                    family) from a noctua
                     node\footnote{\url{https://pc2.uni-paderborn.de/hpc-services/available-systems/noctua/}}.
                 \item They reproduced the same experiment on an FPGA (more precisely, a Bittware 520N PCIe accelerator
                     card, equipped with an Intel Stratix 10 GX 2800 FPGA). This time, the way the matrix was filled had
@@ -954,7 +955,7 @@
         %%   partie parce que l'on calibrait pour des messages jusqu'à 1MB et on
         %%   esssayait de prédire la durée de communications de 1GB.
         %% - Parler de notre tentative d'extrapolation de HPL sur (P,Q) ? Peut être plutôt en partie 1.
-        In several occasions when working on Part~\ref{part:prediction}, we found that our predictions were inaccurate
+        On several occasions when working on Part~\ref{part:prediction}, we found that our predictions were inaccurate
         because of a wrong extrapolation. The measures made for instantiating the model were made with parameters that
         were very different to the ones needed when using these models in simulation. This happened at least twice, with
         the \dgemm function and with MPI communications.
@@ -1017,7 +1018,7 @@
                 \iprobe.
         \end{itemize}
 
-        The two last scenarios can appear oddly twisted. The goal was, again, to implement a micro-benchmark that is as
+        The two last scenarios may seem contrived. The goal was, again, to implement a micro-benchmark that is as
         close as possible to what happens in the real application we tried to model, HPL in this case.
 
         \begin{figure}[htpb]
@@ -1050,17 +1051,17 @@
         %% - De manière plus générale, les conditions expérimentales ont un rôle très important.
         A common theme to several sections of this chapter was the importance of the randomization. It is of great help
         to avoid or at least limit any experimental bias. We have presented several counter-intuitive phenomena that
-        were only revealed through the randomization (or the lack thereof). However, in some cases, we needed our
+        were only revealed through randomization (or the lack thereof). However, in some cases, we needed our
         experiments to be biased, to have more realistic experimental conditions. When we execute a micro-benchmark that
         supposedly mimic a real application, the main objective is for this micro-benchmark to be the best possible
         surrogate for the real application, being unbiased is only a secondary goal.
 
         During our work, we have been confronted multiple times to external factors that unknowingly affected our
-        experiments (\eg cooling issues, BIOS upgrades). With this kind of artifacts, it can become more difficult to
+        experiments (\eg cooling issues, BIOS upgrades). With this kind of experimental artifacts, it can become more difficult to
         trust any experimental results, especially in the presence of unexpected phenomena like the ones presented
         here. This demonstrates the great importance of gaining back this trust by (1) having an experiment engine to
-        automatize everything (thereby limiting greatly the human errors) and collect relevant information and (2)
-        making regular tests on the platform to detect eventual changes.
+        automate the entire experimental process (thereby greatly reducing the human errors) and collect relevant
+        information and (2) making regular tests on the platform to detect possible changes.
 
 \chapter{Performance non-regression tests}%
 \label{chapter:experiment:tests}
