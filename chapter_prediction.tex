@@ -20,6 +20,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
     %% - efficiency
     %% - accuracy
 
+    In this chapter, we discuss the different techniques and tools available for predicting the performance of an
+    application. Section~\ref{sec:performance_prediction} explains why we need simulation to obtain both efficient and
+    faithful predictions while Section~\ref{sec:simgrid_smpi} gives an overview of the simulator we used for this work.
+
     \section{Performance prediction}%
     \label{sec:performance_prediction}
 
@@ -233,6 +237,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
 \chapter{High Performance Linpack}%
 \label{chapter:prediction:hpl}
+
+    This chapter gives a thorough overview of the application we used as a case study for this work, namely High
+    Performance Linpack (HPL). It presents the different state-of-the-art techniques employed in HPL to reach the
+    highest possible performance, making it more challenging to simulate accurately.
 
     \section{The benchmark}%
     \label{sec:hpl:benchmark}
@@ -1794,11 +1802,14 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
 \chapter{Validation}%
 \label{chapter:prediction:validation}
+    It is not possible to formally prove the ``correctness'' of a model like we would do for a theorem. The only
+    reasonable method to evaluate the soundness of our approach is to compare simulation to reality. The goal here is to
+    meticulously try many relevant configurations of the application to possibly unveil any flaw of the models discussed
+    previously.
 
     \section{Experimental setup}%
     \label{sec:experimental_setup}
-        To evaluate the soundness of our approach, we compare several real executions of HPL with simulations using the
-        previous models.  We used the \dahu cluster from the Grid'5000 testbed. It has 32 nodes connected through a
+        We used the \dahu cluster from the Grid'5000 testbed. It has 32 nodes connected through a
         single switch by \SI{100}{\giga\bit\per\second} Omni-Path links. Each node has two Intel Xeon Gold 6130 CPU with
         16 cores per CPU and we disabled hyperthreading.  We used HPL version 2.2 compiled with GCC version 6.3.0. We
         also used the libraries OpenMPI version 2.0.2 and OpenBLAS version 0.3.1. We used one single-threaded
