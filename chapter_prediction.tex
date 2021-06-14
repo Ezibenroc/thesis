@@ -1434,8 +1434,15 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             (for a given size \texttt{N}, either we have both a deadlock with Algorithms~\ref{algo:semantic:deadlock}
             and a corruption with
             Algorithms~\ref{algo:semantic:corruption}, or we have none, there is no alternative combination).
-            On clusters \paravance and \grisou, the search with Algorithms~\ref{algo:semantic:corruption} does not find any
+            On clusters \paravance and \grisou, the search with Algorithm~\ref{algo:semantic:corruption} does not find any
             breakpoint, the message is always corrupted. This means that the \emph{asynchronous} mode does not exist.
+
+            These kinds of inconsistencies show the fragility of the semantic approach for detecting breakpoints. The
+            three behaviors we described, namely \emph{asynchronous}, \emph{detached} and \emph{synchronous}, are not
+            part of the MPI standard. They highly depend on both the MPI implementation and the hardware.
+            For instance, Algorithm~\ref{algo:semantic:corruption} depends on the semantic of a concurrent memory read
+            and write, which can produce surprising results on less common architectures. An alternative would be to
+            instrument the memory of the program to have a precise timing of when the memory reads and writes occur.
 
         \subsection{Learning breakpoints}%
         \label{sub:pycewise}
