@@ -71,6 +71,17 @@
     bibstyle=alphabetic,      % reference style
 ]{cleanthesis}
 
+% In some 'online' bibtex entries, we do have a DOI, thanks to Zenodo. Here we want to display it.
+\AtEveryBibitem{%
+    \ifentrytype{online}{
+        \csappto{blx@bbx@\thefield{entrytype}}{% put at end of entry
+            \iffieldundef{doi}{}{%
+                \printfield{doi}
+            }
+        }
+    }
+}
+
 % --- GRAPHICS / FIGURES ---------------
 
 \usepackage{epsfig}  % XXX: to be removed when CCPE figures are out
