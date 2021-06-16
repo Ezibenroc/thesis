@@ -1052,7 +1052,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
             Four other BLAS kernels and a few other very small HPL compute kernels (often related to memory management)
             are deeply intertwined with collective operations to allow HPL to be as efficient as possible. Although the
-            total duration of these kernels is extremely small compared to the total execution time, they may perturb
+            total duration of these kernels is minimal compared to the total execution time, they may perturb
             collective communication by introducing late sends and receives. The behavior of one of these kernels is
             illustrated in Figure~\ref{fig:HPL_var}. This kind of data can only be obtained by running HPL for a small
             input matrix over each node individually. Again, for all these kernels a single parameter combination
@@ -1098,7 +1098,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             (short-term) temporal variability, \ie to model the fact that the duration of two successive calls to \dgemm
             with the same parameters \(M, N, K\) are never identical.
             Finally, we initially decided to use a half-normal distribution instead of a normal distribution to account
-            for the asymetry of the observed durations (\eg there are no negative durations), but with hindsight we do
+            for the asymmetry of the observed durations (\eg there are no negative durations), but with hindsight we do
             not believe this choice to be very important.
 
             As we will show, the performance of nodes exhibits several kinds of variability: i) a spatial variability
@@ -1233,7 +1233,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             This can be explained by the fact that one of the nodes seemed to be significantly slower (with much larger
             \(\alpha_{p}\)), which artificially increased the spatial variability. Second, as expected from a Gaussian
             model, the distributions of the \(\beta_{p,d}\) are symmetrical whereas there was a slight negative skew in
-            the original samples but this should be of little significance for our study. The distributions of the
+            the original samples, but this should be of little significance for our study. The distributions of the
             \(\gamma_{p,d}\) however are particularly realistic.
 
             We also illustrate the generality of this model with the data from Figure~\ref{fig:whatif_slow_calibration}.
@@ -1819,7 +1819,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         We used the \dahu cluster from the Grid'5000 testbed. It has 32 nodes connected through a
         single switch by \SI{100}{\giga\bit\per\second} Omni-Path links. Each node has two Intel Xeon Gold 6130 CPU with
         16 cores per CPU and we disabled hyperthreading.  We used HPL version 2.2 compiled with GCC version 6.3.0. We
-        also used the libraries OpenMPI version 2.0.2 and OpenBLAS version 0.3.1. We used one single-threaded
+        also used the libraries OpenMPI version 2.0.2 and OpenBLAS version 0.3.1. Last, we used one single-threaded
         MPI rank per core.
 
         Although this machine is much smaller than top supercomputers,  faithfully simulating an HPL execution with such
@@ -2038,7 +2038,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
         As in all our previous studies, we report both the predicted performance and the one measured in reality. Like
         the comparisons presented in the previous section, the simulation was done with the \dgemm model from
-        Eq~\eqref{eq:dgemm.complex} (stochastic, heterogeneous, and polynomial) and the simplest linear models for the
+        Equation~\eqref{eq:dgemm.complex} (stochastic, heterogeneous, and polynomial) and the simplest linear models for the
         other kernels.  In our first simulation attempt that relied on a relatively simple network model (deterministic
         yet piecewise-linear to account for protocol switch) depicted on the leftmost plot of
         Figure~\ref{fig:mpi_calibration}, we obtained the unsatisfactory orange line on top of
@@ -2161,7 +2161,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
 
     \section{Influence of \dgemm temporal variability}%
     \label{sec:influence_of_temporal_variability}
-        In Section~\ref{sec:different_problem_sizes}, we were able highlight the importance of accounting for temporal
+        In Section~\ref{sec:different_problem_sizes}, we were able to highlight the importance of accounting for temporal
         variability of the \dgemm kernel to obtain faithful HPL predictions. To the best of our knowledge, HPL
         developers and experts are often aware of this influence (or at least suspect it). However, they have never
         fully quantified it since designing and performing real experiments to evaluate it would be quite difficult.
@@ -2178,7 +2178,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         with \(\gamma\in[0,0.1]\), which represents the coefficient of variation of the \dgemm kernel. We evaluate the
         performance of HPL with one multi-threaded MPI rank per node, a block size of 512, a look-ahead \texttt{depth}
         of 1.  We used the \texttt{increasing-2-ring} broadcast with the \texttt{Crout} panel factorization algorithms
-        and \(\texttt{P}\times\texttt{Q}=8\times32\) and we tested matrix sizes ranging from 100,000 to 500,000. Let us
+        and \(\texttt{P}\times\texttt{Q}=8\times32\), and we tested matrix sizes ranging from 100,000 to 500,000. Let us
         denote by \(T(N,C_i,\gamma)\) the performance of HPL when factorizing a matrix of rank \(N\) on cluster \(C_i\)
         with a temporal variability of \(\gamma\). The overhead for this configuration is the ratio
 
