@@ -111,24 +111,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
         non-deterministic, \eg whenever the application relies on non-blocking communication patterns, which is
         unfortunately often the case.
 
-        The second approach discussed in the literature is \emph{online simulation}.  Here, the application execution is
-        emulated on top of a simulator that is responsible for simulating the execution of each application process
-        including inter-process communication. This approach allows
-        researchers to study directly the behavior of MPI applications but only a few recent simulators such as SST
-        Macro~\cite{sstmacro}, SimGrid/SMPI~\cite{simgrid} and the closed-source xSim~\cite{xsim} support it. To the
-        best of our knowledge, only SST Macro and SimGrid/SMPI are mature enough to faithfully emulate an MPI
-        application.  This work relies on SimGrid as its performance models and its emulation capabilities are now well
-        established, but the proposed developments would also be possible with SST.  Note that the emulation
-        described in Chapter~\ref{chapter:prediction:emulation} should not be confused with the application
-        skeletonization~\cite{sst_skeleton} commonly used with SST. Skeletons are code extractions of the most important
-        parts of a complex application, as illustrated in Figure~\ref{fig:sst_skeleton} (\eg the original Fortran code
-        from Figure~\ref{fig:sst_skeleton:comp_orig} has been translated into the skeleton from
-        Figure~\ref{fig:sst_skeleton:comp_skel}). In our work, we only modify a few dozens of lines of the source code
-        before emulating it with SMPI.  Finally, it is important to understand that the proposed approach is intended to
-        help studies at the level of the whole machine and application, not the influence of microarchitectural details
-        as intended by gem5~\cite{lowepower2020gem5} or by MUSA~\cite{musa_16}.
-
-        \begin{figure}[tpb]
+        \begin{figure}[tb]
             \centering
             \subfigure[Original Fortran \texttt{dm\_x\_bcs}
                 subroutine\label{fig:sst_skeleton:comm_orig}]{\begin{minipage}[b]{\linewidth}
@@ -153,6 +136,23 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \caption{Example of skeletonization done by SST~\cite{sst_skeleton}.}%
             \label{fig:sst_skeleton}
         \end{figure}
+
+        The second approach discussed in the literature is \emph{online simulation}.  Here, the application execution is
+        emulated on top of a simulator that is responsible for simulating the execution of each application process
+        including inter-process communication. This approach allows
+        researchers to study directly the behavior of MPI applications but only a few recent simulators such as SST
+        Macro~\cite{sstmacro}, SimGrid/SMPI~\cite{simgrid} and the closed-source xSim~\cite{xsim} support it. To the
+        best of our knowledge, only SST Macro and SimGrid/SMPI are mature enough to faithfully emulate an MPI
+        application.  This work relies on SimGrid as its performance models and its emulation capabilities are now well
+        established, but the proposed developments would also be possible with SST.  Note that the emulation
+        described in Chapter~\ref{chapter:prediction:emulation} should not be confused with the application
+        skeletonization~\cite{sst_skeleton} commonly used with SST. Skeletons are code extractions of the most important
+        parts of a complex application, as illustrated in Figure~\ref{fig:sst_skeleton} (\eg the original Fortran code
+        from Figure~\ref{fig:sst_skeleton:comp_orig} has been translated into the skeleton from
+        Figure~\ref{fig:sst_skeleton:comp_skel}). In our work, we only modify a few dozens of lines of the source code
+        before emulating it with SMPI.  Finally, it is important to understand that the proposed approach is intended to
+        help studies at the level of the whole machine and application, not the influence of microarchitectural details
+        as intended by gem5~\cite{lowepower2020gem5} or by MUSA~\cite{musa_16}.
 
         Some researchers from Intel unaware of our recent work recently applied the same methodology as the one we
         proposed in~\cite{cornebize:cluster19} to both Intel HPL and OpenHPL in the closed-source CoFluent
