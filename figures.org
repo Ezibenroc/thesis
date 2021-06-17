@@ -4889,6 +4889,112 @@ plot
 
 #+RESULTS:
 [[file:/tmp/babel-Y1PGmR/figureuKRYEI.png]]
+* Conclusion
+** Validation on Gros cluster
+The CSV is stored locally. The experiments were done during the weekend of
+[2021-05-01 Sat], the data has been dumped into this CSV file on
+[2021-06-17 Thu]. The notebooks and archives are located in the repository of my
+journal, see the corresponding entries in the journal for more information.
+*** Drawing the plot
+#+begin_src R :results output :session *R* :exports both
+library(ggplot2)
+library(dplyr)
+options(warn=-1)
+df = read.csv('data/conclusion/hpl_matrix_size.csv') %>%
+    mutate(mode = as.character(mode)) %>%
+    mutate(mode = ifelse(mode=="Simulation (simple)", "Simulation (simple dgemm model)",
+                  ifelse(mode=="Simulation (complex)", "Simulation (complex dgemm model)", mode)))
+head(df)
+#+end_src
+
+#+RESULTS:
+: 
+:   matrix_size gflops    time                            mode       date   jobid
+: 1       50000   4660   17.88 Simulation (simple dgemm model) 2021-05-02 2989432
+: 2      350000  25730 1110.89 Simulation (simple dgemm model) 2021-05-02 2989438
+: 3      200000  20420  261.23 Simulation (simple dgemm model) 2021-05-02 2989435
+: 4      150000  17220  130.65 Simulation (simple dgemm model) 2021-05-02 2989434
+: 5      450000  27630 2198.58 Simulation (simple dgemm model) 2021-05-02 2989440
+: 6      400000  26580 1605.43 Simulation (simple dgemm model) 2021-05-02 2989439
+
+Then, we can generate the plot.
+
+#+begin_src R :results output :session *R* :exports both
+lab = df %>% filter(
+    (mode == 'Reality'                          & matrix_size == 300000) |
+    (mode == 'Simulation (simple dgemm model)'  & matrix_size == 200000) |
+    (mode == 'Simulation (complex dgemm model)' & matrix_size == 150000)
+) %>%
+    select(gflops, matrix_size, mode) %>%
+    group_by(matrix_size, mode) %>%
+    summarise(gflops=mean(gflops)) %>%
+    as.data.frame()
+
+lab$x = lab$matrix_size
+lab$y = lab$gflops
+lab$xl = lab$x*1.0
+lab$yl = lab$y*1.0
+
+delta_x = max(df$matrix_size) / 12
+delta_y = max(df$gflops) / 12
+max_x = max(df$matrix_size)
+max_y = max(df$gflops)
+lab = lab %>% mutate(xl = case_when(mode == 'Reality'     ~ 0.7*max_x,
+                                    mode == 'Simulation (simple dgemm model)' ~ 0.25*max_x,
+                                    mode == 'Simulation (complex dgemm model)' ~ 0.4*max_x,
+                                       T             ~ xl))
+lab = lab %>% mutate(yl = case_when(mode == 'Reality'     ~ 0.5*max_y,
+                                    mode == 'Simulation (simple dgemm model)' ~ 0.9*max_y,
+                                    mode == 'Simulation (complex dgemm model)' ~ 0.4*max_y,
+                                       T             ~ yl))
+lab
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+`summarise()` regrouping output by 'matrix_size' (override with `.groups` argument)
+
+  matrix_size                             mode  gflops      x       y     xl
+1      150000 Simulation (complex dgemm model) 16120.0 150000 16120.0 200000
+2      200000  Simulation (simple dgemm model) 20420.0 200000 20420.0 125000
+3      300000                          Reality 23257.5 300000 23257.5 350000
+     yl
+1 11256
+2 25326
+3 14070
+#+end_example
+
+
+#+begin_src R :results output graphics :file (org-babel-temp-file "figure" ".png") :exports both :width 600 :height 300 :session *R*
+text_size=4
+
+df %>% {(
+    ggplot(.) +
+aes(x=matrix_size, y=gflops, color=mode, fill=mode, shape=mode) +
+        geom_point(data=filter(., mode=="Reality"), size=2, alpha=.5, color="black") +
+        geom_point(data=filter(., mode!="Reality"), size=2, color="NA") +
+        stat_summary(fun.y='mean', geom='line') +
+        expand_limits(y=0) +
+        scale_shape_manual(values=c(23, 21, 21)) +
+        geom_segment(data=lab, aes(x=xl, xend=x, y=yl, yend=y, color=mode), linetype="solid") +
+        geom_label(data=lab, aes(x=xl, y=yl, label=mode, group=mode), size=text_size, fill='white') +
+        geom_label(data=lab, aes(x=xl, y=yl, label=mode, group=mode, fill=mode), alpha=0.3, size=text_size, color="black") +
+        ylim(0, 30000) +
+        ylab('Gflop/s') +
+        xlab('Matrix rank') +
+        labs(color="Mode", fill="Mode", shape="Mode") +
+        scale_fill_brewer(palette="Dark2", guide = guide_legend()) +
+        scale_color_brewer(palette="Dark2", guide = guide_legend()) +
+        theme_bw() +
+        theme(legend.position="none")
+    )} -> plot
+ggsave(filename='img/conclusion/validation_gros.pdf', plot=plot)
+plot
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-rThAwc/figurex95lAi.png]]
 
 * Appendix
 ** Total amount of core hours

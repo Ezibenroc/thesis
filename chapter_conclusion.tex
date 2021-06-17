@@ -43,16 +43,30 @@
         obstacles, as reported in Part~\ref{part:experiment}.
 
         A few weeks before the defense of this thesis, we decided to repeat the whole simulation study from scratch on
-        another Grid'5000 cluster, named \gros. This cluster has different nodes (one Intel Xeon Gold 5220 processor per
-        node with \NSI{96}{\giga\byte} of memory), a different network (with \NSI{25}{\giga\bit/\second} Ethernet) and
-        we used a more recent version of OpenBLAS (resulting in the use of AVX512 instructions by the \dgemm function
-        instead of AVX2). Over the course of a weekend, we calibrated the platform by measuring the \dgemm and MPI
-        durations. Then, we performed real and simulated HPL executions. At first, the predicted performance was too low
-        by one order of magnitude. This was due to a mistake we made: we computed the linear regression of the \dgemm
-        model using all the terms of the polynomial, even those of degree one (\ie \(M\), \(N\) and \(K\)) which were
-        not statistically significant. This resulted in an overfitted model with spurious predictions.  After fixing
-        this issue by only considering the significant terms, we obtained extremely accurate predictions of HPL
-        performance for various matrix sizes.
+        another Grid'5000 cluster named \gros, using 60 of its nodes. This cluster has different nodes (one Intel Xeon
+        Gold 5220 processor per node with \NSI{96}{\giga\byte} of memory), a different network (with
+        \NSI{25}{\giga\bit/\second} Ethernet) and we used a more recent version of OpenBLAS (resulting in the use of
+        AVX512 instructions by the \dgemm function instead of AVX2). Over the course of a weekend, we calibrated the
+        platform by measuring the \dgemm and MPI durations. Then, we performed real and simulated HPL executions. At
+        first, the predicted performance was too low by one order of magnitude. This was due to a mistake we made: we
+        computed the linear regression of the \dgemm model using all the terms of the polynomial, even those of degree
+        one (\ie \(M\), \(N\) and \(K\)) which were not statistically significant. This resulted in an overfitted model
+        with spurious predictions.  After fixing this issue by only considering the significant terms, we obtained
+        extremely accurate predictions of HPL performance for various matrix sizes (see
+        Figure~\ref{fig:conclusion:gros_study}).
+
+        \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=\linewidth]{img/conclusion/validation_gros.pdf}
+            \caption{HPL performance: prediction vs. reality for various matrix ranks, using 60 nodes of the \gros
+            cluster.}%
+            \label{fig:conclusion:gros_study}
+        \end{figure}
+
+        Similarly to what we observed in Chapter~\ref{chapter:prediction:validation}, the predictions are more accurate
+        with a complex \dgemm model (\ie heterogeneous, stochastic and polynomial)  than with a simpler model (\ie
+        homogeneous, deterministic and linear). However, the simpler model still makes reasonably low prediction errors
+        here as the \gros cluster has less variability than the \dahu cluster.
 
         This small additional study demonstrates clearly the level of trust we can now have in our model, but also its
         fragility, as seemingly inoffensive changes in the approach can lead to widely inaccurate predictions.
