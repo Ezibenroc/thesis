@@ -34,13 +34,13 @@
     \section{Trusting our predictions}%
     \label{sec:prediction_trust}
 
-        In contrary to mathematical theorems or algorithms, a model like those of Part~\ref{part:prediction} cannot be
-        formally proven. The only solution for validating its faithfulness is to thoroughly try to break it, by
-        methodically changing the configurations when comparing the predictions to reality. As presented in
+        Unlike mathematical theorems or algorithms, the correctness of a model like those of Part~\ref{part:prediction}
+        cannot be formally proven. The only sound method for validating its faithfulness is to thoroughly try to break
+        it, by comparing predictions to reality while methodically changing the configurations. As presented in
         Chapter~\ref{chapter:prediction:validation}, we did cover an extensive range of configurations in our
-        validation. Before achieving such impressive results, we stumbled on many problems which caused our predictions
-        to be unrealistic. We had to investigate, understand and overcome these multiple obstacles, as reported in
-        Part~\ref{part:experiment}.
+        validation. Before managing to systematically obtain accurate predictions, we stumbled on many problems which
+        caused our predictions to be unrealistic. We had to investigate, understand and overcome these multiple
+        obstacles, as reported in Part~\ref{part:experiment}.
 
         A few weeks before the defense of this thesis, we decided to repeat the whole simulation study from scratch on
         another Grid'5000 cluster, named \gros. This cluster has different nodes (one Intel Xeon Gold 5220 processor per
@@ -49,9 +49,10 @@
         instead of AVX2). Over the course of a weekend, we calibrated the platform by measuring the \dgemm and MPI
         durations. Then, we performed real and simulated HPL executions. At first, the predicted performance was too low
         by one order of magnitude. This was due to a mistake we made: we computed the linear regression of the \dgemm
-        model using all the terms of the polynomial, even those of degree one (\ie \(M\), \(N\) and \(K\)). This
-        resulted in an overfitted model with spurious predictions.  After fixing this issue, we obtained extremely
-        accurate predictions of HPL performance for various matrix sizes.
+        model using all the terms of the polynomial, even those of degree one (\ie \(M\), \(N\) and \(K\)) which were
+        not statistically significant. This resulted in an overfitted model with spurious predictions.  After fixing
+        this issue by only considering the significant terms, we obtained extremely accurate predictions of HPL
+        performance for various matrix sizes.
 
         This small additional study demonstrates clearly the level of trust we can now have in our model, but also its
         fragility, as seemingly inoffensive changes in the approach can lead to widely inaccurate predictions.
@@ -71,17 +72,18 @@
         We believe that our predictions could be extremely valuable to the whole life cycle of supercomputers:
         \begin{description}
             \item[Design] Using simulations, manufacturers could apply co-design techniques to construct the most
-                performant machines for a given budget. This could help achieve more faithful results than the current
-                techniques relying on less accurate simulations or even guesswork.
+                performant machines for a given set of target applications and within a given budget. This could help
+                achieve more faithful results than the current techniques relying on less accurate simulations or even
+                guesswork.
             \item[Development] Simulations could also largely benefit software developers. Both debugging and tuning the
-                application would be more convenient and less expensive in simulation than in reality, especially if
-                large scale runs are required.
+                application are more convenient and less expensive in simulation than in reality, especially if large
+                scale runs are required.
             \item[Maintenance] Whenever the platform employees need to perform some maintenance, there is a
                 non-negligible risk of affecting the machine performance, as we illustrated in
-                Chapter~\ref{chapter:experiment:tests}. To verify that the performance did not change, the usual method is to
-                perform large-scale runs of a benchmark such as HPL, which can largely lengthen the maintenance
-                duration. A more convenient alternative would be to (1) carry small performance tests as those
-                described in Chapter~\ref{chapter:experiment:tests} to check if there is anything obviously wrong, and
-                (2) perform large-scale simulations with the updated model and compare the new predictions with the
-                previous ones.
+                Chapter~\ref{chapter:experiment:tests}. To verify that the performance did not change, the usual method
+                is to perform large-scale runs of a benchmark such as HPL, which can largely lengthen the maintenance
+                duration. A more convenient alternative would be to (1) carry small but carefully designed performance
+                tests as those described in Chapter~\ref{chapter:experiment:tests} to check if there is anything
+                obviously wrong, and (2) perform large-scale simulations with the updated model and compare the new
+                predictions with the previous ones.
         \end{description}
