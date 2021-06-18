@@ -302,15 +302,14 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
             \item \texttt{N} is the order of the square matrix $A$.
             \item \texttt{NB} is the \emph{blocking factor}, \ie the granularity at which HPL operates when panels are
                 distributed or worked on.
-            \item \texttt{P} and \texttt{Q} denote the number of process rows and the number of process columns,
-                respectively.
+            \item \texttt{P} and \texttt{Q} denote the number of process rows and the number of process columns.
             \item \texttt{RFACT} determines the panel factorization algorithm. Possible values are Crout, left- or
                 right-looking.
             \item \texttt{SWAP} specifies the swapping algorithm used while pivoting. Two algorithms are available: one
                 based on \emph{binary exchange} (along a virtual tree topology) and the other one based on a
                 \emph{spread-and-roll} (with a higher number of parallel communications). HPL also provides a panel-size
                 threshold triggering a switch from one variant to the other.
-            \item \texttt{DEPTH} controls how many iterations of the outer loop can overlap with each other.
+            \item \texttt{DEPTH} controls how many iterations of the outer loop overlap with each other.
             \item \texttt{BCAST} sets the algorithm used to broadcast a panel of columns over the process columns. Legacy
                 versions of the MPI standard only supported non-blocking point-to-point communications, which is why HPL
                 ships with in total six self-implemented variants to overlap the time spent waiting for an incoming
@@ -342,11 +341,12 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                   }
                 }
 
+                \newcommand\scalingbcast{0.9}
                 \begin{figure}[htpb]
                     \centering
 
                     % 1ring
-                    \subfigure[Broadcast \texttt{ring}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \scalebox{\scalingbcast}{\subfigure[Broadcast \texttt{ring}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -362,10 +362,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \draw [comm] (e.north) to[bend left] node[comm_label] {t=4} (f.north);
                         \draw [comm] (f.north) to[bend left] node[comm_label] {t=5} (g.north);
                         \draw [comm] (g.north) to[bend left] node[comm_label] {t=6} (h.north);
-                    \end{tikzpicture}}
+                    \end{tikzpicture}}}
 
                     % 1rinM
-                    \subfigure[Broadcast \texttt{ring-modified}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \scalebox{\scalingbcast}{\subfigure[Broadcast \texttt{ring-modified}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -381,10 +381,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \draw [comm] (e.north) to[bend left] node[comm_label] {t=4} (f.north);
                         \draw [comm] (f.north) to[bend left] node[comm_label] {t=5} (g.north);
                         \draw [comm] (g.north) to[bend left] node[comm_label] {t=6} (h.north);
-                    \end{tikzpicture}}
+                    \end{tikzpicture}}}
 
                     % 2ring
-                    \subfigure[Broadcast \texttt{2-ring}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \scalebox{\scalingbcast}{\subfigure[Broadcast \texttt{2-ring}.]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -400,10 +400,10 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \draw [comm] (e.north) to[bend left] node[comm_label] {t=2} (f.north);
                         \draw [comm] (f.north) to[bend left] node[comm_label] {t=3} (g.north);
                         \draw [comm] (g.north) to[bend left] node[comm_label] {t=4} (h.north);
-                    \end{tikzpicture}}
+                    \end{tikzpicture}}}
 
                     % 2rinM
-                    \subfigure[Broadcast \texttt{2-ring-modified.}]{\begin{tikzpicture}[>=latex',line join=bevel,]
+                    \scalebox{\scalingbcast}{\subfigure[Broadcast \texttt{2-ring-modified.}]{\begin{tikzpicture}[>=latex',line join=bevel,]
                         \node (a) [mpi_rank] {a};
                         \node[right of=a] (b) [mpi_rank] {b};
                         \node[right of=b] (c) [mpi_rank] {c};
@@ -419,7 +419,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                         \draw [comm] (e.north) to[bend left] node[comm_label] {t=3} (f.north);
                         \draw [comm] (f.north) to[bend left] node[comm_label] {t=4} (g.north);
                         \draw [comm] (g.north) to[bend left] node[comm_label] {t=5} (h.north);
-                    \end{tikzpicture}}
+                    \end{tikzpicture}}}
                     \caption{Illustration of the four HPL ring-broadcast algorithms.}%
                     \label{fig:hpl_broadcasts}
                 \end{figure}
@@ -427,7 +427,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 \begin{figure}[htpb]
                     \centering
                     % long (scatter phase)
-                    \subfigure[Broadcast \texttt{long}, scatter phase.\label{fig:hpl_broadcasts:long:scatter}]{
+                    \scalebox{\scalingbcast}{\subfigure[Broadcast \texttt{long}, scatter phase.\label{fig:hpl_broadcasts:long:scatter}]{
                         \begin{tikzpicture}[>=latex',line join=bevel,]
                             \node[mpi_buffer={1}{1}{1}{1}{1}{1}{1}{1}{a}] (aa) {};
                             \node[mpi_buffer={0}{1}{0}{0}{0}{0}{0}{0}{b}, right of=aa] (bb) {};
@@ -458,9 +458,9 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                             \path (f 7.east) -- (g 7.west) node [emptynode, pos=0.22, below, anchor=center] (f7g7) {} ;
                             \draw [comm] (e 7.south east) -- (e7f7.south) -- (e9f9.center) -- (f9g9.center) -- (f7g7.south) -- node[comm_label] {t=4} (g 7.south west);
                         \end{tikzpicture}
-                    }
+                    }}
 
-                    \subfigure[Broadcast \texttt{long}, roll phase.\label{fig:hpl_broadcasts:long:roll}]{
+                    \scalebox{\scalingbcast}{\subfigure[Broadcast \texttt{long}, roll phase.\label{fig:hpl_broadcasts:long:roll}]{
                         \newcommand{\drawif}[2]{
                             \unless\ifnum #1<#2
                             1
@@ -522,7 +522,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                             \drawcluster{6} & \drawcluster{7}\\
                         \end{tabular}
 
-                    }
+                    }}
                     \caption{Illustration of the two phases of the HPL \texttt{long} broadcast algorithm. The
                     \texttt{long-modified} algorithm (not shown) is very similar, except that process \texttt{A} starts
                     by sending the whole message to process \texttt{B}, then the \texttt{long} broadcast is performed
