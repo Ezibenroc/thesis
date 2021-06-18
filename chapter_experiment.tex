@@ -1678,11 +1678,19 @@
 
                 We have also implemented the multidimensional test.
                 Figure~\ref{fig:experiment:non_regression:overview_multifactor} presents the overview plot for this test
-                made on the eight regression parameters (\ie \(p=8\), the parameters are\(MNK, MN, MK, NK, M, N, K\) and
+                made on the eight regression parameters (\ie \(p=8\), the parameters are \(MNK, MN, MK, NK, M, N, K\) and
                 the intercept). With several dimensions, there is no notion of \emph{negative} or \emph{positive}
                 anomaly, hence all the detected anomalies are colored in red. Likewise, we cannot represent graphically
                 the temporal evolution of these eight factors like we did in the single-dimension case.
 
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_multifactor.pdf}
+                    \caption{Overview of the test result for the eight regression parameters on cluster \dahu.}
+                    \label{fig:experiment:non_regression:overview_multifactor}
+                \end{figure}
+
+                \pagebreak
                 This figure should be compared to Figure~\ref{fig:experiment:non_regression:overview}, since both of
                 them aim at detecting changes in \dgemm durations. We can notice two interesting differences:
                 \begin{itemize}
@@ -1706,12 +1714,6 @@
                         so, the multi-factor test is able to detect the anomaly from 2020/05/18 on \dahu[26], but
                         it still misses the outliers from 2020/11-2020-12.
                 \end{itemize}
-                \begin{figure}[htpb]
-                    \centering
-                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview_multifactor.pdf}
-                    \caption{Overview of the test result for the eight regression parameters on cluster \dahu.}
-                    \label{fig:experiment:non_regression:overview_multifactor}
-                \end{figure}
 
             \subsubsection{Website presentation}%
 
