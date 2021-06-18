@@ -1565,6 +1565,20 @@
                 words, (1) we do not consider the observations that were made in the future and (2) each time we
                 recognize a change and add a vertical line, the fluctuation interval gets reset.
 
+                \begin{figure}[htpb]
+                    \centering
+                    \subfigure[Performance evolution of node \dada{14}.\label{fig:experiment:non_regression:evolution_dahu14}]{
+                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14.pdf}
+                    }
+                    \subfigure[Performance evolution of node \dada{26}.\label{fig:experiment:non_regression:evolution_dahu26}]{
+                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
+                    }
+                    \caption{
+                        Evolution of the mean performance of the two processors of two nodes from cluster \dahu
+                    (the fluctuation interval has a confidence of \NSI{99.99}{\percent}).}%
+                    \label{fig:experiment:non_regression:evolution_dahu}
+                \end{figure}
+
                 The fluctuation interval for a new value \(\bm{m}^{(r)}\) (which is the sample mean of \(r\) new
                 observations \(x_{n+1},\dots,x_{n+r}\), note that \(r=1\) in
                 Figure~\ref{fig:experiment:non_regression:evolution_dahu}) follows a rewriting of
@@ -1585,20 +1599,6 @@
                 approximately \NSI{23}{\giga\flop/\second} near the end of 2020). When this happens, we manually label
                 this point as an outlier and remove it from the reference set: it will not be taken into account for
                 computing the reference interval afterwards.
-
-                \begin{figure}[htpb]
-                    \centering
-                    \subfigure[Performance evolution of node \dada{14}.\label{fig:experiment:non_regression:evolution_dahu14}]{
-                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-14.pdf}
-                    }
-                    \subfigure[Performance evolution of node \dada{26}.\label{fig:experiment:non_regression:evolution_dahu26}]{
-                        \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/evolution_dahu-26.pdf}
-                    }
-                    \caption{
-                        Evolution of the mean performance of the two processors of two nodes from cluster \dahu
-                    (the fluctuation interval has a confidence of \NSI{99.99}{\percent}).}%
-                    \label{fig:experiment:non_regression:evolution_dahu}
-                \end{figure}
 
             \subsubsection{Overview plot}%
 
