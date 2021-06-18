@@ -1610,6 +1610,13 @@
                 unlikely it was to make a given observation. In the one-dimension case (\ie \(p=1\)), this represents
                 the distance between the observation and the sample mean of the reference set.
 
+                \begin{figure}[htpb]
+                    \centering
+                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview.pdf}
+                    \caption{Overview of the test result for the mean performance on cluster \dahu.}%
+                    \label{fig:experiment:non_regression:overview}
+                \end{figure}
+
                 More formally, this likelihood is the probability to make an observation at least as extreme. To compute
                 it, we use the value \(t\) defined in Equation~\ref{eqn:experiment:non_regression:test} and define the
                 likelihood \(\mathcal{L}\) as follows:
@@ -1620,13 +1627,6 @@
                 \(v_1\) and \(v_2\) degrees of freedom. An implementation is available in R with the function
                 \texttt{pf}\repeatfootnote{footnote:R_fdist} and in Python with the function
                 \texttt{scipy.stats.f.cdf}\repeatfootnote{footnote:PY_fdist}.
-
-                \begin{figure}[htpb]
-                    \centering
-                    \includegraphics[width=\linewidth]{img/experiment/non_regression/implementation/overview.pdf}
-                    \caption{Overview of the test result for the mean performance on cluster \dahu.}%
-                    \label{fig:experiment:non_regression:overview}
-                \end{figure}
 
             \subsubsection{Windowed test}%
 
