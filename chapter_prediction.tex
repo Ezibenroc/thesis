@@ -563,7 +563,7 @@ main contribution is summarized in Chapter~\ref{chapter:prediction:emulation} fo
                 stuck when there are too many ongoing messages.
         \end{itemize}
 
-        The \emph{panel} shown in Figure~\ref{fig:hpl_overview} is an intricate data structure used by
+        The \emph{panel} mentionned in Figure~\ref{fig:hpl_overview} is an intricate data structure used by
         multiple functions of the application.  It contains both \texttt{int}s (accounting for matrix indices, error
         codes, MPI tags, and pivoting information) and \texttt{double}s (corresponding to a copy of a sub-matrix of
         \texttt{A}). To optimize data transfers, HPL flattens this structure into a single allocation of
