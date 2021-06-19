@@ -1078,7 +1078,7 @@
     motivated the implementation of performance non-regression tests, to help us detect any noteworthy change on the
     platform. In this chapter, we start by giving an overview of the existing state of the art in
     Section~\ref{sec:test:state_of_art}. We then describe our contribution in Section~\ref{sec:test:contribution}. We
-    start by detailing the statistics on which relies our tests. Then, we describe how we implemented these tests, from
+    start by detailing the statistics on which rely our tests. Then, we describe how we implemented these tests, from
     the experiment execution to the final test result. We show and explain the graphical representation of our test
     results, and we describe the various events we were able to detect on the Grid'5000 platform. Finally, in
     Section~\ref{sec:test:conclusion} we propose several ways to improve this work.
@@ -1394,7 +1394,7 @@
                 jobs to Grid'5000's scheduler. This regular submission could have been easily automatized, \eg with
                 \texttt{cron} or \texttt{systemd}, but we made the choice to keep this step manual. By inspecting the
                 Grid'5000 Gantt chart, we can check whether the clusters are currently heavily used or not and decide if
-                we should postpone or experiment to avoid disturbing too much the other users. A particularly good
+                we should postpone our experiment to avoid disturbing too much the other users. A particularly good
                 timeframe for our experiments is usually between 7 a.m. and 9 a.m., when the (longer) nightly
                 experiments have terminated and the (shorter and interactive) daily experiments have not started yet.
                 We generally submit one job per cluster, requesting all the nodes, but we sometimes have to split the
@@ -1861,7 +1861,7 @@
                 Four nodes from cluster \dahu encountered some issues in two occasions, namely \dahu[13],
                 \dahu[14], \dahu[15] and \dahu[16]. Their performance and frequency was lower by
                 \NSI{10}{\percent} whereas their temperature was much higher, especially on their CPU n°0 where it went
-                above \NSI{90}{\celsius} instead of the usual \NSI{20}{\celsius}. Our hypothesis is that for some
+                above \NSI{90}{\celsius} instead of the usual \NSI{70}{\celsius}. Our hypothesis is that for some
                 unknown reason the cooling system of the nodes started to malfunction. It is interesting to note that
                 the four nodes are located in the same chassis, which probably explain why they were all affected at the
                 same time.
