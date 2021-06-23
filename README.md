@@ -1,24 +1,26 @@
-[![Actions Status](https://github.com/Ezibenroc/thesis/workflows/Compilation/badge.svg)](http://cornebize.net/thesis/build/thesis.pdf)
+# General
 
 The skeleton of this thesis manuscript was greatly inspired by the ones of Clément Mommessin and Millian Poquet, which in turn are inspired by Raphaël Bleuse, David Beniamine and David Glesser.
 
 The makefile provides convenient recipes to build the whole thesis or unique chapters, to check for missing refs, unreferenced labels or uncited references.
 Feel free to hack the template however you like.
 
-
-To build your own thesis you can use the provided Nix environment, or do it by yourself with:
+To build your own thesis you can use the provided Nix environment, the provided [Dockerfile](Dockerfile), or do it by
+yourself with:
   - `(GNU)make` (for the Makefile)
   - `texlive` (the full one is provided by Nix, just to be safe)
-  - `rubber` (a nice latex tool to compile your document and the bibliography as many times as needed)
-  - `python` (if you want to use the missing references script).
 
+# Data & Figures
 
-This template contains only the introduction and conclusion chapter.
-To add a new chapter you'll need to:
-  - Add a `.tex` file corresponding to your chapter (obviously)
-  - Add an include line in `thesis.tex` (around lines 190)
-  - Add a macro definition in `macros.include.default.tex`
-  - Add a recipe for this chapter in the `Makefile`
+All the figures used in the thesis manuscript or the slides are in the [img](img) directory. They have all been
+generated using data available in the [data](data) directory. The code to generate these figures as well as some
+provenance information are available in either the [figures.org](figures.org) notebook, or one of the notebooks in the
+[figures_ipynb](figures_ipynb) directory.
 
+# Continuous Integration
 
-If you have subfolders in the `fig`, `img` or `inputs` folders, don't forget to add a line for them at the beginning of `thesis.tex` (lines 3-6) so that Rubber can find the figures there.
+Using GitHub actions (see the [.github](.github) directory), both the thesis and the slides are compiled automatically
+whenever a new commit is pushed. The build is done with a [Docker image](https://hub.docker.com/r/ezibenroc/orgmode_latex)
+constructed with the provided [Dockerfile](Dockerfile).
+
+The resulting PDF as well as some plots with basic statistics are deployed on GitHub pages (see the gh-pages branch).
