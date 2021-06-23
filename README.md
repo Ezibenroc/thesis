@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5017099.svg)](https://doi.org/10.5281/zenodo.5017099)
+
 # General
 
 The skeleton of this thesis manuscript was greatly inspired by the ones of Clément Mommessin and Millian Poquet, which in turn are inspired by Raphaël Bleuse, David Beniamine and David Glesser.
