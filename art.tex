@@ -34,11 +34,12 @@
 %	\hline
 %\end{tabular}
 
-\begin{tikzpicture}[x=1.3cm,y=1.65cm]
+\definecolor{mygray}{RGB}{200,200,200}
+\begin{tikzpicture}[x=1.6cm,y=2.2cm]
     \foreach \y in {0,...,7}{
         \foreach \x in {1,...,23}{
             \pgfmathsetmacro{\n}{\y*23+\x}
-            \node[draw,minimum width=1cm,minimum height=1.4cm] (i) at (\x, -\y) {\addframe{\n}} ;
+            \node[draw=mygray, line width=0mm, minimum width=1.5cm, minimum height=2.1cm] (i) at (\x, -\y) {\addframe{\n}} ;
         }
     }
 \end{tikzpicture}
