@@ -1,7 +1,16 @@
 \documentclass{article}
 
+\newlength\baselength
+\setlength{\baselength}{1cm}
+\newlength\globalwidth
+\globalwidth=\dimexpr\baselength*40\relax
+\newlength\globalheight
+\globalheight=\dimexpr\baselength*20\relax
+\newlength\margin
+\setlength{\margin}{\baselength}
+
  % https://tex.stackexchange.com/a/80510/71579
-\usepackage[paperheight=20cm,paperwidth=40cm,top=1cm,bottom=1cm,right=1cm,left=1cm]{geometry}
+\usepackage[paperheight=\globalheight,paperwidth=\globalwidth,top=\margin,bottom=\margin,right=\margin,left=\margin]{geometry}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing}
@@ -11,8 +20,22 @@
 \usetikzlibrary{shapes}
 
 % Command to make the last slide, which shows copies of the other slides
-\newcommand{\addframe}[1] {\includegraphics[page=#1, width=1cm]{thesis_final.pdf}}
+\newlength\picwidth
+\newlength\picheight
+\newlength\picmargin
+\newlength\nodewidth
+\newlength\nodeheight
+\newlength\gridwidth
+\newlength\gridheight
 
+\gridwidth=\dimexpr(\globalwidth-\margin-\margin-\margin-\margin)/23\relax
+\gridheight=\dimexpr\gridwidth*297/210\relax  % These are A4 sheets
+
+\picmargin=\dimexpr\baselength/6\relax
+\nodewidth=\dimexpr\gridwidth-\picmargin\relax
+\nodeheight=\dimexpr\gridheight-\picmargin\relax
+\picwidth=\dimexpr\nodewidth-\picmargin\relax
+\picheight=\dimexpr\nodeheight-\picmargin\relax
 
 \begin{document}
 
@@ -21,27 +44,22 @@
 %   https://unix.stackexchange.com/a/277987/106103
 %   https://stackoverflow.com/a/5349842/4110059
 \thispagestyle{empty}
-%\centering
-%\setlength{\tabcolsep}{0pt}
-%\renewcommand{\arraystretch}{0}
-%\begin{tabular}{|c|c|c|}
-%	\hline
-%	\addframe{1}  & \addframe{2}  & \addframe{3}  \\
-%	\hline
-%	\addframe{4}  & \addframe{5}  & \addframe{6}  \\
-%	\hline
-%	\addframe{7}  & \addframe{8}  & \addframe{9}  \\
-%	\hline
-%\end{tabular}
+%\the\picwidth~\the\picheight~\the\picmargin~\the\gridheight
+
+\newcommand{\addframe}[1] {\includegraphics[page=#1, width=\picwidth]{thesis_final.pdf}}
 
 \definecolor{mygray}{RGB}{200,200,200}
-\begin{tikzpicture}[x=1.6cm,y=2.2cm]
+\centering
+\topskip0pt
+\vspace*{\fill}
+\begin{tikzpicture}[x=\gridwidth,y=\gridheight]
     \foreach \y in {0,...,7}{
         \foreach \x in {1,...,23}{
             \pgfmathsetmacro{\n}{\y*23+\x}
-            \node[draw=mygray, line width=0mm, minimum width=1.5cm, minimum height=2.1cm] (i) at (\x, -\y) {\addframe{\n}} ;
+            \node[draw=mygray, line width=0mm, minimum width=\nodewidth, minimum height=\nodeheight] (i) at (\x, -\y) {\addframe{\n}} ;
         }
     }
 \end{tikzpicture}
+\vspace*{\fill}
 
 \end{document}
