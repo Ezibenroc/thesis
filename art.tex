@@ -48,6 +48,9 @@
 
 \newcommand{\addframe}[1] {\includegraphics[page=#1, width=\picwidth]{thesis_final.pdf}}
 
+% TODO
+% Compilation with pdflatex and lualatex fails.
+
 \definecolor{mygray}{RGB}{200,200,200}
 \centering
 \topskip0pt
@@ -55,7 +58,7 @@
 \begin{tikzpicture}[x=\gridwidth,y=\gridheight]
     \foreach \y in {0,...,7}{
         \foreach \x in {1,...,23}{
-            \pgfmathsetmacro{\n}{\y*23+\x}
+            \pgfmathtruncatemacro{\n}{\y*23+\x}
             \node[draw=mygray, line width=0mm, minimum width=\nodewidth, minimum height=\nodeheight] (i) at (\x, -\y) {\addframe{\n}} ;
         }
     }
