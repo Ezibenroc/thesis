@@ -51,7 +51,8 @@
 % TODO
 % Compilation with pdflatex and lualatex fails.
 
-\definecolor{mygray}{RGB}{200,200,200}
+\definecolor{mygray}{RGB}{240,240,240}
+\pagecolor{mygray}
 \centering
 \topskip0pt
 \vspace*{\fill}
@@ -59,7 +60,7 @@
     \foreach \y in {0,...,7}{
         \foreach \x in {1,...,23}{
             \pgfmathtruncatemacro{\n}{\y*23+\x}
-            \node[draw=mygray, line width=0mm, minimum width=\nodewidth, minimum height=\nodeheight] (i) at (\x, -\y) {\addframe{\n}} ;
+            \node[draw=mygray, line width=0mm, fill=white, minimum width=\nodewidth, minimum height=\nodeheight] (i) at (\x, -\y) {\addframe{\n}} ;
         }
     }
 \end{tikzpicture}
