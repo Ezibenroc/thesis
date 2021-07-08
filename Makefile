@@ -112,6 +112,10 @@ slides.pdf: slides.tex slides_old.pdf
 	@gs -q -dNOPAUSE -dBATCH -dPDFSETTINGS=/prepress -sDEVICE=pdfwrite -sOutputFile=slides_rasterized.pdf output.pdf && rm output.pdf
 	@echo $@ has been updated
 
+art: art.tex thesis_final.pdf
+	@xelatex $<
+	@convert -background white -alpha remove -alpha off -density 900 +antialias art.pdf art.png  # 600dpi for 80*40cm print
+
 ############
 # cleaning #
 ############
