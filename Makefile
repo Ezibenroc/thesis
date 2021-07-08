@@ -114,7 +114,7 @@ slides.pdf: slides.tex slides_old.pdf
 
 art: art.tex thesis_final.pdf
 	@xelatex $<
-	@convert -background white -alpha remove -alpha off -density 900 +antialias art.pdf art.png  # 600dpi for 80*40cm print
+	@convert -background white -alpha remove -alpha off -density 1600 +antialias art.pdf art.png  # 800dpi for 80*40cm print
 
 ############
 # cleaning #
