@@ -31,11 +31,11 @@
 \gridwidth=\dimexpr(\globalwidth-\margin-\margin-\margin-\margin)/23\relax
 \gridheight=\dimexpr\gridwidth*297/210\relax  % These are A4 sheets
 
-\picmargin=\dimexpr\baselength/6\relax
+\picmargin=\dimexpr\baselength/10\relax
 \nodewidth=\dimexpr\gridwidth-\picmargin\relax
 \nodeheight=\dimexpr\gridheight-\picmargin\relax
-\picwidth=\dimexpr\nodewidth-\picmargin\relax
-\picheight=\dimexpr\nodeheight-\picmargin\relax
+\picwidth=\dimexpr\nodewidth\relax
+\picheight=\dimexpr\nodeheight\relax
 
 \begin{document}
 
@@ -60,9 +60,8 @@
     \foreach \y in {0,...,7}{
         \foreach \x in {1,...,23}{
             \pgfmathtruncatemacro{\n}{\y*23+\x}
-            \node[draw=mygray, line width=0mm, fill=white, minimum width=\nodewidth, minimum height=\nodeheight] (i) at (\x, -\y) {\addframe{\n}} ;
-        }
-    }
+            \node[draw=mygray, line width=0mm, fill=white, minimum width=\nodewidth, minimum height=\nodeheight, inner
+                sep=0,outer sep=0] (i) at (\x, -\y) {\addframe{\n}} ; } }
 \end{tikzpicture}
 \vspace*{\fill}
 
