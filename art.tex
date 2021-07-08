@@ -7,7 +7,7 @@
 \newlength\globalheight
 \globalheight=\dimexpr\baselength*20\relax
 \newlength\margin
-\setlength{\margin}{\baselength}
+\margin\dimexpr\baselength/2\relax
 
  % https://tex.stackexchange.com/a/80510/71579
 \usepackage[paperheight=\globalheight,paperwidth=\globalwidth,top=\margin,bottom=\margin,right=\margin,left=\margin]{geometry}
